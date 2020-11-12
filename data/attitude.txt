@@ -1,0 +1,3 @@
+- Used a multitask learning framework to help predict the online forum users’ stance on controversial political issues with their background and arguments through leveraging the possible correlations among the issues, which shows robust improvement than single task models.
+
+- Captured, visualized, and analyzed the relationship among political issues though a novel embeddingbased method. Predicted similar tasks show comparable performance with human intuition for jointly predicted task selection and enhance the prediction accuracy greatly.

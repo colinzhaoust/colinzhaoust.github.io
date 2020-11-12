@@ -1,0 +1,1 @@
+Seek to build an online learning platform with NLP supported widgets, including question answering module and auto quiz generator module. Question answering module retrieves video chunks from lecture videos to answer students’ queries. Auto quiz generator generates basic quizzes from auto-rectified and masked lecture subtitles.

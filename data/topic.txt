@@ -1,0 +1,5 @@
+Understanding the persuasiveness of arguments has attracted much interest in Social Science and Natural Language Processing (NLP) communities. While recent works commonly focus on studying the debaters' characters, language, or relations to the audience, the effect of the topic of the debate is under-represented. 
+
+Prior study in social science has shown how the topic would influence the debaters' performance, audience's favorites on debater characters or languages. Therefore, we hypothesize that the involvement of information from the topics would allow us to study the argument persuasiveness regarding different debate context. 
+
+In this paper, we first use a novel embedding approach to encode the relations among topics. We then propose a bi-encoder models consisting separate encoders for (1) the background and linguistic features of debaters ; (2) the language and the relations of the topics. We show that our system that captures the relations between topics and debaters to predict the argument persuasiveness perform better than predicting with debater side factors alone. 

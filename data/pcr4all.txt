@@ -1,0 +1,7 @@
+Pronoun Coreference Resolution (PCR) is the task of resolving pronominal expressions to all mentions they refer to. 
+The correct resolution of pronouns typically involves the complex inference over both linguistic knowledge and commonsense knowledge.
+Recently, with the help of pre-trained language representation models, the community has made significant progress on several dataset including CoNLL-2012 and winograd Schema Challenge (WSC).
+However, as most existing works focus on developing PCR models for specific datasets, it is still unclear whether current PCR systems are reliable in real applications.
+Motivated by this, we propose a new PCR benchmark PCR4All, which evaluates PCR systems from different angles (i.e., knowledge resource, domain, frequency, distance).
+Experiments demonstrate that there is still a notable gap between existing PCR models and a reliable PCR system because they are often trained to optimize a specific kind of PCR while ignoring others.
+We hope that PCR4ALL can motivate the community to pay more attention solving the overall PCR problem rather than training a model towards a specific dataset.

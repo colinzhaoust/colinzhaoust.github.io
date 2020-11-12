@@ -1,0 +1,3 @@
+- Surveyed in detail on the datasets (ordinary ones, hard ones requiring external knowledge and others for special purposes) and models (from traditional ones to neural based end-to-end models) commonly used for the Pronoun Coreference Resolution task. 
+
+- Experimented on the performance of finetuning approach on different data subsets with different relevance to the test set, which shows that the performance gain comes from both the data similarity and the underneath knowledge in solving the task.

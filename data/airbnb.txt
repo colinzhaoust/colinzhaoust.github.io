@@ -1,0 +1,2 @@
+Built an NLP supported model to detect the differences in focuses, sentiment and pickiness for 
+various categories related to Airbnb between Chinese-speaking and English-speaking tourists.

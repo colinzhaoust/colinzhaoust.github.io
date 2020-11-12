@@ -1,0 +1,3 @@
+- Built a course recommendation and academic planner model based on course dependency graph (generated from school major requirements) and past students’ performance records. 
+
+- Served as part of the unreleased official HKUST undergraduate course planner, providing requirement fulfilment checker and study path recommendation service.

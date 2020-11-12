@@ -1,0 +1,3 @@
+- Designed a novel model combining text embedding and graph embedding algorithms to learn the node embedding for ASER, with text as nodes and eventuality relations as edges. 
+
+- Provided useful signals for link prediction, unknown event resolution and representation captioning on the graph, with a model utilizing BERT embeddings and LSTM.

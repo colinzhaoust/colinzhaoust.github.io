@@ -1,0 +1,3 @@
+- Designed a novel task studying contextual causal knowledge from videos and proposed a corresponding dataset containing human annotate events and causality inferred from video frame sequences. 
+
+- Proposed a Vision-Contextual Causal (VCC) model that can utilize the images as context to better acquire causal knowledge from consecutive videos.

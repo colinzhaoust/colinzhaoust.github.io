@@ -1,0 +1,3 @@
+- Proposed a novel dataset containing categorized human text that justifies the reasons behind commonsense pronoun reference choices in Winograd Schema Challenge to point out what kinds of essential commonsense knowledge are needed, with which we could point out the strength and the limitation of current models as well as possible directions. 
+
+- Proposed a new task, WinoWhy, which requires models to determine the plausibility of collected reasons from similar adversarial examples from humans and generative models to perform as a next-stage challenge testing the model performance in understanding the commonsense reasoning.

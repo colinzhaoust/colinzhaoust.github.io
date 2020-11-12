@@ -1,0 +1,3 @@
+Classify pokimon images given only 1 reference per class as the classic "Who am I?" test for pokemon. Adopted a metric-learning based baseline and make improvements.
+
+Improved 5-way top-1 accuracy from 55.3% to 71.6%
