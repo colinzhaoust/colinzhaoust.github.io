@@ -1,3 +1,5 @@
-- Designed a novel model combining text embedding and graph embedding algorithms to learn the node embedding for ASER, with text as nodes and eventuality relations as edges. 
+Designs a novel embedding model combining text embedding and graph embedding algorithms to learn the node representation for ASER, which has text as nodes and eventuality relations as edges. 
 
-- Provided useful signals for link prediction, unknown event resolution and representation captioning on the graph, with a model utilizing BERT embeddings and LSTM.
+Provides useful signals for link prediction, unknown event resolution, and representation captioning on the graph, with a model utilizing BERT embeddings and LSTM.
+
+Applied ASER to solve the commonsense reasoning problems (Section 6.2) and beat the state-of-the-art at that time.
