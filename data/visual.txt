@@ -1,3 +1,9 @@
-- Designed a novel task studying contextual causal knowledge from videos and proposed a corresponding dataset containing human annotate events and causality inferred from video frame sequences. 
+Knowledge about causality plays a critical role in many artificial intelligence systems.
+Conventional approaches typically require laborious and expensive human annotations, which is infeasible for large-scale acquisition.
 
-- Proposed a Vision-Contextual Causal (VCC) model that can utilize the images as context to better acquire causal knowledge from consecutive videos.
+To remedy this problem, some works in the NLP community propose to acquire the causal knowledge from textual data using pattern mining algorithms. However, as the causal knowledge belongs to commonsense knowledge, which cannot be fully expressed by textual data, such approaches can only cover limited causal knowledge.
+
+In this work, we mimic how human beings learn causality and explore the possibility of acquiring causal knowledge from time-consecutive images. To do so, we first define the task of mining contextual causal knowledge from visual signals, which aims at evaluating models' abilities to identify causal relation given certain visual context, and then employ the crowd-sourcing to annotate a high-quality dataset Vis-Causal.
+On top of that, we propose a Vision-Contextual Causal (VCC) model that can utilize the images as context to better acquire causal knowledge.
+
+Different from existing approaches, the proposed solution has the potential to preserve contextual property (some causal relations only make sense in certain contexts) of causal relations.
