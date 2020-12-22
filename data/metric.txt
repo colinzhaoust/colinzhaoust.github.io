@@ -1,0 +1,7 @@
+Text simplification models target at rewriting complicated input sentences into more readable variants. Text simplification has a wide range of application in various fields including education, language learning, journalism, and etc.
+
+However, Traditional n-gram matching based evaluation metrics rely heavily on: (1) the exact token match and the human annotated simplified sentences; (2) the use of human annotated gold reference.
+
+In this paper, we present the first contextual embedding based automatic evaluation metric for text simplification, which leverages pre-training on large-scale dataset and self-supervision to evaluate the simplification between input and output sentences directly.
+
+Comparative study shows that our metric corresponds well with human judgements for both the text simplicity and meaning preservation. Further experiments show that our model better handles the similar but unfaithful cases than existing metrics.
