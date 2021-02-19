@@ -1,0 +1,9 @@
+Solving text classification in a weakly supervised manner is important for real-world applications where human annotations are scarce.
+In this paper, we propose to query a masked language model with cloze style prompts to obtain supervision signals. 
+
+We design a prompt which combines the document itself and “this article is talking about [MASK].” A masked language model can generate words for the[MASK] token. The generated words which summarize the content of a document are considered as supervision signals. 
+
+We propose a latent variable model (WDDC) to learn a word distribution learner which associates generated words to pre-defined categories and
+a document classifier simultaneously without using any annotated data. 
+
+Evaluation on three datasets, AGNews, 20Newsgroups, and UCINews, shows that our method can outperform baselines by 2%, 9%, and 8%.
