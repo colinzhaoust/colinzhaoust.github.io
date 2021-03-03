@@ -1,0 +1,5 @@
+Large pre-trained language models (PTLMs) have been shown to carry biases towards different social groups which leads to the reproduction of stereotypical and toxic content by major NLP systems. 
+
+In this paper, we propose a method to use simple classifiers to probe English, French, and Arabic PTLMs to quantify the potentially harmful content they convey with respect to a set of templates and social group names. We use PTLMs to predict masked tokens using basic commonsense knowledge patterns and lists of social groups in order to verify, given a large set of causeeffect relations, how likely PTLMs enable offensive language about specific communities.
+
+Then, we shed the light on how such negative content can be triggered within unrelated and benign contexts. We address these problems by showing evidence based on a large scale study, and explain how to take advantage of our methodology to assess and mitigate the toxicity transmitted by PTLMs.
