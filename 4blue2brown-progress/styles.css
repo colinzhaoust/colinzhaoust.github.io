@@ -153,6 +153,7 @@ main {
   width: min(1180px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 5rem 0;
+  scroll-margin-top: 88px;
 }
 
 .section + .section {
@@ -576,6 +577,178 @@ h4 {
   margin-top: 1.6rem;
 }
 
+.cost-layout,
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.cost-layout.two {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.cost-card,
+.model-card,
+.result-backlog article {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 1.2rem;
+}
+
+.formula-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.formula-card h3,
+.formula-card .table-note {
+  padding-inline: 1.2rem;
+}
+
+.formula-card h3 {
+  padding-top: 1.2rem;
+}
+
+.formula-card pre {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.metric-table,
+.coverage-table {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.metric-row,
+.coverage-row {
+  display: grid;
+  gap: 0.55rem;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.88rem;
+  padding: 0.65rem 0.8rem;
+}
+
+.metric-row {
+  grid-template-columns: 1.5fr 0.72fr 0.8fr 0.9fr 0.8fr;
+}
+
+.coverage-row {
+  grid-template-columns: 1.1fr 0.7fr 0.82fr 0.82fr 0.7fr 1.6fr;
+}
+
+.metric-row:last-child,
+.coverage-row:last-child {
+  border-bottom: 0;
+}
+
+.metric-row span:first-child,
+.coverage-row span:first-child {
+  color: var(--ink);
+  font-weight: 760;
+}
+
+.metric-head,
+.coverage-head {
+  background: oklch(94% 0.025 82);
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.table-note {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.coverage-table {
+  margin-top: 1.6rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.status-pill.done {
+  border-color: oklch(74% 0.12 155);
+  background: oklch(94% 0.04 155);
+  color: oklch(37% 0.1 155);
+}
+
+.status-pill.partial {
+  border-color: oklch(78% 0.12 65);
+  background: oklch(95% 0.04 70);
+  color: oklch(42% 0.1 55);
+}
+
+.status-pill.missing {
+  border-color: oklch(76% 0.11 28);
+  background: oklch(96% 0.035 28);
+  color: oklch(42% 0.1 28);
+}
+
+.model-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.score-rubric {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.score-rubric span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: oklch(96% 0.014 82);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 720;
+  padding: 0.38rem 0.58rem;
+}
+
+.eval-grid.deeper {
+  margin-top: 1rem;
+}
+
+.result-backlog {
+  margin-top: 2.5rem;
+}
+
+.backlog-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.result-backlog article {
+  min-height: 220px;
+}
+
+.result-backlog p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .figure-gallery {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -735,12 +908,33 @@ pre {
   .baseline-grid,
   .video-grid,
   .video-grid.compact,
-  .figure-gallery {
+  .figure-gallery,
+  .model-grid,
+  .backlog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .roadmap {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cost-layout,
+  .cost-layout.two {
+    grid-template-columns: 1fr;
+  }
+
+  .coverage-table,
+  .metric-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .coverage-row {
+    width: 940px;
+  }
+
+  .metric-row {
+    width: 720px;
   }
 }
 
@@ -785,7 +979,9 @@ pre {
   .video-grid.compact,
   .eval-grid,
   .figure-gallery,
-  .roadmap {
+  .roadmap,
+  .model-grid,
+  .backlog-grid {
     grid-template-columns: 1fr;
   }
 
