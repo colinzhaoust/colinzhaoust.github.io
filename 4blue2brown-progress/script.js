@@ -1,20 +1,21 @@
 const sections = [...document.querySelectorAll("main section[id]")];
 const navLinks = [...document.querySelectorAll(".top-nav a")];
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    const visible = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (!visible) return;
-    navLinks.forEach((link) => {
-      link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`);
-    });
-  },
-  { rootMargin: "-18% 0px -64% 0px", threshold: [0.1, 0.25, 0.5] }
-);
+function updateActiveNav() {
+  const header = document.querySelector(".site-header");
+  const marker = (header?.getBoundingClientRect().bottom || 96) + 24;
+  let activeId = sections[0]?.id;
+  for (const section of sections) {
+    if (section.getBoundingClientRect().top <= marker) activeId = section.id;
+  }
+  navLinks.forEach((link) => {
+    link.classList.toggle("active", link.getAttribute("href") === `#${activeId}`);
+  });
+}
 
-sections.forEach((section) => observer.observe(section));
+updateActiveNav();
+document.addEventListener("scroll", updateActiveNav, { passive: true });
+window.addEventListener("resize", updateActiveNav);
 
 const tabButtons = [...document.querySelectorAll(".tab-button")];
 const tabPanels = [...document.querySelectorAll(".snippet-panel")];
