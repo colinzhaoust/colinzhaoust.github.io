@@ -23,7 +23,7 @@
       </a>
       <nav class="top-nav" aria-label="Page sections">
         <a href="#motivation">Motivation</a>
-        <a href="#baselines">Baselines</a>
+        <a href="#baselines">Frameworks</a>
         <a href="#cost">Cost</a>
         <a href="#current">Current v0</a>
         <a href="#coverage">Coverage</a>
@@ -125,10 +125,11 @@
 
       <section id="baselines" class="section">
         <div class="section-kicker">References, descriptions, pipelines, examples</div>
-        <h2>Baseline Landscape</h2>
+        <h2>Framework References</h2>
         <p class="section-lead">
-          The baseline work is useful, but each system stops short of the project target:
-          paper plus implementation repo to a reliable educational video series.
+          This section is not the full 5-clip coverage grid. It is the reference landscape:
+          what each baseline is, what its original pipeline emphasizes, and where it fits relative
+          to our paper-plus-code target. The actual coverage status lives in the Coverage Matrix.
         </p>
 
         <div class="baseline-grid">
@@ -215,9 +216,91 @@
           </article>
         </div>
 
+        <div class="pipeline-comparison">
+          <div class="section-kicker">Normalized pipeline comparison</div>
+          <h3>Same visual language, different framework bias</h3>
+          <p>
+            The original papers and repos use different pipeline figures and terminology. Below is a
+            normalized view so we can compare them without confusing framework-specific labels with
+            actual capability coverage.
+          </p>
+
+          <div class="pipeline-grid">
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag">Paper2Manim</span>
+                <strong>Paper section to storyboard</strong>
+              </div>
+              <div class="normalized-flow" aria-label="Paper2Manim normalized pipeline">
+                <span>paper section</span><span>scene storyboard</span><span>Manim code</span><span>render fixer</span><span>vision checker</span><span>memory bank</span>
+              </div>
+              <p><strong>Original emphasis:</strong> VLM keyframes populate positive examples and known pitfalls across tasks.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag warm">Code2Video</span>
+                <strong>Topic to code-centric video</strong>
+              </div>
+              <div class="normalized-flow" aria-label="Code2Video normalized pipeline">
+                <span>knowledge point</span><span>Planner</span><span>Coder</span><span>scope fix</span><span>VLM Critic</span><span>TeachQuiz</span>
+              </div>
+              <p><strong>Original emphasis:</strong> executable Python is the substrate; Critic repairs layout and TeachQuiz measures learning.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag green">TEA</span>
+                <strong>Theorem to long-form video</strong>
+              </div>
+              <div class="normalized-flow" aria-label="TheoremExplainAgent normalized pipeline">
+                <span>theorem</span><span>long-form plan</span><span>scene code</span><span>render repair</span><span>video eval</span><span>benchmark score</span>
+              </div>
+              <p><strong>Original emphasis:</strong> agentic planning is required for videos longer than short demos.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag violet">LLM2Manim</span>
+                <strong>Pedagogy-aware HITL</strong>
+              </div>
+              <div class="normalized-flow" aria-label="LLM2Manim normalized pipeline">
+                <span>concept brief</span><span>prompt template</span><span>symbol ledger</span><span>partial regen</span><span>expert review</span><span>student eval</span>
+              </div>
+              <p><strong>Original emphasis:</strong> segmentation, signaling, dual coding, and human review are first-class gates.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag violet">ManimTrainer</span>
+                <strong>Training plus inference loop</strong>
+              </div>
+              <div class="normalized-flow" aria-label="ManimTrainer normalized pipeline">
+                <span>ManimBench</span><span>SFT</span><span>GRPO</span><span>RITL</span><span>RITL-DOC</span><span>visual reward</span>
+              </div>
+              <p><strong>Original emphasis:</strong> training improves code quality, while renderer-in-the-loop and API docs improve inference.</p>
+            </article>
+
+            <article class="pipeline-card ours">
+              <div class="pipeline-card-head">
+                <span class="tag green">4blue2brown</span>
+                <strong>Paper plus code to explainer</strong>
+              </div>
+              <div class="normalized-flow" aria-label="4blue2brown target pipeline">
+                <span>paper</span><span>code repo</span><span>PaperCodeGraph</span><span>Scene IR</span><span>Manim render</span><span>learner-bench</span>
+              </div>
+              <p><strong>Our missing piece:</strong> formula-code-example-comparison grounding before Manim code generation.</p>
+            </article>
+          </div>
+        </div>
+
         <div class="paper-cases">
           <div class="section-kicker">Paper cases</div>
-          <h3>Baseline video examples we can show</h3>
+          <h3>Representative baseline videos we can show now</h3>
+          <p class="coverage-warning">
+            These are examples, not complete coverage. Code2Video currently covers three paper
+            families; Paper2Manim has one full RoPE output; TEA is still preview-only here.
+          </p>
           <div class="video-grid">
             <article class="video-card" data-paper="transformers">
               <video controls preload="metadata" poster="assets/contact-sheets/code2video_transformer.png">

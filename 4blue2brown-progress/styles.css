@@ -484,6 +484,82 @@ h4 {
   margin-top: 3.4rem;
 }
 
+.pipeline-comparison {
+  margin-top: 3rem;
+  border-top: 1px solid var(--line);
+  padding-top: 2.4rem;
+}
+
+.pipeline-comparison > p,
+.coverage-warning {
+  max-width: 76ch;
+  color: var(--muted);
+}
+
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.pipeline-card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 1.1rem;
+}
+
+.pipeline-card.ours {
+  border-color: oklch(72% 0.12 155);
+  background: oklch(97% 0.018 155);
+}
+
+.pipeline-card-head {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.pipeline-card-head strong {
+  font-size: 1.02rem;
+  line-height: 1.18;
+}
+
+.normalized-flow {
+  display: grid;
+  gap: 0.42rem;
+  margin-bottom: 1rem;
+}
+
+.normalized-flow span {
+  position: relative;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: oklch(96% 0.012 82);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 760;
+  padding: 0.45rem 0.55rem;
+}
+
+.normalized-flow span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  bottom: -0.43rem;
+  height: 0.43rem;
+  border-left: 2px solid var(--line);
+}
+
+.pipeline-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .video-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -906,6 +982,7 @@ pre {
   }
 
   .baseline-grid,
+  .pipeline-grid,
   .video-grid,
   .video-grid.compact,
   .figure-gallery,
@@ -975,6 +1052,7 @@ pre {
 
   .status-row,
   .baseline-grid,
+  .pipeline-grid,
   .video-grid,
   .video-grid.compact,
   .eval-grid,
