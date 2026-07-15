@@ -4,14 +4,16 @@ Status: decisions recorded; implementation pending
 
 Stable specification: [Paper Media Pipelines: Stable Design](../design/paper-media-pipelines.md)
 
+Source-link policy: upstream links in this dated record are mutable navigation references and `non_snapshot` unless a full revision, retrieval timestamp, and content/license hash are explicitly recorded. They do not satisfy run reproducibility or publication gates.
+
 ## 1. Why this discussion happened
 
 The website section titled **Baseline coverage run — Five Topics Across Five Framework Styles** currently overstates its evidence. `[MEASURED]` The checked-in baseline manifest contains 25 entries: 20 use `provider=mock` and five use `provider=local`. Those artifacts are useful previews, but they are not 25 real upstream baseline reproductions.
 
 The immediate integrity rule is therefore:
 
-- mock or deterministic framework-style output is `synthetic_mock` + `placeholder`;
-- an in-house result is `in_house`, not an upstream baseline;
+- mock or deterministic framework-style output has `implementation_origin=synthetic_fixture` + completion `placeholder`;
+- an in-house result has `implementation_origin=project_native`, not `upstream_repository`;
 - only a real upstream run or an explicitly labeled method reproduction may enter a baseline comparison;
 - render success alone is not semantic, pedagogical, or reproduction success.
 
@@ -75,7 +77,7 @@ Built-in Manim capabilities, reusable functions written by the project, one-off 
 
 1. Human: official source render at a fixed commit;
 2. One-shot: MP4-only reconstruction with hidden source/metadata and no render feedback;
-3. Self-refined: exact one-shot code plus at most three fixed feedback iterations.
+3. Self-refined: exact one-shot code plus at most three fixed feedback iterations under a versioned feedback/early-stop policy.
 
 The gallery set is not a clean held-out benchmark because model training exposure is plausible. Ordinary YouTube videos may be linked for context but will not be downloaded or rehosted without an explicit compatible license.
 
@@ -88,35 +90,32 @@ The gallery set is not a clean held-out benchmark because model training exposur
 3. Our Slides + Manim
 4. Backtranslation
 
-The site should be rendered from normalized run/artifact evidence rather than hand-maintained completion claims. Each result should show its pipeline variant, family, granularity, provenance, completion, revision, model condition, cost state, repair history, review, license note, and manifest.
+The site should be rendered from an allowlisted public projection of the private canonical manifest rather than hand-maintained completion claims. Each result should show its pipeline variant, family, granularity, composite lineage, machine-derived completion, revision, model condition, cost state, repair history, review, license conclusion, and public manifest.
 
 ### 2.7 Budget
 
-`[DECISION]` Pilot hard limits are **$15 per cell** and **$200 total**. Unknown cost is not `$0`; it is `N/A`/`null`. Measured and estimated cost remain separate.
+`[DECISION]` Budget policy `pilot-budget-2026-07-15/v1` has hard limits of **$15 per cell** and **$200 total**. Before execution, its experiment config must define shared-setup allocation and rate-card snapshot; the harness uses atomic pre-stage reservations and fails closed when a paid stage's projected cost is unknown. Unknown measured cost is not `$0`; it is `N/A`/`null`. Measured and estimated cost remain separate.
 
 ## 3. Evidence and terminology decisions
 
-`[DECISION]` Public claims use five labels:
+`[DECISION]` Public claims use six labels:
 
 - `[MEASURED]`: reproduced in this project from preserved evidence;
+- `[OBSERVED]`: directly inspected state with retrieval time/evidence, but not a benchmark measurement;
 - `[REPORTED]`: stated by an upstream paper/repository but not reproduced here;
 - `[ESTIMATE]`: forecast with assumptions;
 - `[PLANNED]`: approved but not yet executed;
 - `[DECISION]`: project choice rather than experiment result.
 
-`[DECISION]` Provenance and completion are separate axes.
-
-Provenance: `upstream`, `method_reproduction`, `in_house`, `synthetic_mock`, `human_reference`.
-
-Completion: `full`, `partial`, `smoke`, `failed`, `placeholder`.
-
-Review is a third axis: unreviewed, automatic pass/fail, or human pass/fail. A full render can still fail semantic review; a high-quality in-house clip is still not an upstream reproduction.
+`[DECISION]` Lineage is composite, not a single provenance enum. Run and artifact records independently store implementation origin, native/adapted input contract, patch level and patchset hash, derivation/repair stage, and parent-artifact lineage. Completion (`full`, `partial`, `smoke`, `failed`, `placeholder`) is machine-derived from a versioned pipeline-specific completion contract. Review is a structured event with a rubric/evaluator/evidence/timestamp. A full render can still fail semantic review; a high-quality project-native clip is still not an upstream reproduction.
 
 ## 4. Source review and caveats
 
+Unless a full revision and content/license hash are stated, links in this section are mutable navigation references and the accompanying statements are `non_snapshot`. They document July 15 research observations but do not satisfy a run's source/license gate. Each executed run must create its own immutable source and license snapshot.
+
 ### 4.1 Paper2Manim license
 
-`[MEASURED]` At the reviewed revision, Paper2Manim declares MIT in package metadata, but a standalone license text was not found in the repository root. The approved wording is:
+`[OBSERVED]` At the reviewed revision, Paper2Manim declares MIT in package metadata, but a standalone license text was not found in the repository root. The approved wording is:
 
 > MIT declared in package metadata; standalone license text not found at cited revision.
 
@@ -124,7 +123,7 @@ We will not describe it as unlicensed, but we will also not make an unconditiona
 
 ### 4.2 DeepPresenter versus PPTAgent
 
-`[MEASURED]` The current repository contains both `deeppresenter/` and `pptagent/` paths. “DeepPresenter/PPTAgent” is not a sufficient run identifier. We will use explicit IDs such as `deeppresenter_current`; `pptagent_legacy` is an optional ablation.
+`[OBSERVED]` The current repository contains both `deeppresenter/` and `pptagent/` paths. “DeepPresenter/PPTAgent” is not a sufficient run identifier. We will use explicit IDs such as `deeppresenter_current`; `pptagent_legacy` is an optional ablation.
 
 ### 4.3 Correct SlideGen repository
 
@@ -132,7 +131,7 @@ We will not describe it as unlicensed, but we will also not make an unconditiona
 
 ### 4.4 ArcDeck maturity and ancestry
 
-`[MEASURED]` ArcDeck is code-available and suitable for a pilot, but it is experimental: the reviewed repository has limited visible history, no release/tag, and broad unpinned requirements. Every run must pin a full commit and environment.
+`[OBSERVED]` ArcDeck is code-available and suitable for a pilot, but it is experimental: the reviewed repository has limited visible history, no release/tag, and broad unpinned requirements. Every run must pin a full commit and environment.
 
 `[REPORTED]` ArcDeck's official repository acknowledges that part of its visual generation prompts/code is adapted from SlideGen. ArcDeck and SlideGen are therefore not independent visual backends. ArcDeck remains shortlisted because its discourse-tree and commitment-planning approach is meaningfully different. Paper2Slides remains the fallback.
 
@@ -176,8 +175,9 @@ Rejected as a benchmark count. The current five local specs include two Transfor
 - Quarantine or explicitly label dummy coverage.
 - Capture source/license evidence and pin-at-run state.
 - Add stage status, cost, artifact hash, and review events.
+- Generate a redacted allowlisted public projection from the private canonical manifest.
 
-Exit condition: every public result can be traced to a manifest or is clearly a placeholder.
+Gate evidence: schema/completion validators pass; publication validator passes with canonical/public hashes and redaction summary; every public card resolves to a public manifest and artifact hash.
 
 ### Phase B — video pilot
 
@@ -187,7 +187,7 @@ Exit condition: every public result can be traced to a manifest or is clearly a 
 - Preserve native input differences and method-reproduction labels.
 - Review technical, semantic, pedagogical, visual, cost, and intervention evidence.
 
-Exit decision: continue the remaining nine cells, replace a pipeline, or narrow the matrix.
+Gate evidence: all pilot cells have reconciled budget ledgers, completion-contract outputs, required technical-validator results, and semantic/pedagogical rubric events. The recorded decision uses those evidence refs to continue, replace, or narrow.
 
 ### Phase C — slide pilot
 
@@ -197,7 +197,7 @@ Exit decision: continue the remaining nine cells, replace a pipeline, or narrow 
 - Use a controlled model/budget condition; evaluate native-best only on two hard topics as a separate condition.
 - Exercise the Paper2Slides fallback only under the declared criteria.
 
-Exit decision: lock the three slide baselines for the full matrix.
+Gate evidence: each pilot cell has validated PPTX/static deliverables, completion-contract output, reconciled cost, and versioned semantic/presentation rubric events. The baseline-lock decision references those records.
 
 ### Phase D — formula/code/Manim graph
 
@@ -207,7 +207,7 @@ Exit decision: lock the three slide baselines for the full matrix.
 - Create a primitive registry with origin badges and tests.
 - Produce formula clips and one topic-level composition.
 
-Exit condition: one topic is auditable from paper claim through formula/code mapping to rendered scene.
+Gate evidence: graph-schema/typed-edge validators pass with no dangling refs; every confirmed mapping has a permitted review event; required formula and topic artifacts pass media validation.
 
 ### Phase E — integrated Slides + Manim
 
@@ -217,7 +217,7 @@ Exit condition: one topic is auditable from paper claim through formula/code map
 - Use formula explainers for methodology, graph/dataflow scenes for architecture, and chart/comparison primitives for performance.
 - Verify static fallbacks and editable deck behavior.
 
-Exit condition: one end-to-end deck is coherent with and without animation playback.
+Gate evidence: PPTX structure validator passes; every required AnimationSlot resolves `scene_ir_ref`, rendered artifact, and static fallback; both media and static-fallback rubrics meet predeclared thresholds.
 
 ### Phase F — backtranslation
 
@@ -227,7 +227,7 @@ Exit condition: one end-to-end deck is coherent with and without animation playb
 - Run fixed Human, One-shot, and Self-refined conditions.
 - Publish repair histories, costs, source/license caveats, and contamination limitations.
 
-Exit condition: all protocol invariants and source restrictions are auditable.
+Gate evidence: protocol-policy validator passes; each self-refined chain begins at the exact one-shot hash and complies with its feedback policy; publication/license validators pass for all source assets.
 
 ### Phase G — website refactor and scale-up
 
@@ -237,7 +237,7 @@ Exit condition: all protocol invariants and source restrictions are auditable.
 - Add synchronized mapping views and three-column backtranslation comparison.
 - Expand to full matrices only after pilot review and a new approved budget.
 
-Exit condition: no public baseline claim depends on manually edited dummy state.
+Gate evidence: site build consumes only the validated public projection; claim-to-evidence link checks and accessibility/media checks pass; no synthetic fixture enters baseline aggregates.
 
 ## 7. Open risks
 

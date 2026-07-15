@@ -24,7 +24,7 @@ This design does not implement a manifest schema, run a pilot, or change the web
 2. Compare diverse upstream video and slide pipelines without erasing their different input contracts.
 3. Build a main pipeline that composes editable slides with reusable Manim scenes.
 4. Connect paper claims, formulas, code, Manim primitives, scenes, and final media through typed mappings.
-5. Make provenance, completion, cost, license, and review status visible at every public result.
+5. Make lineage, completion, cost, license, and review status visible at every public result.
 6. Evaluate one-shot and self-refined reconstruction against source-available human Manim scenes.
 
 ### 1.2 Non-goals
@@ -41,58 +41,44 @@ Every quantitative or maturity claim in reports, manifests, and the website MUST
 
 | Label | Meaning | Example |
 | --- | --- | --- |
-| `[MEASURED]` | Produced by this project from a preserved run or repository snapshot | Render time, artifact hash, local rubric score |
+| `[MEASURED]` | Produced by this project from a preserved run under a versioned measurement contract | Render time, artifact hash, local rubric score |
+| `[OBSERVED]` | Directly inspected state with a retrieval time and evidence reference, but not a benchmark measurement | Repository contents or packaging state seen during research |
 | `[REPORTED]` | Reported by an upstream paper or repository but not reproduced here | A benchmark score from a paper |
 | `[ESTIMATE]` | A forecast based on stated assumptions | Expected API cost before a run |
 | `[PLANNED]` | Approved work that has not yet produced evidence | A future matrix cell |
 | `[DECISION]` | A project choice, not an empirical claim | Selected baseline shortlist |
 
-These labels are orthogonal to provenance and completion status. For example, a full upstream reproduction can still contain `[REPORTED]` metrics alongside `[MEASURED]` local costs.
+These labels are orthogonal to lineage and completion status. For example, a full upstream reproduction can still contain `[REPORTED]` metrics alongside `[MEASURED]` local costs.
 
-## 3. Canonical benchmark inputs
+## 3. Benchmark identity contract
 
-The benchmark count is based on `canonical_topic_family × pipeline`, not on the number of generated artifacts. A family MAY contain multiple artifacts at different granularities.
+A benchmark cell is counted by `canonical_topic_family × pipeline_variant × experiment_condition × replicate`, never by the number of generated artifacts. A canonical family MAY contain multiple topic-, section-, formula-, scene-, or slide-level artifacts.
 
-| Canonical family | Paper | Code anchor | Expected artifact granularity |
-| --- | --- | --- | --- |
-| `transformer_attention` | [Attention Is All You Need, v7](https://arxiv.org/abs/1706.03762) | [Tensor2Tensor](https://github.com/tensorflow/tensor2tensor), a historical Apache-2.0 code anchor that is archived/deprecated | Topic-level Transformer artifact plus formula-unit attention/softmax child artifacts |
-| `dpo` | [Direct Preference Optimization, v3](https://arxiv.org/abs/2305.18290) | [Author reference implementation](https://github.com/eric-mitchell/direct-preference-optimization), [Apache-2.0 license](https://github.com/eric-mitchell/direct-preference-optimization/blob/main/LICENSE) | Topic-level method artifact and formula-unit objective artifact |
-| `feynrl_batch_adaptive` | [FeynRL](https://arxiv.org/abs/2605.12380) | [FeynRL repository](https://github.com/FeynRL-project/FeynRL), [Apache-2.0 license](https://github.com/FeynRL-project/FeynRL/blob/main/LICENSE) | Topic-level algorithm artifact plus batch-adaptation formula/code units |
-| `rope` | [RoFormer](https://arxiv.org/abs/2104.09864) | [Author repository](https://github.com/ZhuiyiTechnology/roformer), [Apache-2.0 license](https://github.com/ZhuiyiTechnology/roformer/blob/main/LICENSE) | Topic-level RoPE artifact and formula/code rotation units |
+The versioned experiment configuration MUST define:
 
-`transformers_core` and `attention_softmax_lookup` are two artifacts under the single `transformer_attention` family. The latter is a formula-unit child for `softmax(QK^T / sqrt(d_k))V`; it MUST NOT be counted as a fifth paper family. `gradient_descent_control` is a pedagogical control, not a fifth paper.
+- canonical topic-family IDs and control IDs;
+- paper and code input records with immutable versions and hashes;
+- pipeline and variant IDs;
+- experiment conditions and replicate policy;
+- expected artifact granularity;
+- the pipeline-specific completion contract;
+- budget-policy and evaluation-policy IDs.
 
-Code mappings for the current FeynRL snapshot SHOULD cite the locally verified full commit `dfe85351e28a3744ab0eb02d2299fc1e6d3d5752`. A newer upstream release is separate external state and MUST NOT silently replace a run's pinned source.
+A control is not a paper family. Adding a formula-level child artifact does not create another benchmark cell. Current paper families, control topics, baseline shortlists, pilot membership, and source revisions are mutable research choices and therefore live in the dated discussion record or a versioned experiment configuration, not in this stable contract.
 
 ## 4. Four product threads
 
 ### 4.1 Thread 1: real video pipelines
 
-The initial baseline matrix is three pipelines by four canonical paper families.
-
-| Baseline ID | Upstream | Native input contract | Use in this project | License and maturity note |
-| --- | --- | --- | --- | --- |
-| `paper2manim` | [Paper2Manim / ManimAgent paper](https://arxiv.org/abs/2606.30296), [repository](https://github.com/jwj1342/Paper2Manim) | Paper, arXiv identifier, or PDF to multi-scene Manim with planning/reflection | Paper-grounded video baseline | MIT declared in package metadata; standalone license text not found at cited revision. Redistribution requires caution until clarified. |
-| `code2video` | [Code2Video paper](https://arxiv.org/abs/2510.01174), [repository](https://github.com/showlab/Code2Video), [MIT license](https://github.com/showlab/Code2Video/blob/main/LICENSE) | Knowledge point to Planner–Coder–Critic Manim video | Method baseline adapted to a paper topic | Its native input is not a paper-plus-code pair; it MUST NOT be called a paper-grounded upstream run. |
-| `theorem_explain_agent` | [TheoremExplainAgent paper](https://arxiv.org/abs/2502.19400), [repository](https://github.com/TIGER-AI-Lab/TheoremExplainAgent), [MIT license](https://github.com/TIGER-AI-Lab/TheoremExplainAgent/blob/main/LICENSE) | Theorem or formula to long-form Manim explanation | Formula-unit adaptation for paper equations | DPO or FeynRL results are method adaptations, not whole-paper/code reproductions. |
-
-The full target is 12 cells. Before broad execution, the project MUST run an Attention pilot across all three video pipelines under the budget gates in Section 11.
+This thread compares external or reproduced paper/topic/formula-to-video pipelines. Each run MUST preserve the pipeline's declared native input contract and record whether the benchmark input is `native` or `adapted`. Adapted input MUST NOT be described as a native upstream paper-grounded run.
 
 ### 4.2 Thread 2: paper-to-slides baselines
 
-The initial baseline matrix is three pipelines by four canonical paper families.
-
-| Baseline ID | Upstream | Distinguishing capability | License and maturity note |
-| --- | --- | --- | --- |
-| `deeppresenter_current` | [DeepPresenter / PPTAgent repository](https://github.com/icip-cas/PPTAgent), [DeepPresenter paper](https://arxiv.org/abs/2602.22839), [MIT license](https://github.com/icip-cas/PPTAgent/blob/main/LICENSE) | Current presentation-generation path, including editable PPTX workflow and optional local model | The repository contains both current DeepPresenter and legacy PPTAgent code. Every run MUST name an explicit variant and revision. `pptagent_legacy` MAY be an ablation but is not interchangeable with `deeppresenter_current`. |
-| `slidegen` | [SlideGen paper](https://arxiv.org/abs/2512.04529), [official repository](https://github.com/Y-Research-SBU/SlideGen), [MIT license](https://github.com/Y-Research-SBU/SlideGen/blob/main/LICENSE) | Outliner, mapper, formulizer, arranger, speaker, and refiner stages producing editable PPTX | Reproduction MUST pin its custom `python-pptx` fork and LibreOffice/runtime dependencies. |
-| `arcdeck` | [ArcDeck paper](https://arxiv.org/abs/2604.11969), [project](https://arcdeck.org/), [repository](https://github.com/RehgLab/ArcDeck), [MIT license](https://github.com/RehgLab/ArcDeck/blob/cde8e15/LICENSE) | Discourse tree and commitment planning conditioned on audience and duration | Code-available, pilot-ready, experimental: few visible commits, no release/tag, and broad unpinned requirements at the cited revision. Pin commit and environment. Its visual generation acknowledges SlideGen ancestry, so the two are not independent visual backends. |
-
-`paper2slides` is the fallback if ArcDeck cannot complete a controlled pilot or if backend independence becomes a primary experimental requirement. The full target is 12 cells. The first slide pilot MUST compare Gradient Descent control plus RoPE or FeynRL across all three pipelines, with exact pilot membership recorded before spending.
+This thread compares external or reproduced paper-to-slide pipelines. Each run MUST use an explicit pipeline variant: a repository that contains legacy and current implementations is not itself a sufficient variant ID. Editable deck, static export, citations, and speaker notes count as separate deliverables under a versioned completion contract.
 
 ### 4.3 Thread 3: our integrated slides + Manim pipeline
 
-This is the main project pipeline. It MUST reuse results and lessons from Threads 1 and 2 while preserving its own provenance as `in_house`.
+This is the main project pipeline. It MUST reuse results and lessons from Threads 1 and 2 while recording its implementation origin as `project_native`.
 
 The pipeline consists of:
 
@@ -110,7 +96,7 @@ The bottom-up formula explainer is a subtrack of Thread 3. It exposes formula-le
 
 ### 4.4 Thread 4: backtranslation
 
-Backtranslation evaluates reconstruction rather than paper explanation. It compares approximately ten source-available human Manim scenes against:
+Backtranslation evaluates reconstruction rather than paper explanation. It compares a versioned set of source-available human Manim scenes against:
 
 1. the official source render;
 2. a one-shot reconstruction from the reference video; and
@@ -118,19 +104,22 @@ Backtranslation evaluates reconstruction rather than paper explanation. It compa
 
 The full protocol is in Section 12.
 
-## 5. Evidence model
+## 5. Lineage, completion, and review model
 
-Every public artifact MUST carry independent provenance, completion, and review axes.
+A single provenance enum cannot represent how software, inputs, repairs, and outputs relate. Every run and every artifact MUST carry orthogonal lineage fields.
 
-### 5.1 Provenance
+### 5.1 Lineage
 
-| Value | Meaning |
+| Field | Required values or semantics |
 | --- | --- |
-| `upstream` | Executed from the upstream method/repository with only documented configuration or compatibility changes |
-| `method_reproduction` | Reimplements or adapts the published method because the native input or runnable upstream path does not match the cell |
-| `in_house` | Produced by this project's integrated pipeline |
-| `synthetic_mock` | Placeholder or deterministic framework-style preview; never benchmark evidence |
-| `human_reference` | Human-authored source/reference media used in backtranslation |
+| `implementation_origin` | `upstream_repository`, `project_reimplementation`, `project_native`, `synthetic_fixture`, or `human_authored_reference` |
+| `input_contract_mode` | `native` or `adapted`; adapted records MUST reference the adapter/config and explain the semantic change |
+| `patch_level` | `none`, `config_only`, `compatibility`, or `method_change` |
+| `patchset_hash` | Content hash of the empty or applied patchset; required even when `patch_level=none` |
+| `derivation_stage` | A typed stage such as `source`, `generated`, `rendered`, `composed`, `one_shot`, or `self_refined` |
+| `parent_artifact_refs` | Ordered artifact IDs with relation types such as `derived_from`, `rendered_from`, `composed_from`, or `refined_from` |
+
+Run lineage describes execution context. Artifact lineage MUST repeat the fields that apply to that artifact and MUST NOT be inferred only from the parent run. A repaired or composed child therefore retains its upstream ancestry while explicitly recording its project repair/derivation stage and parent artifacts.
 
 ### 5.2 Completion
 
@@ -142,9 +131,13 @@ Every public artifact MUST carry independent provenance, completion, and review 
 | `failed` | Attempt terminated without the required deliverable |
 | `placeholder` | No real method run occurred |
 
-### 5.3 Review
+Every pipeline variant MUST reference a versioned `completion_contract_id`. That contract lists required stages, terminal stage states, required deliverable roles, and the rule that maps stage/artifact state to the five completion values. Completion MUST be machine-derived from stage records and artifact validation; authors MUST NOT hand-set `full` or `partial` independently of the contract. A contract change requires a new version and MUST NOT retroactively change preserved run results.
 
-Review state MUST distinguish `unreviewed`, `automatic_pass`, `automatic_fail`, `human_pass`, and `human_fail`. Multiple reviews MAY be stored as events rather than collapsed into one value.
+### 5.3 Claim evidence and review
+
+Every public factual claim MUST have a claim-evidence record with a stable claim ID, one label from Section 2, exact evidence refs, and an observation/measurement timestamp. Source-reported claims MUST identify the source snapshot or state explicitly that the link is mutable and non-snapshot.
+
+Reviews MUST be structured append-only events containing event ID, subject ref, rubric ID/version, evaluator type and identifier, result, evidence refs, timestamp, and optional notes. A summary review state MAY be machine-derived; a contradictory array such as simultaneous `automatic_pass` and `unreviewed` is invalid.
 
 `placeholder` MUST NOT be rendered as success, included in baseline completion rates, or used to populate a missing matrix cell. `full`, `partial`, and `smoke` describe completion only; none implies semantic correctness.
 
@@ -159,21 +152,27 @@ The internal representation has four typed layers and three synchronized website
 3. **Code/Dataflow Graph**: symbols, functions, tensors, data transformations, and execution/data dependencies.
 4. **Manim Primitive/Scene Graph**: reusable visual primitives, scene states, animations, clips, and compositions.
 
-Required node identifiers are stable within a manifest version. Graph edges MUST have a type and MAY record source spans, extraction method, confidence, and review state.
+Node identity, node coverage, and edge matching are separate concepts.
 
-Core edge types are:
+- Node IDs MUST be content-addressable or registry-stable across manifest versions. A renamed or merged node MUST retain an `aliases` list and a migration record containing old ID, new ID, reason, version, and timestamp.
+- `coverage_state` belongs to nodes and uses `observed`, `inferred`, `planned_missing`, or `not_applicable`. A node observed only in paper or only in code remains a node coverage fact, not an edge state.
+- `match_state` belongs to mapping edges and uses `candidate`, `confirmed`, `rejected`, or `unresolved`.
 
-- `contains`
-- `supports`
-- `depends_on`
-- `implements`
-- `consumes`
-- `visualized_by`
-- `composes`
-- `embedded_in`
-- `renders_to`
+Allowed typed edges are:
 
-An unresolved edge is valid evidence. The system MUST allow `paper_only`, `code_only`, `candidate`, `confirmed`, and `rejected` mapping states instead of inventing a match. Human review SHOULD be required before a low-confidence formula-to-code edge becomes a public confirmed mapping.
+| Edge | Allowed source → target |
+| --- | --- |
+| `contains` | topic → claim/formula; formula → operation; scene → primitive |
+| `supports` | evidence/claim/formula → claim |
+| `depends_on` | claim/formula/operation/code/scene → same compatible node class |
+| `implements` | code/dataflow → formula/operation |
+| `consumes` | code/operation/primitive/scene → data/value/artifact |
+| `visualized_by` | claim/formula/operation/code/dataflow → primitive/scene |
+| `composes` | formula/scene/slide/topic → child artifact of the compatible class |
+| `embedded_in` | scene/rendered artifact → animation slot/slide |
+| `renders_to` | SceneIR/SlideIR/source → rendered artifact |
+
+Every non-structural edge MUST reference evidence records. Extractor confidence is a calibrated numeric score in `[0,1]`, not a truth value. `confirmed` requires a structured human or policy-authorized automatic review event whose rubric permits confirmation; `rejected` requires a review event; `candidate` and `unresolved` remain visible and MUST NOT be rendered as confirmed. Validators MUST reject disallowed source/target combinations and dangling aliases, migrations, evidence refs, or review refs.
 
 ### 6.2 Website views
 
@@ -233,83 +232,211 @@ The integrated pipeline uses three linked representations:
 - **SceneIR**: primitive instances, visual states, animation timeline, narration hooks, camera plan, aspect ratio, and render targets.
 - **SlideIR**: deck outline, slide intent, claims, layout, citations, static elements, speaker notes, and animation slots.
 
-An `AnimationSlot` MUST reference a versioned SceneIR or rendered artifact and specify:
+An `AnimationSlot` MUST specify:
 
+- a versioned `scene_ir_ref`;
+- a validated `rendered_artifact_ref`;
+- a validated `static_fallback_artifact_ref` that remains understandable without playback;
 - semantic purpose and slide region;
 - expected duration and playback mode;
-- poster frame and static fallback;
+- poster-frame reference;
 - caption/alt text;
 - aspect ratio and crop policy;
-- artifact hash and provenance;
+- artifact hash and composite lineage;
 - whether the animation is optional or required for comprehension.
 
-Slide generation MUST NOT paste an untracked video URL into a deck. The final deck manifest links each slot to an artifact record so the source, revision, cost, and review can be traced.
+All three references are required before a slot can be published. Slide generation MUST NOT paste an untracked video URL into a deck. The final deck manifest links each slot to artifact records so the source, revision, cost, and review can be traced.
 
 ## 10. Run and artifact manifest contract
 
-This section is a design example, not an implemented schema. A normalized run record MUST be sufficient to reproduce the environment, identify the exact input, account for cost, and render the evidence website without hand-authored claims.
+This section defines the logical contract; implementing its schema and validators is separate work. A canonical manifest MUST be sufficient to reproduce the environment, identify the exact input, derive completion, account for cost, trace each claim, and generate a safe public projection.
 
 ### 10.1 Required run fields
 
-- `schema_version`, `run_id`, timestamps, and status;
-- thread and pipeline ID, variant, repository URL, full commit SHA, and license note;
-- canonical topic family and artifact IDs/granularity;
-- paper version, code source, full code commit SHA, and input hashes;
-- model roles, providers, immutable model/version identifiers, and prompt/config hashes;
-- dependency lock, container image digest or environment export, renderer/Manim version, hardware, and exact command/config;
-- budget limits, measured cost, estimated cost, currency, and accounting coverage;
-- per-stage completion, provenance, review events, and failure/stop reason;
-- artifact paths/URIs, content hashes, media metadata, and parent/child relationships;
-- repair/refinement count and event history;
-- evaluation results with metric versions and evidence references.
+- schema/version, run/cell IDs, start/end timestamps, status, and experiment configuration ID;
+- pipeline ID/variant, repository and full SHA, composite lineage, completion contract, and stage records;
+- input paper/code snapshots, content hashes, canonical family, artifact granularity, and adapter record when applicable;
+- license snapshot with retrieval timestamp, source revision, license-content hash, and redistribution conclusion;
+- immutable model identifiers, prompt/tool-policy hashes, dependency/container state, hardware, exact command, and hashed config references;
+- budget policy, atomic reservations, rate-card snapshot, measured/estimated costs, currency, and accounting coverage;
+- artifacts with role, repo-relative or private path, content hash, validation, completion, and artifact-level lineage;
+- per-claim evidence records and structured review events;
+- repair/refinement events with parent artifacts and policy IDs.
 
 ### 10.2 Example
 
 ```json
 {
-  "schema_version": "0.1-design",
-  "run_id": "video.paper2manim.transformer_attention.20260715T120000Z",
+  "schema_version": "paper-media-manifest/0.2-design",
+  "visibility": "private_canonical",
+  "run_id": "run.video.example.example_topic_family.20260715T120000Z",
+  "cell_id": "pilot-video-v1:example_topic_family:example_upstream:controlled:r1",
+  "experiment_config_id": "pilot-video-v1",
   "thread": "real_video_pipelines",
+  "started_at": "2026-07-15T12:00:00Z",
+  "ended_at": "2026-07-15T12:08:30Z",
+  "status": "completed",
   "pipeline": {
-    "id": "paper2manim",
+    "id": "example_upstream",
     "variant": "upstream_main",
-    "repository": "https://github.com/jwj1342/Paper2Manim",
-    "commit_sha": "FULL_SHA_REQUIRED_AT_RUN",
-    "license_note": "MIT declared in package metadata; standalone license text not found at cited revision."
+    "repository": "https://example.org/upstream/pipeline",
+    "commit_sha": "0123456789abcdef0123456789abcdef01234567",
+    "completion_contract": {
+      "id": "video-upstream/v1",
+      "required_stages": ["plan", "generate", "render", "evaluate"],
+      "required_deliverable_roles": ["source_code", "rendered_video"]
+    }
+  },
+  "lineage": {
+    "implementation_origin": "upstream_repository",
+    "input_contract_mode": "native",
+    "adapter_ref": null,
+    "patch_level": "compatibility",
+    "patchset_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "derivation_stage": "generated",
+    "parent_artifact_refs": []
   },
   "input": {
-    "canonical_topic_family": "transformer_attention",
-    "artifact_ids": ["transformers_core", "attention_softmax_lookup"],
-    "paper": {"url": "https://arxiv.org/abs/1706.03762", "version": "v7"},
-    "code": {"repository": "https://github.com/tensorflow/tensor2tensor", "commit_sha": "FULL_SHA_REQUIRED_AT_RUN"},
-    "content_hashes": {"paper_pdf": "sha256:...", "input_bundle": "sha256:..."}
+    "canonical_topic_family": "example_topic_family",
+    "granularity": "topic",
+    "paper_snapshot": {
+      "source_url": "https://arxiv.org/abs/1706.03762",
+      "version": "v7",
+      "retrieved_at": "2026-07-15T11:00:00Z",
+      "content_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "code_snapshot": {
+      "repository": "https://example.org/input/code",
+      "commit_sha": "89abcdef0123456789abcdef0123456789abcdef",
+      "content_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    }
   },
-  "reproducibility": {
-    "model_versions": ["IMMUTABLE_MODEL_ID_REQUIRED"],
-    "prompt_hash": "sha256:...",
-    "config_hash": "sha256:...",
-    "environment_lock": "artifacts/environment.lock",
-    "container_digest": null,
-    "manim_version": "PIN_REQUIRED",
-    "hardware": "RECORDED_AT_RUN"
+  "license_snapshot": {
+    "source_revision": "0123456789abcdef0123456789abcdef01234567",
+    "retrieved_at": "2026-07-15T11:05:00Z",
+    "declared_spdx": "MIT",
+    "license_text_ref": "private/evidence/licenses/example-upstream-LICENSE",
+    "license_text_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "redistribution_conclusion": "allowed_with_notice"
   },
-  "evidence": {
-    "provenance": "upstream",
-    "completion": "partial",
-    "reviews": ["automatic_pass", "unreviewed"],
-    "claim_label": "MEASURED"
+  "execution": {
+    "command": ["uv", "run", "pipeline", "--config", "configs/pilot-video-v1.yaml"],
+    "config_ref": "configs/pilot-video-v1.yaml",
+    "config_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "prompt_bundle_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "tool_policy_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "model_versions": ["provider/model@immutable-version"],
+    "environment_lock_ref": "env/uv.lock",
+    "environment_lock_hash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+    "container_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+    "renderer_versions": {"manim": "0.19.0", "ffmpeg": "7.1"},
+    "hardware": {"platform": "linux-x86_64", "accelerator": "none"}
   },
-  "budget": {"cell_limit_usd": 15.0, "total_pilot_limit_usd": 200.0},
-  "cost": {"measured_usd": null, "estimated_usd": 8.5, "coverage": "api_only"},
-  "artifacts": [],
-  "repair_events": [],
-  "evaluations": []
+  "budget": {
+    "policy_id": "pilot-budget-2026-07-15/v1",
+    "rate_card_snapshot_id": "provider-rates-2026-07-15T110000Z",
+    "reservation_ids": ["reservation:pilot-video-v1:0001"],
+    "measured_usd": 6.42,
+    "estimated_usd": 8.5,
+    "coverage": ["api", "local_compute"]
+  },
+  "stages": [
+    {"id": "plan", "status": "succeeded", "started_at": "2026-07-15T12:00:00Z", "ended_at": "2026-07-15T12:01:00Z", "evidence_refs": ["configs/pilot-video-v1.yaml"]},
+    {"id": "generate", "status": "succeeded", "started_at": "2026-07-15T12:01:00Z", "ended_at": "2026-07-15T12:05:00Z", "evidence_refs": ["artifact:source"]},
+    {"id": "render", "status": "succeeded", "started_at": "2026-07-15T12:05:00Z", "ended_at": "2026-07-15T12:08:00Z", "evidence_refs": ["artifact:video"]},
+    {"id": "evaluate", "status": "succeeded", "started_at": "2026-07-15T12:08:00Z", "ended_at": "2026-07-15T12:08:30Z", "evidence_refs": ["review:technical"]}
+  ],
+  "completion": {"contract_id": "video-upstream/v1", "derived_value": "full", "derived_at": "2026-07-15T12:08:31Z"},
+  "artifacts": [
+    {
+      "artifact_id": "artifact:source",
+      "role": "source_code",
+      "public_path": "progress_site/assets/runs/example/source.py",
+      "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "media_type": "text/x-python",
+      "completion": "full",
+      "validation_refs": ["validator:python-compile@1:pass"],
+      "lineage": {
+        "implementation_origin": "upstream_repository",
+        "input_contract_mode": "native",
+        "patch_level": "compatibility",
+        "patchset_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "derivation_stage": "generated",
+        "parent_artifact_refs": []
+      }
+    },
+    {
+      "artifact_id": "artifact:video",
+      "role": "rendered_video",
+      "public_path": "progress_site/assets/runs/example/video.mp4",
+      "content_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "media_type": "video/mp4",
+      "completion": "full",
+      "validation_refs": ["validator:media-probe@2:pass"],
+      "lineage": {
+        "implementation_origin": "upstream_repository",
+        "input_contract_mode": "native",
+        "patch_level": "compatibility",
+        "patchset_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "derivation_stage": "rendered",
+        "parent_artifact_refs": [{"artifact_id": "artifact:source", "relation": "rendered_from"}]
+      }
+    }
+  ],
+  "validations": [
+    {
+      "validation_id": "validator:python-compile@1:pass",
+      "validator_id": "python-compile@1.0.0",
+      "subject_ref": "artifact:source",
+      "result": "pass",
+      "evidence_ref": "progress_site/assets/runs/example/evidence/python-compile.json",
+      "validated_at": "2026-07-15T12:05:05Z"
+    },
+    {
+      "validation_id": "validator:media-probe@2:pass",
+      "validator_id": "media-probe@2.1.0",
+      "subject_ref": "artifact:video",
+      "result": "pass",
+      "evidence_ref": "progress_site/assets/runs/example/evidence/media-probe.json",
+      "validated_at": "2026-07-15T12:08:20Z"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim:render-valid",
+      "label": "MEASURED",
+      "statement": "The required video artifact passed the versioned media validator.",
+      "evidence_refs": ["artifact:video", "validator:media-probe@2:pass"],
+      "observed_at": "2026-07-15T12:08:20Z"
+    }
+  ],
+  "reviews": [
+    {
+      "review_id": "review:technical",
+      "subject_ref": "artifact:video",
+      "rubric_id": "video-technical/v2",
+      "evaluator": {"type": "automatic", "id": "media-probe@2.1.0"},
+      "result": "pass",
+      "evidence_refs": ["artifact:video", "validator:media-probe@2:pass"],
+      "reviewed_at": "2026-07-15T12:08:25Z",
+      "notes": null
+    }
+  ],
+  "repair_events": []
 }
 ```
 
 A `null` measured cost means unknown or not yet measured; it MUST NOT be displayed as `$0`. Estimates and measurements MUST remain separate fields. Cost coverage MUST state whether labor, compute, API calls, storage, and external assets are included.
 
-### 10.3 Pin-at-run invariants
+### 10.3 Private canonical manifest and public projection
+
+The private canonical manifest is the source of truth. The public manifest MUST be generated from it with an explicit field allowlist; it MUST NOT be maintained as an independent hand-edited copy.
+
+Credential values MUST never be stored even in the private manifest. Before publication, the generator MUST remove or transform secrets and secret references, absolute/local paths, usernames, email addresses and other PII, private-repository URLs/revisions, provider request IDs, unpublished prompts/data, internal hostnames, and artifacts not explicitly marked publishable. Public filesystem references MUST be repository-relative paths; external references MUST use approved `https` URLs.
+
+The publication validator is fail-closed. It MUST reject unknown fields, non-allowlisted paths or artifacts, absolute paths, parent traversal, `file:` URLs, secret/token patterns, private-source markers, PII patterns, dangling references, missing hashes, and license conclusions that do not allow the requested publication. Any validation error produces no public projection. The generated projection MUST record canonical-manifest hash, projection-policy ID/version, validator version, generation timestamp, and redaction summary without disclosing redacted values.
+
+### 10.4 Pin-at-run invariants
 
 Before a run can be called reproducible, it MUST freeze or record:
 
@@ -326,18 +453,19 @@ The website may show a friendly short SHA but the manifest MUST retain the full 
 
 ## 11. Cost, stopping, and evaluation contract
 
-### 11.1 Pilot gates
+### 11.1 Enforceable cost gates
 
-Approved hard gates are:
+Monetary limits are mutable experiment policy and MUST live in a versioned budget configuration referenced by every run. The dated discussion records the currently approved pilot values.
 
-- maximum **$15 per matrix cell**;
-- maximum **$200 total pilot spend** across the approved video and slide pilots.
+A `cell_id` MUST be deterministically derived from experiment-config ID, canonical topic/control ID, pipeline variant, condition, and replicate. Retries remain in the same cell unless the experiment config declares a new condition. Shared setup cost MUST use a predeclared allocation rule (`dedicated_setup_cell`, `equal_allocation`, or a documented weighted allocation); it may not disappear from totals.
 
-A harness MUST stop initiating paid stages when either gate would be exceeded. A cell also stops on a configured time limit, unrecoverable dependency/license block, or exhausted repair budget. Partial artifacts and the stop reason MUST be preserved.
+Before every paid stage, the harness MUST atomically reserve the projected next-stage cost against both cell and experiment ledgers. The projection MUST use a rate-card snapshot with provider, currency, effective/retrieval timestamp, and content hash. A stage may start only if `measured_spend + active_reservations + projected_next_stage_cost` remains within both limits. Completion reconciles reservation against measured cost; crash recovery expires or reconciles stale reservations without double spending.
+
+Unknown price, usage, currency conversion, or projected paid-stage cost fails closed: the paid stage does not start. A cell also stops on configured time, dependency/license, or repair limits. Stage state, partial artifacts, unused reservation, and stop reason MUST be preserved.
 
 Unknown cost is `null`/`N/A`, never `$0`. Free/local execution may be `$0` only when measurement coverage proves that no billable API or external service cost occurred; compute and labor coverage still need disclosure.
 
-The controlled slide matrix SHOULD use the same model family and budget across pipelines where their contracts permit it. Native-best model settings MAY be evaluated only on two predeclared hard topics and MUST be labeled as a separate condition.
+Controlled and native-best model policies, if used, MUST be separate experiment conditions with independent cell IDs.
 
 ### 11.2 Evaluation dimensions
 
@@ -353,23 +481,23 @@ Formula-to-code mappings SHOULD be scored separately for precision, coverage, co
 
 ## 12. Backtranslation protocol
 
-The initial set SHOULD contain approximately ten source-available scenes from the [Manim Community example gallery](https://docs.manim.community/en/stable/examples.html) and [Manim Community repository](https://github.com/ManimCommunity/manim). Both provide MIT-licensed code; each selected scene MUST still record its exact source commit, scene ID, Manim version, and asset dependencies.
-
-The set SHOULD span formula/`MathTex`, graph/area, updater/trace, camera/zoom, boolean geometry, and 3D examples. It is a public development set, not an uncontaminated held-out benchmark; possible model training exposure MUST be disclosed.
+The experiment configuration MUST identify a source-available scene set and snapshot each scene's source revision, scene ID, renderer version, assets, license evidence, and contamination limitations. The set size, source shortlist, and category mix are mutable and belong in that configuration or the dated record.
 
 For each scene:
 
 - **Human**: render the official source at a fixed commit and environment.
 - **One-shot**: provide only the reference MP4; hide source and metadata; permit one generation with no render feedback.
-- **Self-refined**: begin from exactly the one-shot code and permit at most three fixed feedback iterations.
+- **Self-refined**: begin from exactly the one-shot code and follow a versioned refinement policy.
+
+The run MUST record `feedback_policy_id`, allowed feedback inputs/evaluators, maximum iterations, per-iteration budget, and an exact early-stop rule. Early stopping is allowed only when the versioned policy's validator/rubric predicates pass; all iterations and evidence are retained. No unlogged manual edit is permitted, and the first self-refined artifact MUST reference the exact one-shot code artifact as `refined_from`.
 
 Model, prompt family, budget, render environment, and feedback policy MUST be held constant across comparable cells. Evaluation MUST report visual similarity, semantic/structural reconstruction, render validity, code quality, cost, and repair history.
 
-The [Manim documentation](https://docs.manim.community/en/stable/) warns that some 3Blue1Brown-associated characters/assets are copyrighted. Branded or non-permissive assets MUST be excluded. Ordinary YouTube examples MAY be linked for context but MUST NOT be downloaded, rehosted, or treated as source-available ground truth without a verified license.
+Branded or non-permissive assets MUST be excluded under the source/license ledger. Ordinary hosted videos MAY be linked for context but MUST NOT be downloaded, rehosted, or treated as source-available ground truth without a verified compatible license snapshot.
 
 ## 13. Data-driven website information architecture
 
-The public site SHOULD render from a normalized site index derived from run/artifact manifests. Hand-written editorial context is allowed, but baseline state, cost, provenance, and artifact links MUST come from evidence records.
+The public site SHOULD render from a normalized site index derived only from validated public projections. Hand-written editorial context is allowed, but baseline state, cost, lineage, and artifact links MUST come from projected evidence records.
 
 Top-level navigation:
 
@@ -381,86 +509,34 @@ Top-level navigation:
 
 The last four entries are the four product threads. Bottom-up formula exploration lives inside **Our Slides + Manim**.
 
-Each matrix cell or artifact card MUST show pipeline/variant, canonical family and artifact granularity, provenance, completion, revision, model condition, measured/estimated cost, repair count, review status, license note, and manifest link. Dummy content MUST be labeled `synthetic_mock` + `placeholder`, visually separated, and excluded from baseline aggregates.
+Each matrix cell or artifact card MUST show pipeline/variant, canonical family and artifact granularity, composite lineage, completion contract/result, revision, model condition, measured/estimated cost, repair count, review status, license conclusion, and public-manifest link. Synthetic fixtures MUST show `implementation_origin=synthetic_fixture` and completion `placeholder`, remain visually separated, and be excluded from baseline aggregates.
 
 The formula explorer SHOULD show the three synchronized graph views from Section 6, allow node selection/highlighting, and associate each formula with its clip plus the overall topic video. The backtranslation page SHOULD use three aligned columns: Human, One-shot, Self-refined.
 
 Media SHOULD use `preload="none"` or metadata-only loading, lazy posters, stable dimensions, captions, and keyboard-accessible controls. Status and primitive origin MUST never rely on color alone.
 
-## 14. Source and license ledger
+## 14. Source and license ledger contract
 
-The following ledger is the minimum approved source set. Every run MUST snapshot its own exact revisions and license evidence.
+Mutable source shortlists and maturity assessments live in dated records. For every external paper, repository, model, dataset, example, and asset actually used, the canonical manifest MUST snapshot source URL, full revision/version, retrieval timestamp, content hash, declared license, license-text reference and hash, asset-level exceptions, modification/redistribution constraints, reviewer/conclusion, and evidence refs.
 
-| Component | Primary source | License evidence / caveat |
-| --- | --- | --- |
-| Paper2Manim | [Paper](https://arxiv.org/abs/2606.30296), [repo](https://github.com/jwj1342/Paper2Manim) | MIT declared in package metadata; standalone license text not found at cited revision. |
-| Code2Video | [Paper](https://arxiv.org/abs/2510.01174), [repo](https://github.com/showlab/Code2Video) | [MIT](https://github.com/showlab/Code2Video/blob/main/LICENSE) |
-| TheoremExplainAgent | [Paper](https://arxiv.org/abs/2502.19400), [repo](https://github.com/TIGER-AI-Lab/TheoremExplainAgent) | [MIT](https://github.com/TIGER-AI-Lab/TheoremExplainAgent/blob/main/LICENSE) |
-| DeepPresenter / PPTAgent | [DeepPresenter paper](https://arxiv.org/abs/2602.22839), [PPTAgent paper](https://arxiv.org/abs/2501.03936), [repo](https://github.com/icip-cas/PPTAgent) | [MIT](https://github.com/icip-cas/PPTAgent/blob/main/LICENSE); variant must be explicit |
-| SlideGen | [Paper](https://arxiv.org/abs/2512.04529), [official repo](https://github.com/Y-Research-SBU/SlideGen) | [MIT](https://github.com/Y-Research-SBU/SlideGen/blob/main/LICENSE) |
-| ArcDeck | [Paper](https://arxiv.org/abs/2604.11969), [repo](https://github.com/RehgLab/ArcDeck) | [MIT at cited revision](https://github.com/RehgLab/ArcDeck/blob/cde8e15/LICENSE); experimental and visually descended in part from SlideGen |
-| Manim Community | [Docs](https://docs.manim.community/en/stable/), [repo](https://github.com/ManimCommunity/manim) | [MIT](https://github.com/ManimCommunity/manim/blob/main/LICENSE); exclude separately copyrighted assets |
+A branch link, repository home page, or `main` license URL is a mutable non-snapshot claim. It MAY aid navigation but MUST NOT satisfy pin-at-run or publication requirements. If a full revision or license-content hash is unavailable, the claim MUST be labeled `OBSERVED` or `REPORTED`, marked `non_snapshot`, and excluded from reproducibility/license gates.
 
-For every external input, the ledger SHOULD record source URL, full revision, retrieval date, declared license, license-file URL/hash, asset-level exceptions, modification/redistribution constraints, and the conclusion used by the project.
+## 15. Acceptance evidence contract
 
-## 15. Phased backlog and gates
+Phase plans are mutable and belong in the dated record. Any phase exit or release gate MUST instead provide machine-readable acceptance evidence:
 
-### Phase A: integrity and harness
+| Gate area | Required evidence |
+| --- | --- |
+| Manifest integrity | Canonical-manifest schema validator ID/version and pass artifact; completion-contract validator pass |
+| Publication safety | Projection-policy ID/version, fail-closed publication-validator pass, canonical/public hashes, redaction summary |
+| Media technical | Artifact hash plus versioned compile/render/media-probe validator pass |
+| Semantic/pedagogical | Rubric ID/version, structured evaluator event, evidence refs, and threshold result from experiment config |
+| Graph mapping | Graph-schema validator pass, zero dangling refs, typed-edge validation, and required confirmation-review events |
+| Slides + animation | PPTX structure validator, required AnimationSlot refs, rendered-artifact validator, static-fallback validator |
+| Cost | Budget policy/rate-card snapshot, reservation-ledger reconciliation, and cell/experiment gate pass |
+| Backtranslation | Protocol-policy validator, exact one-shot parent hash, refinement-event chain, and feedback-policy compliance |
 
-- Define and validate normalized run/artifact records from this contract.
-- Replace or quarantine dummy coverage claims.
-- Add source/license ledger and pin-at-run capture.
-- Build budget, stage-status, artifact-hash, and review plumbing.
-
-Gate: no public matrix cell lacks provenance, completion, variant, revision, cost state, and manifest link.
-
-### Phase B: video pilot
-
-- Run Attention across Paper2Manim, Code2Video, and TheoremExplainAgent.
-- Preserve native input differences and adaptation labels.
-- Compare completion, fidelity, pedagogy, cost, and intervention.
-
-Gate: decide whether to execute the remaining nine video cells and whether any baseline needs replacement.
-
-### Phase C: slide pilot
-
-- Run Gradient Descent control and one hard paper topic (RoPE or FeynRL, predeclared) across DeepPresenter, SlideGen, and ArcDeck.
-- Pin DeepPresenter variant, SlideGen fork/runtime, and ArcDeck revision/environment.
-- Trigger the Paper2Slides fallback if ArcDeck cannot meet the controlled pilot contract.
-
-Gate: select three stable/diverse slide baselines for the full matrix.
-
-### Phase D: formula graph and primitive registry
-
-- Build typed topic, formula, code/dataflow, and scene graphs for the four families.
-- Populate built-in and project-reusable primitives.
-- Generate formula-level clips and topic-level compositions.
-
-Gate: confirmed mappings and primitive origin are visible and auditable for at least one end-to-end topic.
-
-### Phase E: integrated slides + Manim
-
-- Implement FormulaIR, SceneIR, SlideIR, and animation slots.
-- Produce methodology, architecture, and performance slide patterns.
-- Evaluate static fallback and embedded animation together.
-
-Gate: one editable deck remains coherent both with and without animation playback.
-
-### Phase F: backtranslation
-
-- Select and pin approximately ten gallery scenes.
-- Run Human, One-shot, and Self-refined conditions.
-- Publish costs, repair histories, and limitations.
-
-Gate: protocol invariants are machine-checkable and no prohibited assets are included.
-
-### Phase G: site refactor and full matrices
-
-- Render Overview/Evidence Ledger and the four threads from normalized data.
-- Add synchronized graph interactions and three-column backtranslation comparison.
-- Execute approved full matrices under new budgets established after pilots.
-
-Gate: public claims can be traced from UI card to manifest, artifact hash, source revision, and evaluation evidence.
+An exit statement such as “looks coherent,” “pilot-ready,” or “auditable” is commentary, not gate evidence. The versioned experiment configuration MUST name the required validator/rubric IDs, artifact roles, thresholds, and aggregation rule before execution.
 
 ## 16. Design acceptance criteria
 
@@ -468,11 +544,11 @@ The implementation conforms to this design when:
 
 1. No dummy or placeholder artifact is presented or aggregated as a baseline result.
 2. Each matrix cell uses one canonical topic family and one explicit pipeline variant.
-3. Provenance, completion, and review are separate and visible.
+3. Composite lineage, machine-derived completion, claim evidence, and review are separate and visible at run and artifact level.
 4. Every external source and runtime is pinned at run time with license evidence.
 5. Cost distinguishes measured, estimated, unknown, and genuinely zero values.
-6. Formula-to-code-to-Manim mappings are typed, confidence-aware, and allow unresolved edges.
-7. Formula clips compose into topic videos and can be linked into editable slides through versioned animation slots.
-8. Backtranslation conditions share a fixed protocol and refinement starts from the exact one-shot code.
-9. The website derives evidence state from manifests and exposes the four product threads plus an evidence ledger.
-10. All public claims are labeled as measured, externally reported, estimated, planned, or project decisions.
+6. Formula-to-code-to-Manim mappings separate node coverage from edge match state, validate edge types, and preserve aliases/migrations.
+7. Formula clips compose into topic videos and enter slides only through AnimationSlots with SceneIR, rendered, and static-fallback refs.
+8. Backtranslation conditions share versioned protocol/refinement policies and refinement starts from the exact one-shot code.
+9. The website derives evidence state only from a validated allowlisted public projection and exposes the four product threads plus an evidence ledger.
+10. All public claims are labeled as measured, observed, externally reported, estimated, planned, or project decisions and reference evidence.
