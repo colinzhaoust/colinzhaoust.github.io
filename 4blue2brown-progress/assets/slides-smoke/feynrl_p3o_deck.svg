@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">FeynRL P3O slide smoke test contact sheet</title>
+  <desc id="desc">Four slide thumbnails sketching a paper and code to slides run for the FeynRL P3O ESS example.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f6f1e7; }
+      .sheet-title { font: 700 26px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #3d352a; }
+      .sheet-note { font: 500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #716655; }
+      .slide { fill: #fffaf1; stroke: #d9ccba; stroke-width: 2; }
+      .slide-alt { fill: #f5fbf2; }
+      .slide-title { font: 800 24px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #2f2a22; }
+      .body { font: 500 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #5e5548; }
+      .small { font: 700 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #756b5e; letter-spacing: 0.8px; }
+      .mono { font: 700 13px Menlo, Consolas, monospace; fill: #40382f; }
+      .accent-blue { fill: #2e70b8; }
+      .accent-green { fill: #4d9a62; }
+      .accent-warm { fill: #c77b25; }
+      .accent-coral { fill: #c95a45; }
+      .line { stroke: #d9ccba; stroke-width: 2; fill: none; }
+      .bar-fresh { fill: #75a9d9; }
+      .bar-stale { fill: #d8895e; }
+      .codebox { fill: #efe6d8; stroke: #d9ccba; stroke-width: 1.5; }
+      .pill { fill: #e9f0fb; stroke: #9abbe3; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="sheet-title" x="52" y="48">Local slide-IR smoke test: FeynRL / P3O ESS</text>
+  <text class="sheet-note" x="52" y="74">Generated as a lightweight baseline slot for the paper/code to slides track. Not an upstream SlideGen or PPTAgent output.</text>
+
+  <g transform="translate(52 112)">
+    <rect class="slide" width="560" height="270" rx="8"/>
+    <text class="small" x="28" y="38">SLIDE 1</text>
+    <text class="slide-title" x="28" y="76">Stale replay makes fixed clipping brittle</text>
+    <text class="body" x="28" y="112">A training batch can mix fresh and stale policy ratios.</text>
+    <text class="body" x="28" y="137">When one ratio dominates, the effective batch shrinks.</text>
+    <g transform="translate(308 58)">
+      <line class="line" x1="0" y1="150" x2="204" y2="150"/>
+      <rect class="bar-fresh" x="10" y="86" width="22" height="64" rx="3"/>
+      <rect class="bar-fresh" x="42" y="70" width="22" height="80" rx="3"/>
+      <rect class="bar-fresh" x="74" y="92" width="22" height="58" rx="3"/>
+      <rect class="bar-stale" x="122" y="32" width="22" height="118" rx="3"/>
+      <rect class="bar-stale" x="154" y="110" width="22" height="40" rx="3"/>
+      <rect class="bar-stale" x="186" y="126" width="22" height="24" rx="3"/>
+      <text class="small" x="8" y="174">fresh</text>
+      <text class="small" x="122" y="174">stale</text>
+    </g>
+    <rect class="pill" x="28" y="194" width="218" height="40" rx="20"/>
+    <text class="mono" x="44" y="219">ESS = (sum r)^2 / n sum r^2</text>
+  </g>
+
+  <g transform="translate(668 112)">
+    <rect class="slide slide-alt" width="560" height="270" rx="8"/>
+    <text class="small" x="28" y="38">SLIDE 2</text>
+    <text class="slide-title" x="28" y="76">P3O turns ESS into an update control</text>
+    <text class="body" x="28" y="112">High ESS keeps the score cap loose and KL pressure low.</text>
+    <text class="body" x="28" y="137">Low ESS tightens the score cap and raises behavioral KL.</text>
+    <g transform="translate(314 64)">
+      <path class="line" d="M0 150 C48 126, 82 92, 112 54 S170 20, 210 14"/>
+      <path class="line" d="M0 28 C54 42, 96 78, 126 112 S174 148, 210 160"/>
+      <circle class="accent-green" cx="110" cy="58" r="7"/>
+      <circle class="accent-coral" cx="110" cy="112" r="7"/>
+      <text class="small" x="138" y="45">score cap</text>
+      <text class="small" x="138" y="126">behavior KL</text>
+    </g>
+    <rect class="codebox" x="28" y="180" width="270" height="56" rx="6"/>
+    <text class="mono" x="44" y="205">calculate_ess(...)</text>
+    <text class="mono" x="44" y="226">compute_policy_loss(...)</text>
+  </g>
+
+  <g transform="translate(52 430)">
+    <rect class="slide slide-alt" width="560" height="270" rx="8"/>
+    <text class="small" x="28" y="38">SLIDE 3</text>
+    <text class="slide-title" x="28" y="76">A useful deck needs four aligned channels</text>
+    <g transform="translate(28 112)">
+      <rect class="pill" x="0" y="0" width="230" height="38" rx="19"/>
+      <text class="body" x="18" y="25">Formula: ESS and capped weight</text>
+      <rect class="pill" x="270" y="0" width="230" height="38" rx="19"/>
+      <text class="body" x="288" y="25">Code: P3O loss functions</text>
+      <rect class="pill" x="0" y="58" width="230" height="38" rx="19"/>
+      <text class="body" x="18" y="83">Example: fresh vs stale batch</text>
+      <rect class="pill" x="270" y="58" width="230" height="38" rx="19"/>
+      <text class="body" x="288" y="83">Comparison: PPO, GRPO, CISPO</text>
+    </g>
+    <text class="body" x="28" y="236">Slide systems give structure; 4blue2brown must add code grounding.</text>
+  </g>
+
+  <g transform="translate(668 430)">
+    <rect class="slide" width="560" height="270" rx="8"/>
+    <text class="small" x="28" y="38">SLIDE 4</text>
+    <text class="slide-title" x="28" y="76">Evaluation should score learning, not only polish</text>
+    <g transform="translate(32 116)">
+      <circle class="accent-blue" cx="24" cy="18" r="9"/>
+      <text class="body" x="48" y="24">Content: paper claims and code refs survive compression</text>
+      <circle class="accent-warm" cx="24" cy="66" r="9"/>
+      <text class="body" x="48" y="72">Design: pages are readable as rendered images</text>
+      <circle class="accent-green" cx="24" cy="114" r="9"/>
+      <text class="body" x="48" y="120">Editability: deck can be revised without raster lock-in</text>
+    </g>
+    <rect class="codebox" x="322" y="176" width="190" height="48" rx="6"/>
+    <text class="mono" x="340" y="205">pre/post quiz</text>
+  </g>
+</svg>
