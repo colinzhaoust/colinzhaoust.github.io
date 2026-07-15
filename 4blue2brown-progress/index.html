@@ -53,7 +53,7 @@
               <span>pinned backtranslation cases in the public development set</span>
             </div>
             <div>
-              <strong>62 / 62</strong>
+              <strong>74 / 74</strong>
               <span>evidence and backtranslation tests passing locally</span>
             </div>
             <div>
@@ -150,7 +150,7 @@
         <div class="verification-band" aria-label="Local verification results">
           <div class="verification-total">
             <span>Local verification</span>
-            <strong>62 / 62</strong>
+            <strong>74 / 74</strong>
             <p>All current contract and harness tests pass in the repository's pinned environments.</p>
           </div>
           <div class="verification-split">
@@ -161,13 +161,13 @@
             </div>
             <div>
               <span>Backtranslation harness</span>
-              <strong>33 tests</strong>
+              <strong>45 tests</strong>
               <i style="--pass-width: 100%"></i>
             </div>
           </div>
           <div class="verification-note">
             <span class="tag warm">Current boundary</span>
-            <p><strong>Canonical dry-run path.</strong> The fixture emits validated canonical and public manifests with zero billable calls. Real provider code still needs sandbox execution.</p>
+            <p><strong>Babel clean-checkout validation.</strong> HEAD <code>c814c1f</code>: q-5 discovery found 26 passing tests and 1 skip (the complete local count is 29 / 29); q-6 passed 45 / 45. Synthetic dry-run and compile passed, and the checkout stayed clean.</p>
           </div>
         </div>
 
@@ -773,10 +773,10 @@
             </div>
             <div class="coverage-row slides-run-row" role="row">
               <span>SlideGen</span>
-              <span class="status-pill partial">env setup</span>
+              <span class="status-pill blocked">import-blocked</span>
               <span>FeynRL paper PDF</span>
               <span>figure/formula mapping, notes quality, editability</span>
-              <span>Python 3.12 resolution failed; job 9305034 reached the 500+ package Python 3.11 install, but not the agent pipeline yet.</span>
+              <span>Job 9305034 built the Python 3.11 env, PPTX fork, and browser; the pipeline stopped because installed docling_parse lacks pdf_parser_v2.</span>
             </div>
             <div class="coverage-row slides-run-row" role="row">
               <span>PPTAgent / DeepPresenter</span>
