@@ -28,6 +28,19 @@ tabButtons.forEach((button) => {
   });
 });
 
+const slidesTabButtons = [...document.querySelectorAll(".slides-tab-button")];
+const slidesPanels = [...document.querySelectorAll(".slides-panel")];
+
+slidesTabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const tab = button.dataset.slidesTab;
+    slidesTabButtons.forEach((item) => item.classList.toggle("active", item === button));
+    slidesPanels.forEach((panel) => {
+      panel.classList.toggle("active", panel.id === `slides-tab-${tab}`);
+    });
+  });
+});
+
 document.querySelectorAll(".copy-button").forEach((button) => {
   button.addEventListener("click", async () => {
     const target = document.getElementById(button.dataset.copy);

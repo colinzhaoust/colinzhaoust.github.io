@@ -852,6 +852,181 @@ h4 {
   margin-top: 1rem;
 }
 
+.baseline-run-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(300px, 0.55fr);
+  gap: 1rem 2rem;
+  align-items: end;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 1.1rem 0;
+}
+
+.baseline-run-heading h3,
+.baseline-run-heading p {
+  margin-bottom: 0;
+}
+
+.baseline-run-heading p {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.baseline-result-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 1.4rem;
+  margin-top: 1.4rem;
+}
+
+.plan-contact-sheet {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  border: 1px solid oklch(76% 0.1 245);
+  border-radius: 8px;
+  background: oklch(94% 0.035 235);
+  color: var(--ink);
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.plan-contact-sheet:hover {
+  border-color: var(--blue);
+}
+
+.plan-contact-label {
+  margin-bottom: 0.7rem;
+  color: oklch(40% 0.1 245);
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.plan-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.plan-contact-grid > span {
+  display: grid;
+  min-height: 92px;
+  align-content: space-between;
+  border: 1px solid oklch(84% 0.035 82);
+  border-radius: 6px;
+  background: var(--panel);
+  padding: 0.6rem;
+}
+
+.plan-contact-grid i {
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-style: normal;
+}
+
+.plan-contact-grid b {
+  font-size: 0.76rem;
+  line-height: 1.22;
+}
+
+.plan-contact-sheet > strong {
+  margin-top: 0.8rem;
+  color: var(--blue);
+  font-size: 0.88rem;
+}
+
+.baseline-result-copy {
+  align-self: center;
+}
+
+.baseline-result-copy h4 {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.baseline-result-copy p {
+  margin-bottom: 0.8rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.run-stage-line {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.run-stage-line span {
+  padding: 0.5rem 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-align: center;
+}
+
+.run-stage-line span + span {
+  border-left: 1px solid var(--line);
+}
+
+.run-stage-line .pass {
+  background: oklch(95% 0.03 155);
+  color: oklch(37% 0.1 155);
+}
+
+.run-stage-line .blocked {
+  background: oklch(96% 0.035 300);
+  color: oklch(42% 0.11 300);
+}
+
+.baseline-artifact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.baseline-artifact-links a {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  padding: 0.42rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.baseline-figure-proof {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0 2rem;
+}
+
+.baseline-figure-proof figure {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.baseline-figure-proof img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: oklch(99% 0.004 82);
+  object-fit: contain;
+}
+
+.baseline-figure-proof figcaption {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+  padding: 0.48rem 0.6rem;
+}
+
 .pipeline-comparison {
   margin-top: 3rem;
   border-top: 1px solid var(--line);
@@ -1548,8 +1723,14 @@ pre {
   .cost-layout,
   .cost-layout.two,
   .slide-pipeline-layout,
-  .slide-run-layout {
+  .slide-run-layout,
+  .baseline-result-feature {
     grid-template-columns: 1fr;
+  }
+
+  .plan-contact-grid,
+  .baseline-figure-proof {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .coverage-table,
@@ -1657,6 +1838,19 @@ pre {
   .verification-band,
   .status-flow {
     grid-template-columns: 1fr;
+  }
+
+  .baseline-run-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-contact-grid,
+  .baseline-figure-proof {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-contact-grid > span {
+    min-height: 76px;
   }
 
   .verification-split {

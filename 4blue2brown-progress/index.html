@@ -53,7 +53,7 @@
               <span>pinned backtranslation cases in the public development set</span>
             </div>
             <div>
-              <strong>45 / 45</strong>
+              <strong>62 / 62</strong>
               <span>evidence and backtranslation tests passing locally</span>
             </div>
             <div>
@@ -113,8 +113,8 @@
         <p class="section-lead">
           The project has moved beyond a gallery-only demo. It now has typed evidence contracts,
           a pinned reconstruction protocol, deterministic feedback, and tested condition traces.
-          The next credibility step is a real provider run that publishes through the canonical
-          evidence path.
+          The q-6 harness now publishes through the q-5 canonical and public manifest path. The
+          next credibility step is a real provider and sandbox run through that same boundary.
         </p>
 
         <div class="status-ledger" role="table" aria-label="Current review, plan, code, and demo status">
@@ -137,37 +137,37 @@
             <strong>Code</strong>
             <span>Evidence validation and projection plus reference isolation, feedback, tracing, and eval hooks.</span>
             <span class="status-pill done">tested</span>
-            <span>The canonical bridge is specified, but it is not connected end to end.</span>
+            <span>Canonical/public manifests, exact lineage, cost, and source-vault fail-closed checks are connected.</span>
           </div>
           <div class="status-ledger-row" role="row">
             <strong>Demo</strong>
-            <span>Playable videos, contact sheets, framework comparisons, and a FeynRL HTML slide deck.</span>
+            <span>Playable videos, contact sheets, a local slide sketch, and a Babel Paper2Slides plan checkpoint.</span>
             <span class="status-pill partial">mixed evidence</span>
-            <span>The new backtranslation trace is synthetic and makes zero model-quality claims.</span>
+            <span>The upstream slide plan is real; final slide images are provider-blocked and not represented as complete.</span>
           </div>
         </div>
 
         <div class="verification-band" aria-label="Local verification results">
           <div class="verification-total">
             <span>Local verification</span>
-            <strong>45 / 45</strong>
+            <strong>62 / 62</strong>
             <p>All current contract and harness tests pass in the repository's pinned environments.</p>
           </div>
           <div class="verification-split">
             <div>
               <span>Paper-media evidence</span>
-              <strong>21 tests</strong>
+              <strong>29 tests</strong>
               <i style="--pass-width: 100%"></i>
             </div>
             <div>
               <span>Backtranslation harness</span>
-              <strong>24 tests</strong>
+              <strong>33 tests</strong>
               <i style="--pass-width: 100%"></i>
             </div>
           </div>
           <div class="verification-note">
             <span class="tag warm">Current boundary</span>
-            <p><strong>Offline fixture only.</strong> No provider call, no generated-code execution on the host, and no canonical public run manifest yet.</p>
+            <p><strong>Canonical dry-run path.</strong> The fixture emits validated canonical and public manifests with zero billable calls. Real provider code still needs sandbox execution.</p>
           </div>
         </div>
 
@@ -175,8 +175,8 @@
           <div class="status-flow-node complete"><span>01</span><strong>Registry</strong><small>10 pinned scenes</small></div>
           <div class="status-flow-node complete"><span>02</span><strong>Reference isolation</strong><small>normalized MP4 only</small></div>
           <div class="status-flow-node complete"><span>03</span><strong>Condition harness</strong><small>one-shot + refine</small></div>
-          <div class="status-flow-node next"><span>04</span><strong>Evidence bridge</strong><small>typed boundary only</small></div>
-          <div class="status-flow-node pending"><span>05</span><strong>Real run</strong><small>provider + sandbox</small></div>
+          <div class="status-flow-node complete"><span>04</span><strong>Evidence bridge</strong><small>canonical + public</small></div>
+          <div class="status-flow-node next"><span>05</span><strong>Real run</strong><small>provider + sandbox</small></div>
         </div>
       </section>
 
@@ -478,12 +478,12 @@
         </p>
 
         <div class="slides-tabs" role="tablist" aria-label="Slides research subtab">
-          <button class="slides-tab-button active" type="button" data-slides-tab="landscape">Landscape</button>
+          <button class="slides-tab-button" type="button" data-slides-tab="landscape">Landscape</button>
           <button class="slides-tab-button" type="button" data-slides-tab="pipeline">Pipeline</button>
-          <button class="slides-tab-button" type="button" data-slides-tab="runs">Test runs</button>
+          <button class="slides-tab-button active" type="button" data-slides-tab="runs">Test runs</button>
         </div>
 
-        <div class="slides-panel active" id="slides-tab-landscape">
+        <div class="slides-panel" id="slides-tab-landscape">
           <div class="slides-card-grid">
             <article class="slides-card">
               <div class="card-head">
@@ -659,7 +659,80 @@
           </div>
         </div>
 
-        <div class="slides-panel" id="slides-tab-runs">
+        <div class="slides-panel active" id="slides-tab-runs">
+          <div class="baseline-run-heading">
+            <div>
+              <span class="tag green">Babel upstream batch · July 15</span>
+              <h3>Paper2Slides produced an inspectable 8-slide plan</h3>
+            </div>
+            <p>
+              One frozen FeynRL PDF, three upstream revisions, and explicit stage boundaries.
+              The plan is real upstream output; the browser view is our transparent projection of its JSON checkpoint.
+            </p>
+          </div>
+
+          <div class="baseline-result-feature">
+            <a class="plan-contact-sheet" href="assets/slides-baselines-20260715/paper2slides/plan-preview.html" aria-label="Open the interactive Paper2Slides plan checkpoint preview">
+              <span class="plan-contact-label">Paper2Slides · 8 planned pages</span>
+              <div class="plan-contact-grid">
+                <span><i>01</i><b>Trust the Batch</b></span>
+                <span><i>02</i><b>RL post-training challenges</b></span>
+                <span><i>03</i><b>P3O and GRPO objectives</b></span>
+                <span><i>04</i><b>Training configuration</b></span>
+                <span><i>05</i><b>Evaluation and system setup</b></span>
+                <span><i>06</i><b>Off-policy robustness</b></span>
+                <span><i>07</i><b>Benchmarks and async training</b></span>
+                <span><i>08</i><b>Conclusion and next work</b></span>
+              </div>
+              <strong>Open the checkpoint viewer →</strong>
+            </a>
+
+            <div class="baseline-result-copy">
+              <div class="run-stage-line" aria-label="Paper2Slides stage result">
+                <span class="pass">parse</span><span class="pass">summary</span><span class="pass">plan</span><span class="blocked">generate</span>
+              </div>
+              <h4>What the baseline actually did</h4>
+              <p>
+                Revision <code>0785051</code> parsed all 18 pages, extracted 7 tables and 9 figures,
+                and planned 8 academic slides with formulas, table references, and figure assignments.
+                Initial wall time was 6m13s; a JSON-repair plan retry took 4m33s.
+              </p>
+              <p>
+                <strong>Quality is mixed.</strong> The content is substantial, but OCR damages some notation and
+                the plan invents a long-form expansion for “P3O” that does not appear in the extracted source.
+                This needs factual review before it becomes a deck.
+              </p>
+              <p>
+                <strong>Why no PDF yet:</strong> WInE accepted text and vision input, then returned
+                <code>Multi-modal output is not supported</code> for slide-image generation.
+              </p>
+              <div class="baseline-artifact-links">
+                <a href="assets/slides-baselines-20260715/paper2slides/plan-preview.html">Interactive plan</a>
+                <a href="assets/slides-baselines-20260715/paper2slides/checkpoint_plan.json">Raw plan JSON</a>
+                <a href="assets/slides-baselines-20260715/paper2slides/state.json">Stage state</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="baseline-figure-proof" aria-label="Figures extracted from the FeynRL paper by Paper2Slides">
+            <figure>
+              <img src="assets/slides-baselines-20260715/paper2slides/figure-01.jpg" alt="Figure 1 extracted by Paper2Slides, GRPO clip sensitivity versus P3O">
+              <figcaption>Figure 1 · clip sensitivity</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/slides-baselines-20260715/paper2slides/figure-02.jpg" alt="Figure 2 extracted by Paper2Slides, rollout temperature robustness">
+              <figcaption>Figure 2 · temperature robustness</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/slides-baselines-20260715/paper2slides/figure-03.jpg" alt="Figure 3 extracted by Paper2Slides, FP8 rollout robustness">
+              <figcaption>Figure 3 · FP8 rollout robustness</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/slides-baselines-20260715/paper2slides/figure-04.jpg" alt="Figure 4 extracted by Paper2Slides, pass at k benchmark comparison">
+              <figcaption>Figure 4 · held-out benchmarks</figcaption>
+            </figure>
+          </div>
+
           <div class="slide-run-layout">
             <div class="slide-run-preview">
               <img src="assets/slides-smoke/feynrl_p3o_deck.svg" alt="Four-slide smoke test deck for the FeynRL P3O example">
@@ -700,24 +773,24 @@
             </div>
             <div class="coverage-row slides-run-row" role="row">
               <span>SlideGen</span>
-              <span class="status-pill partial">planned</span>
-              <span>RoPE paper PDF, then FeynRL paper/code packet</span>
+              <span class="status-pill partial">env setup</span>
+              <span>FeynRL paper PDF</span>
               <span>figure/formula mapping, notes quality, editability</span>
-              <span>Create isolated env with OpenAI key, LibreOffice, python-pptx fork.</span>
+              <span>Python 3.12 resolution failed; job 9305034 reached the 500+ package Python 3.11 install, but not the agent pipeline yet.</span>
             </div>
             <div class="coverage-row slides-run-row" role="row">
               <span>PPTAgent / DeepPresenter</span>
-              <span class="status-pill partial">planned</span>
-              <span>FeynRL brief plus source attachments</span>
+              <span class="status-pill blocked">infra-blocked</span>
+              <span>FeynRL paper PDF</span>
               <span>edit action reliability, visual repair, PPTEval dimensions</span>
-              <span>Smoke CLI with a short prompt, then attach paper/code excerpts.</span>
+              <span>Babel lacks Docker, Node/npm, uvx, Playwright, and LibreOffice.</span>
             </div>
             <div class="coverage-row slides-run-row" role="row">
               <span>Paper2Slides</span>
-              <span class="status-pill partial">planned</span>
+              <span class="status-pill partial">3 / 4 stages</span>
               <span>FeynRL paper PDF</span>
               <span>RAG extraction quality, figures/tables, style control</span>
-              <span>Run fast mode first, then normal RAG mode if parsing is stable.</span>
+              <span>8-slide plan is inspectable; rerun generation with an image-output provider.</span>
             </div>
             <div class="coverage-row slides-run-row" role="row">
               <span>SlidesGen-Bench</span>
@@ -1667,9 +1740,9 @@
 ./.venv-arm64/bin/python tools/run_backtranslation.py dry-run \
   --work-dir /tmp/4blue2brown-backtranslation-dry-run
 
-# Current result: synthetic_fixture + placeholder + $0 billable calls.
-# Next: connect the canonical evidence bridge, then use an external
-# video-capable adapter and sandboxed Manim renderer.</code></pre>
+# Current result: synthetic_fixture + canonical/public manifests + $0 billable calls.
+# Next: keep the connected evidence bridge and replace only the fixture with
+# a video-capable adapter plus sandboxed Manim renderer.</code></pre>
         </div>
 
         <div class="snippet-panel" id="tab-render">

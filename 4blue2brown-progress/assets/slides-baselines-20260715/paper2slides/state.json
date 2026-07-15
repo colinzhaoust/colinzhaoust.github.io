@@ -1,0 +1,22 @@
+{
+  "config": {
+    "input_path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/inputs/feynrl_2605.12380.pdf",
+    "content_type": "paper",
+    "output_type": "slides",
+    "style": "academic",
+    "custom_style": null,
+    "slides_length": "short",
+    "poster_density": "medium",
+    "fast_mode": true,
+    "max_workers": 4
+  },
+  "created_at": "2026-07-15T14:19:56.042476",
+  "stages": {
+    "rag": "completed",
+    "summary": "completed",
+    "plan": "completed",
+    "generate": "failed"
+  },
+  "updated_at": "2026-07-15T14:33:57.657985",
+  "error": "Error code: 400 - {'error': {'message': 'litellm.BadRequestError: Vertex_aiException BadRequestError - {\\n  \"error\": {\\n    \"code\": 400,\\n    \"message\": \"Multi-modal output is not supported.\",\\n    \"status\": \"INVALID_ARGUMENT\"\\n  }\\n}\\n. Received Model Group=wine-gemini-2.5-flash\\nAvailable Model Group Fallbacks=None', 'type': None, 'param': None, 'code': '400'}}"
+}

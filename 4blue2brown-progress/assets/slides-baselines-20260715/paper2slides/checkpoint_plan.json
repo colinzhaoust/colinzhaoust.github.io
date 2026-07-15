@@ -1,0 +1,240 @@
+{
+  "plan": {
+    "output_type": "slides",
+    "sections": [
+      {
+        "id": "slide_01",
+        "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
+        "type": "opening",
+        "content": "This presentation introduces an adaptive policy optimization approach, P3O, designed to enhance the robustness and efficiency of Reinforcement Learning (RL) post-training. The work addresses critical challenges in RL, particularly the sensitivity of existing methods to off-policy data and the burden of hyperparameter tuning. The authors, Rasool Fakoor, Murdock Aubry, Nicholas Stranges, and Alexander J. Smola, are all affiliated with Boson AI. Their research focuses on developing more stable and adaptable algorithms for practical applications of RL.",
+        "tables": [],
+        "figures": []
+      },
+      {
+        "id": "slide_02",
+        "title": "Challenges in RL Post-Training & Problem Statement",
+        "type": "content",
+        "content": "Reinforcement Learning (RL) post-training, especially for language models, often faces significant challenges stemming from the inherent dynamics of policy optimization. A major limitation of existing approaches like GRPO (Generalized Reweighted Policy Optimization) is their acute sensitivity to various forms of off-policy data. This sensitivity can lead to performance degradation or even collapse when the data used for training deviates significantly from the current policy's distribution. This is particularly problematic in scenarios involving asynchronous updates, varied sampling temperatures, or mixed-precision training. Moreover, methods like GRPO require careful tuning of hyperparameters, such as the clipping range (ε), which introduces a substantial tuning burden and can lead to unstable training across different environments or model families. The goal of this research is to develop an adaptive policy optimization method that is robust to off-policy data and minimizes the need for extensive hyperparameter tuning, thereby making RL post-training more reliable and efficient. The paper introduces P3O (Policy Performance with Persistent Primal-Dual Optimization) as a solution to these problems, aiming to provide a more stable and high-performing alternative.",
+        "tables": [],
+        "figures": []
+      },
+      {
+        "id": "slide_03",
+        "title": "Adaptive Policy Objectives: P3O and GRPO",
+        "type": "content",
+        "content": "The core of policy optimization lies in defining an effective objective function. This research compares several methods, with a particular focus on GRPO and the proposed P3O. The policy objective typically aims to maximize expected reward while controlling the divergence from the behavior policy. For GRPO/DAPO, the objective is defined as: \n\n\\[ - \\min \\left( \\rho_t A, \\text{clip} (\\rho_t, 1 - \\epsilon_e, 1 + \\epsilon_h) A \\right) \\]\n\nwhere \\(\\rho_t = \\pi_{\\theta}(y_t \\mid x, y_{<t}) / \\pi_b(y_t \\mid x, y_{<t})\\) is the importance ratio, representing the ratio of the new policy's probability to the behavior policy's probability for a given action \\(y_t\\) at time \\(t\\), given context \\(x\\) and previous actions \\(y_{<t}\\). \\(A\\) denotes the advantage function. The clipping mechanism with \\(\\epsilon_e\\) and \\(\\epsilon_h\\) aims to limit large policy updates, but requires careful tuning. P3O, in contrast, aims to alleviate this tuning burden. Its objective is given by:\n\n\\[ -\\text{sg}(\\min\\{\\rho_t, e_B\\}) \\log \\pi_{\\theta}(y_t \\mid x, y_{<t}) A + (1 - e_B) \\text{KL}(\\pi_{\\theta} \\mid \\pi_b) \\]\n\nHere, \\(e_B\\) is an effective batch size driven by an ESS (Effective Sample Size) cap, which adaptively manages the importance ratio, thereby removing the explicit clip hyperparameter. This adaptive mechanism allows P3O to implicitly handle off-policy data more robustly than fixed-clip methods like GRPO. This adaptive choice of \\(e_B\\) is crucial for P3O's enhanced stability and reduced tuning requirements.",
+        "tables": [
+          {
+            "table_id": "Table 1",
+            "extract": "<table><tr><td>Method</td><td>Policy objective</td></tr><tr><td>GRPO /DAPO</td><td> − min (ρtA, clip (ρt, 1 − ∈e, 1 + ∈h) A)</td></tr><tr><td>GSPO</td><td>− min (Sθ(y)A, clip (Sθ(y), 1 − seq, 1 + εseq) A) , Sθ(y) = exp(Γ ∑t=1 10g pt)</td></tr><tr><td>Decoupled</td><td>−g(cli πprox min A, clip 0, Cw πθ πθ , − , 1 + h) A)) πb πpx πprx</td></tr><tr><td>P30</td><td>−sg(min{ρt, eB}) 1og πθ(yt | x, y&lt;t) A + (1 − eB) KL(πθ |πb)</td></tr></table>",
+            "focus": "Comparison of different policy objectives, highlighting P3O's adaptive approach."
+          }
+        ],
+        "figures": []
+      },
+      {
+        "id": "slide_04",
+        "title": "Experimental Setup: Training Configurations",
+        "type": "content",
+        "content": "The experiments were conducted using shared optimizer settings and varied per-experiment training configurations to thoroughly evaluate P3O against baselines like GRPO. The AdamW optimizer was used across all runs with a learning rate of 1e-5, betas (0.9, 0.95), and a weight decay of 0.01. Gradient clipping was set to 1.0, and a WarmupCosineLR scheduler was employed with a 10% warmup ratio. \n\nFor specific training scenarios, different configurations were tested. 'Clip Runs' and 'Temperature Runs' primarily used the Qwen3-4B-Thinking-2507 model with a 6 train + 2 rollout GPU split and a global train batch size of 48. In contrast, 'FP8 Runs' utilized the larger Qwen3-8B-Base model with a 5 train + 3 rollout GPU split, a smaller global train batch size of 5, and a substantially increased max token limit of 16384 for rollouts, demonstrating a focus on mixed-precision training challenges. Sampling temperatures varied, with 'Temperature Runs' exploring \\(T \\in \\{0.6, 1.2\\}\\) to test robustness to off-policy data, while other runs used \\(T=1.0\\). GRPO's clip setting (\\(\\epsilon\\)) was varied across \\(\\{0.2, 0.4, 0.6\\}\\) for comparison.",
+        "tables": [
+          {
+            "table_id": "Table 2",
+            "extract": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=1>Optimizer</td><td rowspan=1 colspan=1>AdamW</td></tr><tr><td rowspan=1 colspan=1>Learning rate</td><td rowspan=1 colspan=1>1e-5</td></tr><tr><td rowspan=1 colspan=1>Betas (β1, β2)</td><td rowspan=1 colspan=1>(0.9, 0.95)</td></tr><tr><td rowspan=1 colspan=1>Weight decay</td><td rowspan=1 colspan=1>0.01</td></tr><tr><td rowspan=1 colspan=1>Gradient clipping</td><td rowspan=1 colspan=1>1.0</td></tr><tr><td rowspan=1 colspan=1>LR scheduler</td><td rowspan=1 colspan=1>WarmupCosineLR (10% warmup ratio)</td></tr></table>",
+            "focus": "Shared optimizer settings across all experiments."
+          },
+          {
+            "table_id": "Table 3",
+            "extract": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=2>Clip Runs</td><td rowspan=1 colspan=1>Temperature Runs</td><td rowspan=1 colspan=1>FP8 Runs</td></tr><tr><td rowspan=1 colspan=1>Model</td><td rowspan=1 colspan=2>Qwen3-4B-Thinking-2507</td><td rowspan=1 colspan=1>Qwen3-4B-Thinking-2507</td><td rowspan=1 colspan=1>Qwen3-8B-Base</td></tr><tr><td rowspan=1 colspan=1>Training / rollout GPU split</td><td rowspan=1 colspan=2>6 train + 2 rollout</td><td rowspan=1 colspan=1>6 train + 2 rollout</td><td rowspan=1 colspan=1>5 train + 3 rollout</td></tr><tr><td rowspan=1 colspan=1>Global train batch size</td><td rowspan=1 colspan=2>48</td><td rowspan=1 colspan=1>48</td><td rowspan=1 colspan=1>5</td></tr><tr><td rowspan=1 colspan=1>Train micro-batch / GPU</td><td rowspan=1 colspan=2>8</td><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>1</td></tr><tr><td rowspan=1 colspan=1>Gradient accumulation</td><td rowspan=1 colspan=2>1</td><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>1</td></tr><tr><td rowspan=1 colspan=1>Rollout batch size / GPU</td><td rowspan=1 colspan=2>64</td><td rowspan=1 colspan=1>64</td><td rowspan=1 colspan=1>16</td></tr><tr><td rowspan=1 colspan=1>Rollout samples / epoch</td><td rowspan=1 colspan=2>512</td><td rowspan=1 colspan=1>512</td><td rowspan=1 colspan=1>256</td></tr><tr><td rowspan=1 colspan=1>Max tokens</td><td rowspan=1 colspan=2>1024</td><td rowspan=1 colspan=1>4096</td><td rowspan=1 colspan=1>16384</td></tr><tr><td rowspan=1 colspan=1>Sampling temperature</td><td rowspan=1 colspan=\"2\">1.0</td><td rowspan=1 colspan=1>T ∈ {0.6, 1.2}</td><td rowspan=1 colspan=1>1.0</td></tr><tr><td rowspan=1 colspan=1>GRPO clip setting</td><td rowspan=1 colspan=1>∈ ∈ {0.2, 0.4, 0.6}</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>∈ = 0.4</td><td rowspan=1 colspan=1>∈ = 0.4</td></tr></table>",
+            "focus": "Per-experiment training configurations for Clip, Temperature, and FP8 runs."
+          }
+        ],
+        "figures": []
+      },
+      {
+        "id": "slide_05",
+        "title": "Evaluation & System Configuration",
+        "type": "content",
+        "content": "Evaluation was conducted across multiple benchmarks grouped by rollout-length families to assess performance under various conditions. Shared benchmark-evaluation settings included a sampling temperature of 1.0, top-p of 0.95, and a group size of 16 samples. For 4K-token evaluation, benchmarks included AIME24, AIME25, AIME26, AMO-Bench, and AMC, with a max response tokens of 4096. The 16K-token evaluation family used the same benchmarks but with a max response tokens of 16384. All evaluations used bfloat16 precision and a tensor parallel size of 1. \n\nThe compute infrastructure consisted of NVIDIA H100 GPUs, with 8 GPUs per run and 8 rollout GPUs. The training precision was bfloat16, with FP8 used specifically in the mixed-precision ablation. The distributed training leveraged DeepSpeed ZeRO-3, and Flash Attention 2 was used for efficient attention mechanisms. The training dataset was DeepScaleR-Preview, and models included Qwen3-4B-Thinking-2507 and Qwen3-8B-Base. The software environment was standardized, using Python 3.13.1, CUDA 12.2 (compatible with 12.x drivers), PyTorch CUDA 12.6 wheels, DeepSpeed 0.18.9, vLLM 0.19.0, Transformers 4.57.6, and FlashAttention 2.54.1.",
+        "tables": [
+          {
+            "table_id": "Table 4",
+            "extract": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=2>Shared benchmark-evaluation settings</td></tr><tr><td rowspan=1 colspan=1>TemperatureTop-pGroup Size (nsamples)Rollout Batch Size / GPURollout GPUsData Workers</td><td rowspan=1 colspan=1>1.00.95161688</td></tr><tr><td rowspan=1 colspan=2>4K benchmark eval family (clip + temperature)</td></tr><tr><td rowspan=1 colspan=1>BenchmarksMax Response Tokens</td><td rowspan=1=1>AIME24, AIME25, AIME26, AMO-Bench, AMC4096</td></tr><tr><td rowspan=1 colspan=1>16Kbencl</td><td rowspan=1=1>16K benchmark eval family (baseline + FP8)</td></tr><tr><td rowspan=1 colspan=1>BenchmarksMax Response Tokens</td><td rowspan=1=1>AIME24, AIME25, AIME26, AMO-Bench, AMC16384</td></tr><tr><td rowspan=1 colspan=2>Model &amp; system configuration</td></tr><tr><td rowspan=1 colspan=1>PrecisionTensor Parallel Size</td><td rowspan=1 colspan=1>bfloat161</td></tr></table>",
+            "focus": "Benchmark evaluation settings and model/system configuration."
+          },
+          {
+            "table_id": "Table 5",
+            "extract": "<table><tr><td rowspan=1 colspan=1>Hardware Attribute</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=2>Accelerator Configuration</td></tr><tr><td rowspan=1 colspan=1>GPU ModelTotal GPUs per runEvaluation partitionTensor Parallel Size</td><td rowspan=1 colspan=1>NVIDIA H100 (as reported in Sec. 4)88 rollout GPUs1</td></tr><tr><td rowspan=1 colspan=2>Runtime Configuration</td></tr><tr><td rowspan=1 colspan=1>Training PrecisionRollout PrecisionDistributed TrainingAttention Backend</td><td rowspan=1 colspan=1>bfl oat16bfloat16; FP8 only in the mixed-precision ablationDeepSpeed ZeRO-3Flash Attention 2</td></tr><tr><td rowspan=1 colspan=2>Workload Summary</td></tr><tr><td rowspan=1 colspan=1>Training DatasetTraining ModelsEvaluation Rollout Batch Size / GPU</td><td rowspan=1 colspan=1>DeepScaleR-PreviewQwen3-4B-Thinking-2507 and Qwen3-8B-Base16</td></tr></table>",
+            "focus": "Compute layout and accelerator/runtime configuration."
+          },
+          {
+            "table_id": "Table 6",
+            "extract": "<table><tr><td>Environment Attribute</td><td>Value</td></tr><tr><td>Python version</td><td>Base environment 3.13.1 (recommended/tested)</td></tr><tr><td>NVIDIA driver CUDA toolkit</td><td>CUDA 12.x-compatible; driver version ≥ 525.85 recom- mended 12.2 (tested); toolkit versions ≥ 12.2 supported</td></tr><tr><td>PyTorch build Core training and rollout stack</td><td>CUDA 12.6 wheels</td></tr><tr><td>PyTorch / TorchVision</td><td>CUDA-enabled install</td></tr><tr><td>DeepSpeed</td><td>0.18.9</td></tr><tr><td>vLLM</td><td>0.19.0</td></tr><tr><td>Transformers</td><td>4.57.6</td></tr><tr><td>Ray FlashAttention</td><td>2.54.1</td></tr></table>",
+            "focus": "Software environment used for experiments."
+          }
+        ],
+        "figures": []
+      },
+      {
+        "id": "slide_06",
+        "title": "Robustness to Off-Policy Data & Hyperparameter Sensitivity",
+        "type": "content",
+        "content": "P3O demonstrates superior robustness compared to GRPO across various challenging conditions, particularly those involving off-policy data and hyperparameter sensitivity. Figure 1 illustrates that P3O, without needing a tunable clip hyperparameter, consistently matches or exceeds the best GRPO variant across different models (Qwen3-4B and Qwen2.5-1.5B). GRPO's performance is highly sensitive to the clip range \\(\\epsilon \\in \\{0.2, 0.4, 0.6\\}\\), exhibiting significant variance. \n\nFurthermore, P3O proves robust to off-policy data introduced by varied sampling temperatures, as shown in Figure 2. When rollouts are sampled at temperatures other than 1.0 (e.g., 0.6 or 1.2), GRPO's performance severely degrades, often collapsing, while P3O maintains stable and high average rewards for Qwen3-4B. This robustness extends to mixed-precision training schemes. Figure 3 highlights that P3O remains stable and performs well under a BF16 train + FP8 rollout setup, even with long rollout lengths (16,384 tokens), where GRPO's performance significantly degrades. This indicates P3O's ability to handle distribution shifts effectively, enabling faster and more efficient rollout generation strategies.",
+        "tables": [],
+        "figures": [
+          {
+            "figure_id": "Figure 1",
+            "focus": "Sensitivity of GRPO’s reward to clip range vs. P3O's performance without explicit clipping."
+          },
+          {
+            "figure_id": "Figure 2",
+            "focus": "P3O's robustness to varied sampling temperatures (0.6 and 1.2) for Qwen3-4B-Thinking-2507, compared to GRPO's degradation."
+          },
+          {
+            "figure_id": "Figure 3",
+            "focus": "P3O's robustness to BF16 Train + FP8 Rollout training scheme with long rollout lengths, highlighting GRPO's performance degradation."
+          }
+        ]
+      },
+      {
+        "id": "slide_07",
+        "title": "Benchmark Performance and Asynchronous Training Stability",
+        "type": "content",
+        "content": "Beyond robustness, P3O consistently delivers strong benchmark performance and maintains stability in asynchronous training environments. Table 7 presents `pass@1` results across five benchmarks (AIME24, AIME25, AIME26, AMO-Bench, AMC). For 4K-token evaluations, P3O (shown as P30) achieves a pass@1 of 0.165 on AIME24, compared to GRPO (clip avg) at 0.176±0.039. Notably, P3O achieves 0.493 on AMC, surpassing GRPO's 0.381±0.195, demonstrating competitive or superior performance without the variance of GRPO's clip settings. In FP8 variants (16K tokens), P3O Iter 30 achieves 0.173 on AIME24 and 0.529 on AMC, while GRPO Iter 30 collapses to near-zero performance (e.g., 0.002 on AIME24).\n\nFigure 4 further illustrates this, showing P3O (Ours) consistently outperforming the Baseline and GRPO for `Pass@k` metrics, especially in FP8 variants where GRPO collapses by iteration 30. Figure 5 highlights P3O's stability in asynchronous training, where rollouts are generated by a stale policy. P3O maintains a higher and more stable reward trajectory than GRPO throughout training, demonstrating better resilience to off-policy lag. Figure 6 shows that when mixing off-policy data from a different model (Qwen3-8B generating rollouts for Qwen3-4B training), P3O maintains a more consistent reward, whereas GRPO's performance is more volatile.",
+        "tables": [
+          {
+            "table_id": "Table 7",
+            "extract": "<table><tr><td>Training Method</td><td>AIME24</td><td>AIME25</td><td>AIME26</td><td>AMO-Bench</td><td>AMC</td></tr><tr><td>Baseline Model (4K tokens)</td><td>0.029</td><td>0.033</td><td>0.006</td><td>0.007</td><td>0.217</td></tr><tr><td>Baseline Model (16K tokens)</td><td>0.371</td><td>0.471</td><td>0.396</td><td>0.019</td><td>0.618</td></tr><tr><td colspan=\"6\">Clip Variants (∈ ∈ {0.2, 0.4, 0.6}, 4K tokens)</td></tr><tr><td>GRPO (clip avg) P30</td><td>0.176±0.039 0.165</td><td>0.160±0.123 0.183</td><td>0.126±0.087 0.160</td><td>0.012±0.007 0.010</td><td>0.381±0.195 0.493</td></tr><tr><td colspan=\"6\">FP8 Variants (BF16 train + FP8 rollout, 16K tokens)</td></tr><tr><td>FP8 Rollout GRPO Iter 15</td><td>0.154</td><td>0.250</td><td>0.160</td><td>0.021</td><td>0.499</td></tr><tr><td>FP8 Rollout GRPO Iter 30</td><td>0.002</td><td>0.000</td><td>0.002</td><td>0.019</td><td>0.029</td></tr><tr><td>FP8 Rollout P3O Iter 15</td><td>0.158</td><td>0.237</td><td>0.179</td><td>0.024</td><td>0.478</td></tr><tr><td>FP8 Rollout P3O Iter 30</td><td>0.173</td><td>0.254</td><td>0.175</td><td>0.026</td><td>0.529</td></tr></table>",
+            "focus": "Benchmark results (pass@1) for trained checkpoints, comparing P3O and GRPO variants."
+          }
+        ],
+        "figures": [
+          {
+            "figure_id": "Figure 4",
+            "focus": "Pass@k averaged over benchmarks, showing P3O's superior and stable performance in clip and FP8 variants."
+          },
+          {
+            "figure_id": "Figure 5",
+            "focus": "Asynchronous training comparison, illustrating P3O's stable reward trajectory versus GRPO's volatility."
+          },
+          {
+            "figure_id": "Figure 6",
+            "focus": "Comparison of GRPO and P3O with respect to the mixing of off-policy data from a different model."
+          }
+        ]
+      },
+      {
+        "id": "slide_08",
+        "title": "Conclusion and Future Directions",
+        "type": "ending",
+        "content": "P3O (Policy Performance with Persistent Primal-Dual Optimization) significantly advances the state-of-the-art in RL post-training by introducing an adaptive policy optimization approach that addresses critical limitations of existing methods. Key findings and contributions include:\n\n1.  **Reduced Hyperparameter Tuning Burden**: P3O eliminates the need for manual tuning of clip hyperparameters, as its ESS-driven cap (\\(e_B\\)) adaptively manages importance ratios, matching or exceeding the performance of carefully tuned GRPO variants (Figure 1).\n2.  **Robustness to Off-Policy Data**: P3O exhibits remarkable stability against various sources of off-policy data, including varied sampling temperatures (Figures 2 and 7) and mixed-precision training schemes (BF16 train + FP8 rollout, Figure 3). This robustness prevents performance collapse often seen in GRPO under such conditions.\n3.  **Stability in Asynchronous Training**: P3O maintains a more stable and higher reward trajectory in asynchronous training setups, where policy updates lag rollout generation, mitigating the 'off-policy lag' problem (Figure 5).\n4.  **Competitive Benchmark Performance**: Across multiple benchmarks, P3O delivers strong `pass@k` results, often outperforming or matching GRPO, especially when GRPO's clip values are averaged or under challenging conditions where GRPO collapses (Table 7, Figure 4).\n5.  **Extension with Two-Anchor P3O**: An extension, the two-anchor P3O, shows potential for even higher final rewards in certain regimes (e.g., \\(\\approx 0.50\\) reward on Qwen3-4B-Thinking at default temperature) and maintains stability comparable to P3O, although its stability can be sensitive to higher rollout temperatures (Figure 9).\n\nIn conclusion, P3O offers a more practical and reliable framework for RL post-training, particularly for large language models, by reducing tuning complexity and enhancing resilience to real-world training challenges. Future work could further explore the adaptive mechanisms of P3O and its two-anchor extension, potentially extending its applicability to even more diverse and dynamic RL environments.",
+        "tables": [],
+        "figures": [
+          {
+            "figure_id": "Figure 7",
+            "focus": "Temperature-robustness for Qwen2.5-1.5B, confirming P3O's stability against distribution shifts."
+          },
+          {
+            "figure_id": "Figure 9",
+            "focus": "Training curves for the two-anchor extension of P3O, P3O, and GRPO, showing the potential for improved performance and sensitivity to temperature."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "density": null,
+      "page_range": [
+        5,
+        8
+      ]
+    }
+  },
+  "origin": {
+    "tables": [
+      {
+        "id": "Table 1",
+        "caption": "Comparison of policy objectives, with $\\rho _ { t } = \\pi _ { \\theta } ( y _ { t } \\mid x , y _ { < t } ) / \\pi _ { \\mathrm { b } } ( y _ { t } \\mid x , y _ { < t } ) ,$ . Red/green: fixed hyper-parameters (high/low). Purple: auxiliary choices. Blue: batch-adaptive quantities. Auxiliary entropy and reference-policy KL terms are omitted.",
+        "html": "<table><tr><td>Method</td><td>Policy objective</td></tr><tr><td>GRPO /DAPO</td><td> − min (ρtA, clip (ρt, 1 − ∈e, 1 + ∈h) A)</td></tr><tr><td>GSPO</td><td>− min (Sθ(y)A, clip (Sθ(y), 1 − seq, 1 + εseq) A) , Sθ(y) = exp(Γ ∑t=1 10g pt)</td></tr><tr><td>Decoupled</td><td>−g(cli πprox min A, clip 0, Cw πθ πθ , − , 1 + h) A)) πb πpx πprx</td></tr><tr><td>P30</td><td>−sg(min{ρt, eB}) 1og πθ(yt | x, y&lt;t) A + (1 − eB) KL(πθ |πb)</td></tr></table>"
+      },
+      {
+        "id": "Table 2",
+        "caption": "Shared optimizer settings used across all experiments.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=1>Optimizer</td><td rowspan=1 colspan=1>AdamW</td></tr><tr><td rowspan=1 colspan=1>Learning rate</td><td rowspan=1 colspan=1>1e-5</td></tr><tr><td rowspan=1 colspan=1>Betas (β1, β2)</td><td rowspan=1 colspan=1>(0.9, 0.95)</td></tr><tr><td rowspan=1 colspan=1>Weight decay</td><td rowspan=1 colspan=1>0.01</td></tr><tr><td rowspan=1 colspan=1>Gradient clipping</td><td rowspan=1 colspan=1>1.0</td></tr><tr><td rowspan=1 colspan=1>LR scheduler</td><td rowspan=1 colspan=1>WarmupCosineLR (10% warmup ratio)</td></tr></table>"
+      },
+      {
+        "id": "Table 3",
+        "caption": "Per-experiment training configuration. Clip and temperature runs use the 4B model with a 6/2 GPU split; the FP8 ablation uses the 8B model with a $5 / 3$ split and a 16K-token rollout budget.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=2>Clip Runs</td><td rowspan=1 colspan=1>Temperature Runs</td><td rowspan=1 colspan=1>FP8 Runs</td></tr><tr><td rowspan=1 colspan=1>Model</td><td rowspan=1 colspan=2>Qwen3-4B-Thinking-2507</td><td rowspan=1 colspan=1>Qwen3-4B-Thinking-2507</td><td rowspan=1 colspan=1>Qwen3-8B-Base</td></tr><tr><td rowspan=1 colspan=1>Training / rollout GPU split</td><td rowspan=1 colspan=2>6 train + 2 rollout</td><td rowspan=1 colspan=1>6 train + 2 rollout</td><td rowspan=1 colspan=1>5 train + 3 rollout</td></tr><tr><td rowspan=1 colspan=1>Global train batch size</td><td rowspan=1 colspan=2>48</td><td rowspan=1 colspan=1>48</td><td rowspan=1 colspan=1>5</td></tr><tr><td rowspan=1 colspan=1>Train micro-batch / GPU</td><td rowspan=1 colspan=2>8</td><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>1</td></tr><tr><td rowspan=1 colspan=1>Gradient accumulation</td><td rowspan=1 colspan=2>1</td><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>1</td></tr><tr><td rowspan=1 colspan=1>Rollout batch size / GPU</td><td rowspan=1 colspan=2>64</td><td rowspan=1 colspan=1>64</td><td rowspan=1 colspan=1>16</td></tr><tr><td rowspan=1 colspan=1>Rollout samples / epoch</td><td rowspan=1 colspan=2>512</td><td rowspan=1 colspan=1>512</td><td rowspan=1 colspan=1>256</td></tr><tr><td rowspan=1 colspan=1>Max tokens</td><td rowspan=1 colspan=2>1024</td><td rowspan=1 colspan=1>4096</td><td rowspan=1 colspan=1>16384</td></tr><tr><td rowspan=1 colspan=1>Sampling temperature</td><td rowspan=1 colspan=2>1.0</td><td rowspan=1 colspan=1>T ∈ {0.6, 1.2}</td><td rowspan=1 colspan=1>1.0</td></tr><tr><td rowspan=1 colspan=1>GRPO clip setting</td><td rowspan=1 colspan=1>∈ ∈ {0.2, 0.4, 0.6}</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>∈ = 0.4</td><td rowspan=1 colspan=1>∈ = 0.4</td></tr></table>"
+      },
+      {
+        "id": "Table 4",
+        "caption": "Benchmark-evaluation settings grouped by rollout-length family. Separate 4K-token and 16K-token evaluation regimes are used in the paper, but the sampling policy and GPU allocation are otherwise held fixed across benchmarks and checkpoints.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=2>Shared benchmark-evaluation settings</td></tr><tr><td rowspan=1 colspan=1>TemperatureTop-pGroup Size (nsamples)Rollout Batch Size / GPURollout GPUsData Workers</td><td rowspan=1 colspan=1>1.00.95161688</td></tr><tr><td rowspan=1 colspan=2>4K benchmark eval family (clip + temperature)</td></tr><tr><td rowspan=1 colspan=1>BenchmarksMax Response Tokens</td><td rowspan=1 colspan=1>AIME24, AIME25, AIME26, AMO-Bench, AMC4096</td></tr><tr><td rowspan=1 colspan=1>16Kbencl</td><td rowspan=1 colspan=1>16K benchmark eval family (baseline + FP8)</td></tr><tr><td rowspan=1 colspan=1>BenchmarksMax Response Tokens</td><td rowspan=1 colspan=1>AIME24, AIME25, AIME26, AMO-Bench, AMC16384</td></tr><tr><td rowspan=1 colspan=2>Model &amp; system configuration</td></tr><tr><td rowspan=1 colspan=1>PrecisionTensor Parallel Size</td><td rowspan=1 colspan=1>bfloat161</td></tr></table>"
+      },
+      {
+        "id": "Table 5",
+        "caption": "Compute layout for the reported runs, together with the accelerator SKU reported in the main text. The eight GPUs are partitioned differently across ablation families depending on whether the workload is optimizer-heavy or rollout-heavy.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hardware Attribute</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=2>Accelerator Configuration</td></tr><tr><td rowspan=1 colspan=1>GPU ModelTotal GPUs per runEvaluation partitionTensor Parallel Size</td><td rowspan=1 colspan=1>NVIDIA H100 (as reported in Sec. 4)88 rollout GPUs1</td></tr><tr><td rowspan=1 colspan=2>Runtime Configuration</td></tr><tr><td rowspan=1 colspan=1>Training PrecisionRollout PrecisionDistributed TrainingAttention Backend</td><td rowspan=1 colspan=1>bfl oat16bfloat16; FP8 only in the mixed-precision ablationDeepSpeed ZeRO-3Flash Attention 2</td></tr><tr><td rowspan=1 colspan=2>Workload Summary</td></tr><tr><td rowspan=1 colspan=1>Training DatasetTraining ModelsEvaluation Rollout Batch Size / GPU</td><td rowspan=1 colspan=1>DeepScaleR-PreviewQwen3-4B-Thinking-2507 and Qwen3-8B-Base16</td></tr></table>"
+      },
+      {
+        "id": "Table 6",
+        "caption": "Software environment used for the reported experiments. The table records only the main CUDA and library versions needed to contextualize the reported pipeline.",
+        "html": "<table><tr><td>Environment Attribute</td><td>Value</td></tr><tr><td>Python version</td><td>Base environment 3.13.1 (recommended/tested)</td></tr><tr><td>NVIDIA driver CUDA toolkit</td><td>CUDA 12.x-compatible; driver version ≥ 525.85 recom- mended 12.2 (tested); toolkit versions ≥ 12.2 supported</td></tr><tr><td>PyTorch build Core training and rollout stack</td><td>CUDA 12.6 wheels</td></tr><tr><td>PyTorch / TorchVision</td><td>CUDA-enabled install</td></tr><tr><td>DeepSpeed</td><td>0.18.9</td></tr><tr><td>vLLM</td><td>0.19.0</td></tr><tr><td>Transformers</td><td>4.57.6</td></tr><tr><td>Ray FlashAttention</td><td>2.54.1</td></tr></table>"
+      },
+      {
+        "id": "Table 7",
+        "caption": "Benchmark results (pass $@ 1$ ) across trained checkpoints. Baseline rows report untrained Qwen3-4B-Thinking-2507 at two rollout lengths. Clip-variant GRPO shows mean $\\pm$ std across $\\epsilon \\in \\lbrace 0 . 2 , 0 . 4 , 0 . 6 \\rbrace$ . FP8 rows report individual checkpoints. Bold: best within each group per column.",
+        "html": "<table><tr><td>Training Method</td><td>AIME24</td><td>AIME25</td><td>AIME26</td><td>AMO-Bench</td><td>AMC</td></tr><tr><td>Baseline Model (4K tokens)</td><td>0.029</td><td>0.033</td><td>0.006</td><td>0.007</td><td>0.217</td></tr><tr><td>Baseline Model (16K tokens)</td><td>0.371</td><td>0.471</td><td>0.396</td><td>0.019</td><td>0.618</td></tr><tr><td colspan=\"6\">Clip Variants (∈ ∈ {0.2, 0.4, 0.6}, 4K tokens)</td></tr><tr><td>GRPO (clip avg) P30</td><td>0.176±0.039 0.165</td><td>0.160±0.123 0.183</td><td>0.126±0.087 0.160</td><td>0.012±0.007 0.010</td><td>0.381±0.195 0.493</td></tr><tr><td colspan=\"6\">FP8 Variants (BF16 train + FP8 rollout, 16K tokens)</td></tr><tr><td>FP8 Rollout GRPO Iter 15</td><td>0.154</td><td>0.250</td><td>0.160</td><td>0.021</td><td>0.499</td></tr><tr><td>FP8 Rollout GRPO Iter 30</td><td>0.002</td><td>0.000</td><td>0.002</td><td>0.019</td><td>0.029</td></tr><tr><td>FP8 Rollout P3O Iter 15</td><td>0.158</td><td>0.237</td><td>0.179</td><td>0.024</td><td>0.478</td></tr><tr><td>FP8 Rollout P3O Iter 30</td><td>0.173</td><td>0.254</td><td>0.175</td><td>0.026</td><td>0.529</td></tr></table>"
+      }
+    ],
+    "figures": [
+      {
+        "id": "Figure 1",
+        "caption": "Sensitivity of GRPO’s reward to the clip range $\\epsilon \\in \\{ 0 . 2 , 0 . 4 , 0 . 6 \\}$ (shaded region: $\\pm \\mathbf { 1 }$ std over clip values) versus P3O run once with no clip hyperparameter. P3O’s ESS-driven cap (Eq. (11)) removes this tuning burden while matching or exceeding the best GRPO variant across both model families.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/e4b10b5767f9d3803bdadd9dc0fd30d9b3a05148660a45a5542a4a65558c3972.jpg"
+      },
+      {
+        "id": "Figure 2",
+        "caption": "P3O is robust to off-policy data introduced through the varied sampling temperature of rollouts. Sampling rollouts at a temperature other than 1.0 introduces a distribution shift in the token-level log probabilities, creating off-policy data for Qwen3-4B-Thinking-2507. Corresponding Qwen2.5-1.5B results are deferred to Fig. 7.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/02cc61742c075bb71be568f3c315a2eaaf5c6b44636a5df09752b432590b0313.jpg"
+      },
+      {
+        "id": "Figure 3",
+        "caption": "P3O is robust to off-policy data introduced through the BF16 Train $\\mathbf { + F P 8 }$ Rollout training scheme. As accuracy collapse is observed in longer rollout lengths [33], a rollout length of 16,384 tokens was used in this experiment. The demonstrated robustness of P3O to off-policy data allows for the use of faster rollout generation strategies. In contrast, GRPO’s performance degrades significantly under the same conditions, highlighting its sensitivity to off-policy data.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/6327dc671ea4b9fb02b60080f78b24e1edc6d25a58d1a48c2f5d2249ca4994af.jpg"
+      },
+      {
+        "id": "Figure 4",
+        "caption": "Pass $@ k$ averaged over all five held-out benchmarks (AIME24/25/26, AMO-Bench, AMC). Left: clip-ratio variants at 4K-token evaluation; GRPO is averaged over $\\epsilon \\in \\{ 0 . 2 , 0 . 4 , 0 . 6 \\}$ . Ours matches or exceeds the averaged GRPO sweep without requiring a clip-ratio choice. Right: BF16-train $+ \\mathrm { F P 8 }$ -rollout variants at 16K-token evaluation. GRPO collapses by iter 30 (near-zero $\\mathrm { p a s s } @ k )$ while Ours retains strong performance.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/e3cbb59707104e9814086134c31ec5616312c9e3bd8255ee921e270162b93f30.jpg"
+      },
+      {
+        "id": "Figure 5",
+        "caption": "Asynchronous-training comparison between P3O and GRPO under one optimizer step per rollout epoch. Rollouts are generated by a stale policy while the learner continues updating, creating the off-policy lag discussed in the main text. In this one-step pipeline setting, P3O maintains a higher and more stable reward trajectory than GRPO across training. The corresponding twostep pipeline produces the same qualitative ordering and is omitted to avoid duplicating the same comparison with only a modest increase in late-training noise.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/56dac0cabfa9a10bbcb0926c55e7539ea0b9350ffc488b28d424ee9635dfe998.jpg"
+      },
+      {
+        "id": "Figure 6",
+        "caption": "Comparison of GRPO and P3O with respect to the mixing of off-policy data. A rollout length of 4,096 tokens was used in this experiment. This experiment uses Qwen3-8B [30] to generate rollouts for training Qwen3-4B-Thinking-2507, as it is from a different model family. Data was mixed at a $50 \\%$ ratio, meaning half of the rollouts were generated by the training model and half were generated by the separate policy.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/fad9d40cc2d44b1d1dbf94c2b6e27f881a3a438fe473535aac052fcb10444017.jpg"
+      },
+      {
+        "id": "Figure 6",
+        "caption": "Comparison of GRPO and P3O with respect to the mixing of off-policy data. A rollout length of 4,096 tokens was used in this experiment. This experiment uses Qwen3-8B [30] to generate rollouts for training Qwen3-4B-Thinking-2507, as it is from a different model family. Data was mixed at a $50 \\%$ ratio, meaning half of the rollouts were generated by the training model and half were generated by the separate policy.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/4238a3a98d6315e654446a752f9a50e59a0aa54af04ab49a94f7707b4c1a4713.jpg"
+      },
+      {
+        "id": "Figure 7",
+        "caption": "Temperature-robustness results for Qwen2.5-1.5B, corresponding to Fig. $\\mathbf { \\Gamma } ( \\mathbf { c } , \\mathbf { d } )$ . As in the main-text Qwen3-4B experiments, changing rollout temperature introduces a token-level distribution shift that degrades GRPO while P3O remains comparatively stable.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/b6d687324e2dbff208631a2a5e96c5da6ea4cb142ef83991e580a3db2f15148b.jpg"
+      },
+      {
+        "id": "Figure 9",
+        "caption": "Training curves for the two-anchor extension of P3O, P3O, and GRPO $( \\epsilon { = } 0 . 4 )$ on Qwen3-4B-Thinking at default temperature. All runs use the DeepSeek dataset with a rollout length of 4,096 tokens. Unlike the temperature-1.2 regime (Fig. 8), the two-anchor extension remains stable throughout training and achieves the highest final reward $( { \\approx } 0 . 5 0 )$ , slightly outpacing both P3O and GRPO with $\\epsilon { = } 0 . 4$ . The standard GRPO baseline (default $\\epsilon$ ) reached only ${ \\approx } 0 . 1 9$ reward in this setting and is excluded from the plot for clarity. Together with Fig. 8, these results suggest that the two-anchor extension’s instability is sensitive to temperature: at higher rollout temperatures the dual-anchor regularizer can destabilize training, whereas at the default temperature it performs comparably to or better than P3O.",
+        "path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/a59b3bd72d28dfab4605f7a7085702562d30304fba3639bab0f8a7f9685bb103.jpg"
+      }
+    ],
+    "base_path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto"
+  },
+  "content_type": "paper"
+}
