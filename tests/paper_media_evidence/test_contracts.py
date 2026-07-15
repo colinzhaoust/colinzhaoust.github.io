@@ -33,6 +33,25 @@ def no_cost(manifest):
     manifest["stages"][1]["billing_class"] = "free"
 
 
+def load_backtranslation():
+    manifest = load_valid()
+    manifest["thread"] = "backtranslation"
+    manifest["input"] = {
+        "canonical_topic_family": "scene:attention-example",
+        "granularity": "clip",
+        "source_snapshots": [
+            {"availability": "available", "source_id": "input:manim", "source_type": "repository", "source_url": "https://github.com/ManimCommunity/manim", "revision": "1234567890abcdef1234567890abcdef12345678", "retrieved_at": "2026-07-15T11:00:00Z", "content_hash": "sha256:" + "1" * 64, "source_visibility": "public", "publication_decision": "allowed"},
+            {"availability": "available", "source_id": "input:gallery", "source_type": "example_gallery", "source_url": "https://example.org/manim-gallery", "revision": "gallery-v1", "retrieved_at": "2026-07-15T11:00:00Z", "content_hash": "sha256:" + "2" * 64, "source_visibility": "public", "publication_decision": "allowed"},
+        ],
+    }
+    repository_license = copy.deepcopy(manifest["license_ledger"][1])
+    repository_license.update({"item_id": "license:manim", "source_ref": "input:manim", "source_url": "https://github.com/ManimCommunity/manim", "source_revision": "1234567890abcdef1234567890abcdef12345678", "content_hash": "sha256:" + "1" * 64})
+    gallery_license = copy.deepcopy(manifest["license_ledger"][0])
+    gallery_license.update({"item_id": "license:gallery", "source_ref": "input:gallery", "resource_type": "example_gallery", "source_url": "https://example.org/manim-gallery", "source_revision": "gallery-v1", "content_hash": "sha256:" + "2" * 64, "declared_spdx": "MIT"})
+    manifest["license_ledger"] = [repository_license, gallery_license]
+    return manifest
+
+
 class SchemaTests(unittest.TestCase):
     def test_schemas_are_valid_draft_2020_12(self):
         for path in (CANONICAL_SCHEMA_PATH, COMPLETION_SCHEMA_PATH, PUBLIC_SCHEMA_PATH):
@@ -49,6 +68,53 @@ class SchemaTests(unittest.TestCase):
         self.assertNotIn("execution", public)
         self.assertNotIn("private_path", public["artifacts"][0])
         self.assertGreater(public["redaction_summary"]["omitted_fields"], 0)
+
+    def test_backtranslation_uses_repository_and_gallery_without_fake_paper(self):
+        manifest = load_backtranslation()
+        validate_canonical(manifest)
+        public = project_public_manifest(manifest, generated_at="2026-07-15T13:00:00Z")
+        self.assertEqual({"repository", "example_gallery"}, {item["source_type"] for item in public["input"]["source_snapshots"]})
+        self.assertNotIn("paper_snapshot", json.dumps(public))
+
+    def test_backtranslation_requires_bound_repository_and_gallery_licenses(self):
+        for missing_ref in ("input:manim", "input:gallery"):
+            manifest = load_backtranslation()
+            manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["source_ref"] != missing_ref]
+            with self.subTest(missing_ref=missing_ref), self.assertRaisesRegex(ManifestValidationError, "source-coverage"):
+                validate_canonical(manifest)
+
+    def test_paper_threads_still_require_paper_and_repository_sources(self):
+        for missing_type in ("paper", "repository"):
+            manifest = load_valid()
+            removed_ids = {item["source_id"] for item in manifest["input"]["source_snapshots"] if item["source_type"] == missing_type}
+            manifest["input"]["source_snapshots"] = [item for item in manifest["input"]["source_snapshots"] if item["source_type"] != missing_type]
+            manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["source_ref"] not in removed_ids]
+            with self.subTest(missing_type=missing_type), self.assertRaisesRegex(ManifestValidationError, "thread-minimum-coverage"):
+                validate_canonical(manifest)
+
+    def test_legacy_paper_code_source_shape_remains_compatible(self):
+        manifest = load_valid()
+        del manifest["input"]["source_snapshots"]
+        manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["resource_type"] in {"paper", "repository"}]
+        repository_license = next(item for item in manifest["license_ledger"] if item["resource_type"] == "repository")
+        repository_license.update({
+            "source_url": manifest["input"]["code_snapshot"]["source_url"],
+            "source_revision": manifest["input"]["code_snapshot"]["revision"],
+            "content_hash": manifest["input"]["code_snapshot"]["content_hash"],
+        })
+        validate_canonical(manifest)
+        public = project_public_manifest(manifest, generated_at="2026-07-15T13:00:00Z")
+        self.assertEqual({"paper", "repository"}, {item["source_type"] for item in public["input"]["source_snapshots"]})
+
+    def test_pairing_id_is_schema_checked_and_preserved(self):
+        manifest = load_backtranslation()
+        manifest["pairing_id"] = "pair:attention-example:r1"
+        validate_canonical(manifest)
+        public = project_public_manifest(manifest, generated_at="2026-07-15T13:00:00Z")
+        self.assertEqual(manifest["pairing_id"], public["pairing_id"])
+        manifest["pairing_id"] = " invalid pairing "
+        with self.assertRaises(ManifestValidationError):
+            validate_canonical(manifest)
 
     def test_unknown_field_and_missing_pin_at_run_fields_are_rejected(self):
         manifest = load_valid(); manifest["unexpected"] = "nope"
@@ -218,7 +284,7 @@ class ProjectionTests(unittest.TestCase):
         private = load_valid(); private["pipeline"]["repository_visibility"] = "private"
         unknown = load_valid(); unknown["pipeline"]["repository_visibility"] = "unknown"
         blocked = load_valid(); blocked["publication"]["decision"] = "blocked"
-        source = load_valid(); source["input"]["code_snapshot"]["publication_decision"] = "pending"
+        source = load_valid(); next(item for item in source["input"]["source_snapshots"] if item["source_type"] == "repository")["publication_decision"] = "pending"
         for manifest in (private, unknown, blocked, source):
             with self.subTest(), self.assertRaises(ManifestValidationError):
                 project_public_manifest(manifest)

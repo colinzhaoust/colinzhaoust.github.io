@@ -13,6 +13,7 @@ from typing import Any, Iterable, Mapping
 from urllib.parse import urlparse
 
 from .constants import PROJECTION_POLICY_ID, PROJECTION_POLICY_PATH, PUBLIC_SCHEMA_VERSION
+from .sources import typed_source_snapshots
 from .validation import ManifestValidationError, validate_canonical, validate_public
 
 
@@ -78,10 +79,9 @@ def _projection_gate_errors(document: Mapping[str, Any], policy: Mapping[str, An
     host = urlparse(pipeline["repository"]).hostname if isinstance(pipeline["repository"], str) else None
     if host not in policy["allowed_repository_hosts"]:
         errors.append("publication:repository-host-not-allowed")
-    for name in ("paper_snapshot", "code_snapshot"):
-        snapshot = document["input"][name]
+    for snapshot in typed_source_snapshots(document):
         if snapshot.get("availability") != "available" or snapshot.get("source_visibility") != "public" or snapshot.get("publication_decision") != "allowed":
-            errors.append(f"publication:{name}-not-approved-public")
+            errors.append("publication:source-snapshot-not-approved-public")
     for item in document["license_ledger"]:
         if item.get("availability") != "available":
             errors.append("publication:license-ledger-incomplete")
@@ -199,11 +199,14 @@ def _redaction_summary(document: Mapping[str, Any]) -> dict[str, int]:
     always_private = [
         document["visibility"], document["experiment_config_id"], document["completion_contract"],
         document["execution"], document["review_policy"], document["migration"] if "migration" in document else {},
-        document["input"]["paper_snapshot"], document["input"]["code_snapshot"],
         document["publication"]["reason"], document["publication"]["policy_id"],
         document["pipeline"]["completion_contract_id"], document["completion"]["derived_at"],
     ]
     omitted_fields = sum(_leaf_count(value) for value in always_private)
+    if "source_snapshots" in document["input"]:
+        omitted_fields += _leaf_count(document["input"].get("paper_snapshot", {}))
+        omitted_fields += _leaf_count(document["input"].get("code_snapshot", {}))
+    omitted_fields += sum(4 if item["availability"] == "available" else _leaf_count(item) - 2 for item in typed_source_snapshots(document))
     omitted_fields += _leaf_count(document["external_lineage"])
     omitted_fields += sum(_leaf_count(item) for item in unpublishable_artifacts)
     omitted_fields += sum(_leaf_count(item) for name in collections for item in document[name] if not item["publishable"])
@@ -257,7 +260,14 @@ def project_public_manifest(document: Mapping[str, Any], *, generated_at: str | 
         "run_id": document["run_id"], "cell_id": document["cell_id"], "thread": document["thread"],
         "started_at": document["started_at"], "ended_at": document["ended_at"], "status": document["status"],
         "pipeline": {key: document["pipeline"][key] for key in ("id", "variant", "repository", "repository_visibility", "commit_sha")},
-        "input": {key: document["input"][key] for key in ("canonical_topic_family", "granularity")},
+        "input": {
+            "canonical_topic_family": document["input"]["canonical_topic_family"],
+            "granularity": document["input"]["granularity"],
+            "source_snapshots": [
+                {key: item[key] for key in ("source_id", "source_type", "source_url", "revision", "content_hash")}
+                for item in typed_source_snapshots(document)
+            ],
+        },
         "condition": {key: document["condition"][key] for key in ("condition_id", "model_policy", "replicate")},
         "publication": {"source_visibility": document["publication"]["source_visibility"], "decision": document["publication"]["decision"]},
         "lineage": _safe_lineage(document["lineage"]),
@@ -286,10 +296,12 @@ def project_public_manifest(document: Mapping[str, Any], *, generated_at: str | 
         "repair_summary": {"event_count": len(repairs), "max_iteration": max((item["iteration"] for item in repairs), default=0), "policy_ids": sorted({item["policy_id"] for item in repairs})},
         "cost": {"currency": document["budget"]["currency"], "measured_usd": document["budget"]["measured_usd"], "estimated_usd": document["budget"]["estimated_usd"], "coverage": list(document["budget"]["coverage"]), "reservation_state": _public_reservation_state(document["budget"]["reservations"])},
         "license_ledger": [
-            {key: item[key] for key in ("item_id", "resource_type", "source_url", "source_revision", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision")}
+            {key: item[key] for key in ("item_id", "source_ref", "resource_type", "source_url", "source_revision", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision")}
             for item in document["license_ledger"]
         ],
     }
+    if "pairing_id" in document:
+        projected["pairing_id"] = document["pairing_id"]
     errors = _scan_projected(projected, policy)
     if errors:
         raise ManifestValidationError(errors)

@@ -15,6 +15,7 @@
     "schema_version": {"const": "paper-media-manifest/0.1.0"},
     "visibility": {"const": "private_canonical"},
     "run_id": {"$ref": "#/$defs/id"},
+    "pairing_id": {"$ref": "#/$defs/id"},
     "cell_id": {"$ref": "#/$defs/id"},
     "experiment_config_id": {"$ref": "#/$defs/id"},
     "thread": {"enum": ["real_video_pipelines", "paper_to_slides", "slides_plus_manim", "backtranslation"]},
@@ -38,13 +39,18 @@
     "external_lineage": {"type": "array", "items": {"$ref": "#/$defs/external_parent_evidence"}},
     "input": {
       "type": "object", "additionalProperties": false,
-      "required": ["canonical_topic_family", "granularity", "paper_snapshot", "code_snapshot"],
+      "required": ["canonical_topic_family", "granularity"],
       "properties": {
         "canonical_topic_family": {"$ref": "#/$defs/id"},
         "granularity": {"enum": ["paper", "topic", "section", "formula", "slide", "clip", "video"]},
         "paper_snapshot": {"$ref": "#/$defs/source_snapshot"},
-        "code_snapshot": {"$ref": "#/$defs/source_snapshot"}
-      }
+        "code_snapshot": {"$ref": "#/$defs/source_snapshot"},
+        "source_snapshots": {"type": "array", "items": {"$ref": "#/$defs/typed_source_snapshot"}, "minItems": 1}
+      },
+      "anyOf": [
+        {"required": ["source_snapshots"]},
+        {"required": ["paper_snapshot", "code_snapshot"]}
+      ]
     },
     "condition": {
       "type": "object", "additionalProperties": false,
@@ -135,6 +141,31 @@
         {"$ref": "#/$defs/unavailable"}
       ]
     },
+    "typed_source_snapshot": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "source_id", "source_type", "source_url", "revision", "retrieved_at", "content_hash", "source_visibility", "publication_decision"],
+          "properties": {
+            "availability": {"const": "available"}, "source_id": {"$ref": "#/$defs/id"},
+            "source_type": {"enum": ["paper", "repository", "example_gallery", "example", "dataset", "model", "other"]},
+            "source_url": {"$ref": "#/$defs/https"}, "revision": {"type": "string", "minLength": 1},
+            "retrieved_at": {"$ref": "#/$defs/timestamp"}, "content_hash": {"$ref": "#/$defs/hash"},
+            "source_visibility": {"enum": ["public", "private", "unknown"]},
+            "publication_decision": {"enum": ["allowed", "blocked", "pending"]}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "source_id", "source_type", "reason"],
+          "properties": {
+            "availability": {"const": "unavailable"}, "source_id": {"$ref": "#/$defs/id"},
+            "source_type": {"enum": ["paper", "repository", "example_gallery", "example", "dataset", "model", "other"]},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
     "parent_ref": {
       "type": "object", "additionalProperties": false,
       "required": ["scope", "run_id", "artifact_id", "relation", "content_hash", "canonical_manifest_hash"],
@@ -171,10 +202,10 @@
       "oneOf": [
         {
           "type": "object", "additionalProperties": false,
-          "required": ["availability", "item_id", "resource_type", "source_url", "source_revision", "retrieved_at", "content_hash", "declared_spdx", "license_text_ref", "license_text_hash", "constraints", "exceptions", "reviewer", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision"],
+          "required": ["availability", "item_id", "source_ref", "resource_type", "source_url", "source_revision", "retrieved_at", "content_hash", "declared_spdx", "license_text_ref", "license_text_hash", "constraints", "exceptions", "reviewer", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision"],
           "properties": {
-            "availability": {"const": "available"}, "item_id": {"$ref": "#/$defs/id"},
-            "resource_type": {"enum": ["paper", "repository", "model", "dataset", "example", "asset"]},
+            "availability": {"const": "available"}, "item_id": {"$ref": "#/$defs/id"}, "source_ref": {"$ref": "#/$defs/id"},
+            "resource_type": {"enum": ["paper", "repository", "model", "dataset", "example_gallery", "example", "other", "asset"]},
             "source_url": {"$ref": "#/$defs/https"}, "source_revision": {"type": "string", "minLength": 1},
             "retrieved_at": {"$ref": "#/$defs/timestamp"}, "content_hash": {"$ref": "#/$defs/hash"},
             "declared_spdx": {"type": ["string", "null"]}, "license_text_ref": {"$ref": "#/$defs/repo_path"},
@@ -189,10 +220,10 @@
         },
         {
           "type": "object", "additionalProperties": false,
-          "required": ["availability", "item_id", "resource_type", "reason", "source_visibility", "publication_decision"],
+          "required": ["availability", "item_id", "source_ref", "resource_type", "reason", "source_visibility", "publication_decision"],
           "properties": {
-            "availability": {"const": "unavailable"}, "item_id": {"$ref": "#/$defs/id"},
-            "resource_type": {"enum": ["paper", "repository", "model", "dataset", "example", "asset"]},
+            "availability": {"const": "unavailable"}, "item_id": {"$ref": "#/$defs/id"}, "source_ref": {"$ref": "#/$defs/id"},
+            "resource_type": {"enum": ["paper", "repository", "model", "dataset", "example_gallery", "example", "other", "asset"]},
             "reason": {"type": "string", "minLength": 1}, "source_visibility": {"const": "unknown"},
             "publication_decision": {"enum": ["blocked", "pending"]}
           }

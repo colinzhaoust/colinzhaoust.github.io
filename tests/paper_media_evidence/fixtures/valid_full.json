@@ -61,7 +61,12 @@
       "content_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
       "source_visibility": "public",
       "publication_decision": "allowed"
-    }
+    },
+    "source_snapshots": [
+      {"availability": "available", "source_id": "input:paper", "source_type": "paper", "source_url": "https://arxiv.org/abs/0000.00000", "revision": "v1", "retrieved_at": "2026-07-15T11:00:00Z", "content_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "source_visibility": "public", "publication_decision": "allowed"},
+      {"availability": "available", "source_id": "input:repository", "source_type": "repository", "source_url": "https://example.org/pipeline", "revision": "0123456789abcdef0123456789abcdef01234567", "retrieved_at": "2026-07-15T11:00:00Z", "content_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "source_visibility": "public", "publication_decision": "allowed"},
+      {"availability": "available", "source_id": "input:model", "source_type": "model", "source_url": "https://example.org/model", "revision": "immutable-v1", "retrieved_at": "2026-07-15T11:00:00Z", "content_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "source_visibility": "public", "publication_decision": "allowed"}
+    ]
   },
   "condition": {"condition_id": "controlled:r1", "model_policy": "controlled", "replicate": 1},
   "publication": {
@@ -79,6 +84,7 @@
     {
       "availability": "available",
       "item_id": "license:paper",
+      "source_ref": "input:paper",
       "resource_type": "paper",
       "source_url": "https://arxiv.org/abs/0000.00000",
       "source_revision": "v1",
@@ -98,6 +104,7 @@
     {
       "availability": "available",
       "item_id": "license:repository",
+      "source_ref": "input:repository",
       "resource_type": "repository",
       "source_url": "https://example.org/pipeline",
       "source_revision": "0123456789abcdef0123456789abcdef01234567",
@@ -117,6 +124,7 @@
     {
       "availability": "available",
       "item_id": "license:model",
+      "source_ref": "input:model",
       "resource_type": "model",
       "source_url": "https://example.org/model",
       "source_revision": "immutable-v1",

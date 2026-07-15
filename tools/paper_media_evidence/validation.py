@@ -12,6 +12,7 @@ from referencing import Registry, Resource
 
 from .completion import derive_completion
 from .constants import CANONICAL_SCHEMA_PATH, COMPLETION_SCHEMA_PATH, PUBLIC_SCHEMA_PATH
+from .sources import required_source_groups, typed_source_snapshots
 
 
 class ManifestValidationError(ValueError):
@@ -206,12 +207,35 @@ def _semantic_errors(document: Mapping[str, Any]) -> list[str]:
         if (execution["seed_policy"] == "explicit") != (execution["random_seed"] is not None):
             errors.append("execution:seed-policy-contradiction")
 
-    available_license_types = {item["resource_type"] for item in document["license_ledger"] if item["availability"] == "available"}
-    required_license_types = {"paper", "repository"}
-    if document["execution"].get("availability") == "available" and document["execution"]["model_versions"]:
-        required_license_types.add("model")
-    if document["status"] != "migration_pending" and not required_license_types.issubset(available_license_types):
-        errors.append("license:required-resource-coverage")
+    sources = typed_source_snapshots(document)
+    if _duplicates(item["source_id"] for item in sources):
+        errors.append("ids:source:duplicate")
+    source_by_id = {item["source_id"]: item for item in sources}
+    available_source_types = {item["source_type"] for item in sources if item["availability"] == "available"}
+    licenses_by_source = {item["source_ref"]: item for item in document["license_ledger"]}
+    for item in document["license_ledger"]:
+        source = source_by_id.get(item["source_ref"])
+        type_matches = source is not None and (
+            source["source_type"] == item["resource_type"]
+            or (source["source_type"] == "other" and item["resource_type"] == "asset")
+        )
+        if not type_matches:
+            errors.append(f"license:{item['item_id']}:source-binding")
+        elif "source_snapshots" in document["input"] and item["availability"] == "available" and (
+            item["source_url"] != source["source_url"]
+            or item["source_revision"] != source["revision"]
+            or item["content_hash"] != source["content_hash"]
+        ):
+            errors.append(f"license:{item['item_id']}:source-identity-mismatch")
+    if document["status"] != "migration_pending":
+        if any(not (group & available_source_types) for group in required_source_groups(document["thread"])):
+            errors.append("source:thread-minimum-coverage")
+        for source in sources:
+            if source["availability"] != "available":
+                continue
+            license_entry = licenses_by_source.get(source["source_id"])
+            if not license_entry or license_entry["availability"] != "available" or license_entry["resource_type"] != source["source_type"]:
+                errors.append(f"license:{source['source_id']}:source-coverage")
 
     groups = {
         "stage": [item["id"] for item in document["stages"]],
@@ -335,6 +359,7 @@ def _public_semantic_errors(document: Mapping[str, Any]) -> list[str]:
     reviews = {item["review_id"]: item for item in document["reviews"]}
     nodes = {item["node_id"]: item for item in document["graph"]["nodes"]}
     edges = {item["edge_id"]: item for item in document["graph"]["edges"]}
+    sources = {item["source_id"]: item for item in document["input"]["source_snapshots"]}
     evidence = set(artifacts) | set(validations) | set(claims)
     for artifact in artifacts.values():
         if any(ref not in validations or validations[ref]["subject_ref"] != artifact["artifact_id"] for ref in artifact["validation_refs"]):
@@ -359,6 +384,14 @@ def _public_semantic_errors(document: Mapping[str, Any]) -> list[str]:
     for migration in document["graph"]["migrations"]:
         if migration["old_id"] not in aliases or migration["new_id"] not in nodes:
             errors.append("public:graph-migration-closure")
+    for item in document["license_ledger"]:
+        source = sources.get(item["source_ref"])
+        type_matches = source is not None and (
+            source["source_type"] == item["resource_type"]
+            or (source["source_type"] == "other" and item["resource_type"] == "asset")
+        )
+        if not type_matches or item["source_url"] != source["source_url"] or item["source_revision"] != source["revision"]:
+            errors.append(f"public:{item['item_id']}:source-license-closure")
     return errors
 
 

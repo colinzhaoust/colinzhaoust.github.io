@@ -135,8 +135,8 @@ def migrate_legacy_baseline(
             "publication": {"source_visibility": "unknown", "decision": "pending", "reason": "legacy evidence requires enrichment before publication", "policy_id": PROJECTION_POLICY_ID},
             "review_policy": {"policy_id": "legacy-review-policy/0.1.0", "graph_confirmation_rubric_ids": ["graph-match/1.0.0"], "graph_reviewer_types": ["human"]},
             "license_ledger": [
-                {"availability": "unavailable", "item_id": "license:paper", "resource_type": "paper", "reason": "legacy manifest did not preserve paper license evidence", "source_visibility": "unknown", "publication_decision": "pending"},
-                {"availability": "unavailable", "item_id": "license:repository", "resource_type": "repository", "reason": "legacy manifest did not preserve repository license evidence", "source_visibility": "unknown", "publication_decision": "pending"},
+                {"availability": "unavailable", "item_id": "license:paper", "source_ref": "input:paper", "resource_type": "paper", "reason": "legacy manifest did not preserve paper license evidence", "source_visibility": "unknown", "publication_decision": "pending"},
+                {"availability": "unavailable", "item_id": "license:repository", "source_ref": "input:repository", "resource_type": "repository", "reason": "legacy manifest did not preserve repository license evidence", "source_visibility": "unknown", "publication_decision": "pending"},
             ],
             "execution": _unavailable("legacy manifest did not preserve exact command and configuration evidence"),
             "budget": {
