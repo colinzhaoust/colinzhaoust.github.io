@@ -9,7 +9,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Protocol, Sequence
 
-from .feedback import FeedbackBundle, FeedbackPolicy, RenderResult, build_feedback, write_feedback
+from .feedback import FeedbackBundle, FeedbackPolicy, ModelFeedback, RenderResult, build_feedback, write_feedback
+from .reference import PreparedReference, ReferencePreparationError, validate_prepared_reference
 from .registry import sha256_file
 
 
@@ -35,7 +36,7 @@ class ModelRequest:
     reference_video: Path
     prompt: str
     current_code: str | None = None
-    feedback: Mapping[str, Any] | None = None
+    feedback: ModelFeedback | None = None
 
 
 @dataclass(frozen=True)
@@ -165,6 +166,17 @@ def _assert_adapter(adapter: ModelAdapter) -> None:
         raise ConditionError("adapter_non_compliant: network-disabled sandbox declaration is required")
 
 
+def _assert_reference(prepared: PreparedReference, run_root: Path, redactions: Sequence[str]) -> None:
+    try:
+        validate_prepared_reference(
+            prepared,
+            run_root=run_root,
+            forbidden_tokens=list(redactions),
+        )
+    except ReferencePreparationError as exc:
+        raise ConditionError("reference_non_compliant: PreparedReference validation failed") from exc
+
+
 def _write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
@@ -238,8 +250,7 @@ def _write_trace(trace: ConditionTrace, run_root: Path) -> None:
 def run_one_shot(
     *,
     pairing_id: str,
-    case_id: str,
-    reference_video: Path,
+    prepared_reference: PreparedReference,
     run_root: Path,
     adapter: ModelAdapter,
     renderer: Renderer,
@@ -247,7 +258,10 @@ def run_one_shot(
     redactions: Sequence[str] = (),
 ) -> ConditionTrace:
     _assert_adapter(adapter)
+    _assert_reference(prepared_reference, run_root, redactions)
     run_root.mkdir(parents=True, exist_ok=True)
+    case_id = prepared_reference.case_id
+    reference_video = prepared_reference.video_path.resolve()
     reference_hash = sha256_file(reference_video)
     request = ModelRequest(
         condition="one_shot",
@@ -259,40 +273,46 @@ def run_one_shot(
     )
     rounds: list[CandidateRound] = []
     failure_codes: list[str] = []
+    provider_calls = 1
     try:
         response = adapter.generate(request)
+    except Exception as exc:
+        failure_codes.append("generation_error")
+        _write_text(run_root / "round_0" / "failure.txt", f"generation_error: {type(exc).__name__}")
+    else:
         response_path = run_root / "round_0" / "response.txt"
         _write_text(response_path, response.raw_text)
-        code = extract_python_source(response.raw_text)
-        code_path = run_root / "round_0" / "code.py"
-        _write_text(code_path, code)
-        render, feedback, feedback_path = _render_and_feedback(
-            root=run_root,
-            reference_video=reference_video,
-            code_path=code_path,
-            renderer=renderer,
-            policy=policy,
-            round_index=0,
-            redactions=redactions,
-        )
-        candidate = _round_from_artifacts(
-            root=run_root,
-            round_index=0,
-            stage="one_shot",
-            code_path=code_path,
-            parent_hash=None,
-            response_path=response_path,
-            render=render,
-            feedback_path=feedback_path,
-            feedback=feedback,
-        )
-        rounds.append(candidate)
-        if candidate.failure_code:
-            failure_codes.append(candidate.failure_code)
-    except Exception as exc:
-        failure_codes.append("malformed_code" if isinstance(exc, ConditionError) else "generation_error")
-        response_path = run_root / "round_0" / "failure.txt"
-        _write_text(response_path, str(exc))
+        try:
+            code = extract_python_source(response.raw_text)
+        except ConditionError:
+            failure_codes.append("malformed_code")
+            _write_text(run_root / "round_0" / "failure.txt", "malformed_code")
+        else:
+            code_path = run_root / "round_0" / "code.py"
+            _write_text(code_path, code)
+            render, feedback, feedback_path = _render_and_feedback(
+                root=run_root,
+                reference_video=reference_video,
+                code_path=code_path,
+                renderer=renderer,
+                policy=policy,
+                round_index=0,
+                redactions=redactions,
+            )
+            candidate = _round_from_artifacts(
+                root=run_root,
+                round_index=0,
+                stage="one_shot",
+                code_path=code_path,
+                parent_hash=None,
+                response_path=response_path,
+                render=render,
+                feedback_path=feedback_path,
+                feedback=feedback,
+            )
+            rounds.append(candidate)
+            if candidate.failure_code:
+                failure_codes.append(candidate.failure_code)
 
     final = rounds[-1] if rounds else None
     trace = ConditionTrace(
@@ -305,7 +325,7 @@ def run_one_shot(
         rounds=rounds,
         status="completed" if final and not final.failure_code else "failed",
         failure_codes=failure_codes,
-        provider_calls=1,
+        provider_calls=provider_calls,
         billable_provider_calls=0,
         final_code_hash=final.code_hash if final else None,
         final_render_hash=final.render_hash if final else None,
@@ -317,8 +337,7 @@ def run_one_shot(
 def run_self_refined(
     *,
     pairing_id: str,
-    case_id: str,
-    reference_video: Path,
+    prepared_reference: PreparedReference,
     one_shot_code_path: Path,
     expected_one_shot_hash: str,
     run_root: Path,
@@ -328,6 +347,9 @@ def run_self_refined(
     redactions: Sequence[str] = (),
 ) -> ConditionTrace:
     _assert_adapter(adapter)
+    _assert_reference(prepared_reference, run_root, redactions)
+    case_id = prepared_reference.case_id
+    reference_video = prepared_reference.video_path.resolve()
     actual_one_shot_hash = sha256_file(one_shot_code_path)
     if actual_one_shot_hash != expected_one_shot_hash:
         raise ConditionError("policy_violation: self-refinement parent is not the exact one-shot code")
@@ -369,6 +391,7 @@ def run_self_refined(
     current_code_path = initial_code_path
     current_code_hash = expected_one_shot_hash
     current_feedback = feedback
+    current_feedback_root = feedback_path.parent / "feedback"
     for round_index in range(1, policy.max_revision_rounds + 1):
         if current_feedback.early_stop:
             break
@@ -378,15 +401,25 @@ def run_self_refined(
             reference_video=reference_video,
             prompt=GENERIC_PROMPT,
             current_code=current_code_path.read_text(encoding="utf-8"),
-            feedback=current_feedback.model_view(),
+            feedback=current_feedback.model_input(current_feedback_root),
         )
         round_root = run_root / f"round_{round_index}"
+        provider_calls += 1
         try:
             response = adapter.generate(request)
-            provider_calls += 1
-            response_path = round_root / "response.txt"
-            _write_text(response_path, response.raw_text)
+        except Exception as exc:
+            failure_codes.append("generation_error")
+            _write_text(round_root / "failure.txt", f"generation_error: {type(exc).__name__}")
+            break
+        response_path = round_root / "response.txt"
+        _write_text(response_path, response.raw_text)
+        try:
             code = extract_python_source(response.raw_text)
+        except ConditionError:
+            failure_codes.append("malformed_code")
+            _write_text(round_root / "failure.txt", "malformed_code")
+            break
+        try:
             code_path = round_root / "code.py"
             _write_text(code_path, code)
             render, next_feedback, feedback_path = _render_and_feedback(
@@ -415,9 +448,10 @@ def run_self_refined(
             current_code_path = code_path
             current_code_hash = candidate.code_hash or current_code_hash
             current_feedback = next_feedback
+            current_feedback_root = feedback_path.parent / "feedback"
         except Exception as exc:
-            failure_codes.append("malformed_code" if isinstance(exc, ConditionError) else "generation_error")
-            _write_text(round_root / "failure.txt", str(exc))
+            failure_codes.append("evaluation_error")
+            _write_text(round_root / "failure.txt", f"evaluation_error: {type(exc).__name__}")
             break
 
     final = rounds[-1]

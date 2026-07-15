@@ -1,0 +1,5 @@
+# Combined q-5 + q-6 test/runtime lock for CPython 3.9.
+# jsonschema 4.26.0 requires Python >=3.10; 4.25.1 is the newest compatible line used here.
+jsonschema==4.25.1
+# Pillow 11.3.0 supports Python >=3.9 and supplies deterministic PNG comparison/loading.
+Pillow==11.3.0

@@ -23,12 +23,14 @@ from tools.paper_media_evidence import (
 )
 
 from .conditions import ConditionTrace, GENERIC_PROMPT, load_protocol
+from .reference import PreparedReference, validate_prepared_reference
 from .registry import load_registry, sha256_file
 
 
 EMPTY_SHA256 = "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 MANIM_LICENSE_REF = "experiments/backtranslation/v1/licenses/manim-LICENSE.txt"
 MANIM_COMMUNITY_LICENSE_REF = "experiments/backtranslation/v1/licenses/manim-LICENSE.community.txt"
+COMBINED_REQUIREMENTS_REF = "requirements-backtranslation-evidence.txt"
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -39,9 +41,16 @@ class ManifestBridgeError(ValueError):
 @dataclass(frozen=True)
 class HumanConditionInput:
     pairing_id: str
-    case_id: str
-    reference_video: Path
+    prepared_reference: PreparedReference
     implementation_origin: str = "synthetic_fixture"
+
+    @property
+    def case_id(self) -> str:
+        return self.prepared_reference.case_id
+
+    @property
+    def reference_video(self) -> Path:
+        return self.prepared_reference.video_path
 
 
 @dataclass(frozen=True)
@@ -151,6 +160,7 @@ class PaperMediaEvidenceBridge:
         protocol_path: Path,
         pipeline_repository: str,
         pipeline_commit: str,
+        license_snapshot_root: Path | None = None,
         generated_at: str = "2026-07-15T18:00:00Z",
     ) -> None:
         self.registry_path = registry_path
@@ -159,11 +169,16 @@ class PaperMediaEvidenceBridge:
         self.protocol = load_protocol(protocol_path)
         self.pipeline_repository = pipeline_repository
         self.pipeline_commit = pipeline_commit
+        self.license_snapshot_root = license_snapshot_root or registry_path.parent / "licenses"
         self.generated_at = generated_at
         self.protocol_hash = _prefixed_hash(sha256_file(protocol_path))
         self.registry_hash = _prefixed_hash(sha256_file(registry_path))
         self.protocol_ref = self._repo_ref(protocol_path)
         self.registry_ref = self._repo_ref(registry_path)
+        self.dependency_lock_path = ROOT / COMBINED_REQUIREMENTS_REF
+        if not self.dependency_lock_path.is_file():
+            raise ManifestBridgeError("Combined q-5/q-6 dependency lock is missing")
+        self.dependency_lock_hash = _prefixed_hash(sha256_file(self.dependency_lock_path))
 
     def emit_pairing(
         self,
@@ -246,8 +261,10 @@ class PaperMediaEvidenceBridge:
             raise ManifestBridgeError("offline dry-run recorded a billable provider call")
 
     def emit_human_run(self, *, human: HumanConditionInput, artifact_root: Path) -> CanonicalManifestResult:
-        if not human.reference_video.is_file():
-            raise ManifestBridgeError("Human reference video is missing")
+        try:
+            validate_prepared_reference(human.prepared_reference, run_root=artifact_root)
+        except Exception as exc:
+            raise ManifestBridgeError("Human PreparedReference validation failed") from exc
         condition = "human"
         run_id = self._run_id(human.pairing_id, condition)
         artifact_id = f"artifact:{human.pairing_id}:{condition}:reference-video"
@@ -297,6 +314,7 @@ class PaperMediaEvidenceBridge:
         cross_run_parents: Sequence[CrossRunParent],
         dry_run: bool,
     ) -> CanonicalManifestResult:
+        condition_root = self._validated_condition_root(trace, condition_root)
         if trace.condition not in {"one_shot", "self_refined"}:
             raise ManifestBridgeError("unsupported generated condition")
         if len(cross_run_parents) != 1:
@@ -328,7 +346,7 @@ class PaperMediaEvidenceBridge:
         claims = [
             self._claim(
                 f"claim:{trace.condition}:attempt-denominator",
-                f"Attempt denominator: {attempts} retained candidate attempts; {failures} failed attempts.",
+                f"Attempt denominator: {attempts} attempted candidate generations; {failures} failed attempts.",
                 [trace_artifact],
             ),
             self._claim(
@@ -359,19 +377,18 @@ class PaperMediaEvidenceBridge:
     def _trace_evidence(
         self, *, trace: ConditionTrace, condition_root: Path, external_parent: CrossRunParent, origin: str
     ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, str], list[dict[str, Any]]]:
-        trace_path = condition_root / "condition_trace.json"
-        if not trace_path.is_file():
-            raise ManifestBridgeError("condition_trace.json is missing")
+        trace_path = self._resolve_retained_file(condition_root, "condition_trace.json")
         artifacts: list[dict[str, Any]] = []
         validations: list[dict[str, Any]] = []
         repairs: list[dict[str, Any]] = []
         ids: dict[str, str] = {}
         previous_code_id: str | None = None
         for item in trace.rounds:
+            if item.response_path:
+                self._resolve_retained_file(condition_root, item.response_path)
             code_id: str | None = None
             if item.code_path:
-                code_path = condition_root / item.code_path
-                self._assert_file_hash(code_path, item.code_hash)
+                code_path = self._resolve_retained_file(condition_root, item.code_path, item.code_hash)
                 code_id = f"artifact:{trace.pairing_id}:{trace.condition}:round:{item.round_index}:code"
                 if item.round_index == 0:
                     code_parents = [external_parent.parent_ref()]
@@ -402,8 +419,7 @@ class PaperMediaEvidenceBridge:
 
             render_id: str | None = None
             if item.render_path:
-                render_path = condition_root / item.render_path
-                self._assert_file_hash(render_path, item.render_hash)
+                render_path = self._resolve_retained_file(condition_root, item.render_path, item.render_hash)
                 render_id = f"artifact:{trace.pairing_id}:{trace.condition}:round:{item.round_index}:render"
                 if not code_id:
                     raise ManifestBridgeError("render has no exact code parent")
@@ -420,8 +436,7 @@ class PaperMediaEvidenceBridge:
                     ids["final_render"] = render_id
 
             if item.feedback_path:
-                feedback_path = condition_root / item.feedback_path
-                self._assert_file_hash(feedback_path, item.feedback_hash)
+                feedback_path = self._resolve_retained_file(condition_root, item.feedback_path, item.feedback_hash)
                 feedback_id = f"artifact:{trace.pairing_id}:{trace.condition}:round:{item.round_index}:feedback"
                 parent_id = render_id or code_id
                 if not parent_id:
@@ -449,9 +464,39 @@ class PaperMediaEvidenceBridge:
         ids["trace"] = trace_id
         return artifacts, validations, ids, repairs
 
-    def _assert_file_hash(self, path: Path, expected: str | None) -> None:
-        if not expected or not path.is_file() or sha256_file(path) != expected:
-            raise ManifestBridgeError("retained artifact is missing or does not match its trace hash")
+    def _validated_condition_root(self, trace: ConditionTrace, condition_root: Path) -> Path:
+        if condition_root.is_symlink():
+            raise ManifestBridgeError("condition_root must not be a symlink")
+        try:
+            root = condition_root.resolve(strict=True)
+        except FileNotFoundError as exc:
+            raise ManifestBridgeError("condition_root is missing") from exc
+        if not root.is_dir():
+            raise ManifestBridgeError("condition_root must be a directory")
+        trace_path = self._resolve_retained_file(root, "condition_trace.json")
+        try:
+            persisted = json.loads(trace_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ManifestBridgeError("persisted condition trace is unreadable") from exc
+        if persisted != trace.to_dict():
+            raise ManifestBridgeError("persisted condition_trace.json does not exactly match the supplied trace")
+        return root
+
+    def _resolve_retained_file(self, condition_root: Path, relative_path: str, expected: str | None = None) -> Path:
+        relative = Path(relative_path)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ManifestBridgeError("retained artifact path must be relative and traversal-free")
+        root = condition_root.resolve(strict=True)
+        try:
+            resolved = (root / relative).resolve(strict=True)
+            resolved.relative_to(root)
+        except (FileNotFoundError, ValueError) as exc:
+            raise ManifestBridgeError("retained artifact escapes condition_root or is missing") from exc
+        if not resolved.is_file():
+            raise ManifestBridgeError("retained artifact must be a regular file")
+        if expected is not None and (not expected or sha256_file(resolved) != expected):
+            raise ManifestBridgeError("retained artifact does not match its trace hash")
+        return resolved
 
     def _local_parent(self, trace: ConditionTrace, artifact: Mapping[str, Any], relation: str) -> dict[str, Any]:
         return {
@@ -499,6 +544,7 @@ class PaperMediaEvidenceBridge:
         }
 
     def _sources_and_licenses(self) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        self._validate_local_license_snapshots()
         upstream = self.registry["upstream"]
         repository_hash = _sha256_text(f"{upstream['repository']}\n{upstream['commit_sha']}\n")
         sources = [
@@ -533,6 +579,29 @@ class PaperMediaEvidenceBridge:
                 "source_visibility": "public", "publication_decision": "allowed",
             })
         return sources, licenses
+
+    def _validate_local_license_snapshots(self) -> None:
+        names = {
+            "LICENSE": "manim-LICENSE.txt",
+            "LICENSE.community": "manim-LICENSE.community.txt",
+        }
+        try:
+            root = self.license_snapshot_root.resolve(strict=True)
+        except FileNotFoundError as exc:
+            raise ManifestBridgeError("Local Manim license snapshot directory is missing") from exc
+        if not root.is_dir() or self.license_snapshot_root.is_symlink():
+            raise ManifestBridgeError("Local Manim license snapshot root must be a real directory")
+        for evidence in self.registry["license_snapshot"]["files"]:
+            filename = names.get(evidence["path"])
+            if filename is None:
+                raise ManifestBridgeError("Registry contains an unsupported license snapshot")
+            try:
+                path = (root / filename).resolve(strict=True)
+                path.relative_to(root)
+            except (FileNotFoundError, ValueError) as exc:
+                raise ManifestBridgeError(f"Local pinned license snapshot is missing: {evidence['path']}") from exc
+            if not path.is_file() or sha256_file(path) != evidence["sha256"]:
+                raise ManifestBridgeError(f"Local pinned license snapshot hash mismatch: {evidence['path']}")
 
     def _base_manifest(
         self, *, run_id: str, pairing_id: str, case_id: str, condition: str, status: str,
@@ -599,7 +668,7 @@ class PaperMediaEvidenceBridge:
                     "role": "condition", "model_id": "q6/recording-mock" if adapted else "q6/reference-preparation",
                     "immutable_version": self.protocol_hash,
                 }],
-                "dependency_lock_ref": self.protocol_ref, "dependency_lock_hash": self.protocol_hash,
+                "dependency_lock_ref": COMBINED_REQUIREMENTS_REF, "dependency_lock_hash": self.dependency_lock_hash,
                 "container_digest": _sha256_text("q6-offline-fixture:no-container"),
                 "renderer_versions": {"manim_source": "0.20.1", "ffmpeg": "fixture-runtime"},
                 "hardware": {"platform": "offline-fixture", "cpu": "not-recorded", "accelerator": "none"},

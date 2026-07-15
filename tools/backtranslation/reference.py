@@ -34,8 +34,10 @@ class ReferencePreparationError(RuntimeError):
 class PreparedReference:
     case_id: str
     video_path: Path
+    workspace_root: Path
     content_hash: str
     media: Mapping[str, Any]
+    normalization: Mapping[str, Any]
     private_evidence: Mapping[str, Any]
 
 
@@ -221,8 +223,16 @@ def prepare_reference(
     return PreparedReference(
         case_id=case_id,
         video_path=output_path,
+        workspace_root=output_root,
         content_hash=private_evidence["output_content_hash"],
         media=media,
+        normalization={
+            "model_visible_filename": str(config.get("model_visible_filename", "reference.mp4")),
+            "width": width,
+            "height": height,
+            "pixel_format": str(config["pixel_format"]),
+            "fps": fps,
+        },
         private_evidence=private_evidence,
     )
 
@@ -259,3 +269,43 @@ def assert_workspace_isolation(
             content = path.read_text(encoding="utf-8", errors="replace").lower()
             if any(re.search(re.escape(token), content) for token in normalized_tokens):
                 raise ReferencePreparationError("Model-visible text leaks source metadata")
+
+
+def validate_prepared_reference(
+    prepared: PreparedReference,
+    *,
+    run_root: Path,
+    forbidden_tokens: list[str] | None = None,
+    ffprobe: str = "ffprobe",
+) -> None:
+    """Revalidate the complete prepared-reference boundary before any adapter call."""
+
+    if not isinstance(prepared, PreparedReference):
+        raise ReferencePreparationError("A typed PreparedReference is required")
+    workspace = prepared.workspace_root.resolve()
+    reference = prepared.video_path.resolve()
+    run = run_root.resolve()
+    if prepared.workspace_root.is_symlink() or prepared.video_path.is_symlink():
+        raise ReferencePreparationError("Prepared reference paths must not be symlinks")
+    if reference.parent.parent != workspace:
+        raise ReferencePreparationError("Prepared reference is outside its isolated workspace")
+    if run == workspace or run in workspace.parents or workspace in run.parents:
+        raise ReferencePreparationError("Run output and model-visible reference workspace must be disjoint")
+    media = validate_model_visible_reference(reference, prepared.case_id, prepared.normalization, ffprobe=ffprobe)
+    if media != dict(prepared.media):
+        raise ReferencePreparationError("Prepared reference media evidence no longer matches the file")
+    content_hash = sha256_file(reference)
+    if content_hash != prepared.content_hash:
+        raise ReferencePreparationError("Prepared reference content hash no longer matches the file")
+    if prepared.private_evidence.get("output_content_hash") != content_hash:
+        raise ReferencePreparationError("Prepared reference private evidence hash is inconsistent")
+    if prepared.private_evidence.get("case_id") != prepared.case_id:
+        raise ReferencePreparationError("Prepared reference private evidence case ID is inconsistent")
+    if prepared.private_evidence.get("output_media") != media:
+        raise ReferencePreparationError("Prepared reference private media evidence is inconsistent")
+    assert_workspace_isolation(
+        workspace,
+        reference_path=reference,
+        source_root=run,
+        forbidden_tokens=list(forbidden_tokens or ()),
+    )

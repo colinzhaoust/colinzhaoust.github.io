@@ -12,12 +12,17 @@ from .conditions import (
     run_one_shot,
     run_self_refined,
 )
+from .feedback import FeedbackAttachment, ModelFeedback
+from .reference import PreparedReference
 from .registry import load_registry, validate_registry, verify_source_root
 
 __all__ = [
     "AdapterCapabilities",
     "ConditionTrace",
     "FixtureRenderer",
+    "FeedbackAttachment",
+    "ModelFeedback",
+    "PreparedReference",
     "RecordingMockAdapter",
     "load_registry",
     "run_one_shot",

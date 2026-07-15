@@ -15,6 +15,85 @@ from .reference import ReferencePreparationError, probe_media
 from .registry import sha256_file
 
 
+class FeedbackAttachmentError(ValueError):
+    """A deterministic model-feedback attachment is missing or unsafe."""
+
+
+@dataclass(frozen=True)
+class FeedbackAttachment:
+    attachment_id: str
+    role: str
+    relative_path: str
+    content_hash: str
+    media_type: str = "image/png"
+
+
+@dataclass(frozen=True)
+class ModelFeedback:
+    """Typed payload plus a connector-local, hash-bound attachment root."""
+
+    contract: str
+    payload: Mapping[str, Any]
+    attachment_root: Path
+    attachments: tuple[FeedbackAttachment, ...]
+
+    def __post_init__(self) -> None:
+        if self.contract != "backtranslation-model-feedback/v1":
+            raise FeedbackAttachmentError("Unsupported model-feedback contract")
+        try:
+            root = self.attachment_root.resolve(strict=True)
+        except FileNotFoundError as exc:
+            raise FeedbackAttachmentError("Feedback attachment root is missing") from exc
+        if not root.is_dir() or self.attachment_root.is_symlink():
+            raise FeedbackAttachmentError("Feedback attachment root must be a real directory")
+        expected: dict[str, tuple[str, str]] = {}
+        for frame in self.payload.get("frame_pairs", []):
+            index = int(frame["index"])
+            expected.update(
+                {
+                    f"sample:{index}:reference": ("reference_frame", str(frame["reference_frame"])),
+                    f"sample:{index}:candidate": ("candidate_frame", str(frame["candidate_frame"])),
+                    f"sample:{index}:diff": ("diff_overlay", str(frame["diff_overlay"])),
+                }
+            )
+        actual = {item.attachment_id: (item.role, item.relative_path) for item in self.attachments}
+        if actual != expected:
+            raise FeedbackAttachmentError("Feedback attachments do not exactly match the typed payload")
+        seen: set[str] = set()
+        for item in self.attachments:
+            if item.attachment_id in seen:
+                raise FeedbackAttachmentError("Duplicate feedback attachment ID")
+            seen.add(item.attachment_id)
+            if item.role not in {"reference_frame", "candidate_frame", "diff_overlay"}:
+                raise FeedbackAttachmentError("Unsupported feedback attachment role")
+            if item.media_type != "image/png":
+                raise FeedbackAttachmentError("Feedback attachments must be PNG images")
+            relative = Path(item.relative_path)
+            if relative.is_absolute() or ".." in relative.parts or relative.suffix.lower() != ".png":
+                raise FeedbackAttachmentError("Feedback attachment path must be a relative PNG path")
+            try:
+                resolved = (root / relative).resolve(strict=True)
+                resolved.relative_to(root)
+            except (FileNotFoundError, ValueError) as exc:
+                raise FeedbackAttachmentError("Feedback attachment escapes its typed root or is missing") from exc
+            if not resolved.is_file() or sha256_file(resolved) != item.content_hash:
+                raise FeedbackAttachmentError("Feedback attachment hash mismatch")
+
+    def resolve(self, attachment_id: str) -> Path:
+        item = next((value for value in self.attachments if value.attachment_id == attachment_id), None)
+        if item is None:
+            raise FeedbackAttachmentError("Unknown feedback attachment ID")
+        root = self.attachment_root.resolve(strict=True)
+        resolved = (root / item.relative_path).resolve(strict=True)
+        try:
+            resolved.relative_to(root)
+        except ValueError as exc:
+            raise FeedbackAttachmentError("Feedback attachment escaped its typed root") from exc
+        if sha256_file(resolved) != item.content_hash:
+            raise FeedbackAttachmentError("Feedback attachment changed after contract creation")
+        return resolved
+
+
 @dataclass(frozen=True)
 class RenderResult:
     success: bool
@@ -91,6 +170,8 @@ class FeedbackBundle:
             "policy_id": self.policy_id,
             "technical_pass": self.technical_pass,
             "visual_pass": self.visual_pass,
+            "render_success": self.render_success,
+            "failure_code": self.failure_code,
             "sanitized_render_errors": self.sanitized_render_errors,
             "technical_media_summary": dict(self.technical_media_summary),
             "numeric_similarity_summary": dict(self.numeric_similarity_summary),
@@ -107,6 +188,38 @@ class FeedbackBundle:
                 for item in self.frame_pairs
             ],
         }
+
+    def model_input(self, attachment_root: Path) -> ModelFeedback:
+        attachments: list[FeedbackAttachment] = []
+        for item in self.frame_pairs:
+            attachments.extend(
+                [
+                    FeedbackAttachment(
+                        attachment_id=f"sample:{item.index}:reference",
+                        role="reference_frame",
+                        relative_path=item.reference_frame,
+                        content_hash=item.reference_hash,
+                    ),
+                    FeedbackAttachment(
+                        attachment_id=f"sample:{item.index}:candidate",
+                        role="candidate_frame",
+                        relative_path=item.candidate_frame,
+                        content_hash=item.candidate_hash,
+                    ),
+                    FeedbackAttachment(
+                        attachment_id=f"sample:{item.index}:diff",
+                        role="diff_overlay",
+                        relative_path=item.diff_overlay,
+                        content_hash=item.diff_hash,
+                    ),
+                ]
+            )
+        return ModelFeedback(
+            contract="backtranslation-model-feedback/v1",
+            payload=self.model_view(),
+            attachment_root=attachment_root,
+            attachments=tuple(attachments),
+        )
 
 
 def sanitize_render_errors(text: str, redactions: Sequence[str] = ()) -> str:

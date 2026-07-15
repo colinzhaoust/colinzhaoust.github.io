@@ -126,8 +126,7 @@ def command_dry_run(args: argparse.Namespace) -> int:
     one_root = work_root / "runs" / "one_shot"
     one_trace = run_one_shot(
         pairing_id="fixture-bt-999-r1",
-        case_id="bt-999",
-        reference_video=prepared.video_path,
+        prepared_reference=prepared,
         run_root=one_root,
         adapter=one_adapter,
         renderer=renderer,
@@ -142,8 +141,7 @@ def command_dry_run(args: argparse.Namespace) -> int:
     self_root = work_root / "runs" / "self_refined"
     self_trace = run_self_refined(
         pairing_id=one_trace.pairing_id,
-        case_id=one_trace.case_id,
-        reference_video=prepared.video_path,
+        prepared_reference=prepared,
         one_shot_code_path=one_code,
         expected_one_shot_hash=one_trace.final_code_hash,
         run_root=self_root,
@@ -167,8 +165,7 @@ def command_dry_run(args: argparse.Namespace) -> int:
     manifests = bridge.emit_pairing(
         human=HumanConditionInput(
             pairing_id=one_trace.pairing_id,
-            case_id=one_trace.case_id,
-            reference_video=prepared.video_path,
+            prepared_reference=prepared,
             implementation_origin="synthetic_fixture",
         ),
         one_shot_trace=one_trace,

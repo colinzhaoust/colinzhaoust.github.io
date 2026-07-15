@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from tools.backtranslation.conditions import (
@@ -41,8 +42,7 @@ class ConditionTests(unittest.TestCase):
         root = self.fixture.root / suffix
         trace = run_one_shot(
             pairing_id="fixture-pair-r1",
-            case_id="bt-999",
-            reference_video=self.fixture.prepared.video_path,
+            prepared_reference=self.fixture.prepared,
             run_root=root,
             adapter=adapter,
             renderer=self.renderer(),
@@ -69,8 +69,7 @@ class ConditionTests(unittest.TestCase):
         with self.assertRaisesRegex(ConditionError, "adapter_non_compliant"):
             run_one_shot(
                 pairing_id="fixture-pair-r1",
-                case_id="bt-999",
-                reference_video=self.fixture.prepared.video_path,
+                prepared_reference=self.fixture.prepared,
                 run_root=self.fixture.root / "non_compliant",
                 adapter=adapter,
                 renderer=self.renderer(),
@@ -83,8 +82,7 @@ class ConditionTests(unittest.TestCase):
         adapter = RecordingMockAdapter([fixture_code("refine_1"), fixture_code("refine_2")])
         refined = run_self_refined(
             pairing_id=one.pairing_id,
-            case_id=one.case_id,
-            reference_video=self.fixture.prepared.video_path,
+            prepared_reference=self.fixture.prepared,
             one_shot_code_path=one_code,
             expected_one_shot_hash=one.final_code_hash or "",
             run_root=self.fixture.root / "paired_self",
@@ -100,7 +98,19 @@ class ConditionTests(unittest.TestCase):
         self.assertTrue(refined.rounds[-1].visual_pass)
         self.assertTrue(refined.rounds[-1].early_stop)
         self.assertEqual("completed", refined.status)
-        self.assertIn("frame_pairs", adapter.calls[0].feedback or {})
+        self.assertIsNotNone(adapter.calls[0].feedback)
+        self.assertIn("frame_pairs", adapter.calls[0].feedback.payload)
+        self.assertEqual(15, len(adapter.calls[0].feedback.attachments))
+        for attachment in adapter.calls[0].feedback.attachments:
+            self.assertTrue(adapter.calls[0].feedback.resolve(attachment.attachment_id).is_file())
+        self.assertEqual(
+            (self.fixture.root / "paired_self" / "round_0" / "feedback").resolve(),
+            adapter.calls[0].feedback.attachment_root.resolve(),
+        )
+        self.assertEqual(
+            (self.fixture.root / "paired_self" / "round_1" / "feedback").resolve(),
+            adapter.calls[1].feedback.attachment_root.resolve(),
+        )
 
     def test_self_refinement_rejects_changed_parent(self) -> None:
         one, _, one_root = self.one_shot(suffix="mismatch_one")
@@ -108,8 +118,7 @@ class ConditionTests(unittest.TestCase):
         with self.assertRaisesRegex(ConditionError, "exact one-shot"):
             run_self_refined(
                 pairing_id=one.pairing_id,
-                case_id=one.case_id,
-                reference_video=self.fixture.prepared.video_path,
+                prepared_reference=self.fixture.prepared,
                 one_shot_code_path=one_code,
                 expected_one_shot_hash="0" * 64,
                 run_root=self.fixture.root / "mismatch_self",
@@ -124,8 +133,7 @@ class ConditionTests(unittest.TestCase):
         adapter = RecordingMockAdapter([fixture_code("one_shot") for _ in range(3)])
         refined = run_self_refined(
             pairing_id=one.pairing_id,
-            case_id=one.case_id,
-            reference_video=self.fixture.prepared.video_path,
+            prepared_reference=self.fixture.prepared,
             one_shot_code_path=one_code,
             expected_one_shot_hash=one.final_code_hash or "",
             run_root=self.fixture.root / "budget_self",
@@ -149,8 +157,7 @@ class ConditionTests(unittest.TestCase):
         renderer = self.renderer()
         trace = run_one_shot(
             pairing_id="fixture-pair-r1",
-            case_id="bt-999",
-            reference_video=self.fixture.prepared.video_path,
+            prepared_reference=self.fixture.prepared,
             run_root=self.fixture.root / "malformed",
             adapter=adapter,
             renderer=renderer,
@@ -158,7 +165,56 @@ class ConditionTests(unittest.TestCase):
         )
         self.assertEqual("failed", trace.status)
         self.assertEqual(["malformed_code"], trace.failure_codes)
+        self.assertEqual(1, trace.provider_calls)
         self.assertEqual([], renderer.calls)
+
+    def test_provider_exception_is_counted_and_distinct_from_malformed_output(self) -> None:
+        adapter = RecordingMockAdapter([])
+        trace = run_one_shot(
+            pairing_id="fixture-generation-failure-r1",
+            prepared_reference=self.fixture.prepared,
+            run_root=self.fixture.root / "generation_failure",
+            adapter=adapter,
+            renderer=self.renderer(),
+            policy=self.fixture.policy,
+        )
+        self.assertEqual(1, len(adapter.calls))
+        self.assertEqual(1, trace.provider_calls)
+        self.assertEqual(["generation_error"], trace.failure_codes)
+        self.assertNotIn("malformed_code", trace.failure_codes)
+
+    def test_core_runner_revalidates_typed_reference_before_adapter_call(self) -> None:
+        prepared = self.fixture.prepared
+        cases = {
+            "opaque_case": replace(prepared, case_id="OpeningManim"),
+            "generic_filename": replace(prepared, video_path=prepared.video_path.with_name("OpeningManim.mp4")),
+            "normalized_media": replace(prepared, normalization={**prepared.normalization, "width": 999}),
+            "isolated_workspace": replace(prepared, workspace_root=prepared.video_path.parent),
+        }
+        for label, changed in cases.items():
+            adapter = RecordingMockAdapter([fixture_code("one_shot")])
+            with self.subTest(label=label), self.assertRaisesRegex(ConditionError, "reference_non_compliant"):
+                run_one_shot(
+                    pairing_id=f"fixture-{label}-r1",
+                    prepared_reference=changed,
+                    run_root=self.fixture.root / f"invalid_{label}",
+                    adapter=adapter,
+                    renderer=self.renderer(),
+                    policy=self.fixture.policy,
+                )
+            self.assertEqual([], adapter.calls)
+
+        adapter = RecordingMockAdapter([fixture_code("one_shot")])
+        with self.assertRaisesRegex(ConditionError, "reference_non_compliant"):
+            run_one_shot(
+                pairing_id="fixture-overlap-r1",
+                prepared_reference=prepared,
+                run_root=prepared.workspace_root / "bt-999" / "run",
+                adapter=adapter,
+                renderer=self.renderer(),
+                policy=self.fixture.policy,
+            )
+        self.assertEqual([], adapter.calls)
 
 
 class CliDryRunTests(unittest.TestCase):
