@@ -191,6 +191,7 @@ class PaperMediaEvidenceBridge:
         artifact_root: Path,
         dry_run: bool,
     ) -> PairingManifestResult:
+        self._require_offline_dry_run(dry_run)
         self._assert_pairing(human, one_shot_trace, self_refined_trace, dry_run=dry_run)
         human_result = self.emit_human_run(human=human, artifact_root=artifact_root)
         human_parent = CrossRunParent(
@@ -314,6 +315,7 @@ class PaperMediaEvidenceBridge:
         cross_run_parents: Sequence[CrossRunParent],
         dry_run: bool,
     ) -> CanonicalManifestResult:
+        self._require_offline_dry_run(dry_run)
         condition_root = self._validated_condition_root(trace, condition_root)
         if trace.condition not in {"one_shot", "self_refined"}:
             raise ManifestBridgeError("unsupported generated condition")
@@ -727,6 +729,13 @@ class PaperMediaEvidenceBridge:
     @staticmethod
     def _run_id(pairing_id: str, condition: str) -> str:
         return f"run:{pairing_id}:{condition}"
+
+    @staticmethod
+    def _require_offline_dry_run(dry_run: bool) -> None:
+        if not dry_run:
+            raise ManifestBridgeError(
+                "real provider, provenance, and cost evidence are not implemented; bridge emission is dry-run only"
+            )
 
     @staticmethod
     def _repo_ref(path: Path) -> str:

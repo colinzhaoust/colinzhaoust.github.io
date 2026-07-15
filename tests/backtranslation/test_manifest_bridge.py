@@ -148,6 +148,34 @@ class ManifestBridgeTests(unittest.TestCase):
         )
         self.assertIn("billable provider calls: 0", provider_claim["statement"])
 
+    def test_non_dry_run_fails_closed_before_any_manifest_or_provenance_write(self) -> None:
+        pairing_output = self.fixture.root / "forbidden_real_pairing"
+        with self.assertRaisesRegex(ManifestBridgeError, "dry-run only"):
+            self.bridge.emit_pairing(
+                human=HumanConditionInput(
+                    pairing_id=self.one.pairing_id,
+                    prepared_reference=self.fixture.prepared,
+                ),
+                one_shot_trace=self.one,
+                one_shot_root=self.one_root,
+                self_refined_trace=self.refined,
+                self_refined_root=self.self_root,
+                artifact_root=pairing_output,
+                dry_run=False,
+            )
+        self.assertFalse(pairing_output.exists())
+
+        direct_output = self.fixture.root / "forbidden_real_direct"
+        with self.assertRaisesRegex(ManifestBridgeError, "dry-run only"):
+            self.bridge.emit_backtranslation_run(
+                trace=self.one,
+                condition_root=self.one_root,
+                artifact_root=direct_output,
+                cross_run_parents=[self.human_parent()],
+                dry_run=False,
+            )
+        self.assertFalse(direct_output.exists())
+
     def test_bridge_rejects_more_than_three_revision_calls(self) -> None:
         changed = copy.deepcopy(self.refined)
         changed.provider_calls = 4
