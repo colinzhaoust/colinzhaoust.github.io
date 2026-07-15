@@ -1,0 +1,175 @@
+year	lesson_id	date	title	video_id	source	source_status	suggested_or_checked_path
+2015	2015/eulers-formula-old	2015-03-05	e to the pi i, a nontraditional take (old version)	F_0yfvm0UoU	NA	no_public_source_field	
+2015	2015/eulers-formula-poem	2015-03-05	Euler's Formula Poem	zLzLxVeqdQg	NA	no_public_source_field	
+2015	2015/moser	2015-05-24	Circle Division Solution	K8P8uFahAgc	_2015/moser_main.py	direct_source_path_exists	_2015/moser_main.py
+2015	2015/eulers-characteristic-formula	2015-06-21	Euler's Formula and Graph Duality	-9OUyo8NFZg	_2015/eulers_characteristic_formula.py	direct_source_path_exists	_2015/eulers_characteristic_formula.py
+2015	2015/inventing-math	2015-08-14	What does it feel like to invent math?	XFDM1ip5HdU	_2015/inventing_math.py	direct_source_path_exists	_2015/inventing_math.py
+2015	2015/binary-counting	2015-09-18	How to count to 1000 on two hands	1SMmc9gQmHQ	_2015/counting_in_binary.py	direct_source_path_exists	_2015/counting_in_binary.py
+2015	2015/music-and-measure-theory	2015-10-04	Music And Measure Theory	cyW5z-M2yzw	_2015/music_and_measure.py	direct_source_path_exists	_2015/music_and_measure.py
+2016	2016/brachistochrone	2016-04-01	The Brachistochrone, with Steven Strogatz	Cld0p3a43fU	_2016/brachistochrone	direct_source_path_exists	_2016/brachistochrone/
+2016	2016/snells-law	2016-04-01	Snell's law proof using springs	Iq1a_KJTWJ8	_2016/brachistochrone	direct_source_path_exists	_2016/brachistochrone/
+2016	2016/triangle-of-power	2016-06-26	Triangle of Power	sULa9Lc4pck	_2016/triangle_of_power	direct_source_path_exists	_2016/triangle_of_power/
+2016	2016/eola-preview	2016-08-05	Essence of linear algebra preview	kjBOesZCoqc	_2016/eola/chapter0.py	direct_source_path_exists	_2016/eola/chapter0.py
+2016	2016/span	2016-08-06	Linear combinations, span, and basis vectors	k7RM-ot2NWY	_2016/eola/chapter2.py	direct_source_path_exists	_2016/eola/chapter2.py
+2016	2016/vectors	2016-08-06	Vectors, what even are they?	fNk_zzaMoSs	_2016/eola/chapter1.py	direct_source_path_exists	_2016/eola/chapter1.py
+2016	2016/linear-transformations	2016-08-07	Linear transformations and matrices	kYB8IZa5AuE	_2016/eola/chapter3.py	direct_source_path_exists	_2016/eola/chapter3.py
+2016	2016/matrix-multiplication	2016-08-08	Matrix multiplication as composition	XkY2DOUCWMU	_2016/eola/chapter4.py	direct_source_path_exists	_2016/eola/chapter4.py
+2016	2016/3d-transformations	2016-08-09	Three-dimensional linear transformations	rHLEWRxRGiM	_2016/eola/footnote.py	direct_source_path_exists	_2016/eola/footnote.py
+2016	2016/determinant	2016-08-10	The determinant	Ip3X9LOh2dk	_2016/eola/chapter5.py	direct_source_path_exists	_2016/eola/chapter5.py
+2016	2016/inverse-matrices	2016-08-15	Inverse matrices, column space, and null space	uQhTuRlWMxw	_2016/eola/chapter6.py	direct_source_path_exists	_2016/eola/chapter6.py
+2016	2016/nonsquare-matrices	2016-08-16	Nonsquare matrices as transformations between dimensions	v8VSDg_WQlA	_2016/eola/footnote2.py	direct_source_path_exists	_2016/eola/footnote2.py
+2016	2016/dot-products	2016-08-24	Dot products and duality	LyGKycYT2v0	_2016/eola/chapter7.py	direct_source_path_exists	_2016/eola/chapter7.py
+2016	2016/cross-products	2016-09-01	Cross products	eu6i7WJeinw	_2016/eola/chapter8p2.py	direct_source_path_exists	_2016/eola/chapter8p2.py
+2016	2016/cross-products-extended	2016-09-01	Cross products in the light of linear transformations	BaM7OCEm3G0	_2016/eola/chapter8.py	direct_source_path_exists	_2016/eola/chapter8.py
+2016	2016/change-of-basis	2016-09-11	Change of basis	P2LTAUO1TdA	_2016/eola/chapter9.py	direct_source_path_exists	_2016/eola/chapter9.py
+2016	2016/eigenvalues	2016-09-15	Eigenvectors and eigenvalues	PFDu9oVAE-g	_2016/eola/chapter10.py	direct_source_path_exists	_2016/eola/chapter10.py
+2016	2016/abstract-vector-spaces	2016-09-24	Abstract vector spaces	TgKwz5Ikpc8	_2016/eola/chapter11.py	direct_source_path_exists	_2016/eola/chapter11.py
+2016	2016/inscribed-rectangle-problem	2016-11-04	Who cares about topology? (Inscribed rectangle problem)	AmgkSdhK4K8	_2016/wcat.py	direct_source_path_exists	_2016/wcat.py
+2016	2016/hanoi-and-sierpinski	2016-11-25	Binary, Hanoi and Sierpinski, part 1	2SUvWfNJSsM	_2016/hanoi.py	direct_source_path_exists	_2016/hanoi.py
+2016	2016/zeta	2016-12-09	Visualizing the Riemann zeta function and analytic continuation	sD0NjbwqlYw	_2016/zeta.py	direct_source_path_exists	_2016/zeta.py
+2017	2017/tattoos-on-math	2017-01-06	Tattoos on Math	IxNb1WG_Ido	_2017/tattoo.py	direct_source_path_exists	_2017/tattoo.py
+2017	2017/fractal-dimension	2017-01-27	Fractals are typically not self-similar	gB9n2gHsHN4	_2017/fractal_dimension.py	direct_source_path_exists	_2017/fractal_dimension.py
+2017	2017/eulers-formula-via-group-theory	2017-03-03	Euler's formula with introductory group theory	mvmuCPvRoWQ	_2017/efvgt.py	direct_source_path_exists	_2017/efvgt.py
+2017	2017/essence-of-calculus	2017-04-28	The Essence of Calculus	WUvTyaaNkzM	_2017/eoc/chapter1.py	direct_source_path_exists	_2017/eoc/chapter1.py
+2017	2017/derivatives	2017-04-29	The paradox of the derivative	9vKqVkMQHKk	_2017/eoc/chapter2.py	direct_source_path_exists	_2017/eoc/chapter2.py
+2017	2017/derivatives-power-rule	2017-04-30	Power Rule through geometry	S0_qX4VJhMQ	_2017/eoc/chapter3.py	direct_source_path_exists	_2017/eoc/chapter3.py
+2017	2017/derivatives-trig-functions	2017-04-30	Trig Derivatives through geometry		_2017/eoc/chapter3.py	direct_source_path_exists	_2017/eoc/chapter3.py
+2017	2017/chain-rule-and-product-rule	2017-05-01	Visualizing the chain rule and product rule	YG15m2VwSjA	_2017/eoc/chapter4.py	direct_source_path_exists	_2017/eoc/chapter4.py
+2017	2017/eulers-number	2017-05-02	What's so special about Euler's number e?	m2MIpDrF7Es	_2017/eoc/chapter5.py	direct_source_path_exists	_2017/eoc/chapter5.py
+2017	2017/implicit-differentiation	2017-05-03	Implicit differentiation, what's going on here?	qb40J4N1fa4	_2017/eoc/chapter6.py	direct_source_path_exists	_2017/eoc/chapter6.py
+2017	2017/epsilon-delta	2017-05-04	"(ε, δ) ""epsilon delta"" definitions of limits"		_2017/eoc/chapter7.py	direct_source_path_exists	_2017/eoc/chapter7.py
+2017	2017/l-hopitals-rule	2017-05-04	L'Hôpital's rule		_2017/eoc/chapter7.py	direct_source_path_exists	_2017/eoc/chapter7.py
+2017	2017/limits	2017-05-04	Limits and the definition of derivatives	kfF40MiS7zA	_2017/eoc/chapter7.py	direct_source_path_exists	_2017/eoc/chapter7.py
+2017	2017/integration	2017-05-05	Integration and the fundamental theorem of calculus	rfG8ce4nNh0	_2017/eoc/chapter8.py	direct_source_path_exists	_2017/eoc/chapter8.py
+2017	2017/area-and-slope	2017-05-06	What does area have to do with slope?	FnJqaIESC2s	_2017/eoc/chapter9.py	direct_source_path_exists	_2017/eoc/chapter9.py
+2017	2017/higher-order-derivatives	2017-05-07	Higher order derivatives	BLkz5LGWihw	_2017/eoc/footnote.py	direct_source_path_exists	_2017/eoc/footnote.py
+2017	2017/taylor-series	2017-05-07	Taylor series	3d6DsjIBzJ4	_2017/eoc/chapter10.py	direct_source_path_exists	_2017/eoc/chapter10.py
+2017	2017/taylor-series-geometric-view	2017-05-07	Taylor series (geometric view)		_2017/eoc/chapter10.py	direct_source_path_exists	_2017/eoc/chapter10.py
+2017	2017/leibniz-formula	2017-05-19	Pi hiding in prime regularities	NaL_Cb42WyY	_2017/leibniz.py	direct_source_path_exists	_2017/leibniz.py
+2017	2017/pythagorean-triples	2017-05-26	All possible pythagorean triples, visualized	QJYmyhnaaek	_2017/triples.py	direct_source_path_exists	_2017/triples.py
+2017	2017/bitcoin	2017-07-07	But how does bitcoin actually work?	bBC-nXj3Ng4	_2017/crypto.py	direct_source_path_exists	_2017/crypto.py
+2017	2017/256-bit-security	2017-07-08	How secure is 256 bit security?	S9JGmA5_unY	_2017/256.py	direct_source_path_exists	_2017/256.py
+2017	2017/hilbert-curve	2017-07-21	Hilbert's Curve: Is infinite math useful?	3s7h2MHQtxc	_2016/hilbert	direct_source_path_exists	_2016/hilbert/
+2017	2017/higher-dimensions	2017-08-11	Thinking outside the 10-dimensional box	zwAD6dRSVyI	_2017/highD.py	direct_source_path_exists	_2017/highD.py
+2017	2017/light-quantum-mechanics	2017-09-13	Some light quantum mechanics (with minutephysics)	MzRCDLre1b4	_2017/waves.py	direct_source_path_exists	_2017/waves.py
+2017	2017/neural-networks	2017-10-05	But what is a Neural Network?	aircAruvnKk	_2017/nn/part1.py	direct_source_path_exists	_2017/nn/part1.py
+2017	2017/gradient-descent	2017-10-16	Gradient descent, how neural networks learn	IHZwWFHWa-w	_2017/nn/part2.py	direct_source_path_exists	_2017/nn/part2.py
+2017	2017/neural-network-analysis	2017-10-16	Analyzing our neural network			no_public_source_field	
+2017	2017/backpropagation	2017-11-03	What is backpropagation really doing?	Ilg3gGewQ5U	_2017/nn/part3.py	direct_source_path_exists	_2017/nn/part3.py
+2017	2017/backpropagation-calculus	2017-11-03	Backpropagation calculus	tIeHLnjs5U8	_2017/nn/part3.py	direct_source_path_exists	_2017/nn/part3.py
+2017	2017/hardest-problem	2017-12-08	The hardest problem on the hardest test	OkmNXy7er84	_2017/putnam.py	direct_source_path_exists	_2017/putnam.py
+2017	2017/three-utilities	2017-12-23	The three utilities puzzle with math/science YouTubers	VvCytJvd4H0	_2017/mug.py	direct_source_path_exists	_2017/mug.py
+2018	2018/fourier-transforms	2018-01-26	But what is the Fourier Transform?  A visual introduction.	spUNpyF58BY	_2018/fourier.py	direct_source_path_exists	_2018/fourier.py
+2018	2018/uncertainty-principle	2018-02-25	The more general uncertainty principle, beyond quantum	MBnnXbOM5S4	_2018/uncertainty.py	direct_source_path_exists	_2018/uncertainty.py
+2018	2018/basel-problem	2018-03-02	Why is pi here?  And why is it squared?  A geometric answer to the Basel problem	d-o3eB9sfls	_2018/basel	direct_source_path_exists	_2018/basel/
+2018	2018/pi-was-628	2018-03-14	How pi was almost 6.283185...	bcPTiiiYDs8	_2018/pi_day.py	direct_source_path_exists	_2018/pi_day.py
+2018	2018/winding-numbers	2018-03-24	Winding numbers and domain coloring	b7FxPsqfkOY	_2018/WindingNumber.py	direct_source_path_exists	_2018/WindingNumber.py
+2018	2018/wallis-product	2018-04-20	The Wallis product for pi, proved geometrically	8GPy_UMV-08	_2018/wallis.py	direct_source_path_exists	_2018/wallis.py
+2018	2018/derivatives-and-transforms	2018-05-19	The other way to visualize derivatives	CfW845LNObM	_2018/alt_calc.py	direct_source_path_exists	_2018/alt_calc.py
+2018	2018/divergence-and-curl	2018-06-21	Divergence and curl:  The language of Maxwell's equations, fluid flow, and more	rB83DpBJQsE	_2018/div_curl.py	direct_source_path_exists	_2018/div_curl.py
+2018	2018/feynmans-lost-lecture	2018-07-20	Feynman's Lost Lecture (ft. 3Blue1Brown)	xdIjYBtnvZU	_2018/lost_lecture.py	direct_source_path_exists	_2018/lost_lecture.py
+2018	2018/dandelin-spheres	2018-08-01	Why slicing a cone gives an ellipse	pQa_tWZmlGs	_2018/dandelin.py	direct_source_path_exists	_2018/dandelin.py
+2018	2018/qa3	2018-08-24	Q&A with Grant Sanderson (3blue1brown)	Qe6o9j4IjTo	NA	no_public_source_field	
+2018	2018/quaternions	2018-09-06	Visualizing quaternions (4d numbers) with stereographic projection	d4EgbgTm0Bg	_2018/quaternions.py	direct_source_path_exists	_2018/quaternions.py
+2018	2018/quaternions-and-3d-rotation	2018-10-26	Quaternions and 3d rotation, explained interactively	zjMuIxRvygQ	_2018/quat3d.py	direct_source_path_exists	_2018/quat3d.py
+2018	2018/turbulence	2018-11-07	Why 5/3 is a fundamental constant for turbulence	_UoTTq651dE	_2018/turbulence.py	direct_source_path_exists	_2018/turbulence.py
+2018	2018/borsuk-ulam	2018-11-18	Sneaky Topology | The Borsuk-Ulam theorem and stolen necklaces	yuVqxCSsE7c	_2017/borsuk.py	direct_source_path_exists	_2017/borsuk.py
+2018	2018/sphere-area	2018-12-02	But why is a sphere's surface area four times its shadow?	GNcFjFmqEc8	_2018/sphere_area.py	direct_source_path_exists	_2018/sphere_area.py
+2019	2019/clacks	2019-01-13	The most unexpected answer to a counting puzzle	HEfHFsfGXjs	_2019/clacks/question.py	direct_source_path_exists	_2019/clacks/question.py
+2019	2019/clacks-solution	2019-01-20	Why do colliding blocks compute pi?	jsYwFizhncE	_2019/clacks/solution1.py	direct_source_path_exists	_2019/clacks/solution1.py
+2019	2019/clacks-via-light	2019-02-03	How colliding blocks act like a beam of light...to compute pi.	brU5yLm9DZM	_2019/clacks/solution2	direct_source_path_exists	_2019/clacks/solution2/
+2019	2019/cramers-rule	2019-03-17	Cramer's rule, explained geometrically	jBsC34PxzoM	_2018/cramer.py	direct_source_path_exists	_2018/cramer.py
+2019	2019/differential-equations	2019-03-31	Differential equations, studying the unsolvable	p_di4Zn4wz4	_2019/diffyq/part1	direct_source_path_exists	_2019/diffyq/part1/
+2019	2019/pdes	2019-04-21	But what is a partial differential equation?	ly4S0oi3Yz8	_2019/diffyq/par $T_2$	source_field_stale_or_renamed	_2019/diffyq/part2/
+2019	2019/heat-equation	2019-06-16	Solving the heat equation	ToIXSwZ1pJU	_2019/diffyq/part3	direct_source_path_exists	_2019/diffyq/part3/
+2019	2019/fourier-series	2019-06-30	But what is a Fourier series? From heat flow to circle drawings	r6sGWTCMz2k	_2019/diffyq/part4	direct_source_path_exists	_2019/diffyq/part4/
+2019	2019/fourier-series-montage	2019-07-03	Pure Fourier series animation montage	-qgreAUpPwM	_2019/diffyq/fourier_montage_scenes.py	direct_source_path_exists	_2019/diffyq/fourier_montage_scenes.py
+2019	2019/eulers-formula-dynamically	2019-07-07	e^(iπ) in 3.14 minutes, using dynamics	v0YEaeIClKY	_2019/diffyq/part5	direct_source_path_exists	_2019/diffyq/part5/
+2019	2019/windmills	2019-08-04	The unexpectedly hard windmill question (2011 IMO, Q2)	M64HUIJFTZM	_2019/windmill.py	direct_source_path_exists	_2019/windmill.py
+2019	2019/prime-spirals	2019-10-08	Why do prime numbers make these spirals?	EK32jo7i5LQ	_2019/spirals.py	direct_source_path_exists	_2019/spirals.py
+2019	2019/hyperdarts	2019-11-19	Darts in Higher Dimensions [Numberphile]	6_yU9eJ0NxA	_2019/hyperdarts.py	direct_source_path_exists	_2019/hyperdarts.py
+2019	2019/qa4	2019-11-23	Q&A with Grant (3blue1brown), windy walk edition	Agbh95KyWxY	NA	no_public_source_field	
+2019	2019/bayes-theorem	2019-12-22	Bayes' theorem	HZGCoVF3YvM	_2019/bayes/part1.py	direct_source_path_exists	_2019/bayes/part1.py
+2019	2019/bayes-theorem-quick	2019-12-22	The quick proof of Bayes' theorem	U_85TaXbeIo	_2019/bayes/footnote.py	direct_source_path_exists	_2019/bayes/footnote.py
+2020	2020/exponential-and-epidemics	2020-03-08	Exponential growth and epidemics	Kas0tIxDvrg	_2020/covid.py	direct_source_path_exists	_2020/covid.py
+2020	2020/tedx-talk	2020-03-13	What Makes People Engage With Math	s_L-fp8gDzY		no_public_source_field	
+2020	2020/binomial-distributions	2020-03-15	Binomial distributions | Probabilities of probabilities, part 1	8idr1WZ1A7Q	_2020/beta/beta1.py	direct_source_path_exists	_2020/beta/beta1.py
+2020	2020/epidemic-simulations	2020-03-27	Simulating an epidemic	gxAaO2rsdIs	_2020/sir.py	direct_source_path_exists	_2020/sir.py
+2020	2020/pdfs	2020-04-12	"Why ""probability of 0"" does not mean ""impossible"" | Probabilities of probabilities, part 2"	ZA4JkHKZM50	_2020/beta/beta2.py	direct_source_path_exists	_2020/beta/beta2.py
+2020	2020/lockdown-math-announcement	2020-04-16	Lockdown math announcement	ppWPuXsnf1Q	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-quadratic	2020-04-17	The simpler quadratic formula	MHXO86wKeDY	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-trigonometry	2020-04-21	Trigonometry fundamentals	yBw67Fb31Cs	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-complex-numbers	2020-04-24	Complex number fundamentals	5PcpBw5Hbwo	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-eulers-formula	2020-04-28	What is Euler's formula actually saying?	ZxYOEwM6Wbk	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-imaginary-interest	2020-05-01	Imaginary interest rates	IAEASE5GjdI	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-logarithms	2020-05-05	Logarithm Fundamentals	cEvgcoyZvB4	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-natural-logs	2020-05-08	"What makes the natural log ""natural""?"	4PDoT7jtxmw	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-power-towers	2020-05-12	The power tower puzzle	elQVZLLiod4	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/dp3t	2020-05-14	The DP-3T algorithm for contact tracing (via Nicky Case)	D__UaR5MQao	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-i-to-i	2020-05-15	Intuition for i to the power i	pq9LcwC7CoY	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/ldm-tips-to-problem-solving	2020-05-22	Tips to be a better problem solver	QvuQH4_05LI	_2020/ldm.py	direct_source_path_exists	_2020/ldm.py
+2020	2020/chessboard-puzzle	2020-07-05	The impossible chessboard puzzle	wTJI_WuZSwE	_2020/chess.py	direct_source_path_exists	_2020/chess.py
+2020	2020/groups-and-monsters	2020-08-19	Group theory, abstraction, and the 196,883-dimensional monster	mH0oCDa74tE	_2020/monster.py	direct_source_path_exists	_2020/monster.py
+2020	2020/image-convolution	2020-09-03	Convolutions in Image Processing	8rrHTtUzyZA	_2020/18S191/	direct_source_path_exists	_2020/18S191/
+2020	2020/hamming-codes	2020-09-04	Hamming codes and error correction	X8jsijhllIA	_2020/hamming.py	direct_source_path_exists	_2020/hamming.py
+2020	2020/hamming-codes-2	2020-09-04	Hamming codes part 2, the elegance of it all	b3NxrZOu_CE	_2020/hamming.py	direct_source_path_exists	_2020/hamming.py
+2020	2020/seam-carving	2020-09-08	Seam Carving	rpB6zQNsbQU	_2020/18S191/	direct_source_path_exists	_2020/18S191/
+2020	2020/diffusion-equation	2020-11-17	The diffusion equation	a3V0BJLIo_c		no_public_source_field	
+2020	2020/discrete-fourier-transform	2020-12-08	What is a Discrete Fourier Transform? Sanderson	g8RkArhtCc4	_2020/18S191/	direct_source_path_exists	_2020/18S191/
+2020	2020/better-bayes	2020-12-22	The medical test paradox: Can redesigning Bayes rule help?	lG4VkPoG3ko	_2020/med_test.py	direct_source_path_exists	_2020/med_test.py
+2021	2021/matrix-exponents	2021-04-01	How (and why) to raise e to the power of a matrix	O85OWBJ2ayo	_2021/matrix_exp.py	direct_source_path_exists	_2021/matrix_exp.py
+2021	2021/quick-eigen	2021-05-07	A quick trick for computing eigenvalues	e50Bj7jn9IQ	_2021/quick_eigen.py	direct_source_path_exists	_2021/quick_eigen.py
+2021	2021/some1	2021-07-16	Summer of Math Exposition 1 announcement	ojjzXyQCzso	_2021/some1	source_field_stale_or_renamed	_2021/some1.py and _2021/some1_winners.py
+2021	2021/newtons-fractal	2021-10-12	Newton's Fractal (which Newton knew nothing about)	-RdOwhmqP5s	_2021/newton_fractal.py	direct_source_path_exists	_2021/newton_fractal.py
+2021	2021/holomorphic-dynamics	2021-10-16	How a Mandelbrot set arises from Newton's work	LqbZpur38nw	_2021/holomorphic_dynamics.py	direct_source_path_exists	_2021/holomorphic_dynamics.py
+2021	2021/bertrands-paradox	2021-12-20	Bertrand's Paradox [Numberphile]	mZBwsm6B280	_2021/bertrands_paradox.py	direct_source_path_exists	_2021/bertrands_paradox.py
+2021	2021/shadows	2021-12-20	Alice, Bob, and the average shadow of a cube	ltLUadnCyi0	_2021/shadows.py	direct_source_path_exists	_2021/shadows.py
+2022	2022/wordle	2022-02-06	Solving Wordle using information theory	v68zYyaEmEA	_2022/wordle/simulations.py	direct_source_path_exists	_2022/wordle/simulations.py
+2022	2022/wordle-2	2022-02-13	"Oh, wait, actually the best Wordle opener is not ""crane""…"	fRed0Xmc2Wg	_2022/wordle/simulations.py	direct_source_path_exists	_2022/wordle/simulations.py
+2022	2022/subsets-puzzle	2022-05-23	Olympiad level counting  (Generating functions)	bOXCLR3Wric	_2022/puzzles/subsets.py	direct_source_path_exists	_2022/puzzles/subsets.py
+2022	2022/visual-proofs	2022-07-03	How to lie using visual proofs	VYQVlVoWoPY	_2022/visual_proofs/lies.py	direct_source_path_exists	_2022/visual_proofs/lies.py
+2022	2022/borwein	2022-11-04	Researchers thought this was a bug (Borwein integrals)	851U557j6HE	_2022/borwein/main.py	direct_source_path_exists	_2022/borwein/main.py
+2022	2022/convolutions	2022-11-18	But what is a convolution?	KuXjwB4LzSA	_2022/convolutions/discrete.py	direct_source_path_exists	_2022/convolutions/discrete.py
+2023	2023/prime-number-race	2023-02-23	The Prime Number Race [Numberphile]	YAsHGOwB408	_2023/prime_race.py/	source_field_stale_or_renamed	_2023/numberphile/prime_race.py
+2023	2023/clt	2023-03-14	But what is the Central Limit Theorem?	zeJD6dqJ5lo	_2023/clt/main.py	direct_source_path_exists	_2023/clt/main.py
+2023	2023/pedagogical-curse	2023-03-31	Math's pedagogical curse | Grant Sanderson JPBM Award Lecture, JMM 2023	UOuxo6SA8Uc		no_public_source_field	
+2023	2023/gaussian-integral	2023-04-02	Why π is in the normal distribution (beyond integral tricks)	cy8r7WSuT1I	_2023/clt/integral.py	source_field_stale_or_renamed	_2023/gauss_int/integral.py
+2022	2022/some2	2023-06-08	Summer of Math Exposition 2 Invitation	hZuYICAEN9Y	_2022/some2	direct_source_path_exists	_2022/some2/
+2023	2023/ego-and-math	2023-06-20	Ego and Math | Stanford Math Department Commencement Speech 2023	z7GVHB2wiyg		no_public_source_field	
+2023	2023/convolutions2	2023-06-27	Convolutions | Why X+Y in probability is a beautiful mess	IaSGqQa5O-M	_2023/convolutions2/	direct_source_path_exists	_2023/convolutions2/
+2023	2023/moser-reboot	2023-07-01	This pattern breaks, but for a good reason | Moser's circle problem	YtkIWDE36qU	_2023/moser_reboot/main.py	direct_source_path_exists	_2023/moser_reboot/main.py
+2023	2023/gaussian-convolution	2023-07-11	A pretty reason why Gaussian + Gaussian = Gaussian	d_qvLDhkg00	_2023/convolutions2/gauss_example_supplements.py	direct_source_path_exists	_2023/convolutions2/gauss_example_supplements.py
+2023	2023/some3-results	2023-07-23	25 Math explainers you may enjoy | SoME3 results	6a1fLEToyvU	_2023/some3	source_field_stale_or_renamed	_2023/SoME3/main.py
+2023	2023/barber-pole-2	2023-08-31	How wiggling charges give rise to light	aXRTczANuIs	_2023/barber_pole/	source_field_stale_or_renamed	_2023/optics_puzzles/
+2023	2023/barber-pole-1	2023-09-01	This tests your understanding of light | The barber pole effect	QCX62YJCmGk	_2023/barber_pole/	source_field_stale_or_renamed	_2023/optics_puzzles/
+2022	2022/some2-results	2023-10-01	What makes a great math explanation? | SoME2 results	cDofhN-RJqg	_2022/some2	direct_source_path_exists	_2022/some2/
+2021	2021/some1-results	2023-10-23	Summer of Math Exposition 1 results	F3Qixy-r_rQ	_2021/some1	source_field_stale_or_renamed	_2021/some1.py and _2021/some1_winners.py
+2023	2023/prism	2023-11-30	" But why would light ""slow down""? | Visualizing Feynman's lecture on the refractive index"	KTzGBJPuJwM	_2023/barber_pole/	source_field_stale_or_renamed	_2023/optics_puzzles/
+2023	2023/refractive-index-questions	2023-12-03	Answering viewer questions about refraction	Cz4Q4QOuoo8	_2023/barber_pole/	source_field_stale_or_renamed	_2023/optics_puzzles/
+2024	2024/gpt	2024-04-01	Transformers, the tech behind LLMs | Deep Learning Chapter 5	wjZofJX0v4M	_2024/transformers/	direct_source_path_exists	_2024/transformers/
+2024	2024/attention	2024-04-07	Attention in transformers, step-by-step | Deep Learning Chapter 6	eMlx5fFNoYc	_2024/transformers/	direct_source_path_exists	_2024/transformers/
+2024	2024/harvey-mudd-speech	2024-05-18	"What ""Follow Your Dreams"" Misses | Harvey Mudd Commencement Speech 2024"	W3I3kAg2J7w		no_public_source_field	
+2024	2024/mlp	2024-08-31	How might LLMs store facts | Deep Learning Chapter 7	9-Jl0dxWQs8	_2024/transformers/	direct_source_path_exists	_2024/transformers/
+2024	2024/holograms	2024-10-04	How are holograms possible?	EmKQsSDlaa4	_2024/holograms/	direct_source_path_exists	_2024/holograms/
+2024	2024/manim-demo	2024-10-12	How I animate 3Blue1Brown | A Manim demo with Ben Sparks	rbu7Zu5X1zI	_2024/manim-demo/	source_field_stale_or_renamed	_2024/manim_demo/lorenz.py
+2024	2024/one-more-dim	2024-11-08	Five puzzles for thinking outside the box	piJkuavhV50	_2024/puzzles/	direct_source_path_exists	_2024/puzzles/
+2024	2024/mini-llm	2024-11-20	Large Language Models explained briefly	LPZh9BOjkQs	_2024/transformers/	direct_source_path_exists	_2024/transformers/
+2024	2024/transformers-talk	2024-11-20	Visualizing transformers and attention | Talk for TNG Big Tech Day '24	KJtZARuO3JY		no_public_source_field	
+2024	2024/inscribed-rect-v2	2024-12-24	This open problem taught me what topology is	IQqtsm-bBRU	_2024/inscribed_rect	direct_source_path_exists	_2024/inscribed_rect/
+2025	2025/cosmic-distance-1	2025-02-08	Terence Tao on the cosmic distance ladder	YdOXS_9_P4U	_2025/cosmic_distance/	direct_source_path_exists	_2025/cosmic_distance/
+2025	2025/cosmic-distance-2	2025-02-23	Terence Tao continuing history's cleverest cosmological measurements	hFMaT9oRbs4	_2025/cosmic_distance/	direct_source_path_exists	_2025/cosmic_distance/
+2025	2025/colliding-blocks-v2	2025-03-13	Why colliding blocks compute pi	6dTyOl1fmDo	_2025/block_and_grover/	source_field_stale_or_renamed	_2025/colliding_blocks_v2/ and _2025/grover/
+2025	2025/grover	2025-04-29	But what is quantum computing?  (Grover's Algorithm)	RQWpF2Gb-gU	_2025/blocks_and_grover/	source_field_stale_or_renamed	_2025/colliding_blocks_v2/ and _2025/grover/
+2025	2025/grover-clarification	2025-05-04	Where my explanation of Grover's algorithm failed	Dlsa9EBKDGI	_2025/blocks_and_grover/	source_field_stale_or_renamed	_2025/colliding_blocks_v2/ and _2025/grover/
+2025	2025/diffusion-models	2025-07-25	But how do AI images and videos actually work? | Guest video by Welch Labs	iv-5mZ_9CPY		no_public_source_field	
+2025	2025/alpha-geometry	2025-08-17	The AI that solved IMO Geometry Problems | Guest video by @Aleph0	4NlrfOl0l8U		no_public_source_field	
+2025	2025/phase-change	2025-08-28	Simulating and understanding phase change | Guest video by Vilas Winstein	itRV2jEtV8Q		no_public_source_field	
+2025	2025/incomplete-cubes	2025-09-07	Exploration & Epiphany | Guest video by Paul Dancstep	_BrFKp-U8GI		no_public_source_field	
+2025	2025/euclid	2025-09-17	What was Euclid really doing? | Guest video by Ben Syversen	M-MgQC6z3VU		no_public_source_field	
+2025	2025/complex-exponents	2025-10-05	The Physics of Euler's Formula | Laplace Transform Prelude	-j8PzkZ70Lg	_2025/laplace/	direct_source_path_exists	_2025/laplace/
+2025	2025/laplace-transform	2025-10-11	But what is a Laplace Transform?	j0wJBEZdwLs	_2025/laplace/	direct_source_path_exists	_2025/laplace/
+2025	2025/laplace-for-odes	2025-11-05	Why Laplace transforms are so useful	FE-hM1kRK4Y	_2025/laplace/	direct_source_path_exists	_2025/laplace/
+2026	2026/hairy-ball	2026-01-31	The Hairy Ball Theorem	BHdbsHFs2P0	_2026/hairy_ball/	direct_source_path_exists	_2026/hairy_ball/
+2026	2026/spheres-talk	2026-02-26	The most underappreciated formula | Exploring high-dimensional spheres	fsLh-NYhOoU	_2026/spheres/	source_field_stale_or_renamed	_2026/spheres_talk/
+2026	2026/print-gallery	2026-03-21	How (and why) to take a logarithm of an image	ldxFjLJ3rVY	_2026/print_gallery/	direct_source_path_exists	_2026/print_gallery/
+2026	2026/entropy	2026-06-07	Reinventing Entropy | Compression & Intelligence Part 1	l6DKRf-fAAM	_2026/cross_entropy/	direct_source_path_exists	_2026/cross_entropy/

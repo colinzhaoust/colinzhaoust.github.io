@@ -1,0 +1,40 @@
+Topic: RoPE (Rotary Position Embedding), relative-position dot-product identity.
+
+Goal: Create one short Manim animation that teaches why RoPE is different from
+adding absolute position embeddings.
+
+Audience: ML engineers who know basic self-attention but have not internalized
+RoPE yet.
+
+Core idea:
+- In ordinary attention, position information is often added to token vectors.
+- RoPE instead rotates each 2D pair of query/key coordinates by a
+  position-dependent angle.
+- Let q_m = R(m theta) q and k_n = R(n theta) k.
+- Then the attention score q_m dot k_n only depends on the relative offset
+  m - n, because R(m theta)^T R(n theta) = R((n - m) theta).
+- This is why RoPE can behave like a relative position method while still
+  being applied directly to queries and keys.
+
+Please build the animation with robust Manim Community objects:
+- Prefer Text, VGroup, rectangles, arrows, number lines, vector arrows, and
+  simple formulas rendered as Text.
+- Avoid MathTex/LaTeX entirely for portability.
+- Avoid external images.
+
+Suggested visual beats:
+1. Start with two token cards at positions m and n, each producing q and k.
+2. Show a contrast: additive absolute position adds p_m to x_m, while RoPE
+   rotates q and k by angle m theta and n theta.
+3. Show two 2D vectors on small coordinate axes rotating by different angles.
+4. Show the key identity as text:
+   score = dot(R(m theta) q, R(n theta) k)
+   = dot(q, R((n-m) theta) k)
+5. Highlight "only relative distance remains".
+6. End with a compact comparison: Absolute adds position to token; Relative
+   bias adds distance to score; RoPE rotates Q/K before the score.
+
+Style:
+- Clean 3Blue1Brown-like dark background or light background is OK.
+- Use high contrast colors.
+- Keep labels large enough for 480p.

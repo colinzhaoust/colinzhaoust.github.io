@@ -1,0 +1,45 @@
+{
+  "id": "transformers",
+  "title": "Attention Is All You Need",
+  "short_title": "Transformers",
+  "paper_url": "https://arxiv.org/abs/1706.03762",
+  "repo_url": null,
+  "audience": "ML students who know vectors and softmax but are new to attention.",
+  "central_question": "How does a Transformer replace recurrence with attention and positional information?",
+  "teaching_units": [
+    {
+      "id": "scaled_dot_product_attention",
+      "name": "Scaled Dot-Product Attention",
+      "goal": "Show how query-key similarities become weights over value vectors.",
+      "formulas": [
+        "Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) V"
+      ],
+      "visual_example": "A query token asks which context tokens matter; a bar chart of weights mixes value cards."
+    },
+    {
+      "id": "multi_head_attention",
+      "name": "Multi-Head Attention",
+      "goal": "Explain why multiple attention heads can attend to different relations.",
+      "formulas": [
+        "head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)",
+        "MultiHead(Q,K,V) = Concat(head_1,...,head_h) W^O"
+      ],
+      "visual_example": "Three colored heads attend to syntax, position, and object relation, then concatenate."
+    },
+    {
+      "id": "positional_encoding",
+      "name": "Sinusoidal Positional Encoding",
+      "goal": "Show why a non-recurrent model needs position signals.",
+      "formulas": [
+        "PE(pos,2i) = sin(pos / 10000^(2i/d_model))",
+        "PE(pos,2i+1) = cos(pos / 10000^(2i/d_model))"
+      ],
+      "visual_example": "Token embeddings start unordered; sinusoidal waves add distinguishable position stripes."
+    }
+  ],
+  "comparison_axes": [
+    "attention vs recurrence",
+    "single-head vs multi-head",
+    "no position signal vs sinusoidal position signal"
+  ]
+}

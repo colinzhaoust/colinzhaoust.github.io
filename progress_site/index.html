@@ -1,0 +1,1619 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>4blue2brown Progress Review</title>
+    <meta
+      name="description"
+      content="Progress review microsite for 4blue2brown, a paper/code to programmatic Manim explainer pipeline."
+    >
+    <link rel="stylesheet" href="styles.css?v=slides1">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="brand-mark" href="#overview" aria-label="4blue2brown progress review home">
+        <span class="brand-sigil">4B</span>
+        <span>
+          <strong>4blue2brown</strong>
+          <small>Progress review</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Page sections">
+        <a href="#motivation">Motivation</a>
+        <a href="#baselines">Frameworks</a>
+        <a href="#slides">Slides</a>
+        <a href="#cost">Cost</a>
+        <a href="#current">Current v0</a>
+        <a href="#coverage">Coverage</a>
+        <a href="#models">Models</a>
+        <a href="#eval">Eval</a>
+        <a href="#future">Future</a>
+        <a href="#snippets">Code</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section id="overview" class="section section-intro">
+        <div class="intro-copy">
+          <p class="eyebrow">Research snapshot, July 9, 2026</p>
+          <h1>Paper and code into inspectable explainer artifacts.</h1>
+          <p class="lead">
+            4blue2brown is a research prototype for generated educational artifacts that stay
+            grounded in source material. The current scope is Manim explainers; the next track asks
+            whether paper/code-to-slides systems can give us editable decks, better outline
+            structure, and useful evaluation signals.
+          </p>
+          <div class="status-row" aria-label="Project status summary">
+            <div>
+              <strong>5</strong>
+              <span>clip topics in the current test set</span>
+            </div>
+            <div>
+              <strong>25</strong>
+              <span>baseline coverage videos generated</span>
+            </div>
+            <div>
+              <strong>2 + 2</strong>
+              <span>upstream clips plus TEA smoke renders</span>
+            </div>
+            <div>
+              <strong>$0</strong>
+              <span>API cost for the local renderer sweep</span>
+            </div>
+          </div>
+          <div class="orientation-grid" aria-label="What to know first">
+            <div>
+              <strong>Input</strong>
+              <span>papers, formulas, code paths, and small toy examples</span>
+            </div>
+            <div>
+              <strong>Output</strong>
+              <span>Manim videos now; editable slide decks become the next comparison surface</span>
+            </div>
+            <div>
+              <strong>Quality bar</strong>
+              <span>rendered is not enough; clips must be legible, faithful, and useful for learning</span>
+            </div>
+          </div>
+          <div class="track-tabs" aria-label="Research tracks">
+            <a class="track-tab active" href="#baselines">
+              <span>Track 1</span>
+              Manim explainers
+            </a>
+            <a class="track-tab" href="#slides">
+              <span>Track 2</span>
+              Paper/code to slides
+            </a>
+          </div>
+        </div>
+        <div class="intro-media" aria-label="Representative generated video examples">
+          <video controls preload="metadata" poster="assets/contact-sheets/FeynRLESSMiniLesson.png">
+            <source src="assets/videos/FeynRLESSMiniLesson.mp4" type="video/mp4">
+          </video>
+          <div class="media-strip">
+            <img src="assets/contact-sheets/AttentionSoftmaxExplainer.png" alt="Attention softmax generated clip contact sheet">
+            <img src="assets/contact-sheets/code2video_rope.png" alt="Code2Video RoPE baseline contact sheet">
+            <img src="assets/contact-sheets/paper2manim_rope_fanout_repaired.png" alt="Paper2Manim RoPE fanout repaired contact sheet">
+          </div>
+        </div>
+      </section>
+
+      <section id="motivation" class="section">
+        <div class="section-kicker">Why this route</div>
+        <div class="split">
+          <div>
+            <h2>Motivation</h2>
+            <p>
+              The goal is not to copy a channel identity. The goal is to learn from the Manim
+              production model: explanations should be precise, editable, rerenderable, and easy to
+              inspect. Raw video generation can look plausible, but it is still hard to verify,
+              repair, and ground in formulas or source code.
+            </p>
+            <p>
+              A paper-with-code explainer needs four synchronized channels: the paper claim, the
+              formula, the implementation, and a toy example or comparison. If one channel is
+              missing, the animation may look polished while teaching the wrong thing.
+            </p>
+          </div>
+          <div class="notecard">
+            <h3>Current thesis</h3>
+            <p>
+              Keep code as the controllable substrate, then use agents around it: planning before
+              code, render logs for repair, frame probes for visual critique, and learner questions
+              for evaluation.
+            </p>
+            <ul class="check-list">
+              <li>Plan scenes before writing Manim.</li>
+              <li>Treat the renderer as a hard gate, not a final quality score.</li>
+              <li>Ask VLMs to review sampled frames, not imagined outputs.</li>
+              <li>Bind claims, formulas, code paths, toy data, and visual beats in one graph.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="figure-band">
+          <div class="pipeline-figure wide" aria-label="Target pipeline figure">
+            <div class="pipeline-node source">Paper PDF / arXiv</div>
+            <div class="pipeline-node source">Code repo</div>
+            <div class="pipeline-node">Claim + formula graph</div>
+            <div class="pipeline-node">Symbol + function graph</div>
+            <div class="pipeline-node accent">PaperCodeGraph</div>
+            <div class="pipeline-node">Scene IR</div>
+            <div class="pipeline-node">Manim code</div>
+            <div class="pipeline-node">Render + probe</div>
+            <div class="pipeline-node">VLM / quiz review</div>
+            <div class="pipeline-node output">Final clips</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="baselines" class="section">
+        <div class="section-kicker">References, descriptions, pipelines, examples</div>
+        <h2>Framework References</h2>
+        <p class="section-lead">
+          This is the reference landscape, not the result table. Each framework gives us a
+          different design lesson: paper parsing, code-centric rendering, long-horizon planning,
+          pedagogy constraints, or training with renderer feedback. Actual coverage evidence lives
+          in the Coverage section.
+        </p>
+
+        <div class="baseline-grid">
+          <article class="baseline-card">
+            <div class="card-head">
+              <span class="tag">Paper-to-Manim</span>
+              <h3>Paper2Manim / ManimAgent</h3>
+            </div>
+            <p>
+              The closest match to paper-section-to-Manim generation. The useful pattern is a
+              storyboard-to-code path with visual checking and a memory bank that separates
+              successful examples from known failure modes.
+            </p>
+            <div class="mini-pipeline" aria-label="Paper2Manim pipeline">
+              <span>paper section</span><span>storyboard</span><span>scene code</span><span>render</span><span>visual repair</span>
+            </div>
+            <p class="missing"><strong>Still needed:</strong> robust provider setup, no-LaTeX normalization, layout constraints, and code grounding.</p>
+            <p class="reference-line">
+              References:
+              <a href="https://arxiv.org/abs/2606.30296">arXiv</a>,
+              <a href="https://manimagent.github.io/">project</a>,
+              <a href="https://github.com/jwj1342/Paper2Manim">GitHub</a>
+            </p>
+          </article>
+
+          <article class="baseline-card">
+            <div class="card-head">
+              <span class="tag warm">Code-centric</span>
+              <h3>Code2Video</h3>
+            </div>
+            <p>
+              The most practical rendered baseline we have run so far. It stages a knowledge point
+              through planner, coder, debugger, critic, and TeachQuiz-style evaluation, but it does
+              not ingest a full paper and code repo by default.
+            </p>
+            <div class="mini-pipeline" aria-label="Code2Video pipeline">
+              <span>topic</span><span>outline</span><span>Manim code</span><span>debug</span><span>critic</span>
+            </div>
+            <p class="missing"><strong>Still needed:</strong> paper ingestion, source-code mapping, and structured Scene IR repair.</p>
+            <p class="reference-line">
+              References:
+              <a href="https://github.com/showlab/Code2Video">GitHub</a>,
+              <a href="https://arxiv.org/abs/2510.01174">paper</a>
+            </p>
+          </article>
+
+          <article class="baseline-card">
+            <div class="card-head">
+              <span class="tag green">Theorem video</span>
+              <h3>TheoremExplainAgent</h3>
+            </div>
+            <p>
+              Evidence that long-horizon Manim videos need more than one prompt. Its useful lesson
+              is separation of theorem reading, long-form planning, scene implementation, render
+              repair, and multimodal evaluation.
+            </p>
+            <div class="mini-pipeline" aria-label="TheoremExplainAgent pipeline">
+              <span>theorem</span><span>scene plan</span><span>code</span><span>render repair</span><span>eval</span>
+            </div>
+            <p class="missing"><strong>Still needed locally:</strong> a full upstream run. We currently have contract-level previews and implementation notes.</p>
+            <p class="reference-line">
+              References:
+              <a href="https://arxiv.org/abs/2502.19400">arXiv</a>,
+              <a href="https://github.com/TIGER-AI-Lab/TheoremExplainAgent">GitHub</a>
+            </p>
+          </article>
+
+          <article class="baseline-card">
+            <div class="card-head">
+              <span class="tag violet">Pedagogy / training</span>
+              <h3>LLM2Manim and ManimTrainer</h3>
+            </div>
+            <p>
+              LLM2Manim is useful for pedagogy: symbol ledgers, segmentation, and human review.
+              ManimTrainer is useful for model strategy: training helps, but renderer-in-the-loop
+              and API-doc retrieval still matter at inference time.
+            </p>
+            <div class="mini-pipeline" aria-label="Pedagogy and training pipeline">
+              <span>brief</span><span>symbol ledger</span><span>scene plan</span><span>render loop</span><span>learner eval</span>
+            </div>
+            <p class="missing"><strong>Local status:</strong> LLM2Manim has a five-topic method reproduction; ManimTrainer has a RoPE API-mode RITL-DOC run. Official checkpoint runs still need heavier environments.</p>
+            <p class="reference-line">
+              References:
+              <a href="https://arxiv.org/abs/2604.05266">LLM2Manim</a>,
+              <a href="https://arxiv.org/abs/2604.18364">ManimTrainer</a>
+            </p>
+          </article>
+        </div>
+
+        <div class="pipeline-comparison">
+          <div class="section-kicker">Normalized pipeline comparison</div>
+          <h3>Same visual language, different biases</h3>
+          <p>
+            The papers and repos use different diagrams and vocabulary. This normalized view keeps
+            the comparison readable: each row shows what the framework optimizes for, not what we
+            have fully reproduced locally.
+          </p>
+
+          <div class="pipeline-grid">
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag">Paper2Manim</span>
+                <strong>Paper section to storyboard</strong>
+              </div>
+              <div class="normalized-flow" aria-label="Paper2Manim normalized pipeline">
+                <span>paper section</span><span>scene storyboard</span><span>Manim code</span><span>render fixer</span><span>vision checker</span><span>memory bank</span>
+              </div>
+              <p><strong>Original emphasis:</strong> VLM keyframes populate positive examples and known pitfalls across tasks.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag warm">Code2Video</span>
+                <strong>Topic to code-centric video</strong>
+              </div>
+              <div class="normalized-flow" aria-label="Code2Video normalized pipeline">
+                <span>knowledge point</span><span>Planner</span><span>Coder</span><span>scope fix</span><span>VLM Critic</span><span>TeachQuiz</span>
+              </div>
+              <p><strong>Original emphasis:</strong> executable Python is the substrate; Critic repairs layout and TeachQuiz measures learning.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag green">TEA</span>
+                <strong>Theorem to long-form video</strong>
+              </div>
+              <div class="normalized-flow" aria-label="TheoremExplainAgent normalized pipeline">
+                <span>theorem</span><span>long-form plan</span><span>scene code</span><span>render repair</span><span>video eval</span><span>benchmark score</span>
+              </div>
+              <p><strong>Original emphasis:</strong> agentic planning is required for videos longer than short demos.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag violet">LLM2Manim</span>
+                <strong>Pedagogy-aware HITL</strong>
+              </div>
+              <div class="normalized-flow" aria-label="LLM2Manim normalized pipeline">
+                <span>concept brief</span><span>prompt template</span><span>symbol ledger</span><span>partial regen</span><span>expert review</span><span>student eval</span>
+              </div>
+              <p><strong>Original emphasis:</strong> segmentation, signaling, dual coding, and human review are first-class gates.</p>
+            </article>
+
+            <article class="pipeline-card">
+              <div class="pipeline-card-head">
+                <span class="tag violet">ManimTrainer</span>
+                <strong>Training plus inference loop</strong>
+              </div>
+              <div class="normalized-flow" aria-label="ManimTrainer normalized pipeline">
+                <span>ManimBench</span><span>SFT</span><span>GRPO</span><span>RITL</span><span>RITL-DOC</span><span>visual reward</span>
+              </div>
+              <p><strong>Original emphasis:</strong> training improves code quality, while renderer-in-the-loop and API docs improve inference.</p>
+            </article>
+
+            <article class="pipeline-card ours">
+              <div class="pipeline-card-head">
+                <span class="tag green">4blue2brown</span>
+                <strong>Paper plus code to explainer</strong>
+              </div>
+              <div class="normalized-flow" aria-label="4blue2brown target pipeline">
+                <span>paper</span><span>code repo</span><span>PaperCodeGraph</span><span>Scene IR</span><span>Manim render</span><span>learner-bench</span>
+              </div>
+              <p><strong>Our target:</strong> formula-code-example-comparison grounding before Manim code generation.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="paper-cases">
+          <div class="section-kicker">Paper cases</div>
+          <h3>Representative full-run baseline videos</h3>
+          <p class="coverage-warning">
+            These are actual rendered external-framework outputs. They are separate from the 25
+            style-preview videos in the Coverage section, which are local comparable renders.
+          </p>
+          <div class="video-grid">
+            <article class="video-card" data-paper="transformers">
+              <video controls preload="metadata" poster="assets/contact-sheets/code2video_transformer.png">
+                <source src="assets/videos/code2video_transformer.mp4" type="video/mp4">
+              </video>
+              <div class="video-copy">
+                <span class="tag warm">Code2Video</span>
+                <h4>Transformers</h4>
+                <p>4/4 sections rendered, 118.06s, VLM score 2/5. Good section order; limited visual hierarchy.</p>
+              </div>
+            </article>
+            <article class="video-card" data-paper="feynrl">
+              <video controls preload="metadata" poster="assets/contact-sheets/code2video_feynrl_p3o.png">
+                <source src="assets/videos/code2video_feynrl_p3o.mp4" type="video/mp4">
+              </video>
+              <div class="video-copy">
+                <span class="tag warm">Code2Video</span>
+                <h4>FeynRL / P3O</h4>
+                <p>4/4 sections rendered, 133.60s, VLM score 2/5. Covers ESS and capping, but stays sparse.</p>
+              </div>
+            </article>
+            <article class="video-card" data-paper="rope">
+              <video controls preload="metadata" poster="assets/contact-sheets/code2video_rope.png">
+                <source src="assets/videos/code2video_rope.mp4" type="video/mp4">
+              </video>
+              <div class="video-copy">
+                <span class="tag warm">Code2Video</span>
+                <h4>RoPE / RoFormer</h4>
+                <p>4/4 sections rendered, 49.33s, VLM score 3/5. Best baseline clip, still too text-heavy.</p>
+              </div>
+            </article>
+            <article class="video-card" data-paper="rope">
+              <video controls preload="metadata" poster="assets/contact-sheets/paper2manim_rope_fanout_repaired.png">
+                <source src="assets/videos/paper2manim_rope_fanout_repaired.mp4" type="video/mp4">
+              </video>
+              <div class="video-copy">
+                <span class="tag">Paper2Manim</span>
+                <h4>RoPE fanout repair</h4>
+                <p>6-scene storyboard, 59.73s repaired output. Useful planning; readability and motion still need work.</p>
+              </div>
+            </article>
+            <article class="video-card" data-paper="rope">
+              <video controls preload="metadata" poster="assets/contact-sheets/manimtrainer_rope_api.png">
+                <source src="assets/videos/manimtrainer_rope_api.mp4" type="video/mp4">
+              </video>
+              <div class="video-copy">
+                <span class="tag violet">ManimTrainer API-mode</span>
+                <h4>RoPE RITL-DOC repair</h4>
+                <p>48.93s method-level run. Initial render failed; API-doc feedback repaired it in one loop.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="slides" class="section">
+        <div class="section-kicker">New research track</div>
+        <h2>Paper/Code to Slides</h2>
+        <p class="section-lead">
+          Slides are not a replacement for Manim, but they are a useful adjacent substrate. They
+          are editable, easy to skim, easier to evaluate as pages, and closer to how researchers
+          already explain a paper. This tab tracks model-based and agent/skill-based auto-slide
+          systems, then maps them onto our FeynRL, RoPE, Transformer, and DPO examples.
+        </p>
+
+        <div class="slides-tabs" role="tablist" aria-label="Slides research subtab">
+          <button class="slides-tab-button active" type="button" data-slides-tab="landscape">Landscape</button>
+          <button class="slides-tab-button" type="button" data-slides-tab="pipeline">Pipeline</button>
+          <button class="slides-tab-button" type="button" data-slides-tab="runs">Test runs</button>
+        </div>
+
+        <div class="slides-panel active" id="slides-tab-landscape">
+          <div class="slides-card-grid">
+            <article class="slides-card">
+              <div class="card-head">
+                <span class="tag">Agentic PPTX</span>
+                <h3>PPTAgent / DeepPresenter</h3>
+              </div>
+              <p>
+                Strongest general-purpose candidate. PPTAgent uses reference-deck analysis,
+                outline drafting, and edit actions; DeepPresenter adds environment-grounded
+                reflection over rendered slide states.
+              </p>
+              <div class="mini-pipeline" aria-label="PPTAgent pipeline">
+                <span>reference deck</span><span>schema</span><span>outline</span><span>edit actions</span><span>PPTEval</span>
+              </div>
+              <p class="reference-line">
+                References:
+                <a href="https://arxiv.org/abs/2501.03936">PPTAgent</a>,
+                <a href="https://arxiv.org/abs/2602.22839">DeepPresenter</a>,
+                <a href="https://github.com/icip-cas/PPTAgent">GitHub</a>
+              </p>
+            </article>
+
+            <article class="slides-card">
+              <div class="card-head">
+                <span class="tag green">Scientific paper</span>
+                <h3>SlideGen</h3>
+              </div>
+              <p>
+                Closest paper-to-PPTX agent design. It separates outlining, figure/table mapping,
+                equation assignment, layout arrangement, speaker notes, and refinement.
+              </p>
+              <div class="mini-pipeline" aria-label="SlideGen pipeline">
+                <span>paper PDF</span><span>outline</span><span>asset map</span><span>arrange</span><span>refine PPTX</span>
+              </div>
+              <p class="reference-line">
+                References:
+                <a href="https://arxiv.org/abs/2512.04529">arXiv</a>,
+                <a href="https://github.com/zijyut/SlideGen">GitHub</a>
+              </p>
+            </article>
+
+            <article class="slides-card">
+              <div class="card-head">
+                <span class="tag warm">Paper first</span>
+                <h3>Paper2Slides</h3>
+              </div>
+              <p>
+                Practical open-source repo for document-to-slides and posters. Its useful lesson is
+                checkpointed RAG, structure extraction, content planning, and image/render creation.
+              </p>
+              <div class="mini-pipeline" aria-label="Paper2Slides pipeline">
+                <span>RAG</span><span>analysis</span><span>planning</span><span>creation</span><span>resume</span>
+              </div>
+              <p class="reference-line">
+                Reference:
+                <a href="https://github.com/HKUDS/Paper2Slides">GitHub</a>
+              </p>
+            </article>
+
+            <article class="slides-card">
+              <div class="card-head">
+                <span class="tag green">Multimodal hub</span>
+                <h3>Paper2Any</h3>
+              </div>
+              <p>
+                Broader paper-to-artifact system with Paper2PPT, Paper2Figure, DrawIO, poster, and
+                video-script workflows. Good reference for editable figures and deck workspaces.
+              </p>
+              <div class="mini-pipeline" aria-label="Paper2Any pipeline">
+                <span>paper/text</span><span>KB</span><span>outline</span><span>editable PPT</span><span>review</span>
+              </div>
+              <p class="reference-line">
+                Reference:
+                <a href="https://github.com/OpenDCAI/Paper2Any">GitHub</a>
+              </p>
+            </article>
+
+            <article class="slides-card">
+              <div class="card-head">
+                <span class="tag violet">Personalization</span>
+                <h3>SlideTailor</h3>
+              </div>
+              <p>
+                Paper-to-slides system conditioned on a paper-slides example pair and a visual
+                template. This is valuable for our eventual lab-style matching problem.
+              </p>
+              <div class="mini-pipeline" aria-label="SlideTailor pipeline">
+                <span>paper</span><span>example pair</span><span>template</span><span>chain of speech</span><span>editable slides</span>
+              </div>
+              <p class="reference-line">
+                References:
+                <a href="https://arxiv.org/abs/2512.20292">arXiv</a>,
+                <a href="https://github.com/nusnlp/SlideTailor">GitHub</a>
+              </p>
+            </article>
+
+            <article class="slides-card">
+              <div class="card-head">
+                <span class="tag">Programmatic</span>
+                <h3>AutoPresent / SlidesBench</h3>
+              </div>
+              <p>
+                Not paper-specific, but important: programmatic slide generation beat image-only
+                approaches for interactable outputs, and iterative refinement improved design.
+              </p>
+              <div class="mini-pipeline" aria-label="AutoPresent pipeline">
+                <span>instruction</span><span>code</span><span>rendered slide</span><span>self-refine</span><span>benchmark</span>
+              </div>
+              <p class="reference-line">
+                Reference:
+                <a href="https://arxiv.org/abs/2501.00912">arXiv</a>
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="slides-panel" id="slides-tab-pipeline">
+          <div class="slide-pipeline-layout">
+            <div class="pipeline-panel">
+              <h3>Normalized slides pipeline</h3>
+              <div class="flow-stack slides-flow" aria-label="Paper code to slides normalized pipeline">
+                <span>Paper parser plus code index</span>
+                <span>Claim, formula, figure, and symbol map</span>
+                <span>Deck outline and narrative budget</span>
+                <span>Slide IR with assets, notes, and citations</span>
+                <span>HTML/PPTX generation or edit actions</span>
+                <span>Rendered pages for visual QA</span>
+                <span>Content, aesthetics, coherence, editability evaluation</span>
+              </div>
+            </div>
+
+            <div class="artifact-table slides-table" role="table" aria-label="Slides pipeline comparison">
+              <div class="table-row slides-table-row table-head" role="row">
+                <span>System</span><span>Substrate</span><span>Useful lesson</span><span>Risk for us</span>
+              </div>
+              <div class="table-row slides-table-row" role="row">
+                <span>PPTAgent</span><span>editable PPTX</span><span>edit actions plus PPTEval</span><span>general docs, not code-grounded papers</span>
+              </div>
+              <div class="table-row slides-table-row" role="row">
+                <span>SlideGen</span><span>editable PPTX</span><span>agent roles for figures, equations, and notes</span><span>heavy dependencies and API calls</span>
+              </div>
+              <div class="table-row slides-table-row" role="row">
+                <span>Paper2Slides</span><span>PDF/PNG slides</span><span>checkpointed RAG and fast preview path</span><span>may over-index on image generation</span>
+              </div>
+              <div class="table-row slides-table-row" role="row">
+                <span>Paper2Any</span><span>editable decks and diagrams</span><span>workspace model for multiple artifact types</span><span>public repo differs from hosted product</span>
+              </div>
+              <div class="table-row slides-table-row" role="row">
+                <span>SlidesGen-Bench</span><span>rendered pages</span><span>content, aesthetics, editability metrics</span><span>needs conversion pipeline and product config</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="eval-grid deeper">
+            <div class="eval-column">
+              <h3>What slides can add</h3>
+              <ul class="check-list">
+                <li>Deck outline is a natural planning intermediate before Manim scenes.</li>
+                <li>Editable pages expose layout decisions that video clips hide.</li>
+                <li>Speaker notes can become narration drafts for later video generation.</li>
+                <li>Slide-level citations make paper/code grounding easier to audit.</li>
+              </ul>
+            </div>
+            <div class="eval-column">
+              <h3>What still needs our pipeline</h3>
+              <ul class="check-list hollow">
+                <li>Code grounding is weak in most slide systems by default.</li>
+                <li>Formula-to-implementation mapping needs a PaperCodeGraph-like artifact.</li>
+                <li>Slides must distinguish source figures from generated decorations.</li>
+                <li>Evaluation must measure teaching value, not only design polish.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slides-panel" id="slides-tab-runs">
+          <div class="slide-run-layout">
+            <div class="slide-run-preview">
+              <img src="assets/slides-smoke/feynrl_p3o_deck.svg" alt="Four-slide smoke test deck for the FeynRL P3O example">
+            </div>
+            <div class="slide-run-copy">
+              <span class="tag green">Local smoke test</span>
+              <h3>FeynRL / P3O slide-IR sketch</h3>
+              <p>
+                First local slide artifact: a four-slide HTML/SVG sketch built from the existing
+                FeynRL example. It is not an upstream SlideGen or PPTAgent output. Its purpose is to
+                pin the evidence slot and make the evaluation shape concrete.
+              </p>
+              <div class="mini-pipeline" aria-label="Local slide smoke pipeline">
+                <span>existing example</span><span>slide IR</span><span>HTML/SVG</span><span>visual review</span><span>next upstream run</span>
+              </div>
+              <p class="reference-line">
+                Artifact:
+                <a href="assets/slides-smoke/feynrl_p3o_deck.html">HTML deck</a>,
+                <a href="assets/slides-smoke/feynrl_p3o_deck.svg">contact sheet</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="coverage-table slides-run-table" role="table" aria-label="Slides test run matrix">
+            <div class="coverage-row slides-run-row coverage-head" role="row">
+              <span>Candidate</span>
+              <span>Status</span>
+              <span>Example input</span>
+              <span>What to judge</span>
+              <span>Next action</span>
+            </div>
+            <div class="coverage-row slides-run-row" role="row">
+              <span>Local slide-IR sketch</span>
+              <span class="status-pill done">done</span>
+              <span>FeynRL / P3O ESS</span>
+              <span>narrative shape, formula/code/example coverage, slide density</span>
+              <span>Use as a baseline contact sheet, then replace with upstream outputs.</span>
+            </div>
+            <div class="coverage-row slides-run-row" role="row">
+              <span>SlideGen</span>
+              <span class="status-pill partial">planned</span>
+              <span>RoPE paper PDF, then FeynRL paper/code packet</span>
+              <span>figure/formula mapping, notes quality, editability</span>
+              <span>Create isolated env with OpenAI key, LibreOffice, python-pptx fork.</span>
+            </div>
+            <div class="coverage-row slides-run-row" role="row">
+              <span>PPTAgent / DeepPresenter</span>
+              <span class="status-pill partial">planned</span>
+              <span>FeynRL brief plus source attachments</span>
+              <span>edit action reliability, visual repair, PPTEval dimensions</span>
+              <span>Smoke CLI with a short prompt, then attach paper/code excerpts.</span>
+            </div>
+            <div class="coverage-row slides-run-row" role="row">
+              <span>Paper2Slides</span>
+              <span class="status-pill partial">planned</span>
+              <span>FeynRL paper PDF</span>
+              <span>RAG extraction quality, figures/tables, style control</span>
+              <span>Run fast mode first, then normal RAG mode if parsing is stable.</span>
+            </div>
+            <div class="coverage-row slides-run-row" role="row">
+              <span>SlidesGen-Bench</span>
+              <span class="status-pill partial">planned eval</span>
+              <span>All generated decks converted to page images</span>
+              <span>content, aesthetics, editability, human alignment proxy</span>
+              <span>Add our product folder and compare outputs after first upstream run.</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="reference-line slides-research-note">
+          Research notes live in <code>docs/research/auto-slides-generation-landscape.md</code>.
+        </p>
+      </section>
+
+      <section id="cost" class="section">
+        <div class="section-kicker">Runtime and API cost tracking</div>
+        <h2>Cost Snapshot</h2>
+        <p class="section-lead">
+          Every run needs two budgets: model/API cost and local render time. The current coverage
+          sweep used a deterministic local renderer, so it gives render-time numbers but not
+          model-cost numbers. Real provider comparisons still need credentials and rate-card
+          logging.
+        </p>
+
+        <div class="cost-layout">
+          <div class="cost-card">
+            <h3>Baseline coverage sweep, 5 topics</h3>
+            <div class="metric-table compact-table" role="table" aria-label="Baseline coverage render time">
+              <div class="metric-row metric-head" role="row">
+                <span>Framework style</span><span>Videos</span><span>Render</span><span>Duration</span><span>API cost</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>Paper2Manim</span><span>5</span><span>38.34s</span><span>45.0s</span><span>$0</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>Code2Video</span><span>5</span><span>35.26s</span><span>45.0s</span><span>$0</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>TEA style</span><span>5</span><span>32.89s</span><span>45.0s</span><span>$0</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>LLM2Manim-inspired</span><span>5</span><span>124.04s</span><span>102.33s</span><span>$0</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>ManimTrainer</span><span>5</span><span>33.61s</span><span>45.0s</span><span>$0</span>
+              </div>
+            </div>
+            <p class="table-note">
+              Source: `runs/baseline_coverage/manifest.json`. Total: 25 videos, 282.33s of playable video. LLM2Manim is now a method-level reproduction, while the other rows remain style-preview renders.
+            </p>
+          </div>
+
+          <div class="cost-card">
+            <h3>Historical WInE planning previews, 3 topics</h3>
+            <div class="metric-table compact-table" role="table" aria-label="Planning preview token and time cost">
+              <div class="metric-row metric-head" role="row">
+                <span>Framework</span><span>Elapsed</span><span>Prompt</span><span>Completion</span><span>Total</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>Paper2Manim style</span><span>30.02s</span><span>2,845</span><span>3,637</span><span>6,482</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>Code2Video style</span><span>37.32s</span><span>2,746</span><span>4,481</span><span>7,227</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>TheoremExplainAgent style</span><span>90.35s</span><span>2,791</span><span>9,656</span><span>12,447</span>
+              </div>
+            </div>
+            <p class="table-note">
+              Source: WInE preview JSONs for FeynRL, RoPE, and Transformers using `wine-claude-haiku-4-5`. These are planning calls, not rendered full videos.
+            </p>
+          </div>
+
+          <div class="cost-card">
+            <h3>Rendered Code2Video runs</h3>
+            <div class="metric-table" role="table" aria-label="Rendered Code2Video token cost">
+              <div class="metric-row metric-head" role="row">
+                <span>Topic</span><span>Render</span><span>Video</span><span>Tokens</span><span>Known gap</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>Transformers</span><span>4/4</span><span>118.06s</span><span>31,154</span><span>wall time missing</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>FeynRL / P3O</span><span>4/4</span><span>133.60s</span><span>33,424</span><span>wall time missing</span>
+              </div>
+              <div class="metric-row" role="row">
+                <span>RoPE</span><span>4/4</span><span>49.33s</span><span>26,852</span><span>wall time missing</span>
+              </div>
+            </div>
+            <p class="table-note">
+              These are the strongest full external-framework outputs currently on the page. Combined generation tokens: 91,430.
+            </p>
+          </div>
+        </div>
+
+        <div class="cost-layout two">
+          <div class="cost-card">
+            <h3>VLM review cost proxy</h3>
+            <p>
+              Six contact-sheet reviews with `wine-gemini-2.5-flash` used 20,196 total tokens,
+              including 9,151 image tokens and 7,190 hidden reasoning tokens. Each review is cheap
+              enough to run often, but the hidden reasoning budget is large enough to log explicitly.
+            </p>
+          </div>
+          <div class="cost-card formula-card">
+            <h3>Dollar cost formula</h3>
+            <pre><code>usd =
+  input_tokens  / 1e6 * input_price
++ output_tokens / 1e6 * output_price
++ image_tokens  / 1e6 * image_price
++ render_minutes * machine_price</code></pre>
+            <p class="table-note">
+              Still needed: provider price table, cache billing, wall-clock render time, and retry accounting.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="current" class="section">
+        <div class="section-kicker">What exists now</div>
+        <h2>Current v0 Pipeline</h2>
+        <p class="section-lead">
+          The local suite proves the mechanical loop: write or generate a Manim scene, render it,
+          sample frames, build a contact sheet, and record review notes. These clips are prototype
+          teaching artifacts. Their value is that every step is inspectable and reproducible.
+        </p>
+
+        <div class="current-layout">
+          <div class="pipeline-panel">
+            <h3>v0 execution loop</h3>
+            <div class="flow-stack" aria-label="Current v0 pipeline">
+              <span>Specs in JSON</span>
+              <span>Robust Manim scenes</span>
+              <span>Fast low-resolution render</span>
+              <span>ffprobe + frame sampling</span>
+              <span>Contact sheet</span>
+              <span>Optional VLM review</span>
+              <span>Recorded next edits</span>
+            </div>
+          </div>
+
+          <div class="artifact-table" role="table" aria-label="Current local clips">
+            <div class="table-row table-head" role="row">
+              <span>Clip</span><span>Duration</span><span>Current read</span><span>Next gap</span>
+            </div>
+            <div class="table-row" role="row">
+              <span>FeynRL / P3O ESS</span><span>14.27s</span><span>3/5</span><span>derive ESS and bind to code</span>
+            </div>
+            <div class="table-row" role="row">
+              <span>DPO preference objective</span><span>11.73s</span><span>4/5</span><span>define symbols before formula</span>
+            </div>
+            <div class="table-row" role="row">
+              <span>Scaled dot-product attention</span><span>11.40s</span><span>3/5</span><span>animate QK and softmax</span>
+            </div>
+            <div class="table-row" role="row">
+              <span>Transformer core</span><span>11.47s</span><span>storyboard</span><span>split attention heads and positions</span>
+            </div>
+            <div class="table-row" role="row">
+              <span>RoPE rotation</span><span>16.53s</span><span>storyboard</span><span>worked relative-dot example</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-grid compact">
+          <article class="video-card">
+            <video controls preload="metadata" poster="assets/contact-sheets/FeynRLESSMiniLesson.png">
+              <source src="assets/videos/FeynRLESSMiniLesson.mp4" type="video/mp4">
+            </video>
+            <div class="video-copy">
+              <span class="tag green">In-house</span>
+              <h4>FeynRL / P3O ESS</h4>
+              <p>Shows the right components, but still needs a clearer ESS derivation and code link.</p>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata" poster="assets/contact-sheets/DPOPreferenceExplainer.png">
+              <source src="assets/videos/DPOPreferenceExplainer.mp4" type="video/mp4">
+            </video>
+            <div class="video-copy">
+              <span class="tag green">In-house</span>
+              <h4>DPO objective</h4>
+              <p>Readable first-watch storyboard, still needs pi, reference, beta, chosen, and rejected grounded before the formula.</p>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata" poster="assets/contact-sheets/AttentionSoftmaxExplainer.png">
+              <source src="assets/videos/AttentionSoftmaxExplainer.mp4" type="video/mp4">
+            </video>
+            <div class="video-copy">
+              <span class="tag green">In-house</span>
+              <h4>Attention softmax</h4>
+              <p>Good lookup intuition, still missing the numeric QK-to-softmax transition.</p>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata" poster="assets/contact-sheets/RoPERotationExplainer.png">
+              <source src="assets/videos/RoPERotationExplainer.mp4" type="video/mp4">
+            </video>
+            <div class="video-copy">
+              <span class="tag green">In-house</span>
+              <h4>RoPE rotation</h4>
+              <p>Formula-by-formula candidate for a longer position-embedding series.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="coverage" class="section">
+        <div class="section-kicker">Baseline coverage run</div>
+        <h2>Five Topics Across Five Framework Styles</h2>
+        <p class="section-lead">
+          The coverage pass now answers a narrower, useful question: can we compare the same five
+          topics across the planning style of each framework? Yes. The result is 25 short MP4s with
+          manifests. The next question is harder: can each upstream framework produce those videos
+          end to end with real model calls and renderer feedback?
+        </p>
+
+        <div class="evidence-legend" aria-label="Evidence levels">
+          <div>
+            <strong>In-house clip</strong>
+            <span>Locally authored Manim scene used to test our own render, probe, and review loop.</span>
+          </div>
+          <div>
+            <strong>Style-preview render</strong>
+            <span>Local deterministic video generated from a framework-shaped planning schema. Comparable, but not a full upstream run.</span>
+          </div>
+          <div>
+            <strong>Method-level reproduction</strong>
+            <span>Local Manim implementation of the paper's pipeline ideas, clearly marked as non-official.</span>
+          </div>
+          <div>
+            <strong>Full upstream run</strong>
+            <span>An external framework produced rendered output through its own pipeline or adapted local runner.</span>
+          </div>
+        </div>
+
+        <div class="coverage-table" role="table" aria-label="Baseline coverage matrix">
+          <div class="coverage-row coverage-head" role="row">
+            <span>Topic / clip</span>
+            <span>In-house</span>
+            <span>Baseline-style coverage</span>
+            <span>Full upstream evidence</span>
+            <span>Next action</span>
+          </div>
+          <div class="coverage-row" role="row">
+            <span>FeynRL / P3O ESS</span>
+            <span class="status-pill done">rendered</span>
+            <span class="status-pill done">5 / 5 videos</span>
+            <span>Code2Video full run; Paper2Manim real upstream fanout; LLM2Manim-inspired method reproduction.</span>
+            <span>Bind formulas to `external/FeynRL` code and improve layout/readability before scaling.</span>
+          </div>
+          <div class="coverage-row" role="row">
+            <span>DPO objective</span>
+            <span class="status-pill done">rendered</span>
+            <span class="status-pill done">5 / 5 videos</span>
+            <span>LLM2Manim-inspired method reproduction exists; no full upstream baseline yet.</span>
+            <span>Run model comparison once API credentials are available.</span>
+          </div>
+          <div class="coverage-row" role="row">
+            <span>Attention softmax</span>
+            <span class="status-pill done">rendered</span>
+            <span class="status-pill done">5 / 5 videos</span>
+            <span>Standalone spec plus LLM2Manim-inspired method reproduction; no full upstream run yet.</span>
+            <span>Use as a small geometry/aesthetics metric test case.</span>
+          </div>
+          <div class="coverage-row" role="row">
+            <span>Transformer core</span>
+            <span class="status-pill done">rendered</span>
+            <span class="status-pill done">5 / 5 videos</span>
+            <span>Code2Video full run; Paper2Manim real upstream attention fanout; LLM2Manim-inspired method reproduction.</span>
+            <span>Use this for layout and motion diagnostics before GPT / Claude / Gemini model comparison.</span>
+          </div>
+          <div class="coverage-row" role="row">
+            <span>RoPE rotation</span>
+            <span class="status-pill done">rendered</span>
+            <span class="status-pill done">5 / 5 videos</span>
+            <span>Paper2Manim, Code2Video, ManimTrainer API-mode, and LLM2Manim-inspired outputs exist.</span>
+            <span>Run TEA full output and expand baseline-position subclips.</span>
+          </div>
+        </div>
+
+        <div class="coverage-run-summary" aria-label="Baseline coverage run summary">
+          <div>
+            <strong>25</strong>
+            <span>coverage videos generated</span>
+          </div>
+          <div>
+            <strong>225s</strong>
+            <span>original style-preview duration</span>
+          </div>
+          <div>
+            <strong>282s</strong>
+            <span>current playable duration after LLM2Manim-inspired upgrade</span>
+          </div>
+          <div>
+            <strong>2 + 2</strong>
+            <span>Paper2Manim upstream clips plus TEA smoke renders</span>
+          </div>
+        </div>
+
+        <p class="coverage-warning">
+          Every card below has an MP4, contact sheet, and run manifest. Treat these as comparable
+          planning-style artifacts except the LLM2Manim row, which is our method-level reproduction.
+          None of the LLM2Manim clips should be read as an official repo or checkpoint result.
+        </p>
+
+        <section class="framework-block" aria-label="July 9 real upstream batch">
+          <div class="framework-block-head">
+            <span class="tag green">Full upstream run</span>
+            <h3>July 9 Babel batch: Paper2Manim fanout + TEA smokes</h3>
+            <p>
+              These two clips were generated on Babel through the real Paper2Manim MVP1 storyboard
+              path plus our fanout/no-LaTeX repair harness. They are stronger evidence than the
+              style-preview row, but still visually sparse and not yet learner-ready. TEA also
+              produced two single-scene FeynRL smoke renders after compatibility repair; the full
+              TEA run is still too slow and fragile.
+            </p>
+          </div>
+          <div class="coverage-run-summary" aria-label="July 9 upstream batch summary">
+            <div>
+              <strong>9120248</strong>
+              <span>Slurm job on babel-x5-28</span>
+            </div>
+            <div>
+              <strong>86s</strong>
+              <span>FeynRL / P3O ESS fanout</span>
+            </div>
+            <div>
+              <strong>59s</strong>
+              <span>Transformers attention fanout</span>
+            </div>
+            <div>
+              <strong>2 smokes</strong>
+              <span>TEA scenes 1-2 rendered after repair</span>
+            </div>
+          </div>
+          <div class="coverage-video-grid">
+            <article class="coverage-video-card">
+              <video controls preload="metadata" poster="assets/upstream-batch-20260709/contact-sheets/paper2manim_feynrl_p3o_ess_fanout.png">
+                <source src="assets/upstream-batch-20260709/videos/paper2manim_feynrl_p3o_ess_fanout.mp4" type="video/mp4">
+              </video>
+              <div class="coverage-video-copy">
+                <h4>FeynRL / P3O ESS</h4>
+                <p>86.0s, real Paper2Manim upstream storyboard plus fanout render. Main gap: too sparse for teaching.</p>
+              </div>
+            </article>
+            <article class="coverage-video-card">
+              <video controls preload="metadata" poster="assets/upstream-batch-20260709/contact-sheets/paper2manim_transformers_attention_fanout.png">
+                <source src="assets/upstream-batch-20260709/videos/paper2manim_transformers_attention_fanout.mp4" type="video/mp4">
+              </video>
+              <div class="coverage-video-copy">
+                <h4>Transformers attention</h4>
+                <p>59.0s, real Paper2Manim upstream storyboard plus fanout render. Main gap: tiny, low-density visuals.</p>
+              </div>
+            </article>
+            <article class="coverage-video-card">
+              <video controls preload="metadata" poster="assets/upstream-batch-20260709/contact-sheets/tea_feynrl_scene1_smoke.png">
+                <source src="assets/upstream-batch-20260709/videos/tea_feynrl_scene1_smoke.mp4" type="video/mp4">
+              </video>
+              <div class="coverage-video-copy">
+                <h4>TEA FeynRL scene1 smoke</h4>
+                <p>30.9s, TEA-generated Manim code rendered after no-LaTeX and API compatibility fixes. Main gap: sparse blackboard-style content, not a full paper explanation.</p>
+              </div>
+            </article>
+            <article class="coverage-video-card">
+              <video controls preload="metadata" poster="assets/upstream-batch-20260709/contact-sheets/tea_feynrl_scene2_smoke.png">
+                <source src="assets/upstream-batch-20260709/videos/tea_feynrl_scene2_smoke.mp4" type="video/mp4">
+              </video>
+              <div class="coverage-video-copy">
+                <h4>TEA FeynRL scene2 smoke</h4>
+                <p>33.1s, cached TEA plan plus generated Manim code rendered after no-LaTeX repair. Main gap: formulas degrade to literal text and layout remains tiny.</p>
+              </div>
+            </article>
+          </div>
+          <div class="coverage-table" role="table" aria-label="July 9 reproduction status">
+            <div class="coverage-row coverage-head" role="row">
+              <span>System</span>
+              <span>Status</span>
+              <span>What happened</span>
+              <span>Reproduction quality</span>
+              <span>Next step</span>
+            </div>
+            <div class="coverage-row" role="row">
+              <span>Paper2Manim</span>
+              <span class="status-pill done">2 videos</span>
+              <span>MVP1 produced storyboards; fanout rendered all usable scenes; no-LaTeX repair rescued failing scenes.</span>
+              <span>Runnable and inspectable, but mostly text/small diagrams.</span>
+              <span>Add Scene IR, layout checks, and stronger visual templates.</span>
+            </div>
+            <div class="coverage-row" role="row">
+              <span>TEA</span>
+              <span class="status-pill partial">2 scene smokes</span>
+              <span>FeynRL ESS full planning generated scene1-scene7 plans, then hit the 1200s full-run timeout. Smaller single-scene reruns produced Manim code for scenes 1-2 and rendered after no-LaTeX repair.</span>
+              <span>Rendered proof of life, but sparse and formula rendering is degraded.</span>
+              <span>Patch TEA render PATH/LaTeX assumptions, preserve formula semantics without LaTeX, then rerun all scenes one at a time.</span>
+            </div>
+            <div class="coverage-row" role="row">
+              <span>ManimTrainer</span>
+              <span class="status-pill blocked">blocked</span>
+              <span>GPU is available, but the shared env lacks torch, transformers, unsloth, peft, datasets, and trl.</span>
+              <span>No official adapter inference yet.</span>
+              <span>Create a separate GPU env and fix checkpoint paths before loading SeedCoder adapters.</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="framework-result-list">
+          <section class="framework-block" aria-label="Paper2Manim coverage videos">
+            <div class="framework-block-head">
+              <span class="tag">Paper2Manim</span>
+              <h3>Paper2Manim: five-topic coverage</h3>
+              <p>Tests whether paper-section storyboards produce useful scene decomposition before code generation.</p>
+            </div>
+            <div class="coverage-video-grid">
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/paper2manim__feynrl.png">
+                  <source src="assets/baseline-coverage/videos/paper2manim__feynrl.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>FeynRL / P3O ESS</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/paper2manim__dpo.png">
+                  <source src="assets/baseline-coverage/videos/paper2manim__dpo.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>DPO objective</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/paper2manim__attention.png">
+                  <source src="assets/baseline-coverage/videos/paper2manim__attention.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Attention softmax</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/paper2manim__transformers.png">
+                  <source src="assets/baseline-coverage/videos/paper2manim__transformers.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Transformer core</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/paper2manim__rope.png">
+                  <source src="assets/baseline-coverage/videos/paper2manim__rope.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>RoPE rotation</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="framework-block" aria-label="Code2Video coverage videos">
+            <div class="framework-block-head">
+              <span class="tag warm">Code2Video</span>
+              <h3>Code2Video: five-topic coverage</h3>
+              <p>Tests whether topic-to-lecture sections stay runnable and easy to critique after rendering.</p>
+            </div>
+            <div class="coverage-video-grid">
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/code2video__feynrl.png">
+                  <source src="assets/baseline-coverage/videos/code2video__feynrl.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>FeynRL / P3O ESS</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/code2video__dpo.png">
+                  <source src="assets/baseline-coverage/videos/code2video__dpo.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>DPO objective</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/code2video__attention.png">
+                  <source src="assets/baseline-coverage/videos/code2video__attention.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Attention softmax</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/code2video__transformers.png">
+                  <source src="assets/baseline-coverage/videos/code2video__transformers.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Transformer core</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/code2video__rope.png">
+                  <source src="assets/baseline-coverage/videos/code2video__rope.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>RoPE rotation</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="framework-block" aria-label="TEA style coverage videos">
+            <div class="framework-block-head">
+              <span class="tag green">TEA style</span>
+              <h3>TEA style: five-topic coverage</h3>
+              <p>Tests whether long-form theorem-style planning gives richer scene intent or simply too much text.</p>
+            </div>
+            <div class="coverage-video-grid">
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/theorem_explain_agent__feynrl.png">
+                  <source src="assets/baseline-coverage/videos/theorem_explain_agent__feynrl.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>FeynRL / P3O ESS</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/theorem_explain_agent__dpo.png">
+                  <source src="assets/baseline-coverage/videos/theorem_explain_agent__dpo.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>DPO objective</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/theorem_explain_agent__attention.png">
+                  <source src="assets/baseline-coverage/videos/theorem_explain_agent__attention.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Attention softmax</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/theorem_explain_agent__transformers.png">
+                  <source src="assets/baseline-coverage/videos/theorem_explain_agent__transformers.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Transformer core</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/theorem_explain_agent__rope.png">
+                  <source src="assets/baseline-coverage/videos/theorem_explain_agent__rope.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>RoPE rotation</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="framework-block" aria-label="LLM2Manim coverage videos">
+            <div class="framework-block-head">
+              <span class="tag violet">LLM2Manim</span>
+              <h3>LLM2Manim-inspired: five-topic method reproduction</h3>
+              <p>Implements the paper pipeline locally: segmentation, symbol ledger, constrained template, HITL checkpoint, partial-regeneration note, and render.</p>
+            </div>
+            <div class="coverage-video-grid">
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/llm2manim__feynrl.png">
+                  <source src="assets/baseline-coverage/videos/llm2manim__feynrl.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>FeynRL / P3O ESS</h4>
+                  <p>20.47s, method-level reproduction, non-official pipeline clearly marked.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/llm2manim__dpo.png">
+                  <source src="assets/baseline-coverage/videos/llm2manim__dpo.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>DPO objective</h4>
+                  <p>20.47s, method-level reproduction, symbol-ledger and HITL checkpoint visible.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/llm2manim__attention.png">
+                  <source src="assets/baseline-coverage/videos/llm2manim__attention.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Attention softmax</h4>
+                  <p>20.47s, method-level reproduction, formula-template plus visual panel.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/llm2manim__transformers.png">
+                  <source src="assets/baseline-coverage/videos/llm2manim__transformers.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Transformer core</h4>
+                  <p>20.47s, method-level reproduction, multi-head visual and review gate.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/llm2manim__rope.png">
+                  <source src="assets/baseline-coverage/videos/llm2manim__rope.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>RoPE rotation</h4>
+                  <p>20.47s, method-level reproduction, relative-rotation panel and misconception check.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+          <section class="framework-block" aria-label="ManimTrainer coverage videos">
+            <div class="framework-block-head">
+              <span class="tag violet">ManimTrainer</span>
+              <h3>ManimTrainer: five-topic coverage</h3>
+              <p>Tests whether retrieval notes, reward targets, and self-review cues expose training-loop biases.</p>
+            </div>
+            <div class="coverage-video-grid">
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/manimtrainer__feynrl.png">
+                  <source src="assets/baseline-coverage/videos/manimtrainer__feynrl.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>FeynRL / P3O ESS</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/manimtrainer__dpo.png">
+                  <source src="assets/baseline-coverage/videos/manimtrainer__dpo.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>DPO objective</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/manimtrainer__attention.png">
+                  <source src="assets/baseline-coverage/videos/manimtrainer__attention.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Attention softmax</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/manimtrainer__transformers.png">
+                  <source src="assets/baseline-coverage/videos/manimtrainer__transformers.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>Transformer core</h4>
+                  <p>7.5s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+              <article class="coverage-video-card">
+                <video controls preload="metadata" poster="assets/baseline-coverage/posters/manimtrainer__rope.png">
+                  <source src="assets/baseline-coverage/videos/manimtrainer__rope.mp4" type="video/mp4">
+                </video>
+                <div class="coverage-video-copy">
+                  <h4>RoPE rotation</h4>
+                  <p>10.0s, style-preview render, manifest logged.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="models" class="section">
+        <div class="section-kicker">Separate model comparison</div>
+        <h2>Model Comparison Plan</h2>
+        <p class="section-lead">
+          Model comparison should not be mixed with framework comparison. First keep one framework
+          fixed and swap the model family. Then keep the topic fixed and swap the framework style.
+          Code2Video is the most stable rendered path today, so it is the first practical harness.
+        </p>
+
+        <div class="model-grid">
+          <article class="model-card">
+            <h3>Experiment A: same framework, different model</h3>
+            <p>
+              Run Code2Video with one GPT-family, one Claude-family, and one Gemini-family model on
+              the same three specs: Transformers, DPO, and RoPE.
+            </p>
+            <ul class="check-list">
+              <li>Keep prompts, max sections, quality, and no-LaTeX constraints fixed.</li>
+              <li>Log generation wall time, render wall time, retries, tokens, and dollar cost.</li>
+              <li>Review every output with the same contact-sheet rubric and a human pass.</li>
+            </ul>
+          </article>
+          <article class="model-card">
+            <h3>Experiment B: same topic, different framework</h3>
+            <p>
+              After Experiment A, compare Paper2Manim, Code2Video, TEA-style, LLM2Manim, and
+              ManimTrainer-style outputs for each of the five clip topics. This isolates framework
+              bias from model bias.
+            </p>
+            <ul class="check-list hollow">
+              <li>Expect Paper2Manim to produce better scene decomposition.</li>
+              <li>Expect Code2Video to produce better runnable code sooner.</li>
+              <li>Expect TEA, LLM2Manim, and ManimTrainer styles to expose planning, pedagogy, and training-loop bias.</li>
+            </ul>
+          </article>
+          <article class="model-card">
+            <h3>Evaluation dimensions</h3>
+            <div class="score-rubric">
+              <span>Render success</span>
+              <span>Retry count</span>
+              <span>Readable geometry</span>
+              <span>Aesthetic clarity</span>
+              <span>Formula correctness</span>
+              <span>Paper/code grounding</span>
+              <span>TeachQuiz gain</span>
+              <span>Cost per usable clip</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="eval" class="section">
+        <div class="section-kicker">Quality gates</div>
+        <h2>Evaluation Stack</h2>
+        <p class="section-lead">
+          Render success is only the first gate. A useful clip also needs readable geometry,
+          correct formulas, grounded code references, and evidence that a learner understands more
+          after seeing it.
+        </p>
+
+        <div class="eval-grid">
+          <div class="eval-column">
+            <h3>Implemented now</h3>
+            <ul class="check-list">
+              <li>ffprobe metadata: duration, size, resolution, FPS.</li>
+              <li>Frame sampler that avoids fade-transition false negatives.</li>
+              <li>Contact sheets for manual and multimodal review.</li>
+              <li>WInE/Gemini VLM review over rendered keyframes.</li>
+              <li>Structured notes for "what works" and "what fails."</li>
+            </ul>
+          </div>
+          <div class="eval-column">
+            <h3>Needed next</h3>
+            <ul class="check-list hollow">
+              <li>Scene IR validator for symbols, objects, and timing.</li>
+              <li>Formula-code grounding checks for FeynRL/P3O.</li>
+              <li>Layout checks for overlap, tiny text, and offscreen objects.</li>
+              <li>TeachQuiz or learner questions per clip.</li>
+              <li>Memory bank that stores validated successes and failures separately.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="eval-grid deeper">
+          <div class="eval-column">
+            <h3>Geometry and aesthetics need measurable signals</h3>
+            <p>
+              The biggest visible gap is not syntax. Models can render Manim while still failing at
+              spatial hierarchy: tiny formulas, unclear alignment, static text, limited motion, and
+              diagrams that do not reveal the mechanism. We need geometry metrics before asking a
+              judge for taste.
+            </p>
+            <ul class="check-list hollow">
+              <li>OCR text size and line density per frame.</li>
+              <li>Bounding-box overlap, offscreen objects, and crowded safe areas.</li>
+              <li>Motion signal: did the key object move, morph, or only appear as text?</li>
+              <li>Alignment score for axes, arrows, formulas, and highlighted objects.</li>
+            </ul>
+          </div>
+          <div class="eval-column">
+            <h3>Learner-bench signal</h3>
+            <p>
+              The more interesting metric is not "does a judge like the video?" It is whether a
+              learner can answer paper-specific questions after seeing the generated artifact.
+              Talkie-LM is a useful reference: a model with an old knowledge cutoff creates a
+              cleaner generalization test because it cannot simply rely on modern web contamination.
+            </p>
+            <ul class="check-list hollow">
+              <li>Build paper questions before video generation, then hide the paper.</li>
+              <li>Give a learner model only keyframes, transcript, and code highlights.</li>
+              <li>Measure pre/post improvement, misconception reduction, and citation grounding.</li>
+              <li>Use learning gain as an RL/reward signal, not just VLM preference.</li>
+            </ul>
+            <p class="reference-line">
+              Reference:
+              <a href="https://talkie-lm.com/introducing-talkie">talkie, a pre-1931 vintage LM</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="figure-gallery" aria-label="FeynRL visual prototype figures">
+          <figure>
+            <img src="assets/figures/ratio_distributions_ess.svg" alt="Fresh and stale policy ratio distributions with ESS">
+            <figcaption>Policy ratio spread changes normalized ESS.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/figures/objective_weight_curves.svg" alt="Objective weight curves for PPO, CISPO, and P3O">
+            <figcaption>Objective mechanics become visible as weight curves.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/figures/p3o_ess_tradeoff.svg" alt="P3O ESS score cap and behavioral KL tradeoff">
+            <figcaption>P3O uses ESS as both a score cap and KL weight.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/figures/sync_vs_async_timeline.svg" alt="Sync and async FeynRL timeline comparison">
+            <figcaption>System timing explains where staleness enters.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="future" class="section">
+        <div class="section-kicker">Future direction</div>
+        <h2>Next Milestones</h2>
+        <p class="section-lead">
+          The next phase is to turn a promising progress site into a repeatable experiment harness.
+          FeynRL/P3O is the best first full target because it has formulas, code paths, baselines,
+          and a system-level idea, replay staleness, that should be visible on screen.
+        </p>
+
+        <ol class="roadmap">
+          <li>
+            <span class="roadmap-code">M1</span>
+            <strong>Paper/code index</strong>
+            <p>Cache formulas, claims, code symbols, configs, and examples. Success: answer "where is this formula in code?" for FeynRL.</p>
+          </li>
+          <li>
+            <span class="roadmap-code">M2</span>
+            <strong>Scene IR</strong>
+            <p>YAML plans for FeynRL method scenes: ratios, ESS, fixed clipping, CISPO, P3O, sync vs async.</p>
+          </li>
+          <li>
+            <span class="roadmap-code">M3</span>
+            <strong>First grounded Manim clip</strong>
+            <p>One 10-30s clip explaining ESS tradeoff with formula, toy batch, and code pointer.</p>
+          </li>
+          <li>
+            <span class="roadmap-code">M4</span>
+            <strong>Comparison clip</strong>
+            <p>PPO/GRPO/CISPO/P3O side-by-side under fresh, mildly stale, and stale ratio regimes.</p>
+          </li>
+          <li>
+            <span class="roadmap-code">M5</span>
+            <strong>Findings clip</strong>
+            <p>Turn one paper claim into a visual explanation backed by code, example, and result.</p>
+          </li>
+          <li>
+            <span class="roadmap-code">M6</span>
+            <strong>One-command rough video</strong>
+            <p>`generate` produces clips, review artifacts, narration draft, subtitles, and a reproducible run directory.</p>
+          </li>
+        </ol>
+
+        <div class="result-backlog">
+          <h3>Immediate result backlog</h3>
+          <div class="backlog-grid">
+            <article>
+              <span class="roadmap-code">R1</span>
+              <strong>Instrument cost and time</strong>
+              <p>Add `run_manifest.json` to every framework run: start/end, generation time, render time, retries, token usage, model, provider, and rate-card version.</p>
+            </article>
+            <article>
+              <span class="roadmap-code">R2</span>
+              <strong>Replace style-preview renders with full runs</strong>
+              <p>Use the 25-video grid as the comparison scaffold, then rerun each framework through its real upstream path where possible.</p>
+            </article>
+            <article>
+              <span class="roadmap-code">R3</span>
+              <strong>Run model comparison</strong>
+              <p>Use the best stabilized framework first, then compare GPT, Claude, and Gemini families on Transformers, DPO, and RoPE.</p>
+            </article>
+            <article>
+              <span class="roadmap-code">R4</span>
+              <strong>Automate geometry metrics</strong>
+              <p>Move beyond VLM taste: OCR size, overlap, safe area, motion, alignment, and semantic object checks.</p>
+            </article>
+            <article>
+              <span class="roadmap-code">R5</span>
+              <strong>Build learner-bench</strong>
+              <p>Measure whether generated clips teach a paper to a learner model or human, with pre/post questions and paper-hidden answers.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="snippets" class="section">
+        <div class="section-kicker">Code snippets for the progress talk</div>
+        <h2>Implementation Shape</h2>
+        <div class="snippet-tabs" role="tablist" aria-label="Code snippets">
+          <button class="tab-button active" type="button" data-tab="render">Render harness</button>
+          <button class="tab-button" type="button" data-tab="probe">Probe sampler</button>
+          <button class="tab-button" type="button" data-tab="ir">Scene IR</button>
+          <button class="tab-button" type="button" data-tab="futurecli">Future CLI</button>
+        </div>
+
+        <div class="snippet-panel active" id="tab-render">
+          <button class="copy-button" type="button" data-copy="render-code">Copy</button>
+          <pre><code id="render-code">./.venv-arm64/bin/python tools/run_reproduction_previews.py \
+  --provider mock \
+  --out-dir runs/reproductions/previews \
+  --papers feynrl dpo attention transformers rope
+
+./.venv-arm64/bin/python tools/render_preview_baseline_videos.py \
+  --preview-root runs/reproductions/previews \
+  --out-dir runs/baseline_coverage \
+  --papers feynrl dpo attention transformers rope \
+  --size 960x540 \
+  --fps 12 \
+  --seconds-per-item 2.5
+
+# Real provider planning sweep, when WInE credentials are available:
+./.venv-arm64/bin/python tools/run_reproduction_previews.py \
+  --provider wine \
+  --model wine-claude-haiku-4-5 \
+  --out-dir runs/reproductions/previews_wine \
+  --papers feynrl dpo attention transformers rope</code></pre>
+        </div>
+
+        <div class="snippet-panel" id="tab-probe">
+          <button class="copy-button" type="button" data-copy="probe-code">Copy</button>
+          <pre><code id="probe-code">times = [meta["duration_sec"] * frac for frac in (0.18, 0.52, 0.86)]
+offsets = (-0.9, -0.45, 0.0, 0.45, 0.9)
+
+for timestamp in times:
+    # Pick the candidate frame with the largest non-background fraction.
+    # This avoids scoring a fade transition as a bad scene.
+    best = max(candidates, key=lambda frame: frame["non_background_fraction"])</code></pre>
+        </div>
+
+        <div class="snippet-panel" id="tab-ir">
+          <button class="copy-button" type="button" data-copy="ir-code">Copy</button>
+          <pre><code id="ir-code">scene_id: feynrl_ess_tradeoff
+duration_sec: 28
+learning_goal: Explain why one dominant policy ratio shrinks the effective batch.
+channels:
+  formula: "ESS = (sum_i r_i)^2 / (n * sum_i r_i^2)"
+  code_refs:
+    - external/FeynRL/algs/P3O/p3o.py:calculate_ess
+    - external/FeynRL/algs/P3O/p3o.py:compute_policy_loss
+  example: toy_fresh_vs_stale_ratio_batch
+checks:
+  - every symbol is introduced before use
+  - final frame shows ratios, ESS, and update consequence
+  - no text smaller than the readability threshold</code></pre>
+        </div>
+
+        <div class="snippet-panel" id="tab-futurecli">
+          <button class="copy-button" type="button" data-copy="future-code">Copy</button>
+          <pre><code id="future-code">fourblue2brown generate \
+  --paper FeynRL \
+  --code-repo external/FeynRL \
+  --focus "P3O uses ESS to control off-policy updates" \
+  --compare "PPO, GRPO, CISPO, DPO" \
+  --out runs/feynrl_p3o_v1</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Built from local project artifacts in <code>4blue2brown</code>:
+        docs, reproduction runs, Manim renders, probe reports, and FeynRL visualization prototypes.
+      </p>
+    </footer>
+
+    <script src="script.js?v=slides1"></script>
+  </body>
+</html>

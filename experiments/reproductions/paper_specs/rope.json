@@ -1,0 +1,55 @@
+{
+  "id": "rope",
+  "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+  "short_title": "RoPE / RoFormer",
+  "paper_url": "https://arxiv.org/abs/2104.09864",
+  "repo_url": null,
+  "audience": "ML students who understand self-attention and positional encodings.",
+  "central_question": "How does RoPE encode absolute positions while making attention depend on relative distance?",
+  "teaching_units": [
+    {
+      "id": "baseline_position_strategies",
+      "name": "Baseline Position Strategies",
+      "goal": "Separate additive absolute embeddings, sinusoidal embeddings, and relative attention biases.",
+      "formulas": [
+        "x_m' = x_m + p_m",
+        "Attention score = q_m^T k_n + b_{m-n}"
+      ],
+      "visual_example": "Three lanes show add-to-token, sinusoidal stripe, and relative bias matrix."
+    },
+    {
+      "id": "two_dimensional_rotation",
+      "name": "2D Rotary Pair",
+      "goal": "Show that each pair of hidden dimensions is rotated by an angle proportional to position.",
+      "formulas": [
+        "R(m theta) = [[cos(m theta), -sin(m theta)], [sin(m theta), cos(m theta)]]",
+        "RoPE(x_m) = R(m theta) x_m"
+      ],
+      "visual_example": "A vector at position m rotates on a unit circle; another vector at position n rotates farther."
+    },
+    {
+      "id": "relative_position_property",
+      "name": "Relative Position Emerges in Attention",
+      "goal": "Show why the dot product after rotation depends on n - m.",
+      "formulas": [
+        "<R_m q, R_n k> = <q, R_{n-m} k>"
+      ],
+      "visual_example": "Two separately rotated vectors collapse into one relative rotation between them."
+    },
+    {
+      "id": "multi_frequency_rope",
+      "name": "Many Frequencies Across Dimensions",
+      "goal": "Explain how RoPE uses different frequencies for different coordinate pairs.",
+      "formulas": [
+        "theta_i = 10000^{-2(i-1)/d}",
+        "R_m^d = blockdiag(R(m theta_1), ..., R(m theta_{d/2}))"
+      ],
+      "visual_example": "Small coordinate pairs rotate quickly or slowly, producing multi-scale position information."
+    }
+  ],
+  "comparison_axes": [
+    "absolute addition vs rotation",
+    "sinusoidal baseline vs rotary relative dot product",
+    "single frequency toy example vs multi-frequency implementation"
+  ]
+}

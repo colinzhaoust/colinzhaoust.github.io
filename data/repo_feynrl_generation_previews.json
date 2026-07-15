@@ -1,0 +1,101 @@
+[
+  {
+    "repo": "Paper2Manim",
+    "implementability": "high_after_env_setup",
+    "best_entrypoint": "paper2manim mvp1/mvp2 --no-render first, then render",
+    "feynrl_input_shape": "Short concept text or structured paper summary with title, key contributions, formulas, concepts, and scene suggestions.",
+    "likely_feynrl_output_shape": {
+      "title": "P3O: Batch-Adaptive Policy Optimization",
+      "scene_count": "2-5 scenes for 60-120 seconds in MVP2; 1 scene for MVP1",
+      "scenes": [
+        {
+          "name": "ProblemSetup",
+          "description": "Title card plus two policy distributions: old policy generated samples; new policy evaluates them. Arrows show stored old_logprobs becoming policy ratios."
+        },
+        {
+          "name": "EffectiveSampleSize",
+          "description": "A small ratio table morphs from balanced ratios near 1 into a stale batch with one dominant ratio. The normalized ESS equation appears beside the table."
+        },
+        {
+          "name": "AdaptiveObjective",
+          "description": "P3O objective pieces appear: capped score-function weight and behavioral KL weight scaled by 1 - ESS."
+        },
+        {
+          "name": "CodeAndTakeaway",
+          "description": "Highlights calculate_ess and compute_policy_loss as implementation anchors, ending with a concise takeaway."
+        }
+      ]
+    },
+    "expected_strength": "Most aligned with paper-to-video and reflection loop.",
+    "expected_weakness": "Without our PaperCodeGraph it will mention code symbols only if we stuff them into the input summary."
+  },
+  {
+    "repo": "Code2Video",
+    "implementability": "medium_high_after_api_patch",
+    "best_entrypoint": "src/agent.py --knowledge_point '<topic>'",
+    "feynrl_input_shape": "One knowledge point string, optionally enriched with source-code hints inside the string.",
+    "likely_feynrl_output_shape": {
+      "topic": "Why P3O uses effective sample size to trust or distrust a replay batch",
+      "target_audience": "ML/RL students",
+      "sections": [
+        {
+          "id": "section_1",
+          "title": "Fresh vs stale samples",
+          "lecture_lines": ["Old policy made data", "New policy judges it", "Ratios expose mismatch"],
+          "animations": ["Two policy boxes and replay buffer", "Arrows from prompts to sampled responses", "Ratio labels appear above samples"]
+        },
+        {
+          "id": "section_2",
+          "title": "ESS compresses ratio spread",
+          "lecture_lines": ["Balanced ratios mean trust", "One huge ratio shrinks ESS", "ESS becomes a knob"],
+          "animations": ["Ratio dots cluster near one", "One dot moves far right", "Gauge falls from high to low"]
+        },
+        {
+          "id": "section_3",
+          "title": "Adaptive update",
+          "lecture_lines": ["Cap score weight", "Increase behavior KL", "Stable off-policy learning"],
+          "animations": ["Cap line lowers as ESS drops", "KL weight grows", "Final P3O pipeline diagram"]
+        }
+      ]
+    },
+    "expected_strength": "Good at educational topic storyboarding and visual layout feedback.",
+    "expected_weakness": "Not paper-native; no native code-repo indexing; no no-render mode in current entrypoint."
+  },
+  {
+    "repo": "TheoremExplainAgent",
+    "implementability": "medium_after_large_env_setup",
+    "best_entrypoint": "generate_video.py --topic ... --context ... --only_plan first",
+    "feynrl_input_shape": "Topic plus long context paragraph; can also use a one-row theorems_path JSON.",
+    "likely_feynrl_output_shape": {
+      "topic": "Batch-Adaptive Policy Optimization for RL Post-Training",
+      "scene_style": "Long-form theorem/concept explanation with XML scene outline and per-scene technical implementation plans.",
+      "scenes": [
+        "Motivating failure: fixed clipping under stale replay",
+        "Policy ratio distribution as evidence of mismatch",
+        "Normalized ESS as reliability measure",
+        "P3O update rule and behavioral KL",
+        "Sync vs async rollout loop and final takeaway"
+      ]
+    },
+    "expected_strength": "Strong long-form planning, code generation, render retry, optional RAG/context learning.",
+    "expected_weakness": "Designed for theorem understanding, not implementation grounding; TTS/Manim/TEA dependency stack is heavy."
+  },
+  {
+    "repo": "In-house 4blue2brown v0",
+    "implementability": "already_running",
+    "best_entrypoint": "tools/run_inhouse_video_suite.py",
+    "feynrl_input_shape": "Hand-authored scene class now; next target is PaperCodeGraph -> Scene IR.",
+    "likely_feynrl_output_shape": {
+      "scene_class": "FeynRLESSMiniLesson",
+      "rendered_video": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/FeynRLESSMiniLesson.mp4",
+      "current_vlm_score": 3,
+      "current_feedback": [
+        "Explain intuitive meaning of ESS",
+        "Show how ESS impacts policy update",
+        "Animate calculations and clarify graph"
+      ]
+    },
+    "expected_strength": "Actually renders today and already has probe/contact-sheet/VLM eval.",
+    "expected_weakness": "Not yet automatic from paper+code; it is a robust baseline, not a full external repo reproduction."
+  }
+]

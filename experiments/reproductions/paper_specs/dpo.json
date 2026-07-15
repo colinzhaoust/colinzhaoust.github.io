@@ -1,0 +1,55 @@
+{
+  "id": "dpo",
+  "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+  "short_title": "DPO",
+  "paper_url": "https://arxiv.org/abs/2305.18290",
+  "repo_url": null,
+  "audience": "ML students who know supervised fine-tuning and preference pairs, but are new to RLHF objectives.",
+  "central_question": "How can a language model learn directly from chosen-vs-rejected responses without training a separate reward model?",
+  "teaching_units": [
+    {
+      "id": "preference_pair",
+      "name": "Preference Pair Input",
+      "goal": "Introduce prompts, chosen responses, rejected responses, and the role of human or AI preference labels.",
+      "formulas": [
+        "(x, y_w, y_l) where y_w is preferred over y_l"
+      ],
+      "visual_example": "A prompt card branches to a green chosen answer and a red rejected answer, with the preference label between them."
+    },
+    {
+      "id": "reference_policy_anchor",
+      "name": "Reference Policy Anchor",
+      "goal": "Show that DPO compares the current policy preference gap against a fixed reference policy gap.",
+      "formulas": [
+        "Delta_pi = log pi_theta(y_w|x) - log pi_theta(y_l|x)",
+        "Delta_ref = log pi_ref(y_w|x) - log pi_ref(y_l|x)"
+      ],
+      "visual_example": "Two side-by-side bar charts compare winner-minus-loser gaps for the trainable policy and reference policy."
+    },
+    {
+      "id": "dpo_margin_loss",
+      "name": "DPO Margin Loss",
+      "goal": "Explain how the margin turns into a logistic loss that pushes the policy toward the preferred answer.",
+      "formulas": [
+        "margin = Delta_pi - Delta_ref",
+        "L_DPO = - log sigma(beta * margin)"
+      ],
+      "visual_example": "A margin slider moves right; the loss curve drops as the chosen response becomes more favored than the rejected one."
+    },
+    {
+      "id": "dpo_vs_rlhf_route",
+      "name": "DPO vs Reward-Model RLHF",
+      "goal": "Contrast the usual reward-model-plus-RL route with direct preference optimization.",
+      "formulas": [
+        "RLHF: preferences -> reward model -> RL update",
+        "DPO: preferences -> policy loss"
+      ],
+      "visual_example": "A two-lane pipeline shows the reward-model detour on top and the shorter DPO route below."
+    }
+  ],
+  "comparison_axes": [
+    "reward-model RLHF vs direct preference optimization",
+    "policy preference gap vs reference preference gap",
+    "formula correctness vs visual grounding of chosen/rejected responses"
+  ]
+}

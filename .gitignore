@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.env.*
+temp_env.txt
+.venv/
+.venv-*/
+__pycache__/
+.pycache-check/
+*.pyc
+
+# Manim and video render outputs can get very large.
+media/
+rendered_videos/
+renders/
+dist/
+external/
+runs/

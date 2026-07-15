@@ -1,0 +1,85 @@
+{
+  "batch": "upstream_batch_20260709",
+  "execution_environment": "Babel Slurm cluster",
+  "paper2manim": [
+    {
+      "case": "feynrl_p3o_ess",
+      "status": "success",
+      "run_id": "20260709-020756-ba60d6",
+      "input": "runs/reproductions/upstream_batch_20260709/inputs/feynrl_p3o_ess.txt",
+      "storyboard": "runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020756-ba60d6/storyboard.json",
+      "fanout_results": "runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020756-ba60d6/fanout_results.json",
+      "final_video": "runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020756-ba60d6/final/feynrl_p3o_ess_fanout.mp4",
+      "mvp1_returncode": 0,
+      "fanout_returncode": 0,
+      "probe_returncode": 0,
+      "logs": [
+        "runs/reproductions/upstream_batch_20260709/paper2manim/feynrl_p3o_ess/01_mvp1_no_render.log",
+        "runs/reproductions/upstream_batch_20260709/paper2manim/feynrl_p3o_ess/02_fanout_render.log",
+        "runs/reproductions/upstream_batch_20260709/paper2manim/feynrl_p3o_ess/03_probe.log"
+      ]
+    },
+    {
+      "case": "transformers_attention",
+      "status": "success",
+      "run_id": "20260709-020953-a06b09",
+      "input": "runs/reproductions/upstream_batch_20260709/inputs/transformers_attention.txt",
+      "storyboard": "runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020953-a06b09/storyboard.json",
+      "fanout_results": "runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020953-a06b09/fanout_results.json",
+      "final_video": "runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020953-a06b09/final/transformers_attention_fanout.mp4",
+      "mvp1_returncode": 0,
+      "fanout_returncode": 0,
+      "probe_returncode": 0,
+      "logs": [
+        "runs/reproductions/upstream_batch_20260709/paper2manim/transformers_attention/01_mvp1_no_render.log",
+        "runs/reproductions/upstream_batch_20260709/paper2manim/transformers_attention/02_fanout_render.log",
+        "runs/reproductions/upstream_batch_20260709/paper2manim/transformers_attention/03_probe.log"
+      ]
+    }
+  ],
+  "tea": {
+    "status": "failed",
+    "plan_returncode": 124,
+    "plan_log": "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/01_plan.log",
+    "outline_files": [
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/feynrl_p3o_effective_sample_size_scene_outline.txt"
+    ],
+    "plan_files": [
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene1/feynrl_p3o_effective_sample_size_scene1_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene1/subplans/feynrl_p3o_effective_sample_size_scene1_technical_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene2/feynrl_p3o_effective_sample_size_scene2_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene2/subplans/feynrl_p3o_effective_sample_size_scene2_technical_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene3/feynrl_p3o_effective_sample_size_scene3_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene3/subplans/feynrl_p3o_effective_sample_size_scene3_technical_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene4/feynrl_p3o_effective_sample_size_scene4_implementation_plan.txt",
+      "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/feynrl_p3o_effective_sample_size/scene4/subplans/feynrl_p3o_effective_sample_size_scene4_technical_implementation_plan.txt"
+    ],
+    "dependency_probe": {
+      "returncode": 0,
+      "log": "runs/reproductions/upstream_batch_20260709/tea/feynrl_ess/dependency_probe.log"
+    },
+    "render_attempt": {
+      "attempted": false,
+      "reason": "TEA plan failed or dependency probe failed."
+    }
+  },
+  "manimtrainer": {
+    "status": "blocked",
+    "nvidia_smi_returncode": 0,
+    "nvidia_smi_log": "runs/reproductions/upstream_batch_20260709/manimtrainer_feasibility/nvidia_smi.log",
+    "dependency_probe": {
+      "returncode": 0,
+      "log": "runs/reproductions/upstream_batch_20260709/manimtrainer_feasibility/dependency_probe.log"
+    },
+    "trained_model_list": "external/manim-trainer/output/trained_models_v2/trained_model_list.txt",
+    "trained_entries_count": 2,
+    "missing_trained_entries": [
+      "output/trained_models_v2/Seed_Coder_8B_Instruct_unsloth_bnb_4bit_lora_r8_sft_grpo_rw_mean_text_visual_20251211_002632_finaloutput/trained_models_v2/Seed_Coder_8B_Instruct_unsloth_bnb_4bit_lora_r8_sft_20260128_145524_final"
+    ],
+    "blockers": [
+      "trained_model_list.txt contains missing checkpoint paths."
+    ],
+    "sbatch_recipe": "runs/reproductions/upstream_batch_20260709/manimtrainer_feasibility/manimtrainer_sbatch_recipe.sh"
+  },
+  "progress_site_update": "skipped: no progress_site directory found"
+}

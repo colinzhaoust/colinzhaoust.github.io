@@ -1,0 +1,56 @@
+{
+  "id": "feynrl",
+  "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
+  "short_title": "FeynRL / P3O",
+  "paper_url": null,
+  "repo_url": "https://github.com/FeynRL-project/FeynRL",
+  "audience": "ML/RL students who know policy gradients and log probabilities.",
+  "central_question": "How can a policy optimizer adapt its update when replay data becomes stale?",
+  "teaching_units": [
+    {
+      "id": "policy_ratio_staleness",
+      "name": "Policy Ratios Reveal Staleness",
+      "goal": "Connect stored old logprobs to ratio spread under old-vs-new policy mismatch.",
+      "formulas": [
+        "r = exp(log pi_new(a|s) - log pi_old(a|s))"
+      ],
+      "visual_example": "Fresh ratios cluster near 1; stale replay creates a long-tailed ratio distribution.",
+      "code_refs": [
+        "external/FeynRL/algs/P3O/p3o.py:192",
+        "external/FeynRL/algs/P3O/p3o.py:337"
+      ]
+    },
+    {
+      "id": "effective_sample_size",
+      "name": "Normalized Effective Sample Size",
+      "goal": "Show how one dominant ratio shrinks the effective batch.",
+      "formulas": [
+        "ESS = (sum_i r_i)^2 / (n * sum_i r_i^2)"
+      ],
+      "visual_example": "A five-row ratio table morphs from balanced to dominated; the ESS gauge drops.",
+      "code_refs": [
+        "external/FeynRL/algs/P3O/p3o.py:107",
+        "external/FeynRL/algs/P3O/p3o.py:134"
+      ]
+    },
+    {
+      "id": "p3o_adaptive_objective",
+      "name": "P3O Adaptive Objective",
+      "goal": "Explain score-function capping and behavioral KL as two uses of ESS.",
+      "formulas": [
+        "rho = clamp(r, 0, ESS)",
+        "loss = - stopgrad(rho) * log pi * A + (1 - ESS) * KL(pi || pi_old)"
+      ],
+      "visual_example": "As ESS falls, the score cap lowers and behavioral KL weight increases.",
+      "code_refs": [
+        "external/FeynRL/algs/P3O/p3o.py:207",
+        "external/FeynRL/algs/P3O/p3o.py:223"
+      ]
+    }
+  ],
+  "comparison_axes": [
+    "PPO/GRPO fixed clipping vs P3O ESS-adaptive capping",
+    "fresh sync training vs stale async replay",
+    "concept formula vs implementation code path"
+  ]
+}

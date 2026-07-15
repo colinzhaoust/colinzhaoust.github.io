@@ -1,0 +1,55 @@
+{
+  "id": "attention",
+  "title": "Scaled Dot-Product Attention",
+  "short_title": "Attention Softmax",
+  "paper_url": "https://arxiv.org/abs/1706.03762",
+  "repo_url": null,
+  "audience": "ML students who know vectors and softmax but want a concrete attention mechanism walk-through.",
+  "central_question": "How do query-key scores become normalized weights that mix value vectors?",
+  "teaching_units": [
+    {
+      "id": "qkv_roles",
+      "name": "Q, K, and V Roles",
+      "goal": "Separate what the query asks for, what keys advertise, and what values carry forward.",
+      "formulas": [
+        "Q = X W_Q",
+        "K = X W_K",
+        "V = X W_V"
+      ],
+      "visual_example": "Three labeled columns show query, keys, and values for the same token sequence, with distinct colors."
+    },
+    {
+      "id": "scaled_dot_scores",
+      "name": "Scaled Dot-Product Scores",
+      "goal": "Show how query-key similarity produces one raw score per context token and why sqrt(d_k) scaling matters.",
+      "formulas": [
+        "scores = Q K^T / sqrt(d_k)"
+      ],
+      "visual_example": "A query vector dots with several key vectors; raw score bars shrink after scaling."
+    },
+    {
+      "id": "softmax_weights",
+      "name": "Softmax Attention Weights",
+      "goal": "Animate raw scores into a probability distribution over context positions.",
+      "formulas": [
+        "weights_i = exp(score_i) / sum_j exp(score_j)"
+      ],
+      "visual_example": "Score bars morph into normalized weights that sum to one, with the largest relevant token highlighted."
+    },
+    {
+      "id": "value_mixture",
+      "name": "Weighted Value Mixture",
+      "goal": "Explain that the attention output is a weighted blend of value vectors.",
+      "formulas": [
+        "output = weights V",
+        "Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) V"
+      ],
+      "visual_example": "Weighted arrows from value cards flow into one output card, with thicker arrows for larger weights."
+    }
+  ],
+  "comparison_axes": [
+    "raw dot products vs normalized softmax weights",
+    "single-token lookup vs weighted mixture",
+    "formula presentation vs geometric vector intuition"
+  ]
+}

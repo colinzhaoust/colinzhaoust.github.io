@@ -1,0 +1,9 @@
+[
+  {
+    "theorem": "Batch-Adaptive Policy Optimization for RL Post-Training",
+    "description": "Explain the central method in the FeynRL paper 'Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training'. The learner should understand why reinforcement learning post-training becomes fragile when the policy changes the data distribution; how stale or mismatched replay data appears in the policy-ratio distribution; why fixed clipping hyperparameters entangle trust-region and off-policy concerns; how normalized effective sample size (ESS) of policy ratios can become a batch-adaptive control signal; and how the method uses the same ESS statistic to cap the score-function weight and set the strength of an off-policy regularizer. The explanation should connect the paper idea to the FeynRL implementation, especially algs/P3O/p3o.py, calculate_ess, compute_policy_loss, stored old_logprobs, policy ratios, behavioral KL, and the sync versus async rollout/training loop.",
+    "difficulty": "Hard",
+    "remark": "This is not a classical theorem; it is a paper/concept explanation stress test for TheoremExplainAgent. A good video must use a concrete toy batch of policy ratios before showing formulas or implementation details.",
+    "subfield": "Reinforcement Learning Post-Training"
+  }
+]

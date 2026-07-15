@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="560" viewBox="0 0 920 560">
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #1f2933; }
+.title { font-size: 22px; font-weight: 700; }
+.label { font-size: 13px; }
+.small { font-size: 11px; fill: #52616b; }
+.axis { stroke: #2f3a45; stroke-width: 1.2; }
+.grid { stroke: #d8dee6; stroke-width: 1; }
+.legend { font-size: 12px; }
+</style>
+<text class="title" x="82" y="38">Policy-ratio distributions drive ESS</text>
+<text class="small" x="82" y="60">fresh ESS=0.997; stale/off-policy ESS=0.620</text>
+<line class="axis" x1="82" y1="484" x2="886" y2="484"/>
+<line class="axis" x1="82" y1="78" x2="82" y2="484"/>
+<line class="grid" x1="82.00" y1="78" x2="82.00" y2="484"/>
+<text class="small" x="82.00" y="507" text-anchor="middle">0.0</text>
+<line class="grid" x1="216.00" y1="78" x2="216.00" y2="484"/>
+<text class="small" x="216.00" y="507" text-anchor="middle">0.5</text>
+<line class="grid" x1="350.00" y1="78" x2="350.00" y2="484"/>
+<text class="small" x="350.00" y="507" text-anchor="middle">1.0</text>
+<line class="grid" x1="484.00" y1="78" x2="484.00" y2="484"/>
+<text class="small" x="484.00" y="507" text-anchor="middle">1.5</text>
+<line class="grid" x1="618.00" y1="78" x2="618.00" y2="484"/>
+<text class="small" x="618.00" y="507" text-anchor="middle">2.0</text>
+<line class="grid" x1="752.00" y1="78" x2="752.00" y2="484"/>
+<text class="small" x="752.00" y="507" text-anchor="middle">2.5</text>
+<line class="grid" x1="886.00" y1="78" x2="886.00" y2="484"/>
+<text class="small" x="886.00" y="507" text-anchor="middle">3.0</text>
+<rect x="82.00" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="110.71" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="139.43" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="168.14" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="196.86" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="225.57" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="254.29" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="283.00" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="311.71" y="330.04" width="13.21" height="153.96" fill="#2f80ed" opacity="0.62"/>
+<rect x="340.43" y="78.00" width="13.21" height="406.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="369.14" y="423.16" width="13.21" height="60.84" fill="#2f80ed" opacity="0.62"/>
+<rect x="397.86" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="426.57" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="455.29" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="484.00" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="512.71" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="541.43" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="570.14" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="598.86" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="627.57" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="656.29" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="685.00" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="713.71" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="742.43" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="771.14" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="799.86" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="828.57" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="857.29" y="484.00" width="13.21" height="0.00" fill="#2f80ed" opacity="0.62"/>
+<rect x="95.78" y="482.76" width="13.21" height="1.24" fill="#d64545" opacity="0.58"/>
+<rect x="124.50" y="480.28" width="13.21" height="3.72" fill="#d64545" opacity="0.58"/>
+<rect x="153.21" y="454.20" width="13.21" height="29.80" fill="#d64545" opacity="0.58"/>
+<rect x="181.93" y="446.75" width="13.21" height="37.25" fill="#d64545" opacity="0.58"/>
+<rect x="210.64" y="415.71" width="13.21" height="68.29" fill="#d64545" opacity="0.58"/>
+<rect x="239.35" y="426.89" width="13.21" height="57.11" fill="#d64545" opacity="0.58"/>
+<rect x="268.07" y="404.54" width="13.21" height="79.46" fill="#d64545" opacity="0.58"/>
+<rect x="296.78" y="433.09" width="13.21" height="50.91" fill="#d64545" opacity="0.58"/>
+<rect x="325.50" y="436.82" width="13.21" height="47.18" fill="#d64545" opacity="0.58"/>
+<rect x="354.21" y="451.72" width="13.21" height="32.28" fill="#d64545" opacity="0.58"/>
+<rect x="382.93" y="452.96" width="13.21" height="31.04" fill="#d64545" opacity="0.58"/>
+<rect x="411.64" y="472.83" width="13.21" height="11.17" fill="#d64545" opacity="0.58"/>
+<rect x="440.35" y="467.86" width="13.21" height="16.14" fill="#d64545" opacity="0.58"/>
+<rect x="469.07" y="470.34" width="13.21" height="13.66" fill="#d64545" opacity="0.58"/>
+<rect x="497.78" y="475.31" width="13.21" height="8.69" fill="#d64545" opacity="0.58"/>
+<rect x="526.50" y="474.07" width="13.21" height="9.93" fill="#d64545" opacity="0.58"/>
+<rect x="555.21" y="474.07" width="13.21" height="9.93" fill="#d64545" opacity="0.58"/>
+<rect x="583.93" y="477.79" width="13.21" height="6.21" fill="#d64545" opacity="0.58"/>
+<rect x="612.64" y="477.79" width="13.21" height="6.21" fill="#d64545" opacity="0.58"/>
+<rect x="641.35" y="477.79" width="13.21" height="6.21" fill="#d64545" opacity="0.58"/>
+<rect x="670.07" y="477.79" width="13.21" height="6.21" fill="#d64545" opacity="0.58"/>
+<rect x="698.78" y="475.31" width="13.21" height="8.69" fill="#d64545" opacity="0.58"/>
+<rect x="727.50" y="472.83" width="13.21" height="11.17" fill="#d64545" opacity="0.58"/>
+<rect x="756.21" y="475.31" width="13.21" height="8.69" fill="#d64545" opacity="0.58"/>
+<rect x="784.93" y="480.28" width="13.21" height="3.72" fill="#d64545" opacity="0.58"/>
+<rect x="813.64" y="475.31" width="13.21" height="8.69" fill="#d64545" opacity="0.58"/>
+<rect x="842.35" y="477.79" width="13.21" height="6.21" fill="#d64545" opacity="0.58"/>
+<rect x="871.07" y="477.79" width="13.21" height="6.21" fill="#d64545" opacity="0.58"/>
+<rect x="654" y="90" width="18" height="12" fill="#2f80ed" opacity="0.62"/>
+<text class="legend" x="680" y="101">fresh rollout data</text>
+<rect x="654" y="116" width="18" height="12" fill="#d64545" opacity="0.58"/>
+<text class="legend" x="680" y="127">stale / mixed replay</text>
+<text class="label" x="484.0" y="536" text-anchor="middle">policy ratio r = pi_theta / pi_old</text>
+<text class="label" x="22" y="281.0" transform="rotate(-90 22 281.0)" text-anchor="middle">token count</text>
+</svg>

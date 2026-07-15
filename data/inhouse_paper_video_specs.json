@@ -1,0 +1,87 @@
+[
+  {
+    "id": "transformers_core",
+    "paper_or_topic": "Attention Is All You Need / Transformer core",
+    "code_reference": null,
+    "teaching_goal": "Explain scaled attention, multi-head attention, and sinusoidal positional encoding as the core Transformer moves.",
+    "scene_class": "TransformerCoreExplainer",
+    "source_file": "scenes/inhouse_paper_explainer_suite.py",
+    "rendered_video": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/TransformerCoreExplainer.mp4",
+    "contact_sheet": "runs/inhouse_eval/contact_sheets/TransformerCoreExplainer.png",
+    "vlm_review": null,
+    "current_status": "renderable paper-level storyboard",
+    "next_edits": [
+      "split scaled attention and multi-head attention into separate clips",
+      "add a numeric softmax example",
+      "compare sinusoidal positional encoding directly against RoPE"
+    ]
+  },
+  {
+    "id": "feynrl_p3o_ess",
+    "paper_or_topic": "FeynRL / P3O",
+    "code_reference": "FeynRL-project/FeynRL",
+    "teaching_goal": "Explain why effective sample size changes the policy update under stale replay.",
+    "scene_class": "FeynRLESSMiniLesson",
+    "source_file": "scenes/inhouse_paper_explainer_suite.py",
+    "rendered_video": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/FeynRLESSMiniLesson.mp4",
+    "contact_sheet": "runs/inhouse_eval/contact_sheets/FeynRLESSMiniLesson.png",
+    "vlm_review": "runs/inhouse_eval/vlm_reviews/FeynRLESSMiniLesson.wine.json",
+    "current_status": "renderable storyboard",
+    "next_edits": [
+      "animate the ESS calculation instead of showing it as a finished table",
+      "explain the intuition of ESS before showing the P3O loss",
+      "clarify the score-cap graph and link it to update reliability"
+    ]
+  },
+  {
+    "id": "rope_rotary_position_embedding",
+    "paper_or_topic": "RoFormer / Rotary Position Embedding",
+    "code_reference": null,
+    "teaching_goal": "Explain how RoPE rotates hidden-dimension pairs and turns absolute positions into relative attention scores.",
+    "scene_class": "RoPERotationExplainer",
+    "source_file": "scenes/inhouse_paper_explainer_suite.py",
+    "rendered_video": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/RoPERotationExplainer.mp4",
+    "contact_sheet": "runs/inhouse_eval/contact_sheets/RoPERotationExplainer.png",
+    "vlm_review": null,
+    "current_status": "renderable paper-level storyboard",
+    "next_edits": [
+      "animate a concrete q/k dot product before and after rotation",
+      "show the multi-frequency block diagonal rotation more explicitly",
+      "add baseline clips for absolute, sinusoidal, and relative position methods"
+    ]
+  },
+  {
+    "id": "dpo_preference_objective",
+    "paper_or_topic": "Direct Preference Optimization",
+    "code_reference": null,
+    "teaching_goal": "Explain how preference pairs become the DPO objective.",
+    "scene_class": "DPOPreferenceExplainer",
+    "source_file": "scenes/inhouse_paper_explainer_suite.py",
+    "rendered_video": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/DPOPreferenceExplainer.mp4",
+    "contact_sheet": "runs/inhouse_eval/contact_sheets/DPOPreferenceExplainer.png",
+    "vlm_review": "runs/inhouse_eval/vlm_reviews/DPOPreferenceExplainer.wine.json",
+    "current_status": "best current storyboard among the three",
+    "next_edits": [
+      "define pi, reference policy, beta, chosen, and rejected before the formula",
+      "animate the margin/log-ratio change with the bar chart",
+      "add a tiny numeric pair example"
+    ]
+  },
+  {
+    "id": "attention_softmax_lookup",
+    "paper_or_topic": "Attention Is All You Need / scaled dot-product attention",
+    "code_reference": null,
+    "teaching_goal": "Explain how query-key scores become a weighted value mixture.",
+    "scene_class": "AttentionSoftmaxExplainer",
+    "source_file": "scenes/inhouse_paper_explainer_suite.py",
+    "rendered_video": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/AttentionSoftmaxExplainer.mp4",
+    "contact_sheet": "runs/inhouse_eval/contact_sheets/AttentionSoftmaxExplainer.png",
+    "vlm_review": "runs/inhouse_eval/vlm_reviews/AttentionSoftmaxExplainer.wine.json",
+    "current_status": "renderable high-level storyboard",
+    "next_edits": [
+      "show a Q dot K calculation before softmax",
+      "animate raw scores into normalized weights",
+      "remove the duplicate softmax-weight visual beat"
+    ]
+  }
+]
