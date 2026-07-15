@@ -219,6 +219,75 @@ def _round_from_artifacts(
     )
 
 
+def _failed_round(
+    *,
+    root: Path,
+    round_index: int,
+    stage: str,
+    code_path: Path,
+    parent_hash: str | None,
+    response_path: Path | None,
+    failure_code: str,
+) -> CandidateRound:
+    """Retain generated-code evidence even when later materialization fails."""
+
+    return CandidateRound(
+        round_index=round_index,
+        stage=stage,
+        code_path=_relative(code_path, root),
+        code_hash=sha256_file(code_path),
+        parent_code_hash=parent_hash,
+        response_path=_relative(response_path, root),
+        render_path=None,
+        render_hash=None,
+        feedback_path=None,
+        feedback_hash=None,
+        technical_pass=False,
+        visual_pass=False,
+        early_stop=False,
+        failure_code=failure_code,
+    )
+
+
+def _failure_feedback(policy_id: str, failure_code: str, error_type: str) -> FeedbackBundle:
+    return FeedbackBundle(
+        policy_id=policy_id,
+        technical_pass=False,
+        visual_pass=False,
+        early_stop=False,
+        render_success=False,
+        failure_code=failure_code,
+        sanitized_render_errors=f"{failure_code}: {error_type}",
+        technical_media_summary={"candidate_video_valid": False},
+        numeric_similarity_summary={"sample_count": 0, "mean_similarity": None, "mean_absolute_error": None},
+        frame_pairs=(),
+    )
+
+
+def _normalize_render_output(render: RenderResult, root: Path) -> RenderResult:
+    if not render.success or render.video_path is None:
+        return render
+    try:
+        resolved = render.video_path.resolve(strict=True)
+        resolved.relative_to(root.resolve(strict=True))
+    except (FileNotFoundError, ValueError):
+        return RenderResult(
+            False,
+            None,
+            stderr="Renderer output escaped the run root or is missing.",
+            failure_code="render_error",
+        )
+    if not resolved.is_file():
+        return RenderResult(False, None, stderr="Renderer output is not a regular file.", failure_code="render_error")
+    return RenderResult(
+        render.success,
+        resolved,
+        stderr=render.stderr,
+        stdout=render.stdout,
+        failure_code=render.failure_code,
+    )
+
+
 def _render_and_feedback(
     *,
     root: Path,
@@ -228,16 +297,25 @@ def _render_and_feedback(
     policy: FeedbackPolicy,
     round_index: int,
     redactions: Sequence[str],
-) -> tuple[RenderResult, FeedbackBundle, Path]:
+) -> tuple[RenderResult, FeedbackBundle, Path | None]:
     round_root = code_path.parent
     try:
         render = renderer.render(code_path, round_root / "render", round_index)
     except Exception as exc:
         render = RenderResult(False, None, stderr=str(exc), failure_code="render_error")
+    render = _normalize_render_output(render, root)
     feedback_root = round_root / "feedback"
-    feedback = build_feedback(reference_video, render, feedback_root, policy, redactions=redactions)
+    try:
+        feedback = build_feedback(reference_video, render, feedback_root, policy, redactions=redactions)
+    except Exception as exc:
+        feedback_root.mkdir(parents=True, exist_ok=True)
+        feedback = _failure_feedback(policy.policy_id, "evaluation_error", type(exc).__name__)
     feedback_path = round_root / "feedback.json"
-    write_feedback(feedback, feedback_path)
+    try:
+        write_feedback(feedback, feedback_path)
+    except Exception:
+        feedback = _failure_feedback(policy.policy_id, "evaluation_error", "feedback_persistence_error")
+        feedback_path = None
     return render, feedback, feedback_path
 
 
@@ -290,26 +368,38 @@ def run_one_shot(
         else:
             code_path = run_root / "round_0" / "code.py"
             _write_text(code_path, code)
-            render, feedback, feedback_path = _render_and_feedback(
-                root=run_root,
-                reference_video=reference_video,
-                code_path=code_path,
-                renderer=renderer,
-                policy=policy,
-                round_index=0,
-                redactions=redactions,
-            )
-            candidate = _round_from_artifacts(
-                root=run_root,
-                round_index=0,
-                stage="one_shot",
-                code_path=code_path,
-                parent_hash=None,
-                response_path=response_path,
-                render=render,
-                feedback_path=feedback_path,
-                feedback=feedback,
-            )
+            try:
+                render, feedback, feedback_path = _render_and_feedback(
+                    root=run_root,
+                    reference_video=reference_video,
+                    code_path=code_path,
+                    renderer=renderer,
+                    policy=policy,
+                    round_index=0,
+                    redactions=redactions,
+                )
+                candidate = _round_from_artifacts(
+                    root=run_root,
+                    round_index=0,
+                    stage="one_shot",
+                    code_path=code_path,
+                    parent_hash=None,
+                    response_path=response_path,
+                    render=render,
+                    feedback_path=feedback_path,
+                    feedback=feedback,
+                )
+            except Exception as exc:
+                _write_text(run_root / "round_0" / "failure.txt", f"evaluation_error: {type(exc).__name__}")
+                candidate = _failed_round(
+                    root=run_root,
+                    round_index=0,
+                    stage="one_shot",
+                    code_path=code_path,
+                    parent_hash=None,
+                    response_path=response_path,
+                    failure_code="evaluation_error",
+                )
             rounds.append(candidate)
             if candidate.failure_code:
                 failure_codes.append(candidate.failure_code)
@@ -364,26 +454,40 @@ def run_self_refined(
     shutil.copyfile(one_shot_code_path, initial_code_path)
     if sha256_file(initial_code_path) != expected_one_shot_hash:
         raise ConditionError("policy_violation: copied round-zero code changed")
-    render, feedback, feedback_path = _render_and_feedback(
-        root=run_root,
-        reference_video=reference_video,
-        code_path=initial_code_path,
-        renderer=renderer,
-        policy=policy,
-        round_index=0,
-        redactions=redactions,
-    )
-    initial_round = _round_from_artifacts(
-        root=run_root,
-        round_index=0,
-        stage="self_refined_initial_one_shot",
-        code_path=initial_code_path,
-        parent_hash=expected_one_shot_hash,
-        response_path=None,
-        render=render,
-        feedback_path=feedback_path,
-        feedback=feedback,
-    )
+    try:
+        render, feedback, feedback_path = _render_and_feedback(
+            root=run_root,
+            reference_video=reference_video,
+            code_path=initial_code_path,
+            renderer=renderer,
+            policy=policy,
+            round_index=0,
+            redactions=redactions,
+        )
+        initial_round = _round_from_artifacts(
+            root=run_root,
+            round_index=0,
+            stage="self_refined_initial_one_shot",
+            code_path=initial_code_path,
+            parent_hash=expected_one_shot_hash,
+            response_path=None,
+            render=render,
+            feedback_path=feedback_path,
+            feedback=feedback,
+        )
+    except Exception as exc:
+        _write_text(run_root / "round_0" / "failure.txt", f"evaluation_error: {type(exc).__name__}")
+        feedback = _failure_feedback(policy.policy_id, "evaluation_error", type(exc).__name__)
+        (initial_code_path.parent / "feedback").mkdir(parents=True, exist_ok=True)
+        initial_round = _failed_round(
+            root=run_root,
+            round_index=0,
+            stage="self_refined_initial_one_shot",
+            code_path=initial_code_path,
+            parent_hash=expected_one_shot_hash,
+            response_path=None,
+            failure_code="evaluation_error",
+        )
     rounds.append(initial_round)
     if initial_round.failure_code:
         failure_codes.append(initial_round.failure_code)
@@ -391,7 +495,7 @@ def run_self_refined(
     current_code_path = initial_code_path
     current_code_hash = expected_one_shot_hash
     current_feedback = feedback
-    current_feedback_root = feedback_path.parent / "feedback"
+    current_feedback_root = initial_code_path.parent / "feedback"
     for round_index in range(1, policy.max_revision_rounds + 1):
         if current_feedback.early_stop:
             break
@@ -419,6 +523,7 @@ def run_self_refined(
             failure_codes.append("malformed_code")
             _write_text(round_root / "failure.txt", "malformed_code")
             break
+        code_path: Path | None = None
         try:
             code_path = round_root / "code.py"
             _write_text(code_path, code)
@@ -448,10 +553,23 @@ def run_self_refined(
             current_code_path = code_path
             current_code_hash = candidate.code_hash or current_code_hash
             current_feedback = next_feedback
-            current_feedback_root = feedback_path.parent / "feedback"
+            current_feedback_root = code_path.parent / "feedback"
         except Exception as exc:
             failure_codes.append("evaluation_error")
             _write_text(round_root / "failure.txt", f"evaluation_error: {type(exc).__name__}")
+            if code_path is not None and code_path.is_file():
+                candidate = _failed_round(
+                    root=run_root,
+                    round_index=round_index,
+                    stage="self_refined_revision",
+                    code_path=code_path,
+                    parent_hash=current_code_hash,
+                    response_path=response_path,
+                    failure_code="evaluation_error",
+                )
+                rounds.append(candidate)
+                current_code_path = code_path
+                current_code_hash = candidate.code_hash or current_code_hash
             break
 
     final = rounds[-1]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 import tempfile
@@ -15,8 +16,19 @@ from tools.backtranslation.conditions import (
     run_one_shot,
     run_self_refined,
 )
+from tools.backtranslation.feedback import RenderResult
 
 from helpers import OfflineFixture, ROOT, fixture_code, load_json
+
+
+class OutsideRootRenderer:
+    def __init__(self, outside_video: Path) -> None:
+        self.outside_video = outside_video
+        self.calls: list[int] = []
+
+    def render(self, code_path: Path, output_dir: Path, round_index: int) -> RenderResult:
+        self.calls.append(round_index)
+        return RenderResult(True, self.outside_video, stdout="unsafe outside-root fixture")
 
 
 class ConditionTests(unittest.TestCase):
@@ -182,6 +194,53 @@ class ConditionTests(unittest.TestCase):
         self.assertEqual(1, trace.provider_calls)
         self.assertEqual(["generation_error"], trace.failure_codes)
         self.assertNotIn("malformed_code", trace.failure_codes)
+
+    def test_outside_root_renderer_becomes_failed_round_and_always_persists_trace(self) -> None:
+        adapter = RecordingMockAdapter([fixture_code("one_shot")])
+        renderer = OutsideRootRenderer(self.fixture.prepared.video_path)
+        root = self.fixture.root / "outside_root_one_shot"
+        trace = run_one_shot(
+            pairing_id="fixture-outside-root-r1",
+            prepared_reference=self.fixture.prepared,
+            run_root=root,
+            adapter=adapter,
+            renderer=renderer,
+            policy=self.fixture.policy,
+        )
+        self.assertEqual(1, len(adapter.calls))
+        self.assertEqual(1, trace.provider_calls)
+        self.assertEqual("failed", trace.status)
+        self.assertEqual(["render_error"], trace.failure_codes)
+        self.assertEqual(1, len(trace.rounds))
+        self.assertIsNotNone(trace.rounds[0].code_hash)
+        self.assertIsNone(trace.rounds[0].render_path)
+        self.assertTrue((root / str(trace.rounds[0].code_path)).is_file())
+        persisted = json.loads((root / "condition_trace.json").read_text(encoding="utf-8"))
+        self.assertEqual(trace.to_dict(), persisted)
+
+    def test_self_refine_preserves_generated_code_when_renderer_escapes_root(self) -> None:
+        one, _, one_root = self.one_shot(suffix="outside_self_parent")
+        renderer = OutsideRootRenderer(self.fixture.prepared.video_path)
+        adapter = RecordingMockAdapter([fixture_code("refine_1")])
+        root = self.fixture.root / "outside_root_self"
+        trace = run_self_refined(
+            pairing_id=one.pairing_id,
+            prepared_reference=self.fixture.prepared,
+            one_shot_code_path=one_root / str(one.rounds[-1].code_path),
+            expected_one_shot_hash=one.final_code_hash or "",
+            run_root=root,
+            adapter=adapter,
+            renderer=renderer,
+            policy=self.fixture.policy,
+        )
+        self.assertEqual(2, trace.provider_calls)
+        self.assertEqual(2, len(adapter.calls))
+        self.assertIn("render_error", trace.failure_codes)
+        self.assertIn("generation_error", trace.failure_codes)
+        self.assertEqual(2, len(trace.rounds))
+        self.assertIsNotNone(trace.rounds[1].code_hash)
+        self.assertIsNone(trace.rounds[1].render_path)
+        self.assertEqual(trace.to_dict(), json.loads((root / "condition_trace.json").read_text(encoding="utf-8")))
 
     def test_core_runner_revalidates_typed_reference_before_adapter_call(self) -> None:
         prepared = self.fixture.prepared
