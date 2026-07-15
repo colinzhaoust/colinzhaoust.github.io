@@ -131,6 +131,9 @@ code {
 }
 
 .top-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   border-radius: 8px;
   color: var(--muted);
   font-size: 0.9rem;
@@ -143,6 +146,13 @@ code {
 .top-nav a.active {
   background: oklch(92% 0.04 78);
   color: var(--ink);
+}
+
+.top-nav a:focus-visible,
+.slides-tab-button:focus-visible,
+.tab-button:focus-visible {
+  outline: 3px solid oklch(56% 0.17 245 / 0.42);
+  outline-offset: 2px;
 }
 
 main {
@@ -1775,7 +1785,7 @@ pre {
   .section {
     width: min(100% - 1rem, 1180px);
     padding: 3.5rem 0;
-    scroll-margin-top: 210px;
+    scroll-margin-top: 250px;
   }
 
   .section-intro {

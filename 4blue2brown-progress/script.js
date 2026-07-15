@@ -17,29 +17,51 @@ updateActiveNav();
 document.addEventListener("scroll", updateActiveNav, { passive: true });
 window.addEventListener("resize", updateActiveNav);
 
-const tabButtons = [...document.querySelectorAll(".tab-button")];
-const tabPanels = [...document.querySelectorAll(".snippet-panel")];
+function setupTabGroup(tablist) {
+  const buttons = [...tablist.querySelectorAll('[role="tab"]')];
+  const panels = buttons
+    .map((button) => document.getElementById(button.getAttribute("aria-controls")))
+    .filter(Boolean);
 
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const tab = button.dataset.tab;
-    tabButtons.forEach((item) => item.classList.toggle("active", item === button));
-    tabPanels.forEach((panel) => panel.classList.toggle("active", panel.id === `tab-${tab}`));
-  });
-});
+  function activateTab(activeButton, moveFocus = false) {
+    const activePanelId = activeButton.getAttribute("aria-controls");
 
-const slidesTabButtons = [...document.querySelectorAll(".slides-tab-button")];
-const slidesPanels = [...document.querySelectorAll(".slides-panel")];
+    buttons.forEach((button) => {
+      const isActive = button === activeButton;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-selected", String(isActive));
+      button.tabIndex = isActive ? 0 : -1;
+    });
 
-slidesTabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const tab = button.dataset.slidesTab;
-    slidesTabButtons.forEach((item) => item.classList.toggle("active", item === button));
-    slidesPanels.forEach((panel) => {
-      panel.classList.toggle("active", panel.id === `slides-tab-${tab}`);
+    panels.forEach((panel) => {
+      const isActive = panel.id === activePanelId;
+      panel.classList.toggle("active", isActive);
+      panel.hidden = !isActive;
+    });
+
+    if (moveFocus) activeButton.focus();
+  }
+
+  buttons.forEach((button, index) => {
+    button.addEventListener("click", () => activateTab(button));
+    button.addEventListener("keydown", (event) => {
+      let targetIndex;
+      if (event.key === "ArrowRight") targetIndex = (index + 1) % buttons.length;
+      if (event.key === "ArrowLeft") targetIndex = (index - 1 + buttons.length) % buttons.length;
+      if (event.key === "Home") targetIndex = 0;
+      if (event.key === "End") targetIndex = buttons.length - 1;
+      if (targetIndex === undefined) return;
+
+      event.preventDefault();
+      activateTab(buttons[targetIndex], true);
     });
   });
-});
+
+  const initialButton = buttons.find((button) => button.getAttribute("aria-selected") === "true") || buttons[0];
+  if (initialButton) activateTab(initialButton);
+}
+
+document.querySelectorAll('[role="tablist"]').forEach(setupTabGroup);
 
 document.querySelectorAll(".copy-button").forEach((button) => {
   button.addEventListener("click", async () => {

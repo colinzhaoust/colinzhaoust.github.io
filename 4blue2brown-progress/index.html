@@ -8,7 +8,7 @@
       name="description"
       content="Progress review microsite for 4blue2brown, a paper/code to programmatic Manim explainer pipeline."
     >
-    <link rel="stylesheet" href="styles.css?v=status-0715">
+    <link rel="stylesheet" href="styles.css?v=status-0715-a11y1">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -477,13 +477,13 @@
           systems, then maps them onto our FeynRL, RoPE, Transformer, and DPO examples.
         </p>
 
-        <div class="slides-tabs" role="tablist" aria-label="Slides research subtab">
-          <button class="slides-tab-button" type="button" data-slides-tab="landscape">Landscape</button>
-          <button class="slides-tab-button" type="button" data-slides-tab="pipeline">Pipeline</button>
-          <button class="slides-tab-button active" type="button" data-slides-tab="runs">Test runs</button>
+        <div class="slides-tabs" role="tablist" aria-label="Slides research subtab" aria-orientation="horizontal">
+          <button class="slides-tab-button" id="slides-tab-landscape-button" type="button" role="tab" aria-selected="false" aria-controls="slides-tab-landscape" tabindex="-1" data-slides-tab="landscape">Landscape</button>
+          <button class="slides-tab-button" id="slides-tab-pipeline-button" type="button" role="tab" aria-selected="false" aria-controls="slides-tab-pipeline" tabindex="-1" data-slides-tab="pipeline">Pipeline</button>
+          <button class="slides-tab-button active" id="slides-tab-runs-button" type="button" role="tab" aria-selected="true" aria-controls="slides-tab-runs" tabindex="0" data-slides-tab="runs">Test runs</button>
         </div>
 
-        <div class="slides-panel" id="slides-tab-landscape">
+        <div class="slides-panel" id="slides-tab-landscape" role="tabpanel" aria-labelledby="slides-tab-landscape-button" hidden>
           <div class="slides-card-grid">
             <article class="slides-card">
               <div class="card-head">
@@ -600,7 +600,7 @@
           </div>
         </div>
 
-        <div class="slides-panel" id="slides-tab-pipeline">
+        <div class="slides-panel" id="slides-tab-pipeline" role="tabpanel" aria-labelledby="slides-tab-pipeline-button" hidden>
           <div class="slide-pipeline-layout">
             <div class="pipeline-panel">
               <h3>Normalized slides pipeline</h3>
@@ -659,7 +659,7 @@
           </div>
         </div>
 
-        <div class="slides-panel active" id="slides-tab-runs">
+        <div class="slides-panel active" id="slides-tab-runs" role="tabpanel" aria-labelledby="slides-tab-runs-button">
           <div class="baseline-run-heading">
             <div>
               <span class="tag green">Babel upstream batch · July 15</span>
@@ -1723,15 +1723,15 @@
           </div>
         </div>
 
-        <div class="snippet-tabs" role="tablist" aria-label="Code snippets">
-          <button class="tab-button active" type="button" data-tab="backtranslation">Backtranslation CLI</button>
-          <button class="tab-button" type="button" data-tab="render">Render harness</button>
-          <button class="tab-button" type="button" data-tab="probe">Probe sampler</button>
-          <button class="tab-button" type="button" data-tab="ir">Scene IR</button>
-          <button class="tab-button" type="button" data-tab="futurecli">Future CLI</button>
+        <div class="snippet-tabs" role="tablist" aria-label="Code snippets" aria-orientation="horizontal">
+          <button class="tab-button active" id="snippet-tab-backtranslation-button" type="button" role="tab" aria-selected="true" aria-controls="tab-backtranslation" tabindex="0" data-tab="backtranslation">Backtranslation CLI</button>
+          <button class="tab-button" id="snippet-tab-render-button" type="button" role="tab" aria-selected="false" aria-controls="tab-render" tabindex="-1" data-tab="render">Render harness</button>
+          <button class="tab-button" id="snippet-tab-probe-button" type="button" role="tab" aria-selected="false" aria-controls="tab-probe" tabindex="-1" data-tab="probe">Probe sampler</button>
+          <button class="tab-button" id="snippet-tab-ir-button" type="button" role="tab" aria-selected="false" aria-controls="tab-ir" tabindex="-1" data-tab="ir">Scene IR</button>
+          <button class="tab-button" id="snippet-tab-futurecli-button" type="button" role="tab" aria-selected="false" aria-controls="tab-futurecli" tabindex="-1" data-tab="futurecli">Future CLI</button>
         </div>
 
-        <div class="snippet-panel active" id="tab-backtranslation">
+        <div class="snippet-panel active" id="tab-backtranslation" role="tabpanel" aria-labelledby="snippet-tab-backtranslation-button">
           <button class="copy-button" type="button" data-copy="backtranslation-code">Copy</button>
           <pre><code id="backtranslation-code"># Validate the pinned ten-scene development registry.
 ./.venv-arm64/bin/python tools/run_backtranslation.py validate-registry
@@ -1745,7 +1745,7 @@
 # a video-capable adapter plus sandboxed Manim renderer.</code></pre>
         </div>
 
-        <div class="snippet-panel" id="tab-render">
+        <div class="snippet-panel" id="tab-render" role="tabpanel" aria-labelledby="snippet-tab-render-button" hidden>
           <button class="copy-button" type="button" data-copy="render-code">Copy</button>
           <pre><code id="render-code">./.venv-arm64/bin/python tools/run_reproduction_previews.py \
   --provider mock \
@@ -1768,7 +1768,7 @@
   --papers feynrl dpo attention transformers rope</code></pre>
         </div>
 
-        <div class="snippet-panel" id="tab-probe">
+        <div class="snippet-panel" id="tab-probe" role="tabpanel" aria-labelledby="snippet-tab-probe-button" hidden>
           <button class="copy-button" type="button" data-copy="probe-code">Copy</button>
           <pre><code id="probe-code">times = [meta["duration_sec"] * frac for frac in (0.18, 0.52, 0.86)]
 offsets = (-0.9, -0.45, 0.0, 0.45, 0.9)
@@ -1779,7 +1779,7 @@ for timestamp in times:
     best = max(candidates, key=lambda frame: frame["non_background_fraction"])</code></pre>
         </div>
 
-        <div class="snippet-panel" id="tab-ir">
+        <div class="snippet-panel" id="tab-ir" role="tabpanel" aria-labelledby="snippet-tab-ir-button" hidden>
           <button class="copy-button" type="button" data-copy="ir-code">Copy</button>
           <pre><code id="ir-code">scene_id: feynrl_ess_tradeoff
 duration_sec: 28
@@ -1796,7 +1796,7 @@ checks:
   - no text smaller than the readability threshold</code></pre>
         </div>
 
-        <div class="snippet-panel" id="tab-futurecli">
+        <div class="snippet-panel" id="tab-futurecli" role="tabpanel" aria-labelledby="snippet-tab-futurecli-button" hidden>
           <button class="copy-button" type="button" data-copy="future-code">Copy</button>
           <pre><code id="future-code">fourblue2brown generate \
   --paper FeynRL \
@@ -1815,6 +1815,6 @@ checks:
       </p>
     </footer>
 
-    <script src="script.js?v=status-0715"></script>
+    <script src="script.js?v=status-0715-a11y1"></script>
   </body>
 </html>
