@@ -6,11 +6,13 @@ The working goal is not to clone a channel brand, voice, or assets. It is to lea
 
 ## Current phase
 
-Phase 0 is landscape research:
+Phase 1 is evidence-backed offline prototyping and integration design:
 
-- What public 3b1b repositories exist, and which are useful to a generation pipeline?
-- Which published 3Blue1Brown lessons have public source paths that can be mapped to `3b1b/videos`?
-- Which research papers are close to this problem: natural language to visual specs, chart/code generation, animation grammar, video generation, and direct STEM animation generation?
+- The four website/research threads and their evidence/publication rules have an accepted design.
+- The q-5 canonical evidence contract validates completion, lineage, costs, licenses, and fail-closed public projection.
+- The q-6 Manim gallery backtranslation harness has a pinned ten-scene registry, offline one-shot/self-refine protocol, deterministic feedback, and synthetic dry-run manifests.
+
+This is not yet an end-to-end production pipeline. Real provider execution and cost reconciliation, bottom-up formula-graph generation, and slides-plus-Manim integration remain unimplemented.
 
 ## Artifacts
 
@@ -19,6 +21,10 @@ Phase 0 is landscape research:
 - [FeynRL visualization audit](docs/research/feynrl-visualization-audit.md)
 - [Related papers](docs/research/related-papers.md)
 - [Paper-with-code explainer video pipeline plan](docs/plans/paper-code-video-pipeline.md)
+- [Paper media pipeline design](docs/design/paper-media-pipelines.md)
+- [2026-07-15 paper media roadmap](docs/discussions/2026-07-15-paper-media-roadmap.md)
+- [Canonical evidence schemas](schemas/paper-media/)
+- [Offline Manim backtranslation harness](experiments/backtranslation/v1/README.md)
 - [Agentic long-horizon Manim video pipeline](AGENTIC_PIPELINE.md)
 - [Critical review of systems, code, papers, and gaps](CRITICAL_REVIEW.md)
 - [System map diagram](SYSTEM_MAP.md)
@@ -27,14 +33,14 @@ Phase 0 is landscape research:
 
 ## Snapshot
 
-Research snapshot date: 2026-07-01.
+Project snapshot date: 2026-07-15.
 
-The current audit found 174 lesson pages on `3Blue1Brown.com`, of which 143 have `source` fields that directly resolve into the current `3b1b/videos` tree. Another 15 appear to be stale or renamed source paths that can likely be repaired manually. The remaining 16 have no usable public source field in the website frontmatter.
+The earlier landscape audit found 174 lesson pages on `3Blue1Brown.com`, of which 143 have `source` fields that directly resolve into the audited `3b1b/videos` tree. Another 15 appeared stale or renamed, and 16 had no usable public source field. Since that audit, the repository has added the design/evidence layer and an offline backtranslation harness; those additions do not constitute real provider results or completed formula/slides integrations.
 
 ## Candidate next milestones
 
-1. Build a reproducible metadata ingester for `3b1b/3Blue1Brown.com`, `3b1b/videos`, and `3b1b/captions`.
-2. Choose a render baseline: 3b1b ManimGL compatibility first, or modern Manim Community target first.
-3. Render a small golden set of recent scenes, starting with 2024-2026 sources that are more likely to run with fewer historical compatibility fixes.
-4. Define a small scene-plan IR: narrative beats, objects, mathematical state, camera, timing, and audio alignment.
-5. Prototype an LLM-assisted loop: input -> scene plan -> Manim code -> render -> visual checks -> repair.
+1. Produce canonical evidence for real upstream video and paper-to-slides baseline runs.
+2. Implement a real-provider backtranslation path with immutable model identity, reservation/reconciliation cost evidence, and sandboxed rendering.
+3. Build and evaluate the bottom-up topic/formula/Manim-function matching graph.
+4. Integrate formula and performance animation slots into the slides pipeline.
+5. Publish website results only from validated public manifest projections.
