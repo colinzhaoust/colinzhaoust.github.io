@@ -82,7 +82,7 @@
     "cost": {
       "type": "object", "additionalProperties": false,
       "required": ["currency", "measured_usd", "estimated_usd", "coverage", "reservation_state"],
-      "properties": {"currency": {"const": "USD"}, "measured_usd": {"type": ["number", "null"], "minimum": 0}, "estimated_usd": {"type": ["number", "null"], "minimum": 0}, "coverage": {"type": "array", "items": {"type": "string"}}, "reservation_state": {"enum": ["reconciled", "none"]}}
+      "properties": {"currency": {"const": "USD"}, "measured_usd": {"type": ["number", "null"], "minimum": 0}, "estimated_usd": {"type": ["number", "null"], "minimum": 0}, "coverage": {"type": "array", "items": {"type": "string"}}, "reservation_state": {"enum": ["reconciled", "released", "expired", "mixed_finalized", "none"]}}
     },
     "license_ledger": {
       "type": "array", "minItems": 1,

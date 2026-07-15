@@ -133,6 +133,11 @@ def _cost_errors(document: Mapping[str, Any], stages: Mapping[str, Mapping[str, 
                 errors.append(f"cost:{item['reservation_id']}:incomplete-reconciliation")
             else:
                 reconciled_total += item["reconciled_usd"]
+        elif item["status"] in {"released", "expired"}:
+            if item["reconciled_at"] is None or item["reconciled_usd"] is None or item["usage_evidence_ref"] is None:
+                errors.append(f"cost:{item['reservation_id']}:incomplete-zero-spend-finalization")
+            elif item["reconciled_usd"] != 0:
+                errors.append(f"cost:{item['reservation_id']}:released-or-expired-nonzero")
         elif any(item[field] is not None for field in ("reconciled_at", "reconciled_usd", "usage_evidence_ref")):
             errors.append(f"cost:{item['reservation_id']}:unexpected-reconciliation")
         if item["status"] == "active":
@@ -152,7 +157,8 @@ def _cost_errors(document: Mapping[str, Any], stages: Mapping[str, Mapping[str, 
             errors.append(f"cost:{stage_id}:paid-without-rate-card")
         if stage["status"] in {"running", "succeeded", "failed"} and not stage_reservations:
             errors.append(f"cost:{stage_id}:paid-without-reservation")
-        if stage["status"] in {"succeeded", "failed"} and not any(item["status"] == "reconciled" for item in stage_reservations):
+        finalized_statuses = {"reconciled"} if stage["status"] == "succeeded" else {"reconciled", "released", "expired"}
+        if stage["status"] in {"succeeded", "failed"} and not any(item["status"] in finalized_statuses for item in stage_reservations):
             errors.append(f"cost:{stage_id}:terminal-paid-stage-unreconciled")
         if stage["status"] == "running" and not any(item["status"] == "active" for item in stage_reservations):
             errors.append(f"cost:{stage_id}:running-paid-stage-unreserved")
@@ -164,7 +170,7 @@ def _cost_errors(document: Mapping[str, Any], stages: Mapping[str, Mapping[str, 
             errors.append("cost:allowed-with-unknown-projection")
         if gate["next_stage_id"] not in stages or stages.get(gate["next_stage_id"], {}).get("billing_class") != "paid":
             errors.append("cost:allowed-stage-is-not-paid")
-        if not reservation or reservation["stage_id"] != gate["next_stage_id"] or reservation["status"] not in {"active", "reconciled"}:
+        if not reservation or reservation["stage_id"] != gate["next_stage_id"] or reservation["status"] not in {"active", "reconciled", "released", "expired"}:
             errors.append("cost:allowed-without-atomic-reservation")
         elif abs(reservation["projected_usd"] - gate["projected_next_stage_usd"]) > 1e-9:
             errors.append("cost:gate-reservation-projection-mismatch")

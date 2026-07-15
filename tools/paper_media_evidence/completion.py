@@ -43,6 +43,10 @@ def derive_completion(manifest: Mapping[str, Any]) -> str:
     if status == "failed":
         return "failed"
 
+    smoke_stages = contract.get("smoke_stages", [])
+    if smoke_stages and all(stages.get(stage_id, {}).get("status") in successful_states for stage_id in smoke_stages):
+        return "smoke"
+
     has_useful_output = any(
         isinstance(item.get("content_hash"), str) and item.get("completion") in {"full", "partial", "smoke"}
         for item in artifacts
@@ -50,10 +54,6 @@ def derive_completion(manifest: Mapping[str, Any]) -> str:
     has_progress = any(stage.get("status") in {"succeeded", "running"} for stage in stages.values())
     if has_useful_output:
         return "partial"
-
-    smoke_stages = contract.get("smoke_stages", [])
-    if smoke_stages and all(stages.get(stage_id, {}).get("status") in successful_states for stage_id in smoke_stages):
-        return "smoke"
 
     if status == "running" or has_progress:
         return "partial"

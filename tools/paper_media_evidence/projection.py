@@ -95,7 +95,7 @@ def _projection_gate_errors(document: Mapping[str, Any], policy: Mapping[str, An
         errors.append("publication:execution-unavailable")
     elif execution["host_metadata"]:
         errors.append("publication:host-metadata-present")
-    if any(item["status"] != "reconciled" for item in document["budget"]["reservations"]):
+    if any(item["status"] not in {"reconciled", "released", "expired"} for item in document["budget"]["reservations"]):
         errors.append("publication:cost-ledger-not-reconciled")
 
     secret_patterns = [re.compile(pattern) for pattern in policy["secret_value_patterns"]]
@@ -222,6 +222,15 @@ def _redaction_summary(document: Mapping[str, Any]) -> dict[str, int]:
     return {"omitted_fields": omitted_fields, "omitted_artifacts": len(unpublishable_artifacts), "omitted_records": omitted_records}
 
 
+def _public_reservation_state(reservations: Iterable[Mapping[str, Any]]) -> str:
+    statuses = {item["status"] for item in reservations}
+    if not statuses:
+        return "none"
+    if len(statuses) == 1:
+        return next(iter(statuses))
+    return "mixed_finalized"
+
+
 def project_public_manifest(document: Mapping[str, Any], *, generated_at: str | None = None) -> dict[str, Any]:
     """Build a public document from explicit allowlists; never mutate the input."""
 
@@ -275,7 +284,7 @@ def project_public_manifest(document: Mapping[str, Any], *, generated_at: str | 
             "migrations": [dict(item) for item in document["graph"]["migrations"] if item["new_id"] in public_node_ids and any(item["old_id"] in node["aliases"] for node in nodes)],
         },
         "repair_summary": {"event_count": len(repairs), "max_iteration": max((item["iteration"] for item in repairs), default=0), "policy_ids": sorted({item["policy_id"] for item in repairs})},
-        "cost": {"currency": document["budget"]["currency"], "measured_usd": document["budget"]["measured_usd"], "estimated_usd": document["budget"]["estimated_usd"], "coverage": list(document["budget"]["coverage"]), "reservation_state": "reconciled" if document["budget"]["reservations"] else "none"},
+        "cost": {"currency": document["budget"]["currency"], "measured_usd": document["budget"]["measured_usd"], "estimated_usd": document["budget"]["estimated_usd"], "coverage": list(document["budget"]["coverage"]), "reservation_state": _public_reservation_state(document["budget"]["reservations"])},
         "license_ledger": [
             {key: item[key] for key in ("item_id", "resource_type", "source_url", "source_revision", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision")}
             for item in document["license_ledger"]

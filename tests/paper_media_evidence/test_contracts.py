@@ -101,10 +101,10 @@ class SchemaTests(unittest.TestCase):
     def test_completion_matrix_and_contradictions(self):
         self.assertEqual("full", derive_completion(load_valid()))
 
-        partial = load_valid(); partial["status"] = "stopped"; partial["completion"]["derived_value"] = "partial"
+        partial = load_valid(); partial["status"] = "stopped"; partial["completion_contract"]["smoke_stages"] = []; partial["completion"]["derived_value"] = "partial"
         self.assertEqual("partial", derive_completion(partial)); validate_canonical(partial)
 
-        running = load_valid(); running["status"] = "running"; running["ended_at"] = None; running["completion"]["derived_value"] = "partial"
+        running = load_valid(); running["status"] = "running"; running["ended_at"] = None; running["completion_contract"]["smoke_stages"] = []; running["completion"]["derived_value"] = "partial"
         self.assertEqual("partial", derive_completion(running)); validate_canonical(running)
 
         failed = load_valid(); failed["status"] = "failed"; failed["completion"]["derived_value"] = "failed"
@@ -115,6 +115,9 @@ class SchemaTests(unittest.TestCase):
 
         smoke = load_valid(); smoke["artifacts"] = []; smoke["validations"] = []; smoke["claims"] = []; smoke["reviews"] = []; smoke["graph"] = {"nodes": [], "edges": [], "migrations": []}; smoke["stages"][1].update({"status": "not_started", "started_at": None, "ended_at": None, "evidence_refs": []}); no_cost(smoke); smoke["completion"]["derived_value"] = "smoke"
         self.assertEqual("smoke", derive_completion(smoke)); validate_canonical(smoke)
+
+        real_smoke = load_valid(); real_smoke["artifacts"][0]["completion"] = "smoke"; real_smoke["stages"][1].update({"status": "not_started", "started_at": None, "ended_at": None, "evidence_refs": []}); no_cost(real_smoke); real_smoke["completion"]["derived_value"] = "smoke"
+        self.assertEqual("smoke", derive_completion(real_smoke)); validate_canonical(real_smoke)
 
         for status in ("running", "failed"):
             manifest = load_valid(); manifest["status"] = status; manifest["ended_at"] = None if status == "running" else manifest["ended_at"]
@@ -140,6 +143,34 @@ class SchemaTests(unittest.TestCase):
         for manifest, error in mutations:
             with self.subTest(error=error), self.assertRaisesRegex(ManifestValidationError, error):
                 validate_canonical(manifest)
+
+    def test_zero_spend_released_and_expired_terminal_paid_stages(self):
+        for reservation_status, run_status in (("released", "failed"), ("expired", "stopped")):
+            manifest = load_valid()
+            manifest["status"] = run_status
+            manifest["stages"][1].update({"status": "failed", "stop_reason": "provider rejected the request"})
+            manifest["budget"]["reservations"][0].update({
+                "status": reservation_status,
+                "reconciled_at": "2026-07-15T12:02:00Z",
+                "reconciled_usd": 0,
+                "usage_evidence_ref": "evidence/cost/zero-spend.json",
+            })
+            manifest["budget"]["measured_usd"] = 0
+            if run_status == "stopped":
+                manifest["artifacts"][0]["completion"] = "smoke"
+            manifest["completion"]["derived_value"] = derive_completion(manifest)
+            with self.subTest(status=reservation_status):
+                validate_canonical(manifest)
+                public = project_public_manifest(manifest, generated_at="2026-07-15T13:00:00Z")
+                self.assertEqual(reservation_status, public["cost"]["reservation_state"])
+
+        nonzero = load_valid(); nonzero["status"] = "failed"; nonzero["stages"][1].update({"status": "failed", "stop_reason": "failed"}); nonzero["budget"]["reservations"][0].update({"status": "released", "reconciled_usd": 0.1}); nonzero["budget"]["measured_usd"] = 0.1; nonzero["completion"]["derived_value"] = "failed"
+        with self.assertRaisesRegex(ManifestValidationError, "released-or-expired-nonzero"):
+            validate_canonical(nonzero)
+
+        incomplete = load_valid(); incomplete["status"] = "failed"; incomplete["stages"][1].update({"status": "failed", "stop_reason": "failed"}); incomplete["budget"]["reservations"][0].update({"status": "expired", "reconciled_at": None, "reconciled_usd": None, "usage_evidence_ref": None}); incomplete["budget"]["measured_usd"] = 0; incomplete["completion"]["derived_value"] = "failed"
+        with self.assertRaisesRegex(ManifestValidationError, "incomplete-zero-spend-finalization"):
+            validate_canonical(incomplete)
 
     def test_license_ledger_is_typed_and_reviewed(self):
         manifest = load_valid(); del manifest["license_ledger"][0]["reviewer"]
