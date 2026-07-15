@@ -5,6 +5,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from dataclasses import replace
@@ -268,9 +269,10 @@ class CanonicalCliDryRunTests(unittest.TestCase):
     def test_cli_dry_run_exercises_three_manifest_bridge(self) -> None:
         with tempfile.TemporaryDirectory(prefix="backtranslation_bridge_cli_") as raw:
             work = Path(raw) / "work"
+            command = [sys.executable, "tools/run_backtranslation.py", "dry-run", "--work-dir", str(work)]
+            self.assertEqual(sys.executable, command[0])
             process = subprocess.run(
-                [str(ROOT / ".venv-evidence" / "bin" / "python"), "tools/run_backtranslation.py", "dry-run",
-                 "--work-dir", str(work)],
+                command,
                 cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
             )
             self.assertEqual(0, process.returncode, process.stderr)
