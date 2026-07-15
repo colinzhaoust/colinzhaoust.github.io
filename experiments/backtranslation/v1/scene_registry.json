@@ -1,0 +1,143 @@
+{
+  "schema_version": "backtranslation-scene-registry/v1",
+  "registry_id": "manim-community-gallery-v0.20.1-ten-scenes",
+  "role": "public_development_set",
+  "benchmark_claim": "Public source-available development set; not an unseen or contamination-free benchmark.",
+  "upstream": {
+    "repository": "https://github.com/ManimCommunity/manim",
+    "release": "v0.20.1",
+    "commit_sha": "1157b746c37130685e0a02d8aa0871d1f164d5f4",
+    "source_path": "docs/source/examples.rst",
+    "source_blob_git_sha1": "6584daadd8a6673f5a05c621a912f37d24e83402",
+    "source_sha256": "6b56c2cf4a61344b2a1fab5e0c1774a6f7e8ce6a5134149bd5e552f0eb82bb67",
+    "source_url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/docs/source/examples.rst",
+    "retrieved_at": "2026-07-15T17:30:00Z"
+  },
+  "license_snapshot": {
+    "declared_spdx": "MIT",
+    "redistribution_conclusion": "allowed_with_notice",
+    "retrieved_at": "2026-07-15T17:30:00Z",
+    "files": [
+      {
+        "path": "LICENSE",
+        "git_blob_sha1": "774f5965700a59c2c7df2d4c234209d1da333c3e",
+        "sha256": "c6a922fc1cfaed7ac0f87aa1dc77ebf5a3c8d1ccc5ab01da33153f0d013bf019",
+        "url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/LICENSE"
+      },
+      {
+        "path": "LICENSE.community",
+        "git_blob_sha1": "c1c149f1eb3dc7482fc221311f88707a5f0c24c6",
+        "sha256": "78e87bb648bdf08c827dd398a11e29cbdf74c3203969d3738dba3eb09d5c2022",
+        "url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/LICENSE.community"
+      }
+    ],
+    "notice": "The upstream software and examples are MIT licensed. Preserve both upstream notices with redistributed source or substantial portions."
+  },
+  "contamination": {
+    "risk": "high",
+    "reason": "The selected scenes are public Manim Community gallery examples and may have appeared in model training data.",
+    "required_public_disclosure": "Results measure reconstruction on a public development set and do not establish out-of-distribution generalization."
+  },
+  "scenes": [
+    {
+      "case_id": "bt-001",
+      "scene_class": "OpeningManim",
+      "directive_line": 700,
+      "class_line": 704,
+      "category": "latex_and_nonlinear_transform",
+      "features": ["Tex", "MathTex", "Transform", "NumberPlane", "nonlinear_transform"],
+      "runtime_dependencies": ["latex", "cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-002",
+      "scene_class": "SineCurveUnitCircle",
+      "directive_line": 757,
+      "class_line": 762,
+      "category": "updaters_and_dynamic_plot",
+      "features": ["Circle", "MathTex", "updater", "always_redraw", "traced_curve"],
+      "runtime_dependencies": ["latex", "cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-003",
+      "scene_class": "BooleanOperations",
+      "directive_line": 96,
+      "class_line": 99,
+      "category": "constructive_geometry",
+      "features": ["Intersection", "Union", "Exclusion", "Difference", "MarkupText"],
+      "runtime_dependencies": ["pango", "cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-004",
+      "scene_class": "ArgMinExample",
+      "directive_line": 353,
+      "class_line": 355,
+      "category": "optimization_plot",
+      "features": ["Axes", "ValueTracker", "plot", "updater", "argmin"],
+      "runtime_dependencies": ["cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-005",
+      "scene_class": "GraphAreaPlot",
+      "directive_line": 379,
+      "class_line": 384,
+      "category": "area_and_riemann_plot",
+      "features": ["Axes", "plot", "riemann_rectangles", "bounded_area"],
+      "runtime_dependencies": ["cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-006",
+      "scene_class": "PointWithTrace",
+      "directive_line": 287,
+      "class_line": 291,
+      "category": "path_tracing",
+      "features": ["VMobject", "Dot", "Rotating", "updater", "path_trace"],
+      "runtime_dependencies": ["cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-007",
+      "scene_class": "FollowingGraphCamera",
+      "directive_line": 498,
+      "class_line": 504,
+      "category": "moving_camera",
+      "features": ["MovingCameraScene", "Axes", "MoveAlongPath", "camera_updater"],
+      "runtime_dependencies": ["cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-008",
+      "scene_class": "MovingZoomedSceneAround",
+      "directive_line": 529,
+      "class_line": 534,
+      "category": "zoomed_camera",
+      "features": ["ZoomedScene", "ImageMobject", "BackgroundRectangle", "UpdateFromFunc"],
+      "runtime_dependencies": ["pango", "cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-009",
+      "scene_class": "ThreeDCameraRotation",
+      "directive_line": 634,
+      "class_line": 638,
+      "category": "three_d_camera_motion",
+      "features": ["ThreeDScene", "ThreeDAxes", "ambient_camera_rotation"],
+      "runtime_dependencies": ["cairo", "ffmpeg"],
+      "external_assets": []
+    },
+    {
+      "case_id": "bt-010",
+      "scene_class": "ThreeDSurfacePlot",
+      "directive_line": 664,
+      "class_line": 668,
+      "category": "three_d_surface",
+      "features": ["ThreeDScene", "Surface", "ThreeDAxes", "gaussian_surface"],
+      "runtime_dependencies": ["cairo", "ffmpeg"],
+      "external_assets": []
+    }
+  ]
+}

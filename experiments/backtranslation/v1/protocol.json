@@ -1,0 +1,94 @@
+{
+  "schema_version": "backtranslation-protocol/v1",
+  "experiment_id": "manim-gallery-backtranslation-v1",
+  "registry_ref": "experiments/backtranslation/v1/scene_registry.json",
+  "claim_scope": "Public source-available development set; not an unseen benchmark.",
+  "conditions": {
+    "human": {
+      "input": "official_source_at_pinned_revision",
+      "derivation_stage": "rendered",
+      "model_calls": 0
+    },
+    "one_shot": {
+      "input": "anonymized_reference_mp4_only",
+      "derivation_stage": "one_shot",
+      "max_generation_calls": 1,
+      "render_feedback_to_model": false,
+      "source_or_metadata_access": false
+    },
+    "self_refined": {
+      "input": "exact_one_shot_code_plus_policy_feedback",
+      "derivation_stage": "self_refined",
+      "max_revision_rounds": 3,
+      "manual_edits": false,
+      "first_parent_relation": "refined_from"
+    }
+  },
+  "reference_preparation": {
+    "container": "mp4",
+    "video_codec": "h264",
+    "pixel_format": "yuv420p",
+    "width": 854,
+    "height": 480,
+    "fps": 15,
+    "audio": "removed",
+    "metadata": "stripped",
+    "chapters": "removed",
+    "threads": 1,
+    "case_id_pattern": "^bt-[0-9]{3}$",
+    "model_visible_filename": "reference.mp4"
+  },
+  "adapter_contract": {
+    "required_capability": "video_input",
+    "image_only_substitution": "non_compliant",
+    "network_policy": "adapter_must_run_in_an_external_network-disabled_sandbox",
+    "q6_validation_adapter": "recording_mock_only"
+  },
+  "feedback_policy": {
+    "id": "feedback_policy/v1",
+    "sample_fractions": [0.1, 0.3, 0.5, 0.7, 0.9],
+    "allowed_feedback": [
+      "sanitized_render_errors",
+      "technical_media_summary",
+      "sampled_reference_candidate_frame_pairs",
+      "deterministic_diff_overlays",
+      "numeric_similarity_summary"
+    ],
+    "forbidden_feedback": ["learned_evaluator", "human_feedback", "source_code", "scene_metadata"],
+    "technical_thresholds": {
+      "require_render_success": true,
+      "require_valid_video": true,
+      "max_duration_delta_ratio": 0.05
+    },
+    "similarity_thresholds": {
+      "min_mean_similarity": 0.99,
+      "max_mean_absolute_error": 0.01
+    },
+    "early_stop": "technical_pass AND visual_pass",
+    "max_revision_rounds": 3
+  },
+  "render_policy": {
+    "generated_code_execution": "external_sandbox_renderer_only",
+    "unsafe_local_generated_code_execution": false,
+    "timeout_seconds": 300
+  },
+  "failure_codes": [
+    "adapter_non_compliant",
+    "generation_error",
+    "malformed_code",
+    "compile_error",
+    "render_error",
+    "render_timeout",
+    "invalid_media",
+    "evaluation_error",
+    "budget_stop",
+    "policy_violation"
+  ],
+  "manifest_contract": {
+    "conditions_are_separate_runs": true,
+    "pairing_field": "pairing_id",
+    "self_refined_requires_cross_run_one_shot_parent": true,
+    "schema_owner": "q-5",
+    "q6_must_not_duplicate_schema": true
+  }
+}

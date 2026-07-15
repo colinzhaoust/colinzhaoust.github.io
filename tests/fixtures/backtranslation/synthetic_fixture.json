@@ -1,0 +1,16 @@
+{
+  "schema_version": "backtranslation-synthetic-fixture/v1",
+  "implementation_origin": "synthetic_fixture",
+  "completion": "placeholder",
+  "notice": "Project-authored offline fixture. It is not one of the ten human gallery scenes and is never benchmark evidence.",
+  "duration_seconds": 1.0,
+  "width": 320,
+  "height": 180,
+  "fps": 15,
+  "variants": {
+    "reference": {"background": "black", "box_color": "red", "box_x": 80},
+    "one_shot": {"background": "black", "box_color": "blue", "box_x": 20},
+    "refine_1": {"background": "black", "box_color": "red", "box_x": 55},
+    "refine_2": {"copy": "reference"}
+  }
+}
