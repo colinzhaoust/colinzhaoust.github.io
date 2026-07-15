@@ -103,8 +103,8 @@
       "type": "array", "minItems": 1,
       "items": {
         "type": "object", "additionalProperties": false,
-        "required": ["item_id", "source_ref", "resource_type", "source_url", "source_revision", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision"],
-        "properties": {"item_id": {"$ref": "#/$defs/id"}, "source_ref": {"$ref": "#/$defs/id"}, "resource_type": {"enum": ["paper", "repository", "model", "dataset", "example_gallery", "example", "other", "asset"]}, "source_url": {"$ref": "#/$defs/https"}, "source_revision": {"type": "string"}, "declared_spdx": {"type": ["string", "null"]}, "constraints": {"type": "array", "items": {"type": "string"}}, "exceptions": {"type": "array", "items": {"type": "string"}}, "redistribution_conclusion": {"enum": ["allowed", "allowed_with_notice"]}, "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/repo_path"}, "minItems": 1}, "source_visibility": {"const": "public"}, "publication_decision": {"const": "allowed"}}
+        "required": ["item_id", "source_ref", "resource_type", "source_url", "source_revision", "content_hash", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision"],
+        "properties": {"item_id": {"$ref": "#/$defs/id"}, "source_ref": {"$ref": "#/$defs/id"}, "resource_type": {"enum": ["paper", "repository", "model", "dataset", "example_gallery", "example", "other", "asset"]}, "source_url": {"$ref": "#/$defs/https"}, "source_revision": {"type": "string"}, "content_hash": {"$ref": "#/$defs/hash"}, "declared_spdx": {"type": ["string", "null"]}, "constraints": {"type": "array", "items": {"type": "string"}}, "exceptions": {"type": "array", "items": {"type": "string"}}, "redistribution_conclusion": {"enum": ["allowed", "allowed_with_notice"]}, "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/repo_path"}, "minItems": 1}, "source_visibility": {"const": "public"}, "publication_decision": {"const": "allowed"}}
       }
     }
   },

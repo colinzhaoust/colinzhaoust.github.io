@@ -218,7 +218,7 @@ def _redaction_summary(document: Mapping[str, Any]) -> dict[str, int]:
     omitted_fields += sum(1 for item in document["graph"]["nodes"] if item["publishable"])
     omitted_fields += sum(1 for item in document["graph"]["edges"] if item["publishable"])
     omitted_fields += sum(_leaf_count(item) for item in document["repair_events"] if item["publishable"])
-    omitted_fields += sum(7 for item in document["license_ledger"] if item["availability"] == "available")
+    omitted_fields += sum(6 for item in document["license_ledger"] if item["availability"] == "available")
     omitted_fields += 1  # run lineage.adapter_ref
     public_budget_leaves = 3 + len(document["budget"]["coverage"])
     omitted_fields += _leaf_count(document["budget"]) - public_budget_leaves
@@ -296,7 +296,7 @@ def project_public_manifest(document: Mapping[str, Any], *, generated_at: str | 
         "repair_summary": {"event_count": len(repairs), "max_iteration": max((item["iteration"] for item in repairs), default=0), "policy_ids": sorted({item["policy_id"] for item in repairs})},
         "cost": {"currency": document["budget"]["currency"], "measured_usd": document["budget"]["measured_usd"], "estimated_usd": document["budget"]["estimated_usd"], "coverage": list(document["budget"]["coverage"]), "reservation_state": _public_reservation_state(document["budget"]["reservations"])},
         "license_ledger": [
-            {key: item[key] for key in ("item_id", "source_ref", "resource_type", "source_url", "source_revision", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision")}
+            {key: item[key] for key in ("item_id", "source_ref", "resource_type", "source_url", "source_revision", "content_hash", "declared_spdx", "constraints", "exceptions", "redistribution_conclusion", "evidence_refs", "source_visibility", "publication_decision")}
             for item in document["license_ledger"]
         ],
     }

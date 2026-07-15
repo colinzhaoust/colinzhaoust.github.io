@@ -221,7 +221,7 @@ def _semantic_errors(document: Mapping[str, Any]) -> list[str]:
         )
         if not type_matches:
             errors.append(f"license:{item['item_id']}:source-binding")
-        elif "source_snapshots" in document["input"] and item["availability"] == "available" and (
+        elif item["availability"] == "available" and (
             item["source_url"] != source["source_url"]
             or item["source_revision"] != source["revision"]
             or item["content_hash"] != source["content_hash"]
@@ -390,7 +390,12 @@ def _public_semantic_errors(document: Mapping[str, Any]) -> list[str]:
             source["source_type"] == item["resource_type"]
             or (source["source_type"] == "other" and item["resource_type"] == "asset")
         )
-        if not type_matches or item["source_url"] != source["source_url"] or item["source_revision"] != source["revision"]:
+        if (
+            not type_matches
+            or item["source_url"] != source["source_url"]
+            or item["source_revision"] != source["revision"]
+            or item["content_hash"] != source["content_hash"]
+        ):
             errors.append(f"public:{item['item_id']}:source-license-closure")
     return errors
 

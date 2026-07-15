@@ -52,6 +52,19 @@ def load_backtranslation():
     return manifest
 
 
+def load_legacy_paper_sources():
+    manifest = load_valid()
+    del manifest["input"]["source_snapshots"]
+    manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["resource_type"] in {"paper", "repository"}]
+    repository_license = next(item for item in manifest["license_ledger"] if item["resource_type"] == "repository")
+    repository_license.update({
+        "source_url": manifest["input"]["code_snapshot"]["source_url"],
+        "source_revision": manifest["input"]["code_snapshot"]["revision"],
+        "content_hash": manifest["input"]["code_snapshot"]["content_hash"],
+    })
+    return manifest
+
+
 class SchemaTests(unittest.TestCase):
     def test_schemas_are_valid_draft_2020_12(self):
         for path in (CANONICAL_SCHEMA_PATH, COMPLETION_SCHEMA_PATH, PUBLIC_SCHEMA_PATH):
@@ -93,18 +106,22 @@ class SchemaTests(unittest.TestCase):
                 validate_canonical(manifest)
 
     def test_legacy_paper_code_source_shape_remains_compatible(self):
-        manifest = load_valid()
-        del manifest["input"]["source_snapshots"]
-        manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["resource_type"] in {"paper", "repository"}]
-        repository_license = next(item for item in manifest["license_ledger"] if item["resource_type"] == "repository")
-        repository_license.update({
-            "source_url": manifest["input"]["code_snapshot"]["source_url"],
-            "source_revision": manifest["input"]["code_snapshot"]["revision"],
-            "content_hash": manifest["input"]["code_snapshot"]["content_hash"],
-        })
+        manifest = load_legacy_paper_sources()
         validate_canonical(manifest)
         public = project_public_manifest(manifest, generated_at="2026-07-15T13:00:00Z")
         self.assertEqual({"paper", "repository"}, {item["source_type"] for item in public["input"]["source_snapshots"]})
+
+    def test_legacy_source_license_identity_mismatch_is_rejected(self):
+        mutations = (
+            ("source_url", "https://example.org/wrong-source"),
+            ("source_revision", "wrong-revision"),
+            ("content_hash", "sha256:" + "0" * 64),
+        )
+        for field, value in mutations:
+            manifest = load_legacy_paper_sources()
+            next(item for item in manifest["license_ledger"] if item["resource_type"] == "repository")[field] = value
+            with self.subTest(field=field), self.assertRaisesRegex(ManifestValidationError, "source-identity-mismatch"):
+                validate_canonical(manifest)
 
     def test_pairing_id_is_schema_checked_and_preserved(self):
         manifest = load_backtranslation()
@@ -266,6 +283,12 @@ class ProjectionTests(unittest.TestCase):
         public = project_public_manifest(load_valid(), generated_at="2026-07-15T13:00:00Z")
         public["claims"][0]["evidence_refs"] = ["artifact:missing"]
         with self.assertRaisesRegex(ManifestValidationError, "evidence-closure"):
+            validate_public(public)
+
+    def test_public_source_hash_tampering_breaks_license_closure(self):
+        public = project_public_manifest(load_valid(), generated_at="2026-07-15T13:00:00Z")
+        public["input"]["source_snapshots"][0]["content_hash"] = "sha256:" + "0" * 64
+        with self.assertRaisesRegex(ManifestValidationError, "source-license-closure"):
             validate_public(public)
 
     def test_policy_rejects_paths_usernames_source_vault_and_sensitive_keys(self):
