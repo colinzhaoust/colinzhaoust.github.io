@@ -1,14 +1,27 @@
 {
   "policy_id": "paper-media-public-projection/0.1.0",
+  "publication_validator_version": "paper-media-publication-validator/0.1.0",
   "allowed_repository_hosts": ["github.com", "gitlab.com", "arxiv.org", "example.org"],
   "allowed_redistribution_conclusions": ["allowed", "allowed_with_notice"],
-  "forbidden_key_fragments": ["secret", "token", "password", "credential", "api_key", "request_id", "hostname", "job_id", "command", "config", "private_path", "host_metadata"],
+  "forbidden_key_fragments": ["secret", "token", "password", "credential", "api_key", "request_id", "hostname", "job_id", "command", "config", "private_path", "host_metadata", "username", "user_name", "source_vault"],
   "secret_value_patterns": [
     "(?i)bearer\\s+[a-z0-9._-]{12,}",
     "(?i)(api[_-]?key|token|password|secret)\\s*[:=]\\s*[^\\s]{8,}",
     "AKIA[0-9A-Z]{16}",
     "-----BEGIN [A-Z ]*PRIVATE KEY-----"
   ],
-  "pii_value_patterns": ["[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"],
-  "unsafe_path_patterns": ["^/", "^[A-Za-z]:[\\\\/]", "(^|/)\\.\\.(/|$)", "^~", "^file:"]
+  "pii_value_patterns": [
+    "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}",
+    "(?i)\\b(user(name)?|owner|author)\\s*[:=]\\s*[A-Za-z0-9._-]{2,}",
+    "(?i)(^|[/\\\\])(Users|home)[/\\\\][A-Za-z0-9._-]+"
+  ],
+  "unsafe_path_patterns": [
+    "(^|[\\s\\\"'(])/(?!/)[A-Za-z0-9._-]+/",
+    "(^|[\\s\\\"'(])/(Users|home|private|tmp|var)/",
+    "(^|[\\s\\\"'(])[A-Za-z]:[\\\\/]",
+    "(^|[\\s/\\\\])\\.\\.([/\\\\]|$)",
+    "(^|[\\s\\\"'(])~[/\\\\]",
+    "(?i)file:",
+    "(?i)(source[-_ ]vault|vault://|private/evidence|unpublished[ -]prompt)"
+  ]
 }

@@ -7,22 +7,48 @@
   "required": [
     "schema_version",
     "contract_id",
+    "rule_version",
     "required_stages",
+    "successful_stage_states",
     "smoke_stages",
     "required_deliverable_roles",
-    "placeholder_origins"
+    "required_artifact_validation_results",
+    "placeholder_origins",
+    "terminal_run_statuses"
   ],
   "properties": {
     "schema_version": {"const": "paper-media-completion-contract/0.1.0"},
     "contract_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._/-]+$"},
+    "rule_version": {"const": "paper-media-completion-rules/0.1.0"},
     "required_stages": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "successful_stage_states": {
+      "type": "array",
+      "items": {"enum": ["succeeded"]},
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "smoke_stages": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
     "required_deliverable_roles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "required_artifact_validation_results": {
+      "type": "array",
+      "items": {"enum": ["pass"]},
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "placeholder_origins": {
       "type": "array",
       "items": {"enum": ["synthetic_fixture"]},
       "minItems": 1,
       "uniqueItems": true
+    },
+    "terminal_run_statuses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_allowed", "full_forbidden"],
+      "properties": {
+        "full_allowed": {"const": ["completed"]},
+        "full_forbidden": {"const": ["running", "stopped", "failed", "migration_pending"]}
+      }
     }
   }
 }

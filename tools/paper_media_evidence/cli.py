@@ -13,7 +13,7 @@ from typing import Any
 from .completion import derive_completion
 from .migration import migrate_legacy_file
 from .projection import write_public_manifest_atomic
-from .validation import ManifestValidationError, validate_canonical, validate_public
+from .validation import ManifestValidationError, validate_canonical, validate_canonical_structure, validate_public
 
 
 def _read(path: Path) -> dict[str, Any]:
@@ -52,6 +52,7 @@ def _parser() -> argparse.ArgumentParser:
     migrate.add_argument("manifest", type=Path)
     migrate.add_argument("output_dir", type=Path)
     migrate.add_argument("--artifact-root", type=Path)
+    migrate.add_argument("--repo-root", type=Path, required=True)
     return parser
 
 
@@ -64,13 +65,13 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"ok": True, "manifest": str(args.manifest)}))
         elif args.command == "derive-completion":
             document = _read(args.manifest)
-            validate_canonical(document)
+            validate_canonical_structure(document)
             print(derive_completion(document))
         elif args.command == "project":
             write_public_manifest_atomic(_read(args.manifest), args.output)
             print(json.dumps({"ok": True, "output": str(args.output)}))
         elif args.command == "migrate-legacy":
-            manifests = migrate_legacy_file(args.manifest, artifact_root=args.artifact_root)
+            manifests = migrate_legacy_file(args.manifest, artifact_root=args.artifact_root, repo_root=args.repo_root)
             for document in manifests:
                 validate_canonical(document)
             for document in manifests:
