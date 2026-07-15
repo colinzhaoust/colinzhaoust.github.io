@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4blue2brown.local/schemas/paper-media/canonical-manifest-0.1.0.schema.json",
+  "title": "Private canonical paper media manifest 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "visibility", "run_id", "cell_id", "experiment_config_id", "thread",
+    "started_at", "ended_at", "status", "pipeline", "completion_contract", "lineage", "input",
+    "license_snapshot", "execution", "budget", "stages", "completion", "artifacts", "validations",
+    "claims", "reviews", "repair_events", "graph"
+  ],
+  "properties": {
+    "schema_version": {"const": "paper-media-manifest/0.1.0"},
+    "visibility": {"const": "private_canonical"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "cell_id": {"$ref": "#/$defs/id"},
+    "experiment_config_id": {"$ref": "#/$defs/id"},
+    "thread": {"enum": ["real_video_pipelines", "paper_to_slides", "slides_plus_manim", "backtranslation"]},
+    "started_at": {"$ref": "#/$defs/timestamp"},
+    "ended_at": {"$ref": "#/$defs/timestamp"},
+    "status": {"enum": ["running", "completed", "stopped", "failed", "migration_pending"]},
+    "pipeline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "variant", "repository", "commit_sha", "completion_contract_id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "variant": {"$ref": "#/$defs/id"},
+        "repository": {"oneOf": [{"$ref": "#/$defs/https"}, {"$ref": "#/$defs/unavailable"}]},
+        "commit_sha": {"oneOf": [{"$ref": "#/$defs/git_sha"}, {"$ref": "#/$defs/unavailable"}]},
+        "completion_contract_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "completion_contract": {"$ref": "completion-contract-0.1.0.schema.json"},
+    "lineage": {"$ref": "#/$defs/lineage"},
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_topic_family", "granularity", "paper_snapshot", "code_snapshot"],
+      "properties": {
+        "canonical_topic_family": {"$ref": "#/$defs/id"},
+        "granularity": {"enum": ["topic", "section", "formula", "scene", "slide", "control"]},
+        "paper_snapshot": {"$ref": "#/$defs/source_snapshot"},
+        "code_snapshot": {"$ref": "#/$defs/source_snapshot"}
+      }
+    },
+    "license_snapshot": {"$ref": "#/$defs/license_snapshot"},
+    "execution": {"$ref": "#/$defs/execution"},
+    "budget": {"$ref": "#/$defs/budget"},
+    "stages": {"type": "array", "items": {"$ref": "#/$defs/stage"}, "minItems": 1},
+    "completion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract_id", "derived_value", "derived_at"],
+      "properties": {
+        "contract_id": {"$ref": "#/$defs/id"},
+        "derived_value": {"$ref": "#/$defs/completion"},
+        "derived_at": {"$ref": "#/$defs/timestamp"}
+      }
+    },
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "validations": {"type": "array", "items": {"$ref": "#/$defs/validation"}},
+    "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}},
+    "reviews": {"type": "array", "items": {"$ref": "#/$defs/review"}},
+    "repair_events": {"type": "array", "items": {"$ref": "#/$defs/repair"}},
+    "graph": {"$ref": "#/$defs/graph"},
+    "migration": {"$ref": "#/$defs/migration"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "migration_pending"}}, "required": ["status"]},
+      "then": {"required": ["migration"]},
+      "else": {"not": {"required": ["migration"]}}
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "git_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "https": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "repo_path": {"type": "string", "minLength": 1, "not": {"pattern": "(^/|^[A-Za-z]:[\\\\/]|(^|/)\\.\\.(/|$)|^file:)"}},
+    "unavailable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["availability", "reason"],
+      "properties": {"availability": {"const": "unavailable"}, "reason": {"type": "string", "minLength": 1}}
+    },
+    "source_snapshot": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "source_url", "revision", "retrieved_at", "content_hash", "source_visibility"],
+          "properties": {
+            "availability": {"const": "available"}, "source_url": {"$ref": "#/$defs/https"},
+            "revision": {"type": "string", "minLength": 1}, "retrieved_at": {"$ref": "#/$defs/timestamp"},
+            "content_hash": {"$ref": "#/$defs/hash"}, "source_visibility": {"enum": ["public", "private"]}
+          }
+        },
+        {"$ref": "#/$defs/unavailable"}
+      ]
+    },
+    "license_snapshot": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "source_revision", "retrieved_at", "declared_spdx", "license_text_ref", "license_text_hash", "redistribution_conclusion"],
+          "properties": {
+            "availability": {"const": "available"}, "source_revision": {"type": "string", "minLength": 1},
+            "retrieved_at": {"$ref": "#/$defs/timestamp"}, "declared_spdx": {"type": ["string", "null"]},
+            "license_text_ref": {"$ref": "#/$defs/repo_path"}, "license_text_hash": {"$ref": "#/$defs/hash"},
+            "redistribution_conclusion": {"enum": ["allowed", "allowed_with_notice", "link_only", "prohibited", "unresolved"]}
+          }
+        },
+        {"$ref": "#/$defs/unavailable"}
+      ]
+    },
+    "lineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["implementation_origin", "input_contract_mode", "adapter_ref", "patch_level", "patchset_hash", "derivation_stage", "parent_artifact_refs"],
+      "properties": {
+        "implementation_origin": {"enum": ["upstream_repository", "project_reimplementation", "project_native", "synthetic_fixture", "human_authored_reference"]},
+        "input_contract_mode": {"enum": ["native", "adapted"]},
+        "adapter_ref": {"type": ["string", "null"]},
+        "patch_level": {"enum": ["none", "config_only", "compatibility", "method_change"]},
+        "patchset_hash": {"$ref": "#/$defs/hash"},
+        "derivation_stage": {"enum": ["source", "generated", "rendered", "composed", "one_shot", "self_refined"]},
+        "parent_artifact_refs": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["artifact_id", "relation"],
+            "properties": {"artifact_id": {"$ref": "#/$defs/id"}, "relation": {"enum": ["derived_from", "rendered_from", "composed_from", "refined_from"]}}
+          }
+        }
+      }
+    },
+    "execution": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "command", "config_ref", "config_hash", "model_versions", "environment_lock_ref", "environment_lock_hash", "host_metadata"],
+          "properties": {
+            "availability": {"const": "available"}, "command": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "config_ref": {"$ref": "#/$defs/repo_path"}, "config_hash": {"$ref": "#/$defs/hash"},
+            "model_versions": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "environment_lock_ref": {"$ref": "#/$defs/repo_path"}, "environment_lock_hash": {"$ref": "#/$defs/hash"},
+            "host_metadata": {"type": "object"}
+          }
+        },
+        {"$ref": "#/$defs/unavailable"}
+      ]
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy_id", "shared_setup_allocation", "rate_card", "reservations", "paid_stage_gate", "measured_usd", "estimated_usd", "coverage"],
+      "properties": {
+        "policy_id": {"$ref": "#/$defs/id"},
+        "shared_setup_allocation": {"enum": ["dedicated_setup_cell", "equal_allocation", "weighted_allocation", "not_applicable"]},
+        "rate_card": {
+          "oneOf": [
+            {"type": "object", "additionalProperties": false, "required": ["availability", "id", "provider", "currency", "retrieved_at", "content_hash"],
+             "properties": {"availability": {"const": "available"}, "id": {"$ref": "#/$defs/id"}, "provider": {"type": "string"}, "currency": {"const": "USD"}, "retrieved_at": {"$ref": "#/$defs/timestamp"}, "content_hash": {"$ref": "#/$defs/hash"}}},
+            {"$ref": "#/$defs/unavailable"}
+          ]
+        },
+        "reservations": {"type": "array", "items": {"$ref": "#/$defs/reservation"}},
+        "paid_stage_gate": {
+          "type": "object", "additionalProperties": false,
+          "required": ["next_stage_id", "projected_next_stage_usd", "decision"],
+          "properties": {
+            "next_stage_id": {"type": ["string", "null"]},
+            "projected_next_stage_usd": {"type": ["number", "null"], "minimum": 0},
+            "decision": {"enum": ["allowed", "blocked", "not_applicable"]}
+          }
+        },
+        "measured_usd": {"type": ["number", "null"], "minimum": 0},
+        "estimated_usd": {"type": ["number", "null"], "minimum": 0},
+        "coverage": {"type": "array", "items": {"enum": ["api", "local_compute", "labor", "storage", "assets"]}, "uniqueItems": true}
+      }
+    },
+    "reservation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reservation_id", "stage_id", "projected_usd", "status", "reserved_at", "reconciled_usd"],
+      "properties": {
+        "reservation_id": {"$ref": "#/$defs/id"}, "stage_id": {"$ref": "#/$defs/id"},
+        "projected_usd": {"type": "number", "minimum": 0}, "status": {"enum": ["active", "reconciled", "expired"]},
+        "reserved_at": {"$ref": "#/$defs/timestamp"}, "reconciled_usd": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "stage": {
+      "type": "object", "additionalProperties": false, "required": ["id", "status", "started_at", "ended_at", "evidence_refs"],
+      "properties": {"id": {"$ref": "#/$defs/id"}, "status": {"enum": ["succeeded", "failed", "skipped", "not_started", "blocked"]}, "started_at": {"type": ["string", "null"], "format": "date-time"}, "ended_at": {"type": ["string", "null"], "format": "date-time"}, "evidence_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "completion": {"enum": ["full", "partial", "smoke", "failed", "placeholder"]},
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "role", "private_path", "public_path", "content_hash", "media_type", "completion", "validation_refs", "lineage", "publishable"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"}, "role": {"type": "string", "minLength": 1},
+        "private_path": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "public_path": {"oneOf": [{"$ref": "#/$defs/repo_path"}, {"type": "null"}]},
+        "content_hash": {"oneOf": [{"$ref": "#/$defs/hash"}, {"$ref": "#/$defs/unavailable"}]},
+        "media_type": {"type": "string"}, "completion": {"$ref": "#/$defs/completion"},
+        "validation_refs": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "lineage": {"$ref": "#/$defs/lineage"},
+        "publishable": {"type": "boolean"}
+      }
+    },
+    "validation": {
+      "type": "object", "additionalProperties": false, "required": ["validation_id", "validator_id", "subject_ref", "result", "evidence_ref", "validated_at"],
+      "properties": {"validation_id": {"$ref": "#/$defs/id"}, "validator_id": {"$ref": "#/$defs/id"}, "subject_ref": {"$ref": "#/$defs/id"}, "result": {"enum": ["pass", "fail"]}, "evidence_ref": {"$ref": "#/$defs/repo_path"}, "validated_at": {"$ref": "#/$defs/timestamp"}}
+    },
+    "claim": {
+      "type": "object", "additionalProperties": false, "required": ["claim_id", "label", "statement", "evidence_refs", "observed_at"],
+      "properties": {"claim_id": {"$ref": "#/$defs/id"}, "label": {"enum": ["MEASURED", "OBSERVED", "REPORTED", "ESTIMATE", "PLANNED", "DECISION"]}, "statement": {"type": "string", "minLength": 1}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}, "observed_at": {"$ref": "#/$defs/timestamp"}}
+    },
+    "review": {
+      "type": "object", "additionalProperties": false, "required": ["review_id", "subject_ref", "rubric_id", "evaluator", "result", "evidence_refs", "reviewed_at", "notes"],
+      "properties": {"review_id": {"$ref": "#/$defs/id"}, "subject_ref": {"$ref": "#/$defs/id"}, "rubric_id": {"$ref": "#/$defs/id"}, "evaluator": {"type": "object", "additionalProperties": false, "required": ["type", "id"], "properties": {"type": {"enum": ["automatic", "human"]}, "id": {"type": "string"}}}, "result": {"enum": ["pass", "fail"]}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}, "reviewed_at": {"$ref": "#/$defs/timestamp"}, "notes": {"type": ["string", "null"]}}
+    },
+    "repair": {
+      "type": "object", "additionalProperties": false, "required": ["event_id", "policy_id", "parent_artifact_ref", "child_artifact_ref", "iteration", "created_at"],
+      "properties": {"event_id": {"$ref": "#/$defs/id"}, "policy_id": {"$ref": "#/$defs/id"}, "parent_artifact_ref": {"$ref": "#/$defs/id"}, "child_artifact_ref": {"$ref": "#/$defs/id"}, "iteration": {"type": "integer", "minimum": 1}, "created_at": {"$ref": "#/$defs/timestamp"}}
+    },
+    "graph": {
+      "type": "object", "additionalProperties": false, "required": ["nodes", "edges", "migrations"],
+      "properties": {
+        "nodes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["node_id", "node_type", "coverage_state", "aliases"], "properties": {"node_id": {"$ref": "#/$defs/id"}, "node_type": {"enum": ["topic", "claim", "formula", "operation", "code", "dataflow", "data", "value", "primitive", "scene", "slide", "animation_slot", "artifact", "evidence", "source"]}, "coverage_state": {"enum": ["observed", "inferred", "planned_missing", "not_applicable"]}, "aliases": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}}}},
+        "edges": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["edge_id", "edge_type", "source_ref", "target_ref", "match_state", "evidence_refs", "confidence", "review_ref"], "properties": {"edge_id": {"$ref": "#/$defs/id"}, "edge_type": {"enum": ["contains", "supports", "depends_on", "implements", "consumes", "visualized_by", "composes", "embedded_in", "renders_to"]}, "source_ref": {"$ref": "#/$defs/id"}, "target_ref": {"$ref": "#/$defs/id"}, "match_state": {"enum": ["candidate", "confirmed", "rejected", "unresolved"]}, "evidence_refs": {"type": "array", "items": {"type": "string"}}, "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}, "review_ref": {"type": ["string", "null"]}}}},
+        "migrations": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["old_id", "new_id", "reason", "version", "migrated_at"], "properties": {"old_id": {"$ref": "#/$defs/id"}, "new_id": {"$ref": "#/$defs/id"}, "reason": {"type": "string"}, "version": {"type": "string"}, "migrated_at": {"$ref": "#/$defs/timestamp"}}}}
+      }
+    },
+    "migration": {
+      "type": "object", "additionalProperties": false, "required": ["source_path", "source_hash", "migrator_version", "warnings"],
+      "properties": {"source_path": {"$ref": "#/$defs/repo_path"}, "source_hash": {"$ref": "#/$defs/hash"}, "migrator_version": {"type": "string"}, "warnings": {"type": "array", "items": {"type": "string"}}}
+    }
+  }
+}

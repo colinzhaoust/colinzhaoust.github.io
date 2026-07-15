@@ -1,0 +1,138 @@
+{
+  "schema_version": "paper-media-manifest/0.1.0",
+  "visibility": "private_canonical",
+  "run_id": "run.example.full",
+  "cell_id": "pilot:topic:pipeline:controlled:r1",
+  "experiment_config_id": "pilot/0.1.0",
+  "thread": "real_video_pipelines",
+  "started_at": "2026-07-15T12:00:00Z",
+  "ended_at": "2026-07-15T12:02:00Z",
+  "status": "completed",
+  "pipeline": {
+    "id": "example_pipeline",
+    "variant": "upstream_main",
+    "repository": "https://example.org/pipeline",
+    "commit_sha": "0123456789abcdef0123456789abcdef01234567",
+    "completion_contract_id": "video-upstream/0.1.0"
+  },
+  "completion_contract": {
+    "schema_version": "paper-media-completion-contract/0.1.0",
+    "contract_id": "video-upstream/0.1.0",
+    "required_stages": ["plan", "render"],
+    "smoke_stages": [],
+    "required_deliverable_roles": ["rendered_video"],
+    "placeholder_origins": ["synthetic_fixture"]
+  },
+  "lineage": {
+    "implementation_origin": "upstream_repository",
+    "input_contract_mode": "native",
+    "adapter_ref": null,
+    "patch_level": "none",
+    "patchset_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "derivation_stage": "rendered",
+    "parent_artifact_refs": []
+  },
+  "input": {
+    "canonical_topic_family": "example_topic",
+    "granularity": "topic",
+    "paper_snapshot": {
+      "availability": "available",
+      "source_url": "https://arxiv.org/abs/0000.00000",
+      "revision": "v1",
+      "retrieved_at": "2026-07-15T11:00:00Z",
+      "content_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "source_visibility": "public"
+    },
+    "code_snapshot": {
+      "availability": "available",
+      "source_url": "https://github.com/example/project",
+      "revision": "0123456789abcdef0123456789abcdef01234567",
+      "retrieved_at": "2026-07-15T11:00:00Z",
+      "content_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "source_visibility": "public"
+    }
+  },
+  "license_snapshot": {
+    "availability": "available",
+    "source_revision": "0123456789abcdef0123456789abcdef01234567",
+    "retrieved_at": "2026-07-15T11:00:00Z",
+    "declared_spdx": "MIT",
+    "license_text_ref": "evidence/licenses/example-LICENSE",
+    "license_text_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "redistribution_conclusion": "allowed_with_notice"
+  },
+  "execution": {
+    "availability": "available",
+    "command": ["python", "pipeline.py", "--safe"],
+    "config_ref": "configs/pilot.json",
+    "config_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "model_versions": ["provider/model@version"],
+    "environment_lock_ref": "requirements-evidence.txt",
+    "environment_lock_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "host_metadata": {}
+  },
+  "budget": {
+    "policy_id": "pilot-budget/0.1.0",
+    "shared_setup_allocation": "equal_allocation",
+    "rate_card": {
+      "availability": "available",
+      "id": "provider-rates/2026-07-15",
+      "provider": "example",
+      "currency": "USD",
+      "retrieved_at": "2026-07-15T11:00:00Z",
+      "content_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    },
+    "reservations": [
+      {
+        "reservation_id": "reservation:render:1",
+        "stage_id": "render",
+        "projected_usd": 1.25,
+        "status": "reconciled",
+        "reserved_at": "2026-07-15T11:59:00Z",
+        "reconciled_usd": 1.1
+      }
+    ],
+    "paid_stage_gate": {"next_stage_id": "render", "projected_next_stage_usd": 1.25, "decision": "allowed"},
+    "measured_usd": 1.1,
+    "estimated_usd": 1.25,
+    "coverage": ["api", "local_compute"]
+  },
+  "stages": [
+    {"id": "plan", "status": "succeeded", "started_at": "2026-07-15T12:00:00Z", "ended_at": "2026-07-15T12:00:30Z", "evidence_refs": []},
+    {"id": "render", "status": "succeeded", "started_at": "2026-07-15T12:00:30Z", "ended_at": "2026-07-15T12:02:00Z", "evidence_refs": ["artifact:video"]}
+  ],
+  "completion": {"contract_id": "video-upstream/0.1.0", "derived_value": "full", "derived_at": "2026-07-15T12:02:00Z"},
+  "artifacts": [
+    {
+      "artifact_id": "artifact:video",
+      "role": "rendered_video",
+      "private_path": "/private/runs/video.mp4",
+      "public_path": "progress_site/assets/runs/example/video.mp4",
+      "content_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "media_type": "video/mp4",
+      "completion": "full",
+      "validation_refs": ["validation:media"],
+      "lineage": {
+        "implementation_origin": "upstream_repository",
+        "input_contract_mode": "native",
+        "adapter_ref": null,
+        "patch_level": "none",
+        "patchset_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "derivation_stage": "rendered",
+        "parent_artifact_refs": []
+      },
+      "publishable": true
+    }
+  ],
+  "validations": [
+    {"validation_id": "validation:media", "validator_id": "media-probe/1.0.0", "subject_ref": "artifact:video", "result": "pass", "evidence_ref": "evidence/media-probe.json", "validated_at": "2026-07-15T12:02:00Z"}
+  ],
+  "claims": [
+    {"claim_id": "claim:render-valid", "label": "MEASURED", "statement": "The video passed media validation.", "evidence_refs": ["artifact:video", "validation:media"], "observed_at": "2026-07-15T12:02:00Z"}
+  ],
+  "reviews": [
+    {"review_id": "review:technical", "subject_ref": "artifact:video", "rubric_id": "video-technical/1.0.0", "evaluator": {"type": "automatic", "id": "media-probe/1.0.0"}, "result": "pass", "evidence_refs": ["artifact:video", "validation:media"], "reviewed_at": "2026-07-15T12:02:00Z", "notes": null}
+  ],
+  "repair_events": [],
+  "graph": {"nodes": [], "edges": [], "migrations": []}
+}

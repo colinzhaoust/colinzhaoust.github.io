@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4blue2brown.local/schemas/paper-media/completion-contract-0.1.0.schema.json",
+  "title": "Paper media completion contract 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "required_stages",
+    "smoke_stages",
+    "required_deliverable_roles",
+    "placeholder_origins"
+  ],
+  "properties": {
+    "schema_version": {"const": "paper-media-completion-contract/0.1.0"},
+    "contract_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._/-]+$"},
+    "required_stages": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "smoke_stages": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "required_deliverable_roles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "placeholder_origins": {
+      "type": "array",
+      "items": {"enum": ["synthetic_fixture"]},
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}
