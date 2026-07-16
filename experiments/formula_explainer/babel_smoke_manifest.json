@@ -2,6 +2,10 @@
   "schema_version": "formula-explainer-babel-smoke/0.1.0",
   "scene_ir_ref": "runs/formula_explainer/build/scene_ir/attention_softmax_lookup/attention_softmax.json",
   "renderer_ref": "scenes/formula_explainer_scene.py",
+  "render_environment": {
+    "manim_version": "0.20.1",
+    "scope": "Observed for Babel jobs 9313535 and 9313551; this is render provenance, not a minimum-version compatibility claim."
+  },
   "jobs": [
     {
       "job_id": "9313500",

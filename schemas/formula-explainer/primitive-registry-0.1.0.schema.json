@@ -3,15 +3,24 @@
   "$id": "https://4blue2brown.local/schemas/formula-explainer/primitive-registry-0.1.0.schema.json",
   "title": "Formula explainer Manim primitive registry 0.1.0",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "manim_version", "primitives"],
+  "required": ["schema_version", "manim_compatibility", "primitives"],
   "properties": {
     "schema_version": {"const": "primitive-registry/0.1.0"},
-    "manim_version": {"type": "string", "minLength": 1},
+    "manim_compatibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["validated_render_versions", "minimum_supported_version", "render_evidence_refs", "statement"],
+      "properties": {
+        "validated_render_versions": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "minimum_supported_version": {"type": ["string", "null"]},
+        "render_evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "statement": {"type": "string", "minLength": 1}
+      }
+    },
     "primitives": {
       "type": "array", "minItems": 1,
       "items": {
         "type": "object", "additionalProperties": false,
-        "required": ["primitive_id", "canonical_node_id", "version", "origin", "origin_badge", "source_symbol", "source_revision", "operations", "inputs", "outputs", "visual_states", "animation_contract", "status", "used_by", "limitations"],
+        "required": ["primitive_id", "canonical_node_id", "version", "origin", "origin_badge", "source_symbol", "source_revision", "operations", "inputs", "outputs", "visual_states", "animation_contract", "status", "used_by", "verification", "limitations"],
         "properties": {
           "primitive_id": {"$ref": "#/$defs/id"}, "canonical_node_id": {"$ref": "#/$defs/id"}, "version": {"type": "string", "minLength": 1},
           "origin": {"enum": ["built_in", "project_reusable", "generated_one_off", "missing_planned"]},
@@ -28,6 +37,13 @@
           },
           "animation_contract": {"type": "string", "minLength": 1}, "status": {"enum": ["available", "candidate", "missing"]},
           "used_by": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true},
+          "verification": {
+            "type": "object", "additionalProperties": false, "required": ["test_refs", "golden_scene_refs"],
+            "properties": {
+              "test_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+              "golden_scene_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+            }
+          },
           "limitations": {"type": "array", "items": {"type": "string"}}
         }
       }

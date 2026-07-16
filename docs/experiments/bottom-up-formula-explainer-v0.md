@@ -80,6 +80,12 @@ Semantic operations such as `exp`, `softmax`, `ESS`, and `KL` are not falsely
 presented as Manim API calls. They map to visual implementations composed from
 Manim mobjects and animations.
 
+`project_reusable` is a promotion state, not a naming preference. The registry
+requires both a test reference and a completed golden-scene reference before a
+primitive can use that origin. The two promoted v0 primitives point to the
+operation-contract regression test and Babel job `9313551`; one-off and missing
+primitives carry empty verification sets until they earn promotion.
+
 ## Build and validation
 
 ```bash
@@ -110,6 +116,11 @@ FORMULA_SCENE_IR=runs/formula_explainer/build/scene_ir/attention_softmax_lookup/
 - Job `9313551`: final layout refinement; see
   `experiments/formula_explainer/babel_smoke_manifest.json` for terminal state and
   final artifact hash.
+
+The observed Babel render environment used Manim `0.20.1`. The registry records
+that as render provenance and deliberately leaves the minimum supported version
+unset; it no longer presents `0.19.0` as the exact environment or as a tested
+lower compatibility bound.
 
 The failed job is useful evidence: using Manim built-ins still requires recording
 their transitive renderer dependencies. The project primitive is deliberately

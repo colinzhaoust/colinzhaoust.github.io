@@ -1,15 +1,20 @@
 {
   "schema_version": "primitive-registry/0.1.0",
-  "manim_version": "0.19.0",
+  "manim_compatibility": {
+    "validated_render_versions": ["0.20.1"],
+    "minimum_supported_version": null,
+    "render_evidence_refs": ["experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"],
+    "statement": "Manim 0.20.1 is the only validated render environment. No minimum-version compatibility claim is made yet."
+  },
   "primitives": [
     {
       "primitive_id": "manim.text",
       "canonical_node_id": "primitive:manim.text",
-      "version": "0.19.0",
+      "version": "0.20.1",
       "origin": "built_in",
       "origin_badge": {"label": "Manim built-in", "color": "#16A34A", "icon": "library"},
       "source_symbol": "manim.Text",
-      "source_revision": "manim-community-v0.19.0",
+      "source_revision": "manim-community-v0.20.1",
       "operations": ["formula_display"],
       "inputs": ["plain_text"],
       "outputs": ["text_mobject"],
@@ -17,50 +22,53 @@
       "animation_contract": "Text is created with Write or FadeIn and remains legible at the target frame size.",
       "status": "available",
       "used_by": ["formula:transformers.attention", "formula:attention.softmax", "formula:dpo.objective", "formula:feynrl.ess", "formula:rope.relative"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Plain text fallback does not perform TeX layout."]
     },
     {
       "primitive_id": "manim.bar_chart",
       "canonical_node_id": "primitive:manim.bar_chart",
-      "version": "0.19.0",
+      "version": "0.20.1",
       "origin": "built_in",
       "origin_badge": {"label": "Manim built-in", "color": "#16A34A", "icon": "library"},
       "source_symbol": "manim.BarChart",
-      "source_revision": "manim-community-v0.19.0",
-      "operations": ["softmax", "normalize", "weighted_sum", "ess"],
+      "source_revision": "manim-community-v0.20.1",
+      "operations": ["softmax", "normalize", "weighted_sum", "ess", "expectation"],
       "inputs": ["numeric_values", "labels"],
       "outputs": ["bar_chart_mobject"],
       "visual_states": {"initial": "raw values", "intermediate": "animated rescale", "terminal": "normalized or summarized values"},
       "animation_contract": "Axis ranges and labels must be fixed before transforming between charts.",
       "status": "available",
       "used_by": ["formula:transformers.attention", "formula:attention.softmax", "formula:feynrl.ess"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Negative values require an explicit y-range."]
     },
     {
       "primitive_id": "manim.transform",
       "canonical_node_id": "primitive:manim.transform",
-      "version": "0.19.0",
+      "version": "0.20.1",
       "origin": "built_in",
       "origin_badge": {"label": "Manim built-in", "color": "#16A34A", "icon": "library"},
       "source_symbol": "manim.Transform",
-      "source_revision": "manim-community-v0.19.0",
-      "operations": ["add", "subtract", "multiply", "divide", "scale", "concatenate", "linear_projection"],
+      "source_revision": "manim-community-v0.20.1",
+      "operations": ["add", "subtract", "multiply", "divide", "matmul", "scale", "concatenate", "linear_projection"],
       "inputs": ["source_mobject", "target_mobject"],
       "outputs": ["animated_mobject"],
       "visual_states": {"initial": "source", "intermediate": "interpolated", "terminal": "target"},
       "animation_contract": "Source and target objects occupy compatible scene regions.",
       "status": "available",
       "used_by": ["formula:transformers.multihead", "formula:dpo.objective", "formula:rope.relative"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Semantic token matching needs TransformMatchingTex or authored grouping."]
     },
     {
       "primitive_id": "manim.axes_vector",
       "canonical_node_id": "primitive:manim.axes_vector",
-      "version": "0.19.0",
+      "version": "0.20.1",
       "origin": "built_in",
       "origin_badge": {"label": "Manim built-in", "color": "#16A34A", "icon": "library"},
       "source_symbol": "manim.Axes+Arrow+Rotate",
-      "source_revision": "manim-community-v0.19.0",
+      "source_revision": "manim-community-v0.20.1",
       "operations": ["rotation", "sine", "cosine", "dot"],
       "inputs": ["vector", "angle"],
       "outputs": ["rotated_vector"],
@@ -68,6 +76,7 @@
       "animation_contract": "Axes remain fixed while vector rotation is animated around the origin.",
       "status": "available",
       "used_by": ["formula:transformers.positional", "formula:rope.rotation", "formula:rope.relative"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["High-dimensional block rotations require a 2D pair decomposition."]
     },
     {
@@ -85,6 +94,10 @@
       "animation_contract": "Use a shared token order and fixed color identity across score, exp, and normalized states.",
       "status": "available",
       "used_by": ["formula:transformers.attention", "formula:attention.softmax"],
+      "verification": {
+        "test_refs": ["tests/formula_explainer/test_formula_explainer.py::FormulaExplainerTests.test_project_reusable_primitives_have_resolvable_verification_evidence"],
+        "golden_scene_refs": ["experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"]
+      },
       "limitations": ["The v0.1 smoke uses a fixed three-token numeric example."]
     },
     {
@@ -95,13 +108,17 @@
       "origin_badge": {"label": "Project reusable", "color": "#7C3AED", "icon": "wrench"},
       "source_symbol": "scenes.formula_explainer_scene.OperationWalk",
       "source_revision": "q9-formula-explainer/0.1.0",
-      "operations": ["formula_operation_dag"],
+      "operations": ["formula_operation_dag", "stop_gradient"],
       "inputs": ["ordered_operations", "primitive_origins"],
       "outputs": ["operation_pipeline"],
       "visual_states": {"initial": "formula only", "intermediate": "operation nodes appear", "terminal": "primitive badges are bound to every operation"},
       "animation_contract": "Every operation chip shows semantic operation text plus a non-color origin badge.",
       "status": "available",
-      "used_by": ["formula:transformers.attention", "formula:attention.softmax", "formula:dpo.objective", "formula:feynrl.ess", "formula:rope.relative"],
+      "used_by": ["formula:transformers.attention", "formula:transformers.multihead", "formula:attention.softmax", "formula:dpo.objective", "formula:feynrl.ess", "formula:feynrl.p3o_objective", "formula:rope.relative"],
+      "verification": {
+        "test_refs": ["tests/formula_explainer/test_formula_explainer.py::FormulaExplainerTests.test_project_reusable_primitives_have_resolvable_verification_evidence"],
+        "golden_scene_refs": ["experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"]
+      },
       "limitations": ["The first renderer lays out a topological sequence rather than arbitrary branches."]
     },
     {
@@ -119,6 +136,7 @@
       "animation_contract": "Chosen and rejected retain green/red text labels in addition to color.",
       "status": "candidate",
       "used_by": ["formula:dpo.objective"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Not implemented by the generic smoke renderer yet."]
     },
     {
@@ -136,6 +154,7 @@
       "animation_contract": "The ratio histogram, ESS gauge, cap, and KL weight update from the same batch values.",
       "status": "candidate",
       "used_by": ["formula:feynrl.ess", "formula:feynrl.p3o_objective"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Needs a golden scene before promotion to project_reusable."]
     },
     {
@@ -153,6 +172,7 @@
       "animation_contract": "Preserve vector identity while collapsing two rotations into one relative angle.",
       "status": "candidate",
       "used_by": ["formula:rope.relative"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Numeric equality labels need a worked-example fixture."]
     },
     {
@@ -170,6 +190,7 @@
       "animation_contract": "Parallel heads must preserve head-specific labels through concatenation.",
       "status": "missing",
       "used_by": ["formula:transformers.multihead"],
+      "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["No stable implementation or golden scene exists."]
     }
   ]

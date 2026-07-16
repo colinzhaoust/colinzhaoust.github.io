@@ -72,10 +72,16 @@ def validate_formula(formula: dict[str, Any], registry: dict[str, Any]) -> list[
         known.add(operation["output_ref"])
     if formula.get("output_ref") not in outputs:
         errors.append("formula output_ref is not produced by an operation")
-    registry_ids = {item["primitive_id"] for item in registry.get("primitives", [])}
+    registry_by_id = {item["primitive_id"]: item for item in registry.get("primitives", [])}
     for operation in operations:
-        if operation["primitive_ref"] not in registry_ids:
+        primitive = registry_by_id.get(operation["primitive_ref"])
+        if not primitive:
             errors.append(f"{operation['operation_id']}: unknown primitive {operation['primitive_ref']}")
+        elif operation["operation_type"] not in primitive["operations"]:
+            errors.append(
+                f"{operation['operation_id']}: operation {operation['operation_type']} "
+                f"is not supported by {operation['primitive_ref']}"
+            )
     for mapping in formula.get("code_mappings", []):
         if mapping["line_end"] < mapping["line_start"]:
             errors.append(f"{mapping['code_node_id']}: reversed line range")
@@ -90,14 +96,34 @@ def validate_registry(registry: dict[str, Any]) -> list[str]:
     ids = [item["primitive_id"] for item in primitives]
     if duplicate := _duplicates(ids):
         errors.append(f"duplicate primitive IDs: {sorted(duplicate)}")
+    compatibility = registry.get("manim_compatibility", {})
+    if compatibility.get("minimum_supported_version") is not None:
+        errors.append("manim compatibility: minimum_supported_version must stay null until a lower-bound render is tested")
+    for ref in compatibility.get("render_evidence_refs", []):
+        if not _ref_target(ref).is_file():
+            errors.append(f"manim compatibility: unresolved render evidence {ref}")
     for item in primitives:
         if item["origin"] == "project_reusable" and len(item["used_by"]) < 2:
             errors.append(f"{item['primitive_id']}: project_reusable requires at least two formula uses")
+        if item["origin"] == "project_reusable":
+            verification = item.get("verification", {})
+            for field in ("test_refs", "golden_scene_refs"):
+                refs = verification.get(field, [])
+                if not refs:
+                    errors.append(f"{item['primitive_id']}: project_reusable requires {field}")
+                for ref in refs:
+                    if not _ref_target(ref).is_file():
+                        errors.append(f"{item['primitive_id']}: unresolved {field} target {ref}")
         if item["origin"] == "missing_planned" and item["status"] != "missing":
             errors.append(f"{item['primitive_id']}: missing_planned must have missing status")
         if item["origin"] == "built_in" and not (item["source_symbol"] or "").startswith("manim."):
             errors.append(f"{item['primitive_id']}: built-in primitive must cite a manim symbol")
     return errors
+
+
+def _ref_target(ref: str) -> Path:
+    relative = ref.split("::", 1)[0].split("#", 1)[0]
+    return ROOT / relative
 
 
 def validate_scene(scene: dict[str, Any], formula: dict[str, Any], registry: dict[str, Any]) -> list[str]:
@@ -162,15 +188,66 @@ def validate_workspace(build_dir: Path | None = None) -> None:
     families = {topic["paper_family_id"] for topic in topics.values()}
     if len(families) != 4:
         errors.append(f"expected four benchmark paper families, got {len(families)}")
-    if build_dir and build_dir.exists():
-        for path in sorted((build_dir / "scene_ir").glob("**/*.json")):
-            scene = load_json(path)
-            formula_ref = scene["formula_ir_ref"]
-            errors.extend(f"{path.relative_to(ROOT)}: {error}" for error in validate_scene(scene, formulas[formula_ref], registry))
-        for path in sorted((build_dir / "topic_compositions").glob("*.json")):
-            errors.extend(f"{path.relative_to(ROOT)}: {error}" for error in validate_composition(load_json(path)))
-        graph_path = build_dir / "canonical_graph_fragment.json"
-        if graph_path.exists():
-            errors.extend(validate_graph_fragment(load_json(graph_path)))
+    if build_dir is not None:
+        expected_scenes = {
+            Path("scene_ir")
+            / formula["topic_id"].split(":", 1)[1]
+            / f"{formula['formula_id'].split(':', 1)[1].replace('.', '_')}.json": formula_ref
+            for formula_ref, formula in formulas.items()
+        }
+        expected_compositions = {
+            Path("topic_compositions") / f"{topic_id.split(':', 1)[1]}.json"
+            for topic_id in topics
+        }
+        expected_files = set(expected_scenes) | expected_compositions | {
+            Path("canonical_graph_fragment.json"),
+            Path("build_summary.json"),
+        }
+        if not build_dir.is_dir():
+            errors.append(f"build inventory: directory missing: {build_dir}")
+        else:
+            actual_files = {
+                path.relative_to(build_dir)
+                for path in build_dir.rglob("*")
+                if path.is_file()
+            }
+            missing = expected_files - actual_files
+            extra = actual_files - expected_files
+            if missing:
+                errors.append(f"build inventory: missing={sorted(path.as_posix() for path in missing)}")
+            if extra:
+                errors.append(f"build inventory: extra={sorted(path.as_posix() for path in extra)}")
+
+            for relative, formula_ref in sorted(expected_scenes.items()):
+                path = build_dir / relative
+                if not path.is_file():
+                    continue
+                scene = load_json(path)
+                if scene.get("formula_ir_ref") != formula_ref:
+                    errors.append(f"{relative}: expected formula_ir_ref {formula_ref}")
+                    continue
+                errors.extend(f"{relative}: {error}" for error in validate_scene(scene, formulas[formula_ref], registry))
+            for relative in sorted(expected_compositions):
+                path = build_dir / relative
+                if path.is_file():
+                    errors.extend(f"{relative}: {error}" for error in validate_composition(load_json(path)))
+            graph_path = build_dir / "canonical_graph_fragment.json"
+            if graph_path.is_file():
+                errors.extend(validate_graph_fragment(load_json(graph_path)))
+            summary_path = build_dir / "build_summary.json"
+            if summary_path.is_file():
+                summary = load_json(summary_path)
+                expected_counts = {
+                    "demo_topic_count": len(topics),
+                    "benchmark_paper_family_count": len(families),
+                    "formula_count": len(formulas),
+                    "primitive_count": len(registry["primitives"]),
+                }
+                for field, expected in expected_counts.items():
+                    if summary.get(field) != expected:
+                        errors.append(f"build summary: {field} expected {expected}, got {summary.get(field)}")
+                expected_refs = sorted(path.as_posix() for path in expected_compositions)
+                if sorted(summary.get("topic_composition_refs", [])) != expected_refs:
+                    errors.append("build summary: topic_composition_refs do not match the five expected compositions")
     if errors:
         raise FormulaExplainerValidationError("\n".join(errors))
