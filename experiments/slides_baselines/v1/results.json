@@ -16,6 +16,19 @@
     "exit_code": "0:0",
     "elapsed": "00:00:02",
     "retrieval_window": ["2026-07-16T03:23:07Z", "2026-07-16T03:23:08Z"],
+    "source_revisions": {
+      "transformers": "arxiv:1706.03762v7",
+      "dpo": "arxiv:2305.18290v3",
+      "feynrl": "arxiv:2605.12380v1",
+      "rope": "arxiv:2104.09864v5"
+    },
+    "version_binding": {
+      "verified_at": "2026-07-16T04:23:59Z",
+      "method": "Downloaded each exact versioned arXiv PDF on Babel and compared SHA-256 with the job 9313499 frozen input.",
+      "all_hashes_match": true,
+      "fresh_freeze_job_required": false,
+      "historical_download_note": "Job 9313499 used versionless arXiv URLs; the later byte-for-byte verification binds those retrieved files to the exact revisions above."
+    },
     "provider_calls": 0,
     "provider_cost_measured_usd": 0.0
   },

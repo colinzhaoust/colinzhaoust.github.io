@@ -17,6 +17,8 @@ python tools/slides_baselines.py \
 
 The matrix is paper-native. `pipeline.repository` pins the implementation;
 an input `repository` snapshot is not required and must not be invented.
+The four paper inputs are pinned to exact arXiv revisions: `1706.03762v7`,
+`2305.18290v3`, `2605.12380v1`, and `2104.09864v5`.
 
 ## Execution gates
 
@@ -42,3 +44,8 @@ exit `0:0` and content-hashed markdown outputs. Their matrix completion is
 `smoke`: PDF parsing succeeded, but no editable deck or static slide render was
 generated. DeepPresenter current and ArcDeck remain explicitly blocked rather
 than being filled with substitute or dummy output.
+
+Job `9313499` historically fetched the versionless arXiv URLs. On
+2026-07-16 UTC, each exact versioned URL above was downloaded on Babel and its
+SHA-256 compared with the preserved input. All four matched byte-for-byte, so
+the exact revision binding required no replacement artifacts or new Slurm job.

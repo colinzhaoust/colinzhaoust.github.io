@@ -36,8 +36,8 @@
     {
       "id": "transformers",
       "title": "Attention Is All You Need",
-      "source_url": "https://arxiv.org/pdf/1706.03762",
-      "source_revision": "arxiv:1706.03762; frozen Babel snapshot from 2026-07-16 UTC",
+      "source_url": "https://arxiv.org/pdf/1706.03762v7",
+      "source_revision": "arxiv:1706.03762v7",
       "retrieved_at": "2026-07-16T03:23:07Z",
       "content_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
       "snapshot_state": "frozen"
@@ -45,8 +45,8 @@
     {
       "id": "dpo",
       "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
-      "source_url": "https://arxiv.org/pdf/2305.18290",
-      "source_revision": "arxiv:2305.18290; frozen Babel snapshot from 2026-07-16 UTC",
+      "source_url": "https://arxiv.org/pdf/2305.18290v3",
+      "source_revision": "arxiv:2305.18290v3",
       "retrieved_at": "2026-07-16T03:23:07Z",
       "content_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
       "snapshot_state": "frozen"
@@ -54,8 +54,8 @@
     {
       "id": "feynrl",
       "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
-      "source_url": "https://arxiv.org/pdf/2605.12380",
-      "source_revision": "arxiv:2605.12380; frozen Babel snapshot",
+      "source_url": "https://arxiv.org/pdf/2605.12380v1",
+      "source_revision": "arxiv:2605.12380v1",
       "retrieved_at": "2026-07-16T03:23:07Z",
       "content_sha256": "19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
       "snapshot_state": "frozen"
@@ -63,8 +63,8 @@
     {
       "id": "rope",
       "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
-      "source_url": "https://arxiv.org/pdf/2104.09864",
-      "source_revision": "arxiv:2104.09864; frozen Babel snapshot from 2026-07-16 UTC",
+      "source_url": "https://arxiv.org/pdf/2104.09864v5",
+      "source_revision": "arxiv:2104.09864v5",
       "retrieved_at": "2026-07-16T03:23:07Z",
       "content_sha256": "e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
       "snapshot_state": "frozen"
