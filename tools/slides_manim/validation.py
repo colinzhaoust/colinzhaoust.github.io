@@ -86,11 +86,16 @@ def validate_slide_document(document: dict[str, Any], root: Path = ROOT) -> list
         errors.append("run-evidence:duplicate-id")
     evidence_jobs: dict[str, dict[str, Any]] = {}
     for evidence_id, evidence in evidence_by_id.items():
-        evidence_path = root / evidence["evidence_path"]
+        evidence_path_ref = evidence.get("evidence_path")
+        evidence_hash = evidence.get("evidence_hash")
+        source_run_ref = evidence.get("source_run_ref")
+        if not isinstance(evidence_path_ref, str) or not evidence_path_ref:
+            continue
+        evidence_path = root / evidence_path_ref
         if not evidence_path.is_file():
             errors.append(f"run-evidence:{evidence_id}:missing-file")
             continue
-        if sha256(evidence_path) != evidence["evidence_hash"]:
+        if isinstance(evidence_hash, str) and sha256(evidence_path) != evidence_hash:
             errors.append(f"run-evidence:{evidence_id}:hash-mismatch")
         try:
             evidence_document = load_json(evidence_path)
@@ -99,8 +104,7 @@ def validate_slide_document(document: dict[str, Any], root: Path = ROOT) -> list
             continue
         if evidence_document.get("source_commit") != evidence.get("source_commit"):
             errors.append(f"run-evidence:{evidence_id}:source-commit-mismatch")
-        source_run_ref = evidence["source_run_ref"]
-        if source_run_ref.startswith("babel:job:"):
+        if isinstance(source_run_ref, str) and source_run_ref.startswith("babel:job:"):
             job_id = source_run_ref.rsplit(":", 1)[1]
             if evidence.get("locator") != f"jobs[job_id={job_id}]":
                 errors.append(f"run-evidence:{evidence_id}:locator-mismatch")

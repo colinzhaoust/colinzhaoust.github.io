@@ -123,6 +123,12 @@ class SlidesManimContractTests(unittest.TestCase):
         errors = validate_slide_document(document)
         self.assertIn("slot:animation_slot:methodology.attention_softmax:run-video-hash-mismatch", errors)
 
+    def test_missing_run_evidence_path_returns_schema_error_without_crashing(self) -> None:
+        document = copy.deepcopy(self.document)
+        del document["run_evidence"][0]["evidence_path"]
+        errors = validate_slide_document(document)
+        self.assertIn("schema:run_evidence/0:required", errors)
+
     def test_required_slot_needs_independent_static_fallback(self) -> None:
         document = copy.deepcopy(self.document)
         poster_id = document["animation_slots"][0]["static_fallback_artifact_ref"]
