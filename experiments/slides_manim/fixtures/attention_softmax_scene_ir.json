@@ -1,0 +1,51 @@
+{
+  "aspect_ratio": "16:9",
+  "beats": [
+    {
+      "beat_id": "beat:attention.softmax.initial",
+      "caption": "Start from the sourced formula and its typed atoms.",
+      "duration_seconds": 1.0,
+      "narration_hook": "What values enter this formula?",
+      "operation_ref": "op:attention.exp",
+      "primitive_ref": "project.formula_operation_walk",
+      "state": "initial"
+    },
+    {
+      "beat_id": "beat:attention.exp",
+      "caption": "Apply semantic operation: exp.",
+      "duration_seconds": 1.0,
+      "narration_hook": "Track value:attention.positive_scores as it is produced.",
+      "operation_ref": "op:attention.exp",
+      "primitive_ref": "project.softmax_probability_flow",
+      "state": "intermediate"
+    },
+    {
+      "beat_id": "beat:attention.normalize",
+      "caption": "Apply semantic operation: normalize.",
+      "duration_seconds": 1.0,
+      "narration_hook": "Track value:attention.weights as it is produced.",
+      "operation_ref": "op:attention.normalize",
+      "primitive_ref": "project.softmax_probability_flow",
+      "state": "intermediate"
+    },
+    {
+      "beat_id": "beat:attention.softmax.terminal",
+      "caption": "End at value:attention.weights and retain source/code evidence state.",
+      "duration_seconds": 1.0,
+      "narration_hook": "What did the operation chain establish?",
+      "operation_ref": "op:attention.normalize",
+      "primitive_ref": "project.formula_operation_walk",
+      "state": "terminal"
+    }
+  ],
+  "canonical_node_id": "scene:attention.softmax",
+  "formula_ir_ref": "data/formula_explainer/formulas/attention_softmax_lookup/softmax.json",
+  "render_targets": [
+    "mp4",
+    "poster_png"
+  ],
+  "scene_id": "scene:attention.softmax",
+  "schema_version": "scene-ir/0.1.0",
+  "static_fallback_plan": "Use the terminal frame with the formula, operation sequence, primitive-origin badges, and source locator visible.",
+  "title": "Softmax turns scores into attention weights"
+}

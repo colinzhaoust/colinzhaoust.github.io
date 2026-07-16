@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slides + Manim Fusion Smoke</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <p class="eyebrow">Slides + Manim / resolved AnimationSlot</p>
+      <h1>Methodology: scores become attention weights</h1>
+      <p>This package demonstrates one honest, locally resolved slot. It is a smoke artifact, not a completed integrated deck.</p>
+    </header>
+
+    <section class="slide" aria-labelledby="slide-title">
+      <div class="slide-heading">
+        <div>
+          <p class="kicker">Methodology</p>
+          <h2 id="slide-title">From scores to a probability distribution</h2>
+        </div>
+        <span class="status">SMOKE · Babel 9313551</span>
+      </div>
+
+      <p class="formula" aria-label="weight i equals exponential score i divided by the sum of exponential scores">
+        weight<sub>i</sub> = exp(score<sub>i</sub>) / Σ<sub>j</sub> exp(score<sub>j</sub>)
+      </p>
+
+      <figure class="animation-slot">
+        <video
+          controls
+          preload="metadata"
+          poster="assets/attention_softmax_9313551_poster.png"
+          aria-describedby="slot-caption"
+        >
+          <source src="assets/attention_softmax_9313551.mp4" type="video/mp4">
+          <track kind="captions" srclang="en" label="English" src="assets/attention_softmax_9313551.vtt" default>
+          Your browser cannot play the animation. The poster image is the required static fallback.
+        </video>
+        <figcaption id="slot-caption">
+          Raw attention scores pass through exponentiation and normalization to become weights summing to one.
+        </figcaption>
+      </figure>
+
+      <footer>
+        <span>Vaswani et al., 2017 · §3.2.1 · Eq. (1)</span>
+        <span>16:9 · contain/no crop · on click</span>
+      </footer>
+    </section>
+
+    <section class="ledger" aria-labelledby="ledger-title">
+      <h2 id="ledger-title">Slot resolution ledger</h2>
+      <div class="ledger-grid">
+        <article class="resolved">
+          <p class="state">Resolved smoke</p>
+          <h3>Methodology formula</h3>
+          <ul>
+            <li>SceneIR snapshot: resolved and hashed</li>
+            <li>MP4: H.264, 854×480, 6.666s</li>
+            <li>Poster/static fallback: resolved and hashed</li>
+            <li>Required for comprehension; fallback independently understandable</li>
+          </ul>
+        </article>
+        <article class="planned">
+          <p class="state">Planned / missing</p>
+          <h3>Architecture dataflow</h3>
+          <p>Awaiting reviewed Q/K/V SceneIR, render, poster, and fallback.</p>
+        </article>
+        <article class="planned">
+          <p class="state">Planned / missing</p>
+          <h3>Performance comparison</h3>
+          <p>Awaiting a paper-grounded chart scene and validated media pair.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

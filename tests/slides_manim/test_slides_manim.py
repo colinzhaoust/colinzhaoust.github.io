@@ -1,0 +1,139 @@
+from __future__ import annotations
+
+import copy
+import unittest
+
+from jsonschema import Draft202012Validator
+
+from tools.slides_manim.validation import (
+    DEMO_DIR,
+    SAMPLE_SLIDE_PATH,
+    SLIDE_SCHEMA_PATH,
+    SLOT_SCHEMA_PATH,
+    load_json,
+    sha256,
+    validate_demo_package,
+    validate_slide_document,
+)
+
+
+EXPECTED_ANIMATION_SLOT_FIELDS = {
+    "slot_id",
+    "slot_version",
+    "scene_ir_ref",
+    "rendered_artifact_ref",
+    "static_fallback_artifact_ref",
+    "semantic_purpose",
+    "slide_region",
+    "expected_duration_seconds",
+    "playback_mode",
+    "poster_frame_ref",
+    "caption",
+    "alt_text",
+    "aspect_ratio",
+    "crop_policy",
+    "artifact_hash",
+    "composite_lineage",
+    "requiredness",
+}
+
+
+class SlidesManimContractTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.document = load_json(SAMPLE_SLIDE_PATH)
+
+    def test_schemas_are_valid_draft_2020_12(self) -> None:
+        Draft202012Validator.check_schema(load_json(SLOT_SCHEMA_PATH))
+        Draft202012Validator.check_schema(load_json(SLIDE_SCHEMA_PATH))
+
+    def test_animation_slot_contract_requires_exact_fields(self) -> None:
+        schema = load_json(SLOT_SCHEMA_PATH)
+        self.assertEqual(EXPECTED_ANIMATION_SLOT_FIELDS, set(schema["required"]))
+        self.assertEqual(EXPECTED_ANIMATION_SLOT_FIELDS, set(schema["properties"]))
+        self.assertFalse(schema["additionalProperties"])
+
+    def test_resolved_methodology_sample_passes(self) -> None:
+        self.assertEqual([], validate_slide_document(self.document))
+        self.assertEqual("smoke", self.document["completion"])
+        self.assertEqual(1, len(self.document["animation_slots"]))
+        self.assertEqual(
+            "methodology_formula_explanation",
+            self.document["animation_slots"][0]["semantic_purpose"],
+        )
+
+    def test_required_reference_cannot_be_omitted(self) -> None:
+        document = copy.deepcopy(self.document)
+        del document["animation_slots"][0]["static_fallback_artifact_ref"]
+        errors = validate_slide_document(document)
+        self.assertTrue(any(error.startswith("schema:animation_slots/0:required") for error in errors))
+
+    def test_references_must_resolve_to_correct_roles(self) -> None:
+        document = copy.deepcopy(self.document)
+        slot = document["animation_slots"][0]
+        slot["scene_ir_ref"] = slot["rendered_artifact_ref"]
+        errors = validate_slide_document(document)
+        self.assertIn(
+            "slot:animation_slot:methodology.attention_softmax:scene_ir_ref:wrong-role",
+            errors,
+        )
+
+    def test_hash_and_lineage_are_enforced(self) -> None:
+        document = copy.deepcopy(self.document)
+        slot = document["animation_slots"][0]
+        slot["artifact_hash"] = "sha256:" + "0" * 64
+        slot["composite_lineage"]["parent_artifact_refs"].remove(slot["poster_frame_ref"])
+        errors = validate_slide_document(document)
+        self.assertIn(
+            "slot:animation_slot:methodology.attention_softmax:rendered-hash-mismatch",
+            errors,
+        )
+        self.assertIn(
+            "slot:animation_slot:methodology.attention_softmax:lineage-incomplete",
+            errors,
+        )
+
+    def test_required_slot_needs_independent_static_fallback(self) -> None:
+        document = copy.deepcopy(self.document)
+        poster_id = document["animation_slots"][0]["static_fallback_artifact_ref"]
+        next(item for item in document["artifacts"] if item["artifact_id"] == poster_id)[
+            "understandable_without_playback"
+        ] = False
+        errors = validate_slide_document(document)
+        self.assertIn(
+            "slot:animation_slot:methodology.attention_softmax:fallback-not-independent",
+            errors,
+        )
+
+    def test_geometry_duration_and_smoke_status_are_enforced(self) -> None:
+        document = copy.deepcopy(self.document)
+        slot = document["animation_slots"][0]
+        slot["slide_region"].update({"x": 0.8, "width": 0.4})
+        slot["expected_duration_seconds"] = 3
+        document["completion"] = "full"
+        errors = validate_slide_document(document)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:region-overflow", errors)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:duration-mismatch", errors)
+        self.assertIn("completion:smoke-cannot-be-full", errors)
+
+    def test_architecture_and_performance_stay_explicitly_unresolved(self) -> None:
+        planned = {item["semantic_purpose"]: item for item in self.document["planned_slots"]}
+        self.assertEqual({"architecture_dataflow", "performance_comparison"}, set(planned))
+        for item in planned.values():
+            self.assertEqual("planned_missing", item["status"])
+            self.assertEqual(
+                {"scene_ir", "rendered_artifact", "static_fallback", "poster", "review"},
+                set(item["missing_requirements"]),
+            )
+
+    def test_demo_package_and_real_artifact_hashes_pass(self) -> None:
+        validate_demo_package()
+        artifacts = {item["role"]: item for item in self.document["artifacts"]}
+        for role in ("scene_ir", "rendered_video", "static_fallback"):
+            artifact = artifacts[role]
+            self.assertEqual(artifact["content_hash"], sha256(SAMPLE_SLIDE_PATH.parents[2] / artifact["path"]))
+        html = (DEMO_DIR / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn("autoplay", html)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4blue2brown.local/schemas/slides-manim/animation-slot-0.1.0.schema.json",
+  "title": "Slides + Manim AnimationSlot 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slot_id",
+    "slot_version",
+    "scene_ir_ref",
+    "rendered_artifact_ref",
+    "static_fallback_artifact_ref",
+    "semantic_purpose",
+    "slide_region",
+    "expected_duration_seconds",
+    "playback_mode",
+    "poster_frame_ref",
+    "caption",
+    "alt_text",
+    "aspect_ratio",
+    "crop_policy",
+    "artifact_hash",
+    "composite_lineage",
+    "requiredness"
+  ],
+  "properties": {
+    "slot_id": {"$ref": "#/$defs/id"},
+    "slot_version": {"const": "animation-slot/0.1.0"},
+    "scene_ir_ref": {"$ref": "#/$defs/id"},
+    "rendered_artifact_ref": {"$ref": "#/$defs/id"},
+    "static_fallback_artifact_ref": {"$ref": "#/$defs/id"},
+    "semantic_purpose": {"enum": ["methodology_formula_explanation", "architecture_dataflow", "performance_comparison", "ablation", "uncertainty"]},
+    "slide_region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height", "unit"],
+      "properties": {
+        "x": {"type": "number", "minimum": 0},
+        "y": {"type": "number", "minimum": 0},
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"const": "normalized"}
+      }
+    },
+    "expected_duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "playback_mode": {"enum": ["on_click", "automatic", "loop_muted", "manual_controls"]},
+    "poster_frame_ref": {"$ref": "#/$defs/id"},
+    "caption": {"type": "string", "minLength": 1},
+    "alt_text": {"type": "string", "minLength": 1},
+    "aspect_ratio": {"enum": ["16:9", "4:3", "1:1", "9:16"]},
+    "crop_policy": {"enum": ["contain_no_crop", "cover_center", "letterbox", "manual"]},
+    "artifact_hash": {"$ref": "#/$defs/hash"},
+    "composite_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation_origin", "derivation_stage", "source_run_ref", "source_commit", "parent_artifact_refs"],
+      "properties": {
+        "implementation_origin": {"enum": ["project_native", "upstream_repository", "project_reimplementation"]},
+        "derivation_stage": {"const": "embedded"},
+        "source_run_ref": {"$ref": "#/$defs/id"},
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "parent_artifact_refs": {"type": "array", "items": {"$ref": "#/$defs/id"}, "minItems": 3, "uniqueItems": true}
+      }
+    },
+    "requiredness": {"enum": ["required_for_comprehension", "optional_enhancement"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
