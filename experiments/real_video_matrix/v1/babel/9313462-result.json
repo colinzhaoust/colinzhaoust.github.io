@@ -1,0 +1,70 @@
+{
+  "schema_version": "q8-babel-result/0.1.0",
+  "slurm_job_id": "9313462",
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "host": "babel-w9-22",
+  "started_at": "2026-07-16T03:17:46Z",
+  "ended_at": "2026-07-16T03:23:06Z",
+  "wall_time_seconds": 320,
+  "source": {
+    "project_commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",
+    "scene_sha256": "457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119",
+    "spec_sha256": "9644c31f88a761b5fd1b955b942e949a7aa6a3f285f22bcd2df2f41b022217d5",
+    "note": "The remote checkout's .git directory was empty, so the full commit is bound by matching the executed scene/spec content hashes to the locally pinned commit."
+  },
+  "cost": {
+    "measured_api_cost_usd": 0,
+    "provenance": "Deterministic local Manim render; no paid provider call. Babel compute allocation is recorded as wall time, not converted to USD."
+  },
+  "artifacts": [
+    {
+      "topic": "transformers",
+      "scene": "TransformerCoreExplainer",
+      "sha256": "652fc4d035d57765fa7bddc38a5ff8b40180cc195b3500cb4217e657eb8da6c4",
+      "duration_seconds": 11.467,
+      "size_bytes": 266085,
+      "width": 854,
+      "height": 480,
+      "fps": "15/1"
+    },
+    {
+      "topic": "dpo",
+      "scene": "DPOPreferenceExplainer",
+      "sha256": "02054b00b64536b6993c808119829d2e8324d680714e525a3ee0958e3141b21d",
+      "duration_seconds": 11.734,
+      "size_bytes": 237800,
+      "width": 854,
+      "height": 480,
+      "fps": "15/1"
+    },
+    {
+      "topic": "feynrl",
+      "scene": "FeynRLESSMiniLesson",
+      "sha256": "f79c5cd56b92c608e0edb0f848373195cdbd95e4a16a40b075023bbd13d7bdb8",
+      "duration_seconds": 14.266,
+      "size_bytes": 311662,
+      "width": 854,
+      "height": 480,
+      "fps": "15/1"
+    },
+    {
+      "topic": "rope",
+      "scene": "RoPERotationExplainer",
+      "sha256": "a58d3a4816e100a276d4a36f30f2b0b217f312d2a123c3aef78fcbc3a5db688d",
+      "duration_seconds": 16.533,
+      "size_bytes": 342698,
+      "width": 854,
+      "height": 480,
+      "fps": "15/1"
+    }
+  ],
+  "validation": {
+    "validator": "tools/probe_rendered_videos.py",
+    "result": "pass",
+    "sampled_frames_per_video": 3,
+    "all_sampled_frames_non_background": true,
+    "remote_probe_report": "/home/xinranz3/4blue2brown_explore/runs/q8_real_video_matrix/inhouse_v0/probe/probe_report.json",
+    "remote_artifact_root": "/home/xinranz3/4blue2brown_explore/runs/q8_real_video_matrix/inhouse_v0"
+  }
+}
