@@ -14,9 +14,8 @@ ROOT=${BACKTRANSLATION_BABEL_ROOT:-/home/xinranz3/4blue2brown_explore/backtransl
 PROJECT="$ROOT/project"
 SOURCE_ROOT="$ROOT/upstream/manim"
 RUN_ROOT="$ROOT/runs/${SLURM_ARRAY_JOB_ID}"
-DEPENDENCY_ROOT="$RUN_ROOT/dependencies"
-ARCHIVE="$ROOT/dependencies/standalone-v1.5a-ctan-20250222.zip"
-EXPECTED_ARCHIVE_SHA256=25078d6ff117e08f524dad6979bf682e6b3dc8eacfa035219c279d31f439bc49
+ARCHIVE="$ROOT/dependencies/standalone-v1.5a-texlive-r77682.tar.xz"
+EXPECTED_ARCHIVE_SHA256=6daa00b081106b1c240a11732155287d9933e612f3e9a045ee40824f68b0ba98
 MANIM=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/manim
 PYTHON=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/python
 FFMPEG=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/ffmpeg
@@ -31,10 +30,10 @@ case "$SLURM_ARRAY_TASK_ID" in
 esac
 
 CASE_ROOT="$RUN_ROOT/cases/$CASE_ID"
-TEX_SOURCE="$DEPENDENCY_ROOT/standalone/source"
+DEPENDENCY_ROOT="$CASE_ROOT/private/dependencies"
 TEXMF_ROOT="$DEPENDENCY_ROOT/standalone/texmf"
 TEX_INSTALL="$TEXMF_ROOT/tex/latex/standalone"
-mkdir -p "$CASE_ROOT/raw_media" "$CASE_ROOT/private" "$TEX_SOURCE" "$TEX_INSTALL"
+mkdir -p "$CASE_ROOT/raw_media" "$CASE_ROOT/private" "$TEXMF_ROOT"
 cd "$PROJECT"
 
 export PYTHONPATH="$PROJECT"
@@ -43,28 +42,17 @@ STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 PIPELINE_COMMIT=${BACKTRANSLATION_PIPELINE_COMMIT:-$(git rev-parse HEAD 2>/dev/null || printf unknown)}
 UPSTREAM_COMMIT=$(git -C "$SOURCE_ROOT" rev-parse HEAD 2>/dev/null || printf unknown)
 
-# The archive is pre-staged and hash-pinned. Extraction and docstrip generation
-# remain job-local; no global TeX tree or upstream scene source is changed.
+# The archive is pre-staged and hash-pinned. It is CTAN's official TeX Live
+# runtime package, avoiding an undeclared ydocstrip build dependency. Extraction
+# remains case-local; no global TeX tree or upstream scene source is changed.
 DEPENDENCY_EXIT=0
 ACTUAL_ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" 2>/dev/null | awk '{print $1}')
 if [ "$ACTUAL_ARCHIVE_SHA256" != "$EXPECTED_ARCHIVE_SHA256" ]; then
   DEPENDENCY_EXIT=66
 else
-  unzip -oq "$ARCHIVE" -d "$TEX_SOURCE" || DEPENDENCY_EXIT=$?
+  tar -xJf "$ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
 fi
-if [ "$DEPENDENCY_EXIT" -eq 0 ]; then
-  (
-    cd "$TEX_SOURCE/standalone"
-    latex -interaction=nonstopmode standalone.ins > "$CASE_ROOT/private/standalone-docstrip.stdout" 2> "$CASE_ROOT/private/standalone-docstrip.stderr"
-  ) || DEPENDENCY_EXIT=$?
-fi
-if [ "$DEPENDENCY_EXIT" -eq 0 ]; then
-  cp "$TEX_SOURCE/standalone/standalone.cls" "$TEX_INSTALL/"
-  cp "$TEX_SOURCE/standalone/standalone.sty" "$TEX_INSTALL/"
-  cp "$TEX_SOURCE/standalone/standalone.cfg" "$TEX_INSTALL/"
-  cp "$TEX_SOURCE/standalone/README.txt" "$TEX_INSTALL/"
-fi
-export TEXINPUTS="$TEXMF_ROOT//:"
+export TEXINPUTS="$TEXMF_ROOT/tex//:"
 
 export ARCHIVE EXPECTED_ARCHIVE_SHA256 ACTUAL_ARCHIVE_SHA256 DEPENDENCY_EXIT TEX_INSTALL
 "$PYTHON" - "$CASE_ROOT/private/dependency-provenance.json" <<'PY'
@@ -76,14 +64,15 @@ from pathlib import Path
 
 install = Path(os.environ["TEX_INSTALL"])
 derived = {}
-for name in ("standalone.cls", "standalone.sty", "standalone.cfg", "README.txt"):
+for name in ("standalone.cls", "standalone.sty", "standalone.cfg", "standalone.tex"):
     path = install / name
     derived[name] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
 payload = {
     "schema_version": "backtranslation-job-local-dependency/v1",
     "name": "standalone",
     "version": "1.5a",
-    "source": "https://mirrors.ctan.org/macros/latex/contrib/standalone.zip",
+    "tex_live_revision": 77682,
+    "source": "https://mirrors.ctan.org/systems/texlive/tlnet/archive/standalone.tar.xz",
     "archive_filename": Path(os.environ["ARCHIVE"]).name,
     "expected_archive_sha256": os.environ["EXPECTED_ARCHIVE_SHA256"],
     "actual_archive_sha256": os.environ.get("ACTUAL_ARCHIVE_SHA256") or None,
