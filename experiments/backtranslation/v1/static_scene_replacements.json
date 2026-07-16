@@ -1,0 +1,47 @@
+{
+  "schema_version": "backtranslation-static-scene-replacements/v1",
+  "registry_id": "manim-community-gallery-v0.20.1-ten-scenes",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4",
+  "policy": "Do not relabel a save_last_frame scene as a video success. Preserve the original result, then revise the next registry version with an exact pinned animated scene.",
+  "recommendations": [
+    {
+      "original_case_id": "bt-005",
+      "original_scene_class": "GraphAreaPlot",
+      "original_outcome": "upstream_save_last_frame_no_mp4",
+      "replacement_scene_class": "PolygonOnAxes",
+      "source_path": "docs/source/examples.rst",
+      "directive_line": 410,
+      "class_line": 413,
+      "code_sha256": "981ddba5729349955a2421473dd3b5e1d61922d539d570c9a2ba1ca356ac112a",
+      "source_exact": true,
+      "animation_evidence": [
+        "self.play(Create(polygon))",
+        "self.play(t.animate.set_value(10))",
+        "self.play(t.animate.set_value(k / 10))",
+        "self.play(t.animate.set_value(5))"
+      ],
+      "coverage_tradeoff": "Keeps Axes, a filled area polygon, ValueTracker, updater, and curve geometry; it replaces bounded-area and Riemann-rectangle coverage with an animated constant-area rectangle."
+    },
+    {
+      "original_case_id": "bt-010",
+      "original_scene_class": "ThreeDSurfacePlot",
+      "original_outcome": "upstream_save_last_frame_no_mp4",
+      "replacement_scene_class": "ThreeDCameraIllusionRotation",
+      "source_path": "docs/source/examples.rst",
+      "directive_line": 650,
+      "class_line": 654,
+      "code_sha256": "e2b822cbf76f97ab8d8fa2a81d782f66b07b1a959a67369fbfcf0336895c7f0e",
+      "source_exact": true,
+      "animation_evidence": [
+        "self.begin_3dillusion_camera_rotation(rate=2)",
+        "self.wait(PI/2)",
+        "self.stop_3dillusion_camera_rotation()"
+      ],
+      "coverage_tradeoff": "Keeps an upstream-exact animated ThreeDScene and camera-motion challenge, but loses Surface and Gaussian geometry coverage. Preserve the original ThreeDSurfacePlot as a static poster fixture if Surface coverage is still needed."
+    }
+  ],
+  "rejected_alternative": {
+    "name": "ThreeDSurfacePlotAnimated",
+    "reason": "Adding ambient camera rotation to ThreeDSurfacePlot would preserve Surface coverage, but it would be project-authored derived code rather than an exact human/source condition. It may be a separate derived stress test, not a replacement in the source-exact backtranslation condition."
+  }
+}

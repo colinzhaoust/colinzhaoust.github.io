@@ -10,6 +10,7 @@ from pathlib import Path
 from tools.backtranslation.reference import prepare_reference
 from tools.backtranslation.reference_batch import (
     ReferenceBatchError,
+    UPSTREAM_SAVE_LAST_FRAME_SCENES,
     combine_reference_runs,
     extract_registered_scenes,
     harvest_reference_inventory,
@@ -17,6 +18,11 @@ from tools.backtranslation.reference_batch import (
 from tools.backtranslation.registry import load_registry, sha256_file
 
 from helpers import OfflineFixture, PROTOCOL_PATH, REGISTRY_PATH
+
+
+STATIC_REPLACEMENTS_PATH = (
+    REGISTRY_PATH.parent / "static_scene_replacements.json"
+)
 
 
 def source_fixture(registry: dict, root: Path) -> None:
@@ -210,6 +216,23 @@ class ReferenceBatchTests(unittest.TestCase):
                 combine_reference_runs(
                     registry, protocol, [("same", root), ("same", root)]
                 )
+
+    def test_static_replacements_are_source_exact_and_disclose_tradeoffs(self) -> None:
+        registry = load_registry(REGISTRY_PATH)
+        replacements = json.loads(STATIC_REPLACEMENTS_PATH.read_text(encoding="utf-8"))
+        rows = replacements["recommendations"]
+        self.assertEqual(UPSTREAM_SAVE_LAST_FRAME_SCENES, {
+            row["original_scene_class"] for row in rows
+        })
+        self.assertEqual(2, len({row["replacement_scene_class"] for row in rows}))
+        self.assertTrue(all(row["source_exact"] is True for row in rows))
+        self.assertTrue(all(len(row["code_sha256"]) == 64 for row in rows))
+        self.assertTrue(all(row["animation_evidence"] for row in rows))
+        self.assertTrue(all(row["coverage_tradeoff"] for row in rows))
+        registry_scenes = {scene["scene_class"] for scene in registry["scenes"]}
+        self.assertTrue(all(
+            row["replacement_scene_class"] not in registry_scenes for row in rows
+        ))
 
 
 if __name__ == "__main__":

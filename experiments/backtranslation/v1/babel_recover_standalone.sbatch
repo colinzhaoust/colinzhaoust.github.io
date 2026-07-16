@@ -22,6 +22,10 @@ PREVIEW_ARCHIVE="$ROOT/dependencies/preview-v14.0.6-texlive-r71662.tar.xz"
 PREVIEW_SOURCE_ARCHIVE="$ROOT/dependencies/preview-v14.0.6-ctan-20240630.zip"
 EXPECTED_PREVIEW_SHA256=91fad28da99be4fee077ea2779f609b341c0d0e1b4816623ab85e635665e32f9
 EXPECTED_PREVIEW_SOURCE_SHA256=3059a3b0a43a4cbbff029064dc9c7200c96eefc09756368758be78b4c6894cbc
+DVISVGM_ARCHIVE="$ROOT/dependencies/dvisvgm-r77966-x86_64-linux.tar.xz"
+DVISVGM_SOURCE_ARCHIVE="$ROOT/dependencies/dvisvgm-3.6.tar.gz"
+EXPECTED_DVISVGM_SHA256=d06f6ab32aec34a40f0be0252ee8e6fb1afa8f4a5105fce0e566885b88306612
+EXPECTED_DVISVGM_SOURCE_SHA256=26446bb3b10739ff0925c9e416b76d2d222075c9d5dcfafe6e214609d072ed1a
 MANIM=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/manim
 PYTHON=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/python
 FFMPEG=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/ffmpeg
@@ -57,23 +61,33 @@ ACTUAL_STANDALONE_SHA256=$(sha256sum "$STANDALONE_ARCHIVE" 2>/dev/null | awk '{p
 ACTUAL_STANDALONE_SOURCE_SHA256=$(sha256sum "$STANDALONE_SOURCE_ARCHIVE" 2>/dev/null | awk '{print $1}')
 ACTUAL_PREVIEW_SHA256=$(sha256sum "$PREVIEW_ARCHIVE" 2>/dev/null | awk '{print $1}')
 ACTUAL_PREVIEW_SOURCE_SHA256=$(sha256sum "$PREVIEW_SOURCE_ARCHIVE" 2>/dev/null | awk '{print $1}')
+ACTUAL_DVISVGM_SHA256=$(sha256sum "$DVISVGM_ARCHIVE" 2>/dev/null | awk '{print $1}')
+ACTUAL_DVISVGM_SOURCE_SHA256=$(sha256sum "$DVISVGM_SOURCE_ARCHIVE" 2>/dev/null | awk '{print $1}')
 if [ "$ACTUAL_STANDALONE_SHA256" != "$EXPECTED_STANDALONE_SHA256" ] \
   || [ "$ACTUAL_STANDALONE_SOURCE_SHA256" != "$EXPECTED_STANDALONE_SOURCE_SHA256" ] \
   || [ "$ACTUAL_PREVIEW_SHA256" != "$EXPECTED_PREVIEW_SHA256" ] \
-  || [ "$ACTUAL_PREVIEW_SOURCE_SHA256" != "$EXPECTED_PREVIEW_SOURCE_SHA256" ]; then
+  || [ "$ACTUAL_PREVIEW_SOURCE_SHA256" != "$EXPECTED_PREVIEW_SOURCE_SHA256" ] \
+  || [ "$ACTUAL_DVISVGM_SHA256" != "$EXPECTED_DVISVGM_SHA256" ] \
+  || [ "$ACTUAL_DVISVGM_SOURCE_SHA256" != "$EXPECTED_DVISVGM_SOURCE_SHA256" ]; then
   DEPENDENCY_EXIT=66
 else
   tar -xJf "$STANDALONE_ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
   if [ "$DEPENDENCY_EXIT" -eq 0 ]; then
     tar -xJf "$PREVIEW_ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
   fi
+  if [ "$DEPENDENCY_EXIT" -eq 0 ]; then
+    tar -xJf "$DVISVGM_ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
+  fi
 fi
 export TEXINPUTS="$TEXMF_ROOT/tex//:"
+export PATH="$TEXMF_ROOT/bin/x86_64-linux:$PATH"
 
 export STANDALONE_ARCHIVE STANDALONE_SOURCE_ARCHIVE EXPECTED_STANDALONE_SHA256 EXPECTED_STANDALONE_SOURCE_SHA256
 export ACTUAL_STANDALONE_SHA256 ACTUAL_STANDALONE_SOURCE_SHA256
 export PREVIEW_ARCHIVE PREVIEW_SOURCE_ARCHIVE EXPECTED_PREVIEW_SHA256 EXPECTED_PREVIEW_SOURCE_SHA256
-export ACTUAL_PREVIEW_SHA256 ACTUAL_PREVIEW_SOURCE_SHA256 DEPENDENCY_EXIT TEXMF_ROOT
+export ACTUAL_PREVIEW_SHA256 ACTUAL_PREVIEW_SOURCE_SHA256
+export DVISVGM_ARCHIVE DVISVGM_SOURCE_ARCHIVE EXPECTED_DVISVGM_SHA256 EXPECTED_DVISVGM_SOURCE_SHA256
+export ACTUAL_DVISVGM_SHA256 ACTUAL_DVISVGM_SOURCE_SHA256 DEPENDENCY_EXIT TEXMF_ROOT
 "$PYTHON" - "$CASE_ROOT/private/dependency-provenance.json" <<'PY'
 import hashlib
 import json
@@ -134,6 +148,24 @@ payload = {
                 "tex/latex/preview/preview.sty",
                 "tex/latex/preview/prtightpage.def",
                 "tex/latex/preview/prauctex.def",
+            ]),
+        },
+        {
+            "name": "dvisvgm",
+            "version": "3.6",
+            "tex_live_revision": 77966,
+            "runtime_url": "https://mirrors.ctan.org/systems/texlive/tlnet/archive/dvisvgm.x86_64-linux.tar.xz",
+            "runtime_archive_filename": Path(os.environ["DVISVGM_ARCHIVE"]).name,
+            "expected_runtime_sha256": os.environ["EXPECTED_DVISVGM_SHA256"],
+            "actual_runtime_sha256": os.environ.get("ACTUAL_DVISVGM_SHA256") or None,
+            "source_url": "https://github.com/mgieseki/dvisvgm/releases/download/3.6/dvisvgm-3.6.tar.gz",
+            "source_archive_filename": Path(os.environ["DVISVGM_SOURCE_ARCHIVE"]).name,
+            "expected_source_sha256": os.environ["EXPECTED_DVISVGM_SOURCE_SHA256"],
+            "actual_source_sha256": os.environ.get("ACTUAL_DVISVGM_SOURCE_SHA256") or None,
+            "license": "GPL-3.0-or-later",
+            "copyright": "Copyright (c) 2005-2025 Martin Gieseking",
+            "derived_files_sha256": hashes([
+                "bin/x86_64-linux/dvisvgm",
             ]),
         },
     ],
