@@ -1,0 +1,24 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:dpo.objective",
+  "canonical_node_id": "formula:dpo.objective",
+  "topic_id": "topic:dpo",
+  "paper_family_id": "paper_family:dpo",
+  "title": "Direct Preference Optimization objective",
+  "display": {"latex": "\\mathcal{L}_{DPO}=-\\mathbb{E}\\log\\sigma(\\beta[\\log\\frac{\\pi_\\theta(y_w|x)}{\\pi_{ref}(y_w|x)}-\\log\\frac{\\pi_\\theta(y_l|x)}{\\pi_{ref}(y_l|x)}])", "plain_text": "L_DPO = -E log sigmoid(beta * (chosen policy/reference log-ratio - rejected policy/reference log-ratio))"},
+  "source_anchor": {"source_id": "paper:dpo", "source_url": "https://arxiv.org/pdf/2305.18290v3", "revision": "arXiv:2305.18290v3", "content_hash": "sha256:92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a", "locator": "Section 4, page 4, Equation (7)", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:dpo.policy_probs", "symbol": "pi_theta", "semantic_type": "distribution", "role": "trainable policy"},
+    {"atom_id": "atom:dpo.reference_probs", "symbol": "pi_ref", "semantic_type": "distribution", "role": "fixed reference policy"},
+    {"atom_id": "atom:dpo.preference_pair", "symbol": "(x,y_w,y_l)", "semantic_type": "data", "role": "prompt, chosen, rejected"},
+    {"atom_id": "atom:dpo.beta", "symbol": "beta", "semantic_type": "scalar", "role": "KL-temperature scale"}
+  ],
+  "operations": [
+    {"operation_id": "op:dpo.log_ratios", "canonical_node_id": "operation:dpo.log_ratios", "operation_type": "log", "input_refs": ["atom:dpo.policy_probs", "atom:dpo.reference_probs", "atom:dpo.preference_pair"], "output_ref": "value:dpo.log_ratios", "primitive_ref": "project.preference_margin_flow", "mapping_state": "unresolved", "evidence_refs": ["paper:dpo#eq7"]},
+    {"operation_id": "op:dpo.margin", "canonical_node_id": "operation:dpo.margin", "operation_type": "subtract", "input_refs": ["value:dpo.log_ratios"], "output_ref": "value:dpo.margin", "primitive_ref": "project.preference_margin_flow", "mapping_state": "unresolved", "evidence_refs": ["paper:dpo#eq7"]},
+    {"operation_id": "op:dpo.scale", "canonical_node_id": "operation:dpo.scale", "operation_type": "multiply", "input_refs": ["value:dpo.margin", "atom:dpo.beta"], "output_ref": "value:dpo.scaled_margin", "primitive_ref": "manim.transform", "mapping_state": "candidate", "evidence_refs": ["paper:dpo#eq7"]},
+    {"operation_id": "op:dpo.log_sigmoid", "canonical_node_id": "operation:dpo.log_sigmoid", "operation_type": "sigmoid", "input_refs": ["value:dpo.scaled_margin"], "output_ref": "value:dpo.objective", "primitive_ref": "project.preference_margin_flow", "mapping_state": "unresolved", "evidence_refs": ["paper:dpo#eq7"]}
+  ],
+  "output_ref": "value:dpo.objective",
+  "code_mappings": []
+}

@@ -1,0 +1,43 @@
+{
+  "topic:transformers_core": {
+    "title": "Transformer core",
+    "paper_family_id": "paper_family:transformer_attention",
+    "claim_context": "Scaled attention and parallel heads replace recurrence with content-addressed mixing.",
+    "code_transition_policy": "unresolved_visible",
+    "formula_refs": [
+      "data/formula_explainer/formulas/transformers_core/attention.json",
+      "data/formula_explainer/formulas/transformers_core/multihead.json"
+    ]
+  },
+  "topic:attention_softmax_lookup": {
+    "title": "Attention softmax lookup",
+    "paper_family_id": "paper_family:transformer_attention",
+    "claim_context": "Softmax turns query-key scores into a probability distribution over values.",
+    "code_transition_policy": "unresolved_visible",
+    "formula_refs": ["data/formula_explainer/formulas/attention_softmax_lookup/softmax.json"]
+  },
+  "topic:dpo": {
+    "title": "Direct Preference Optimization",
+    "paper_family_id": "paper_family:dpo",
+    "claim_context": "DPO directly optimizes the policy from chosen/rejected pairs relative to a reference policy.",
+    "code_transition_policy": "unresolved_visible",
+    "formula_refs": ["data/formula_explainer/formulas/dpo/objective.json"]
+  },
+  "topic:feynrl": {
+    "title": "FeynRL batch adaptation",
+    "paper_family_id": "paper_family:feynrl_batch_adaptation",
+    "claim_context": "The FeynRL paper adopts an ESS-driven P3O objective; P3O is a sourced method mapping, not a synonym for FeynRL.",
+    "code_transition_policy": "candidate_anchor",
+    "formula_refs": [
+      "data/formula_explainer/formulas/feynrl/ess.json",
+      "data/formula_explainer/formulas/feynrl/p3o_objective.json"
+    ]
+  },
+  "topic:rope": {
+    "title": "Rotary Position Embedding",
+    "paper_family_id": "paper_family:rope",
+    "claim_context": "RoPE rotates query/key coordinate pairs so their attention interaction exposes relative position.",
+    "code_transition_policy": "unresolved_visible",
+    "formula_refs": ["data/formula_explainer/formulas/rope/relative.json"]
+  }
+}

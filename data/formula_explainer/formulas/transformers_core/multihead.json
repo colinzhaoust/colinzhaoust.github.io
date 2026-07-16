@@ -1,0 +1,22 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:transformers.multihead",
+  "canonical_node_id": "formula:transformers.multihead",
+  "topic_id": "topic:transformers_core",
+  "paper_family_id": "paper_family:transformer_attention",
+  "title": "Multi-head attention",
+  "display": {"latex": "\\operatorname{MultiHead}(Q,K,V)=\\operatorname{Concat}(head_1,\\ldots,head_h)W^O", "plain_text": "MultiHead(Q,K,V) = Concat(head_1,...,head_h) W^O"},
+  "source_anchor": {"source_id": "paper:attention-is-all-you-need", "source_url": "https://arxiv.org/pdf/1706.03762v7", "revision": "arXiv:1706.03762v7", "content_hash": "sha256:bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697", "locator": "Section 3.2.2, page 5, unnumbered MultiHead display", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:qkv", "symbol": "Q,K,V", "semantic_type": "matrix", "role": "attention inputs"},
+    {"atom_id": "atom:head_count", "symbol": "h", "semantic_type": "scalar", "role": "number of heads"},
+    {"atom_id": "atom:wo", "symbol": "W^O", "semantic_type": "matrix", "role": "output projection"}
+  ],
+  "operations": [
+    {"operation_id": "op:transformers.head_projection", "canonical_node_id": "operation:transformers.head_projection", "operation_type": "linear_projection", "input_refs": ["atom:qkv", "atom:head_count"], "output_ref": "value:transformers.heads", "primitive_ref": "project.multihead_fanout", "mapping_state": "unresolved", "evidence_refs": ["paper:attention-is-all-you-need#section3.2.2"]},
+    {"operation_id": "op:transformers.concat", "canonical_node_id": "operation:transformers.concat", "operation_type": "concatenate", "input_refs": ["value:transformers.heads"], "output_ref": "value:transformers.concatenated", "primitive_ref": "project.multihead_fanout", "mapping_state": "unresolved", "evidence_refs": ["paper:attention-is-all-you-need#section3.2.2"]},
+    {"operation_id": "op:transformers.output_projection", "canonical_node_id": "operation:transformers.output_projection", "operation_type": "linear_projection", "input_refs": ["value:transformers.concatenated", "atom:wo"], "output_ref": "value:transformers.multihead_output", "primitive_ref": "manim.transform", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#section3.2.2"]}
+  ],
+  "output_ref": "value:transformers.multihead_output",
+  "code_mappings": []
+}

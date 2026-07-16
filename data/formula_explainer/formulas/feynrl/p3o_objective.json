@@ -1,0 +1,28 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:feynrl.p3o_objective",
+  "canonical_node_id": "formula:feynrl.p3o_objective",
+  "topic_id": "topic:feynrl",
+  "paper_family_id": "paper_family:feynrl_batch_adaptation",
+  "title": "P3O objective adopted in the FeynRL paper",
+  "display": {"latex": "\\mathcal{L}_{P3O}=-\\operatorname{sg}(\\min\\{\\rho_t,e_B\\})\\log\\pi_\\theta A+(1-e_B)\\operatorname{KL}(\\pi_\\theta\\|\\pi_{old})", "plain_text": "L_P3O = -stopgrad(min(rho_t,e_B)) log(pi_theta) A + (1-e_B) KL(pi_theta || pi_old)"},
+  "source_anchor": {"source_id": "paper:feynrl-trust-the-batch", "source_url": "https://arxiv.org/pdf/2605.12380v1", "revision": "arXiv:2605.12380v1", "content_hash": "sha256:19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e", "locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:feynrl.rho", "symbol": "rho_t", "semantic_type": "scalar", "role": "per-token policy ratio"},
+    {"atom_id": "atom:feynrl.eb", "symbol": "e_B", "semantic_type": "scalar", "role": "detached batch ESS"},
+    {"atom_id": "atom:feynrl.logpi", "symbol": "log pi_theta", "semantic_type": "scalar", "role": "current-policy token log probability"},
+    {"atom_id": "atom:feynrl.advantage", "symbol": "A", "semantic_type": "scalar", "role": "advantage"},
+    {"atom_id": "atom:feynrl.old_policy", "symbol": "pi_old", "semantic_type": "distribution", "role": "behavior policy"}
+  ],
+  "operations": [
+    {"operation_id": "op:feynrl.cap", "canonical_node_id": "operation:feynrl.cap", "operation_type": "minimum", "input_refs": ["atom:feynrl.rho", "atom:feynrl.eb"], "output_ref": "value:feynrl.cap", "primitive_ref": "project.ess_tradeoff_gauge", "mapping_state": "unresolved", "evidence_refs": ["paper:feynrl-trust-the-batch#eq12"]},
+    {"operation_id": "op:feynrl.stopgrad", "canonical_node_id": "operation:feynrl.stopgrad", "operation_type": "stop_gradient", "input_refs": ["value:feynrl.cap"], "output_ref": "value:feynrl.detached_cap", "primitive_ref": "manim.text", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq12"]},
+    {"operation_id": "op:feynrl.score_term", "canonical_node_id": "operation:feynrl.score_term", "operation_type": "multiply", "input_refs": ["value:feynrl.detached_cap", "atom:feynrl.logpi", "atom:feynrl.advantage"], "output_ref": "value:feynrl.score_term", "primitive_ref": "manim.transform", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq12"]},
+    {"operation_id": "op:feynrl.behavior_kl", "canonical_node_id": "operation:feynrl.behavior_kl", "operation_type": "kl", "input_refs": ["atom:feynrl.eb", "atom:feynrl.old_policy"], "output_ref": "value:feynrl.behavior_kl", "primitive_ref": "project.ess_tradeoff_gauge", "mapping_state": "unresolved", "evidence_refs": ["paper:feynrl-trust-the-batch#eq12"]},
+    {"operation_id": "op:feynrl.objective_sum", "canonical_node_id": "operation:feynrl.objective_sum", "operation_type": "add", "input_refs": ["value:feynrl.score_term", "value:feynrl.behavior_kl"], "output_ref": "value:feynrl.p3o_loss", "primitive_ref": "manim.transform", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq12"]}
+  ],
+  "output_ref": "value:feynrl.p3o_loss",
+  "code_mappings": [
+    {"code_node_id": "code:feynrl.p3o.compute_policy_loss", "repository_revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752", "path": "external/FeynRL/algs/P3O/p3o.py", "symbol": "P3O.compute_policy_loss", "line_start": 157, "line_end": 223, "match_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq12", "repo:feynrl@dfe8535#p3o.py:L157-L223"]}
+  ]
+}

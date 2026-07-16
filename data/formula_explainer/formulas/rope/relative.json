@@ -1,0 +1,24 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:rope.relative",
+  "canonical_node_id": "formula:rope.relative",
+  "topic_id": "topic:rope",
+  "paper_family_id": "paper_family:rope",
+  "title": "RoPE relative-position attention identity",
+  "display": {"latex": "(R_mW^qx_m)^T(R_nW^kx_n)=x_m^T(W^q)^TR_{n-m}W^kx_n", "plain_text": "(R_m W_q x_m)^T (R_n W_k x_n) = x_m^T W_q^T R_(n-m) W_k x_n"},
+  "source_anchor": {"source_id": "paper:roformer", "source_url": "https://arxiv.org/pdf/2104.09864v5", "revision": "arXiv:2104.09864v5", "content_hash": "sha256:e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79", "locator": "Section 3.2.2, page 5, Equation (16)", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:rope.query", "symbol": "W_q x_m", "semantic_type": "vector", "role": "query at position m"},
+    {"atom_id": "atom:rope.key", "symbol": "W_k x_n", "semantic_type": "vector", "role": "key at position n"},
+    {"atom_id": "atom:rope.m", "symbol": "m", "semantic_type": "index", "role": "query position"},
+    {"atom_id": "atom:rope.n", "symbol": "n", "semantic_type": "index", "role": "key position"}
+  ],
+  "operations": [
+    {"operation_id": "op:rope.rotate_query", "canonical_node_id": "operation:rope.rotate_query", "operation_type": "rotation", "input_refs": ["atom:rope.query", "atom:rope.m"], "output_ref": "value:rope.rotated_query", "primitive_ref": "manim.axes_vector", "mapping_state": "candidate", "evidence_refs": ["paper:roformer#eq16"]},
+    {"operation_id": "op:rope.rotate_key", "canonical_node_id": "operation:rope.rotate_key", "operation_type": "rotation", "input_refs": ["atom:rope.key", "atom:rope.n"], "output_ref": "value:rope.rotated_key", "primitive_ref": "manim.axes_vector", "mapping_state": "candidate", "evidence_refs": ["paper:roformer#eq16"]},
+    {"operation_id": "op:rope.relative_offset", "canonical_node_id": "operation:rope.relative_offset", "operation_type": "subtract", "input_refs": ["atom:rope.n", "atom:rope.m"], "output_ref": "value:rope.offset", "primitive_ref": "project.rope_relative_rotation", "mapping_state": "unresolved", "evidence_refs": ["paper:roformer#eq16"]},
+    {"operation_id": "op:rope.relative_dot", "canonical_node_id": "operation:rope.relative_dot", "operation_type": "dot", "input_refs": ["value:rope.rotated_query", "value:rope.rotated_key", "value:rope.offset"], "output_ref": "value:rope.attention_score", "primitive_ref": "project.rope_relative_rotation", "mapping_state": "unresolved", "evidence_refs": ["paper:roformer#eq16"]}
+  ],
+  "output_ref": "value:rope.attention_score",
+  "code_mappings": []
+}

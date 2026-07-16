@@ -1,0 +1,21 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:attention.softmax",
+  "canonical_node_id": "formula:attention.softmax",
+  "topic_id": "topic:attention_softmax_lookup",
+  "paper_family_id": "paper_family:transformer_attention",
+  "title": "Softmax turns scores into attention weights",
+  "display": {"latex": "w_i=\\exp(s_i)/\\sum_j\\exp(s_j)", "plain_text": "weight_i = exp(score_i) / sum_j exp(score_j)"},
+  "source_anchor": {"source_id": "paper:attention-is-all-you-need", "source_url": "https://arxiv.org/pdf/1706.03762v7", "revision": "arXiv:1706.03762v7", "content_hash": "sha256:bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697", "locator": "Section 3.2.1, page 4, Equation (1); scalar softmax expansion is a project decomposition", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:scores", "symbol": "s", "semantic_type": "vector", "role": "scaled query-key scores"},
+    {"atom_id": "atom:index_i", "symbol": "i", "semantic_type": "index", "role": "selected context position"},
+    {"atom_id": "atom:index_j", "symbol": "j", "semantic_type": "index", "role": "normalization index"}
+  ],
+  "operations": [
+    {"operation_id": "op:attention.exp", "canonical_node_id": "operation:attention.exp", "operation_type": "exp", "input_refs": ["atom:scores"], "output_ref": "value:attention.positive_scores", "primitive_ref": "project.softmax_probability_flow", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#eq1", "derivation:softmax-definition"]},
+    {"operation_id": "op:attention.normalize", "canonical_node_id": "operation:attention.normalize", "operation_type": "normalize", "input_refs": ["value:attention.positive_scores", "atom:index_j"], "output_ref": "value:attention.weights", "primitive_ref": "project.softmax_probability_flow", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#eq1", "derivation:softmax-definition"]}
+  ],
+  "output_ref": "value:attention.weights",
+  "code_mappings": []
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:transformers.attention",
+  "canonical_node_id": "formula:transformers.attention",
+  "topic_id": "topic:transformers_core",
+  "paper_family_id": "paper_family:transformer_attention",
+  "title": "Scaled dot-product attention",
+  "display": {"latex": "\\operatorname{Attention}(Q,K,V)=\\operatorname{softmax}(QK^T/\\sqrt{d_k})V", "plain_text": "Attention(Q,K,V) = softmax(Q K^T / sqrt(d_k)) V"},
+  "source_anchor": {"source_id": "paper:attention-is-all-you-need", "source_url": "https://arxiv.org/pdf/1706.03762v7", "revision": "arXiv:1706.03762v7", "content_hash": "sha256:bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697", "locator": "Section 3.2.1, page 4, Equation (1)", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:q", "symbol": "Q", "semantic_type": "matrix", "role": "queries"},
+    {"atom_id": "atom:k", "symbol": "K", "semantic_type": "matrix", "role": "keys"},
+    {"atom_id": "atom:v", "symbol": "V", "semantic_type": "matrix", "role": "values"},
+    {"atom_id": "atom:dk", "symbol": "d_k", "semantic_type": "scalar", "role": "key dimension"}
+  ],
+  "operations": [
+    {"operation_id": "op:transformers.qk", "canonical_node_id": "operation:transformers.qk", "operation_type": "matmul", "input_refs": ["atom:q", "atom:k"], "output_ref": "value:transformers.qk", "primitive_ref": "manim.transform", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#eq1"]},
+    {"operation_id": "op:transformers.scale", "canonical_node_id": "operation:transformers.scale", "operation_type": "scale", "input_refs": ["value:transformers.qk", "atom:dk"], "output_ref": "value:transformers.scores", "primitive_ref": "manim.transform", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#eq1"]},
+    {"operation_id": "op:transformers.softmax", "canonical_node_id": "operation:transformers.softmax", "operation_type": "softmax", "input_refs": ["value:transformers.scores"], "output_ref": "value:transformers.weights", "primitive_ref": "project.softmax_probability_flow", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#eq1"]},
+    {"operation_id": "op:transformers.mix", "canonical_node_id": "operation:transformers.mix", "operation_type": "matmul", "input_refs": ["value:transformers.weights", "atom:v"], "output_ref": "value:transformers.output", "primitive_ref": "manim.bar_chart", "mapping_state": "candidate", "evidence_refs": ["paper:attention-is-all-you-need#eq1"]}
+  ],
+  "output_ref": "value:transformers.output",
+  "code_mappings": []
+}

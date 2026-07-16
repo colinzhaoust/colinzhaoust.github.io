@@ -1,0 +1,42 @@
+{
+  "schema_version": "formula-explainer-babel-smoke/0.1.0",
+  "scene_ir_ref": "runs/formula_explainer/build/scene_ir/attention_softmax_lookup/attention_softmax.json",
+  "renderer_ref": "scenes/formula_explainer_scene.py",
+  "jobs": [
+    {
+      "job_id": "9313500",
+      "state": "failed",
+      "exit_code": "1:0",
+      "finding": "Manim BarChart transitively required MathTex/LaTeX for axis labels."
+    },
+    {
+      "job_id": "9313535",
+      "state": "completed",
+      "exit_code": "0:0",
+      "elapsed_seconds": 43,
+      "artifact_path": "runs/formula_explainer/babel_smoke_9313535/FormulaExplainerScene.mp4",
+      "content_hash": "sha256:a8ac69f1340b9e2b26deb2506c247f428b79cfc1b7bb189e17c25ba854ff43ec",
+      "duration_seconds": 6.667,
+      "width": 854,
+      "height": 480,
+      "fps": "15/1"
+    },
+    {
+      "job_id": "9313551",
+      "state": "completed",
+      "exit_code": "0:0",
+      "elapsed_seconds": 36,
+      "artifact_path": "runs/formula_explainer/babel_smoke_9313551/FormulaExplainerScene.mp4",
+      "content_hash": "sha256:86568917ad365c1dcbdaca7187c3848e7a4fe350e4c84398dde67be416d33c87",
+      "poster_path": "runs/formula_explainer/babel_smoke_9313551/poster.png",
+      "poster_hash": "sha256:4b304104a9f7f36d205c79c944768eb8fb77ed1d184950832d97f44c019413a0",
+      "contact_sheet_path": "runs/formula_explainer/babel_smoke_9313551/contact_sheet.png",
+      "contact_sheet_hash": "sha256:d9b5d1c18f9a439bac11cc9cac131feab417ea12db4d158ca699b650d4c679e7",
+      "duration_seconds": 6.666,
+      "width": 854,
+      "height": 480,
+      "fps": "15/1",
+      "finding": "Final layout refinement moves the chart and accessible origin legend into non-overlapping regions; visual QA passed."
+    }
+  ]
+}

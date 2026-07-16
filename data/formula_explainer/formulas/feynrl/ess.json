@@ -1,0 +1,23 @@
+{
+  "schema_version": "formula-ir/0.1.0",
+  "formula_id": "formula:feynrl.ess",
+  "canonical_node_id": "formula:feynrl.ess",
+  "topic_id": "topic:feynrl",
+  "paper_family_id": "paper_family:feynrl_batch_adaptation",
+  "title": "Normalized effective sample size used by FeynRL",
+  "display": {"latex": "\\operatorname{ESS}(B;\\theta)=\\widehat{\\mathbb{E}}_B[\\rho_t]^2/\\widehat{\\mathbb{E}}_B[\\rho_t^2]", "plain_text": "ESS(B;theta) = mean_B(rho_t)^2 / mean_B(rho_t^2)"},
+  "source_anchor": {"source_id": "paper:feynrl-trust-the-batch", "source_url": "https://arxiv.org/pdf/2605.12380v1", "revision": "arXiv:2605.12380v1", "content_hash": "sha256:19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e", "locator": "Section 3, page 5, Equation (11)", "verification": "primary_source_visual"},
+  "atoms": [
+    {"atom_id": "atom:feynrl.ratios", "symbol": "rho_t", "semantic_type": "vector", "role": "per-token policy ratios"},
+    {"atom_id": "atom:feynrl.batch", "symbol": "B", "semantic_type": "data", "role": "valid response tokens"}
+  ],
+  "operations": [
+    {"operation_id": "op:feynrl.mean_ratio", "canonical_node_id": "operation:feynrl.mean_ratio", "operation_type": "expectation", "input_refs": ["atom:feynrl.ratios", "atom:feynrl.batch"], "output_ref": "value:feynrl.mean_ratio", "primitive_ref": "manim.bar_chart", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11"]},
+    {"operation_id": "op:feynrl.mean_square", "canonical_node_id": "operation:feynrl.mean_square", "operation_type": "expectation", "input_refs": ["atom:feynrl.ratios", "atom:feynrl.batch"], "output_ref": "value:feynrl.mean_square", "primitive_ref": "manim.bar_chart", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11"]},
+    {"operation_id": "op:feynrl.ess", "canonical_node_id": "operation:feynrl.ess", "operation_type": "ess", "input_refs": ["value:feynrl.mean_ratio", "value:feynrl.mean_square"], "output_ref": "value:feynrl.ess", "primitive_ref": "project.ess_tradeoff_gauge", "mapping_state": "unresolved", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11"]}
+  ],
+  "output_ref": "value:feynrl.ess",
+  "code_mappings": [
+    {"code_node_id": "code:feynrl.p3o.calculate_ess", "repository_revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752", "path": "external/FeynRL/algs/P3O/p3o.py", "symbol": "P3O.calculate_ess", "line_start": 107, "line_end": 135, "match_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11", "repo:feynrl@dfe8535#p3o.py:L107-L135"]}
+  ]
+}
