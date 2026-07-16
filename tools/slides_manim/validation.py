@@ -77,6 +77,41 @@ def validate_slide_document(document: dict[str, Any], root: Path = ROOT) -> list
     if len(artifacts) != len(document.get("artifacts", [])):
         errors.append("artifacts:duplicate-id")
 
+    evidence_by_id = {
+        item.get("evidence_id"): item
+        for item in document.get("run_evidence", [])
+        if item.get("evidence_id")
+    }
+    if len(evidence_by_id) != len(document.get("run_evidence", [])):
+        errors.append("run-evidence:duplicate-id")
+    evidence_jobs: dict[str, dict[str, Any]] = {}
+    for evidence_id, evidence in evidence_by_id.items():
+        evidence_path = root / evidence["evidence_path"]
+        if not evidence_path.is_file():
+            errors.append(f"run-evidence:{evidence_id}:missing-file")
+            continue
+        if sha256(evidence_path) != evidence["evidence_hash"]:
+            errors.append(f"run-evidence:{evidence_id}:hash-mismatch")
+        try:
+            evidence_document = load_json(evidence_path)
+        except (OSError, json.JSONDecodeError):
+            errors.append(f"run-evidence:{evidence_id}:invalid-json")
+            continue
+        if evidence_document.get("source_commit") != evidence.get("source_commit"):
+            errors.append(f"run-evidence:{evidence_id}:source-commit-mismatch")
+        source_run_ref = evidence["source_run_ref"]
+        if source_run_ref.startswith("babel:job:"):
+            job_id = source_run_ref.rsplit(":", 1)[1]
+            if evidence.get("locator") != f"jobs[job_id={job_id}]":
+                errors.append(f"run-evidence:{evidence_id}:locator-mismatch")
+            jobs = [item for item in evidence_document.get("jobs", []) if str(item.get("job_id")) == job_id]
+            if len(jobs) != 1:
+                errors.append(f"run-evidence:{evidence_id}:job-unresolved")
+            elif jobs[0].get("state") != "completed" or jobs[0].get("exit_code") != "0:0":
+                errors.append(f"run-evidence:{evidence_id}:job-not-successful")
+            else:
+                evidence_jobs[evidence_id] = jobs[0]
+
     probed: dict[str, dict[str, Any]] = {}
     for artifact_id, artifact in artifacts.items():
         path = root / artifact["path"]
@@ -87,6 +122,15 @@ def validate_slide_document(document: dict[str, Any], root: Path = ROOT) -> list
             errors.append(f"artifact:{artifact_id}:hash-mismatch")
         if artifact["validation_status"] != "pass":
             errors.append(f"artifact:{artifact_id}:not-validated")
+        if artifact["role"] == "static_fallback":
+            if not artifact["media_type"].startswith("image/"):
+                errors.append(f"artifact:{artifact_id}:static-fallback-media-type")
+            if not artifact["understandable_without_playback"]:
+                errors.append(f"artifact:{artifact_id}:static-fallback-not-independent")
+            if path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
+                errors.append(f"artifact:{artifact_id}:static-fallback-extension")
+        if artifact["role"] == "rendered_video" and not artifact["media_type"].startswith("video/"):
+            errors.append(f"artifact:{artifact_id}:rendered-video-media-type")
         if artifact["role"] in {"rendered_video", "static_fallback"}:
             try:
                 probed[artifact_id] = _artifact_probe(path)
@@ -127,6 +171,32 @@ def validate_slide_document(document: dict[str, Any], root: Path = ROOT) -> list
         parents = set(slot.get("composite_lineage", {}).get("parent_artifact_refs", []))
         if not referenced.issubset(parents):
             errors.append(f"slot:{slot.get('slot_id', 'unknown')}:lineage-incomplete")
+        if parents != referenced:
+            errors.append(f"slot:{slot.get('slot_id', 'unknown')}:lineage-parent-set-mismatch")
+        lineage = slot.get("composite_lineage", {})
+        evidence_id = lineage.get("run_evidence_ref")
+        evidence = evidence_by_id.get(evidence_id)
+        if not evidence:
+            errors.append(f"slot:{slot.get('slot_id', 'unknown')}:run-evidence-unresolved")
+        elif evidence.get("source_run_ref") != lineage.get("source_run_ref"):
+            errors.append(f"slot:{slot.get('slot_id', 'unknown')}:run-evidence-source-mismatch")
+        elif evidence.get("source_commit") != lineage.get("source_commit"):
+            errors.append(f"slot:{slot.get('slot_id', 'unknown')}:run-evidence-commit-mismatch")
+        for artifact_ref in parents:
+            parent = artifacts.get(artifact_ref)
+            if not parent:
+                errors.append(f"slot:{slot.get('slot_id', 'unknown')}:lineage-parent-unresolved")
+                continue
+            parent_lineage = parent.get("lineage", {})
+            if parent_lineage.get("source_run_ref") != lineage.get("source_run_ref"):
+                errors.append(f"slot:{slot.get('slot_id', 'unknown')}:parent-run-mismatch")
+            if parent_lineage.get("source_commit") != lineage.get("source_commit"):
+                errors.append(f"slot:{slot.get('slot_id', 'unknown')}:parent-commit-mismatch")
+        job = evidence_jobs.get(evidence_id)
+        if job and video and job.get("content_hash") != video.get("content_hash"):
+            errors.append(f"slot:{slot.get('slot_id', 'unknown')}:run-video-hash-mismatch")
+        if job and fallback and job.get("poster_hash") != fallback.get("content_hash"):
+            errors.append(f"slot:{slot.get('slot_id', 'unknown')}:run-poster-hash-mismatch")
         region = slot.get("slide_region", {})
         if region.get("x", 0) + region.get("width", 0) > 1 or region.get("y", 0) + region.get("height", 0) > 1:
             errors.append(f"slot:{slot.get('slot_id', 'unknown')}:region-overflow")

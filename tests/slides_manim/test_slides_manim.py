@@ -92,6 +92,37 @@ class SlidesManimContractTests(unittest.TestCase):
             errors,
         )
 
+    def test_lineage_matches_parent_artifacts_and_resolved_run_evidence(self) -> None:
+        document = copy.deepcopy(self.document)
+        slot = document["animation_slots"][0]
+        slot["composite_lineage"]["source_run_ref"] = "babel:job:wrong"
+        errors = validate_slide_document(document)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:run-evidence-source-mismatch", errors)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:parent-run-mismatch", errors)
+
+        document = copy.deepcopy(self.document)
+        document["animation_slots"][0]["composite_lineage"]["source_commit"] = "0" * 40
+        errors = validate_slide_document(document)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:run-evidence-commit-mismatch", errors)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:parent-commit-mismatch", errors)
+
+        document = copy.deepcopy(self.document)
+        document["artifacts"][0]["lineage"]["source_commit"] = "0" * 40
+        errors = validate_slide_document(document)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:parent-commit-mismatch", errors)
+
+        document = copy.deepcopy(self.document)
+        document["run_evidence"][0]["evidence_hash"] = "sha256:" + "0" * 64
+        errors = validate_slide_document(document)
+        self.assertIn("run-evidence:run_evidence:babel.9313551:hash-mismatch", errors)
+
+        document = copy.deepcopy(self.document)
+        video_id = document["animation_slots"][0]["rendered_artifact_ref"]
+        video = next(item for item in document["artifacts"] if item["artifact_id"] == video_id)
+        video["content_hash"] = "sha256:" + "0" * 64
+        errors = validate_slide_document(document)
+        self.assertIn("slot:animation_slot:methodology.attention_softmax:run-video-hash-mismatch", errors)
+
     def test_required_slot_needs_independent_static_fallback(self) -> None:
         document = copy.deepcopy(self.document)
         poster_id = document["animation_slots"][0]["static_fallback_artifact_ref"]
@@ -103,6 +134,15 @@ class SlidesManimContractTests(unittest.TestCase):
             "slot:animation_slot:methodology.attention_softmax:fallback-not-independent",
             errors,
         )
+
+    def test_static_fallback_must_be_a_non_video_understandable_image(self) -> None:
+        document = copy.deepcopy(self.document)
+        poster_id = document["animation_slots"][0]["static_fallback_artifact_ref"]
+        poster = next(item for item in document["artifacts"] if item["artifact_id"] == poster_id)
+        poster["media_type"] = "video/mp4"
+        errors = validate_slide_document(document)
+        self.assertIn(f"artifact:{poster_id}:static-fallback-media-type", errors)
+        self.assertIn("schema:artifacts/2/media_type:pattern", errors)
 
     def test_geometry_duration_and_smoke_status_are_enforced(self) -> None:
         document = copy.deepcopy(self.document)

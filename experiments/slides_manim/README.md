@@ -32,7 +32,13 @@ comprehension.
 
 `schemas/slides-manim/slide-ir-0.1.0.schema.json` wraps the slot in a slide-level
 artifact registry, citations, layout, speaker notes, completion status, and honest
-planned-work records.
+planned-work records. It also pins a hashed run-evidence manifest. Validation
+requires the slot run/commit to agree with every parent artifact and requires the
+manifest's completed Babel job to report the same video and poster hashes.
+
+A `static_fallback` is not merely a second media reference: it must be a validated
+`image/*` artifact that is independently understandable without playback. A video
+cannot satisfy the fallback role.
 
 ## Validate and inspect
 

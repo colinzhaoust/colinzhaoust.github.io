@@ -141,11 +141,161 @@ def validate_scene(scene: dict[str, Any], formula: dict[str, Any], registry: dic
     return errors
 
 
-def validate_composition(composition: dict[str, Any]) -> list[str]:
+def validate_composition(
+    composition: dict[str, Any],
+    *,
+    expected_topic_id: str | None = None,
+    expected_topic: dict[str, Any] | None = None,
+    expected_scene_refs: list[str] | None = None,
+    formulas: dict[str, dict[str, Any]] | None = None,
+) -> list[str]:
     errors = _schema_errors(composition, COMPOSITION_SCHEMA)
     orders = [item["order"] for item in composition.get("composition", [])]
     if orders != list(range(1, len(orders) + 1)):
         errors.append("composition order must be contiguous and sorted from one")
+    if expected_topic_id is not None and expected_topic is not None and expected_scene_refs is not None:
+        if composition.get("topic_id") != expected_topic_id:
+            errors.append(f"composition topic_id expected {expected_topic_id}")
+        if composition.get("canonical_node_id") != expected_topic_id:
+            errors.append(f"composition canonical_node_id expected {expected_topic_id}")
+        if composition.get("paper_family_id") != expected_topic["paper_family_id"]:
+            errors.append("composition paper_family_id does not match topic registry")
+        if composition.get("title") != expected_topic["title"]:
+            errors.append("composition title does not match topic registry")
+        expected_formula_refs = expected_topic["formula_refs"]
+        if composition.get("formula_ir_refs") != expected_formula_refs:
+            errors.append("composition formula_ir_refs do not match topic registry order")
+        if composition.get("scene_ir_refs") != expected_scene_refs:
+            errors.append("composition scene_ir_refs do not match expected compiled scenes")
+        expected_sequence = []
+        for order, (formula_ref, scene_ref) in enumerate(zip(expected_formula_refs, expected_scene_refs), start=1):
+            formula = (formulas or {}).get(formula_ref, {})
+            expected_sequence.append({
+                "order": order,
+                "scene_ir_ref": scene_ref,
+                "transition": "claim_context" if order == 1 else ("code_grounding" if formula.get("code_mappings") else "formula_dependency"),
+            })
+        if composition.get("composition") != expected_sequence:
+            errors.append("composition sequence does not match formula/scene semantics")
+    return errors
+
+
+def validate_graph_inventory(
+    fragment: dict[str, Any],
+    topics: dict[str, Any],
+    formulas: dict[str, dict[str, Any]],
+    registry: dict[str, Any],
+) -> list[str]:
+    errors: list[str] = []
+    expected_nodes: dict[str, dict[str, Any]] = {}
+    expected_edges: dict[str, dict[str, Any]] = {}
+
+    def node(node_id: str, node_type: str, coverage_state: str) -> dict[str, Any]:
+        return {
+            "node_id": node_id,
+            "node_type": node_type,
+            "coverage_state": coverage_state,
+            "aliases": [],
+            "publishable": True,
+        }
+
+    def edge(
+        edge_id: str,
+        edge_type: str,
+        source_ref: str,
+        target_ref: str,
+        match_state: str,
+        evidence_refs: list[str],
+        confidence: float | None,
+    ) -> dict[str, Any]:
+        return {
+            "edge_id": edge_id,
+            "edge_type": edge_type,
+            "source_ref": source_ref,
+            "target_ref": target_ref,
+            "match_state": match_state,
+            "evidence_refs": evidence_refs,
+            "confidence": confidence,
+            "review_ref": None,
+            "publishable": True,
+        }
+
+    primitive_nodes = {item["primitive_id"]: item for item in registry["primitives"]}
+    for primitive in registry["primitives"]:
+        coverage = "planned_missing" if primitive["status"] == "missing" else "observed"
+        expected_nodes[primitive["canonical_node_id"]] = node(primitive["canonical_node_id"], "primitive", coverage)
+    for topic_id, topic in topics.items():
+        expected_nodes[topic_id] = node(topic_id, "topic", "observed")
+        for formula_ref in topic["formula_refs"]:
+            formula = formulas[formula_ref]
+            formula_suffix = formula["formula_id"].split(":", 1)[1]
+            scene_id = f"scene:{formula_suffix}"
+            expected_nodes[formula["canonical_node_id"]] = node(formula["canonical_node_id"], "formula", "observed")
+            expected_nodes[scene_id] = node(scene_id, "scene", "observed")
+            contains_formula_id = f"edge:{topic_id.split(':', 1)[1]}.contains.{formula_suffix}"
+            expected_edges[contains_formula_id] = edge(
+                contains_formula_id, "contains", topic_id, formula["canonical_node_id"], "candidate", [], 1.0,
+            )
+            formula_scene_id = f"edge:{formula_suffix}.visualized_by.scene"
+            expected_edges[formula_scene_id] = edge(
+                formula_scene_id, "visualized_by", formula["canonical_node_id"], scene_id, "candidate",
+                [f"artifact:formula_ir.{formula_suffix}"], 1.0,
+            )
+            for operation in formula["operations"]:
+                operation_suffix = operation["operation_id"].split(":", 1)[1]
+                expected_nodes[operation["canonical_node_id"]] = node(operation["canonical_node_id"], "operation", "inferred")
+                contains_operation_id = f"edge:{formula_suffix}.contains.{operation_suffix}"
+                expected_edges[contains_operation_id] = edge(
+                    contains_operation_id, "contains", formula["canonical_node_id"], operation["canonical_node_id"],
+                    "candidate", [], 1.0,
+                )
+                primitive = primitive_nodes[operation["primitive_ref"]]
+                operation_primitive_id = f"edge:{operation_suffix}.visualized_by.{operation['primitive_ref'].replace(':', '_')}"
+                expected_edges[operation_primitive_id] = edge(
+                    operation_primitive_id, "visualized_by", operation["canonical_node_id"], primitive["canonical_node_id"],
+                    operation["mapping_state"], [f"artifact:formula_ir.{formula_suffix}"],
+                    None if operation["mapping_state"] == "unresolved" else 0.8,
+                )
+            for mapping in formula["code_mappings"]:
+                code_suffix = mapping["code_node_id"].split(":", 1)[1]
+                expected_nodes[mapping["code_node_id"]] = node(mapping["code_node_id"], "code", "observed")
+                code_formula_id = f"edge:{code_suffix}.implements.{formula_suffix}"
+                expected_edges[code_formula_id] = edge(
+                    code_formula_id, "implements", mapping["code_node_id"], formula["canonical_node_id"],
+                    mapping["match_state"], [f"artifact:formula_ir.{formula_suffix}"],
+                    0.9 if mapping["match_state"] == "candidate" else None,
+                )
+
+    actual_node_list = fragment.get("nodes", [])
+    actual_edge_list = fragment.get("edges", [])
+    if not actual_node_list or not actual_edge_list:
+        errors.append("graph inventory: nodes and edges must both be nonempty")
+    actual_nodes = {
+        item.get("node_id"): item
+        for item in actual_node_list
+        if item.get("node_id")
+    }
+    actual_edges = {
+        item.get("edge_id"): item
+        for item in actual_edge_list
+        if item.get("edge_id")
+    }
+    if len(actual_nodes) != len(actual_node_list):
+        errors.append("graph inventory: duplicate or missing node IDs")
+    if len(actual_edges) != len(actual_edge_list):
+        errors.append("graph inventory: duplicate or missing edge IDs")
+    if actual_nodes != expected_nodes:
+        changed = sorted(key for key in set(expected_nodes) & set(actual_nodes) if expected_nodes[key] != actual_nodes[key])
+        errors.append(
+            f"graph inventory: node mismatch missing={sorted(set(expected_nodes) - set(actual_nodes))} "
+            f"extra={sorted(set(actual_nodes) - set(expected_nodes))} changed={changed}"
+        )
+    if actual_edges != expected_edges:
+        changed = sorted(key for key in set(expected_edges) & set(actual_edges) if expected_edges[key] != actual_edges[key])
+        errors.append(
+            f"graph inventory: edge mismatch missing={sorted(set(expected_edges) - set(actual_edges))} "
+            f"extra={sorted(set(actual_edges) - set(expected_edges))} changed={changed}"
+        )
     return errors
 
 
@@ -230,10 +380,26 @@ def validate_workspace(build_dir: Path | None = None) -> None:
             for relative in sorted(expected_compositions):
                 path = build_dir / relative
                 if path.is_file():
-                    errors.extend(f"{relative}: {error}" for error in validate_composition(load_json(path)))
+                    topic_id = f"topic:{relative.stem}"
+                    expected_scene_refs = []
+                    for formula_ref in topics[topic_id]["formula_refs"]:
+                        scene_relative = next(key for key, value in expected_scenes.items() if value == formula_ref)
+                        expected_scene_refs.append((build_dir.relative_to(ROOT) / scene_relative).as_posix())
+                    errors.extend(
+                        f"{relative}: {error}"
+                        for error in validate_composition(
+                            load_json(path),
+                            expected_topic_id=topic_id,
+                            expected_topic=topics[topic_id],
+                            expected_scene_refs=expected_scene_refs,
+                            formulas=formulas,
+                        )
+                    )
             graph_path = build_dir / "canonical_graph_fragment.json"
             if graph_path.is_file():
-                errors.extend(validate_graph_fragment(load_json(graph_path)))
+                graph = load_json(graph_path)
+                errors.extend(validate_graph_fragment(graph))
+                errors.extend(validate_graph_inventory(graph, topics, formulas, registry))
             summary_path = build_dir / "build_summary.json"
             if summary_path.is_file():
                 summary = load_json(summary_path)

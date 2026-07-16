@@ -118,6 +118,12 @@ class FormulaExplainerTests(unittest.TestCase):
         atoms = {item["atom_id"] for item in formula["atoms"]}
         operations = {item["operation_id"]: item for item in formula["operations"]}
         self.assertIn("atom:feynrl.current_policy", atoms)
+        self.assertIn("atom:feynrl.negative_one", atoms)
+        self.assertEqual(
+            ["atom:feynrl.negative_one", "value:feynrl.raw_score_term"],
+            operations["op:feynrl.negate_score_term"]["input_refs"],
+        )
+        self.assertEqual("value:feynrl.score_term", operations["op:feynrl.negate_score_term"]["output_ref"])
         self.assertEqual(
             ["atom:feynrl.current_policy", "atom:feynrl.old_policy"],
             operations["op:feynrl.behavior_kl"]["input_refs"],
@@ -137,8 +143,7 @@ class FormulaExplainerTests(unittest.TestCase):
         )
 
     def test_build_emits_scene_plans_compositions_and_canonical_fragment(self):
-        runs_dir = ROOT / "runs"
-        with tempfile.TemporaryDirectory(prefix="formula-explainer-test-", dir=runs_dir) as temp:
+        with tempfile.TemporaryDirectory(prefix=".formula-explainer-test-", dir=ROOT) as temp:
             output = Path(temp)
             summary = build_all(output)
             self.assertEqual(5, summary["demo_topic_count"])
@@ -153,8 +158,7 @@ class FormulaExplainerTests(unittest.TestCase):
                 self.assertEqual({"initial", "intermediate", "terminal"}, states)
 
     def test_build_validation_rejects_missing_empty_incomplete_and_extra_inventories(self):
-        runs_dir = ROOT / "runs"
-        with tempfile.TemporaryDirectory(prefix="formula-explainer-inventory-", dir=runs_dir) as temp:
+        with tempfile.TemporaryDirectory(prefix=".formula-explainer-inventory-", dir=ROOT) as temp:
             root = Path(temp)
             with self.assertRaises(FormulaExplainerValidationError):
                 validate_workspace(root / "missing")
@@ -174,6 +178,39 @@ class FormulaExplainerTests(unittest.TestCase):
             with self.assertRaises(FormulaExplainerValidationError):
                 validate_workspace(build)
 
+    def test_build_validation_rejects_semantically_wrong_composition_and_graph(self):
+        with tempfile.TemporaryDirectory(prefix=".formula-explainer-semantics-", dir=ROOT) as temp:
+            build = Path(temp) / "build"
+            build_all(build)
+            composition_path = build / "topic_compositions/feynrl.json"
+            composition = load_json(composition_path)
+            composition["paper_family_id"] = "paper_family:wrong"
+            composition_path.write_text(json.dumps(composition), encoding="utf-8")
+            with self.assertRaisesRegex(FormulaExplainerValidationError, "paper_family_id"):
+                validate_workspace(build)
+
+            build_all(build)
+            graph_path = build / "canonical_graph_fragment.json"
+            graph = load_json(graph_path)
+            graph["nodes"].pop()
+            graph_path.write_text(json.dumps(graph), encoding="utf-8")
+            with self.assertRaisesRegex(FormulaExplainerValidationError, "graph inventory: node mismatch"):
+                validate_workspace(build)
+
+            build_all(build)
+            graph = load_json(graph_path)
+            graph["edges"][0]["confidence"] = 0.25
+            graph_path.write_text(json.dumps(graph), encoding="utf-8")
+            with self.assertRaisesRegex(FormulaExplainerValidationError, "graph inventory: edge mismatch"):
+                validate_workspace(build)
+
+            build_all(build)
+            graph = load_json(graph_path)
+            graph["nodes"] = []
+            graph["edges"] = []
+            graph_path.write_text(json.dumps(graph), encoding="utf-8")
+            with self.assertRaisesRegex(FormulaExplainerValidationError, "nodes and edges must both be nonempty"):
+                validate_workspace(build)
 
 if __name__ == "__main__":
     unittest.main()

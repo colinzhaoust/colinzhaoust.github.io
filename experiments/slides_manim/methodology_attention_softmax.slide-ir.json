@@ -28,6 +28,17 @@
     {"element_id": "element:citation", "kind": "citation", "content": "Vaswani et al., 2017, Eq. (1)", "region": "footer"}
   ],
   "speaker_notes": "Explain exp then normalization. Do not describe this slide as full paper-to-slides integration; architecture and performance slots remain planned.",
+  "run_evidence": [
+    {
+      "evidence_id": "run_evidence:babel.9313551",
+      "source_run_ref": "babel:job:9313551",
+      "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464",
+      "evidence_path": "experiments/formula_explainer/babel_smoke_manifest.json",
+      "evidence_hash": "sha256:06295cd8395c852d6f355289fd48bdca4850224327483381fa1b46b850717fb6",
+      "locator": "jobs[job_id=9313551]",
+      "validation_status": "pass"
+    }
+  ],
   "artifacts": [
     {
       "artifact_id": "artifact:scene_ir.attention_softmax.9313551",
@@ -85,6 +96,7 @@
         "derivation_stage": "embedded",
         "source_run_ref": "babel:job:9313551",
         "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464",
+        "run_evidence_ref": "run_evidence:babel.9313551",
         "parent_artifact_refs": [
           "artifact:scene_ir.attention_softmax.9313551",
           "artifact:video.attention_softmax.9313551",

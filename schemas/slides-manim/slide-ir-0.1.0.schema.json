@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": [
     "schema_version", "slide_id", "title", "intent", "completion", "claims", "layout",
-    "citations", "static_elements", "speaker_notes", "artifacts", "animation_slots", "planned_slots"
+    "citations", "static_elements", "speaker_notes", "run_evidence", "artifacts", "animation_slots", "planned_slots"
   ],
   "properties": {
     "schema_version": {"const": "slide-ir/0.1.0"},
@@ -47,6 +47,22 @@
       }
     },
     "speaker_notes": {"type": "string"},
+    "run_evidence": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["evidence_id", "source_run_ref", "source_commit", "evidence_path", "evidence_hash", "locator", "validation_status"],
+        "properties": {
+          "evidence_id": {"$ref": "#/$defs/id"},
+          "source_run_ref": {"$ref": "#/$defs/id"},
+          "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "evidence_path": {"$ref": "#/$defs/repo_path"},
+          "evidence_hash": {"$ref": "#/$defs/hash"},
+          "locator": {"type": "string", "minLength": 1},
+          "validation_status": {"const": "pass"}
+        }
+      }
+    },
     "artifacts": {
       "type": "array", "minItems": 3,
       "items": {
@@ -69,7 +85,26 @@
               "derivation_stage": {"enum": ["generated", "rendered", "static_fallback", "embedded"]}
             }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"role": {"const": "static_fallback"}}, "required": ["role"]},
+            "then": {
+              "properties": {
+                "media_type": {"type": "string", "pattern": "^image/"},
+                "understandable_without_playback": {"const": true}
+              }
+            }
+          },
+          {
+            "if": {"properties": {"role": {"const": "rendered_video"}}, "required": ["role"]},
+            "then": {"properties": {"media_type": {"type": "string", "pattern": "^video/"}}}
+          },
+          {
+            "if": {"properties": {"role": {"const": "scene_ir"}}, "required": ["role"]},
+            "then": {"properties": {"media_type": {"const": "application/json"}}}
+          }
+        ]
       }
     },
     "animation_slots": {

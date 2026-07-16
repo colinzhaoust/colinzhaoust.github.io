@@ -53,12 +53,13 @@
     "composite_lineage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["implementation_origin", "derivation_stage", "source_run_ref", "source_commit", "parent_artifact_refs"],
+      "required": ["implementation_origin", "derivation_stage", "source_run_ref", "source_commit", "run_evidence_ref", "parent_artifact_refs"],
       "properties": {
         "implementation_origin": {"enum": ["project_native", "upstream_repository", "project_reimplementation"]},
         "derivation_stage": {"const": "embedded"},
         "source_run_ref": {"$ref": "#/$defs/id"},
         "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "run_evidence_ref": {"$ref": "#/$defs/id"},
         "parent_artifact_refs": {"type": "array", "items": {"$ref": "#/$defs/id"}, "minItems": 3, "uniqueItems": true}
       }
     },

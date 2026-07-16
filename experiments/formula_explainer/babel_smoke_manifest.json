@@ -1,5 +1,6 @@
 {
   "schema_version": "formula-explainer-babel-smoke/0.1.0",
+  "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464",
   "scene_ir_ref": "runs/formula_explainer/build/scene_ir/attention_softmax_lookup/attention_softmax.json",
   "renderer_ref": "scenes/formula_explainer_scene.py",
   "render_environment": {
