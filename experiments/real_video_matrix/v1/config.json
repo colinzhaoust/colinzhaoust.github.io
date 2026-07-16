@@ -110,7 +110,7 @@
       "artifacts": [],
       "reviews": [],
       "attempts": ["Repository and adapter were proven on three other topics; no historical DPO invocation or provider receipt exists."],
-      "blocker": "A new paid-provider Code2Video run needs a predeclared WInE rate card/reservation and pinned upstream commit; dummy baseline-coverage media is explicitly excluded."
+      "blocker": "A new paid-provider Code2Video run needs a predeclared WInE rate card/reservation and pinned upstream commit; placeholder baseline-coverage media is explicitly excluded."
     },
     {
       "cell_id": "q8:code2video:feynrl:r1",

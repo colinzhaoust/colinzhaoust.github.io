@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .validation import ROOT, REGISTRY_PATH, TOPICS_PATH, load_json, validate_workspace
+from .validation import FormulaExplainerValidationError, ROOT, REGISTRY_PATH, TOPICS_PATH, load_json, validate_workspace
 
 
 def _write(path: Path, document: dict[str, Any]) -> None:
@@ -42,6 +42,12 @@ def _canonical_node(node_id: str, node_type: str, coverage: str = "observed") ->
 
 
 def build_all(output_dir: Path) -> dict[str, Any]:
+    try:
+        output_relative = output_dir.relative_to(ROOT)
+    except ValueError as exc:
+        raise FormulaExplainerValidationError(
+            f"build output must be inside repository root {ROOT}: {output_dir}"
+        ) from exc
     validate_workspace()
     topics = load_json(TOPICS_PATH)
     registry = load_json(REGISTRY_PATH)
@@ -60,7 +66,7 @@ def build_all(output_dir: Path) -> dict[str, Any]:
             formula = load_json(ROOT / formula_ref)
             scene_ref, scene = compile_scene(formula_ref, formula, output_dir)
             formula_ir_refs.append(formula_ref)
-            scene_path_ref = (output_dir.relative_to(ROOT) / scene_ref).as_posix()
+            scene_path_ref = (output_relative / scene_ref).as_posix()
             scene_ir_refs.append(scene_path_ref)
             sequence.append({"order": order, "scene_ir_ref": scene_path_ref, "transition": "claim_context" if order == 1 else ("code_grounding" if formula["code_mappings"] else "formula_dependency")})
             nodes[formula["canonical_node_id"]] = _canonical_node(formula["canonical_node_id"], "formula")
@@ -80,7 +86,7 @@ def build_all(output_dir: Path) -> dict[str, Any]:
         compositions.append(composition_ref.as_posix())
     graph = {"nodes": sorted(nodes.values(), key=lambda item: item["node_id"]), "edges": sorted(edges, key=lambda item: item["edge_id"]), "migrations": []}
     _write(output_dir / "canonical_graph_fragment.json", graph)
-    summary = {"schema_version": "formula-explainer-build/0.1.0", "demo_topic_count": len(topics), "benchmark_paper_family_count": len({item["paper_family_id"] for item in topics.values()}), "formula_count": sum(len(item["formula_refs"]) for item in topics.values()), "primitive_count": len(registry["primitives"]), "topic_composition_refs": compositions, "canonical_graph_fragment_ref": (output_dir.relative_to(ROOT) / "canonical_graph_fragment.json").as_posix()}
+    summary = {"schema_version": "formula-explainer-build/0.1.0", "demo_topic_count": len(topics), "benchmark_paper_family_count": len({item["paper_family_id"] for item in topics.values()}), "formula_count": sum(len(item["formula_refs"]) for item in topics.values()), "primitive_count": len(registry["primitives"]), "topic_composition_refs": compositions, "canonical_graph_fragment_ref": (output_relative / "canonical_graph_fragment.json").as_posix()}
     _write(output_dir / "build_summary.json", summary)
     validate_workspace(output_dir)
     return summary

@@ -25,6 +25,7 @@ class MatrixContractTests(unittest.TestCase):
         self.assertEqual(12, len(config["cells"]))
         self.assertTrue(all("completion" not in cell for cell in config["cells"]))
         self.assertNotIn("synthetic_fixture", {cell["implementation_origin"] for cell in config["cells"]})
+        self.assertNotIn("dummy", json.dumps(config["cells"]).lower())
 
     def test_missing_and_duplicate_cells_are_rejected(self):
         config = load_config()

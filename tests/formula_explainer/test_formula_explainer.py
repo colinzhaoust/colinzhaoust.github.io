@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -25,6 +27,30 @@ from tools.formula_explainer.validation import (
 
 
 class FormulaExplainerTests(unittest.TestCase):
+    def test_cli_rejects_invalid_input_without_traceback(self):
+        with tempfile.TemporaryDirectory(dir=ROOT / "runs") as temp:
+            build_dir = Path(temp) / "build"
+            build_all(build_dir)
+            scene = build_dir / "scene_ir" / "attention_softmax_lookup" / "attention_softmax.json"
+            scene.write_text("{}\n", encoding="utf-8")
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "tools.formula_explainer.cli",
+                    "validate",
+                    "--build-dir",
+                    str(build_dir),
+                ],
+                cwd=ROOT,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            self.assertEqual(2, proc.returncode)
+            self.assertIn("formula explainer validation: FAIL", proc.stderr)
+            self.assertNotIn("Traceback", proc.stderr)
+
     def test_focused_schemas_are_valid_draft_2020_12(self):
         for path in (FORMULA_SCHEMA, SCENE_SCHEMA, REGISTRY_SCHEMA, COMPOSITION_SCHEMA):
             Draft202012Validator.check_schema(load_json(path))

@@ -58,6 +58,10 @@ def _duplicates(values: Iterable[str]) -> set[str]:
 
 def validate_formula(formula: dict[str, Any], registry: dict[str, Any]) -> list[str]:
     errors = _schema_errors(formula, FORMULA_SCHEMA)
+    # Semantic checks assume the required FormulaIR fields exist. Malformed
+    # documents should be reported as invalid, not crash the validator.
+    if errors:
+        return errors
     atoms = {item["atom_id"] for item in formula.get("atoms", [])}
     operations = formula.get("operations", [])
     operation_ids = [item["operation_id"] for item in operations]
@@ -92,6 +96,8 @@ def validate_formula(formula: dict[str, Any], registry: dict[str, Any]) -> list[
 
 def validate_registry(registry: dict[str, Any]) -> list[str]:
     errors = _schema_errors(registry, REGISTRY_SCHEMA)
+    if errors:
+        return errors
     primitives = registry.get("primitives", [])
     ids = [item["primitive_id"] for item in primitives]
     if duplicate := _duplicates(ids):
@@ -128,6 +134,8 @@ def _ref_target(ref: str) -> Path:
 
 def validate_scene(scene: dict[str, Any], formula: dict[str, Any], registry: dict[str, Any]) -> list[str]:
     errors = _schema_errors(scene, SCENE_SCHEMA)
+    if errors:
+        return errors
     operation_ids = {item["operation_id"] for item in formula["operations"]}
     primitive_ids = {item["primitive_id"] for item in registry["primitives"]}
     for beat in scene.get("beats", []):
@@ -150,6 +158,8 @@ def validate_composition(
     formulas: dict[str, dict[str, Any]] | None = None,
 ) -> list[str]:
     errors = _schema_errors(composition, COMPOSITION_SCHEMA)
+    if errors:
+        return errors
     orders = [item["order"] for item in composition.get("composition", [])]
     if orders != list(range(1, len(orders) + 1)):
         errors.append("composition order must be contiguous and sorted from one")
@@ -303,6 +313,8 @@ def validate_graph_fragment(fragment: dict[str, Any]) -> list[str]:
     canonical = load_json(CANONICAL_SCHEMA)
     graph_schema = {"$schema": canonical["$schema"], "$defs": canonical["$defs"], **canonical["$defs"]["graph"]}
     errors = [f"canonical graph fragment: {message}" for message in _schema_errors_with_schema(fragment, graph_schema)]
+    if errors:
+        return errors
     nodes = {item["node_id"]: item for item in fragment.get("nodes", [])}
     for edge in fragment.get("edges", []):
         source = nodes.get(edge["source_ref"])
