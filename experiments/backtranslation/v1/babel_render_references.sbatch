@@ -5,8 +5,8 @@
 #SBATCH --time=01:00:00
 #SBATCH --mem=12G
 #SBATCH --cpus-per-task=2
-#SBATCH --output=/home/xinranz3/4blue2brown_explore/backtranslation_refs_20260715/runs/%A/cases/task-%a.slurm.out
-#SBATCH --error=/home/xinranz3/4blue2brown_explore/backtranslation_refs_20260715/runs/%A/cases/task-%a.slurm.err
+#SBATCH --output=/home/xinranz3/4blue2brown_explore/backtranslation_refs_20260715/logs/%A_%a.out
+#SBATCH --error=/home/xinranz3/4blue2brown_explore/backtranslation_refs_20260715/logs/%A_%a.err
 
 set -uo pipefail
 
@@ -40,7 +40,7 @@ cd "$PROJECT"
 export PYTHONPATH="$PROJECT"
 export PATH="$(dirname "$FFMPEG"):$PATH"
 STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-PIPELINE_COMMIT=$(git rev-parse HEAD 2>/dev/null || printf unknown)
+PIPELINE_COMMIT=${BACKTRANSLATION_PIPELINE_COMMIT:-$(git rev-parse HEAD 2>/dev/null || printf unknown)}
 UPSTREAM_COMMIT=$(git -C "$SOURCE_ROOT" rev-parse HEAD 2>/dev/null || printf unknown)
 
 "$PYTHON" tools/run_backtranslation.py validate-registry \
