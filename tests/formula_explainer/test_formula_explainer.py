@@ -28,7 +28,7 @@ from tools.formula_explainer.validation import (
 
 class FormulaExplainerTests(unittest.TestCase):
     def test_cli_rejects_invalid_input_without_traceback(self):
-        with tempfile.TemporaryDirectory(dir=ROOT / "runs") as temp:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp:
             build_dir = Path(temp) / "build"
             build_all(build_dir)
             scene = build_dir / "scene_ir" / "attention_softmax_lookup" / "attention_softmax.json"
