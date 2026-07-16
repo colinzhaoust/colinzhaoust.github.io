@@ -137,6 +137,43 @@ class ReferenceBatchTests(unittest.TestCase):
             row = next(item for item in inventory["cases"] if item["case_id"] == case["case_id"])
             self.assertEqual("upstream_save_last_frame_no_mp4", row["failure_detail"])
 
+    def test_harvest_classifies_exact_tex_toolchain_failure(self) -> None:
+        registry = load_registry(REGISTRY_PATH)
+        protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+        case = registry["scenes"][0]
+        fixtures = (
+            (
+                "preview",
+                "(job-local/standalone.cls)\n! LaTeX Error: File `preview.sty' not found.\n",
+                "",
+                "missing_runtime_dependency_preview_sty",
+            ),
+            (
+                "dvisvgm",
+                "(job-local/standalone.cls) (job-local/preview.sty)\n",
+                "FileNotFoundError: [Errno 2] No such file or directory: 'dvisvgm'\n",
+                "missing_runtime_dependency_dvisvgm",
+            ),
+        )
+        for name, tex_log, render_stderr, expected in fixtures:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as raw:
+                run_root = Path(raw)
+                case_root = run_root / "cases" / case["case_id"]
+                tex_root = case_root / "raw_media" / "Tex"
+                private_root = case_root / "private"
+                tex_root.mkdir(parents=True)
+                private_root.mkdir(parents=True)
+                (case_root / "status.json").write_text(
+                    json.dumps({"status": "failed", "failure_code": "render_error"}),
+                    encoding="utf-8",
+                )
+                (tex_root / "fixture.log").write_text(tex_log, encoding="utf-8")
+                (private_root / "render.stderr").write_text(
+                    render_stderr, encoding="utf-8"
+                )
+                inventory = harvest_reference_inventory(registry, protocol, run_root)
+                self.assertEqual(expected, inventory["cases"][0]["failure_detail"])
+
     def test_combine_preserves_failures_and_selects_latest_success(self) -> None:
         registry = load_registry(REGISTRY_PATH)
         protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))

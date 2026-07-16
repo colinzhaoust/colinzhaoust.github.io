@@ -81,6 +81,13 @@ else
 fi
 export TEXINPUTS="$TEXMF_ROOT/tex//:"
 export PATH="$TEXMF_ROOT/bin/x86_64-linux:$PATH"
+# The TeX Live binary archive is relocatable, so its embedded kpathsea would
+# otherwise search beside the case-local binary. Point only data lookup at the
+# compute node's existing TeX tree; the executable itself remains case-local.
+export TEXMFCNF=/usr/share/texlive/texmf-dist/web2c
+export TEXMFROOT=/usr/share/texlive
+export TEXMFDIST=/usr/share/texlive/texmf-dist
+export TEXMF=/usr/share/texlive/texmf-dist
 
 export STANDALONE_ARCHIVE STANDALONE_SOURCE_ARCHIVE EXPECTED_STANDALONE_SHA256 EXPECTED_STANDALONE_SOURCE_SHA256
 export ACTUAL_STANDALONE_SHA256 ACTUAL_STANDALONE_SOURCE_SHA256
@@ -107,6 +114,12 @@ def hashes(relative_paths):
 payload = {
     "schema_version": "backtranslation-job-local-dependency/v1",
     "installation_scope": "slurm_job_local_texmf",
+    "system_tex_data_roots": {
+        "TEXMFCNF": "/usr/share/texlive/texmf-dist/web2c",
+        "TEXMFROOT": "/usr/share/texlive",
+        "TEXMFDIST": "/usr/share/texlive/texmf-dist",
+        "TEXMF": "/usr/share/texlive/texmf-dist",
+    },
     "dependency_exit": int(os.environ["DEPENDENCY_EXIT"]),
     "packages": [
         {

@@ -135,8 +135,20 @@ def harvest_reference_inventory(
         status = json.loads(status_path.read_text(encoding="utf-8"))
         failure_detail = status.get("failure_code")
         tex_logs = list((case_root / "raw_media").glob("Tex/*.log"))
-        if any("standalone.cls" in path.read_text(encoding="utf-8", errors="replace") for path in tex_logs):
+        tex_log_text = "\n".join(
+            path.read_text(encoding="utf-8", errors="replace") for path in tex_logs
+        )
+        render_stderr_path = case_root / "private" / "render.stderr"
+        render_stderr = (
+            render_stderr_path.read_text(encoding="utf-8", errors="replace")
+            if render_stderr_path.is_file() else ""
+        )
+        if "File `standalone.cls' not found" in tex_log_text:
             failure_detail = "missing_runtime_dependency_standalone_cls"
+        elif "File `preview.sty' not found" in tex_log_text:
+            failure_detail = "missing_runtime_dependency_preview_sty"
+        elif "No such file or directory: 'dvisvgm'" in render_stderr:
+            failure_detail = "missing_runtime_dependency_dvisvgm"
         elif (
             status.get("status") != "completed"
             and scene["scene_class"] in UPSTREAM_SAVE_LAST_FRAME_SCENES
