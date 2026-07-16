@@ -106,6 +106,29 @@ class ReferenceBatchTests(unittest.TestCase):
             self.assertEqual(0, inventory["completed"])
             self.assertEqual("reference_hash_mismatch", inventory["cases"][0]["failure_code"])
 
+    def test_harvest_identifies_upstream_static_no_video_outcome(self) -> None:
+        registry = load_registry(REGISTRY_PATH)
+        protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as raw:
+            run_root = Path(raw)
+            case = next(scene for scene in registry["scenes"] if scene["scene_class"] == "ThreeDSurfacePlot")
+            case_root = run_root / "cases" / case["case_id"]
+            case_root.mkdir(parents=True)
+            (case_root / "status.json").write_text(
+                json.dumps(
+                    {
+                        "status": "failed",
+                        "failure_code": "render_error",
+                        "exit_codes": {"render": 0},
+                        "raw_render": {"path": None, "sha256": None},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            inventory = harvest_reference_inventory(registry, protocol, run_root)
+            row = next(item for item in inventory["cases"] if item["case_id"] == case["case_id"])
+            self.assertEqual("upstream_save_last_frame_no_mp4", row["failure_detail"])
+
 
 if __name__ == "__main__":
     unittest.main()

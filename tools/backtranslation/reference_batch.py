@@ -22,6 +22,9 @@ class ReferenceBatchError(RuntimeError):
     """A pinned source bundle or render inventory is inconsistent."""
 
 
+UPSTREAM_SAVE_LAST_FRAME_SCENES = {"GraphAreaPlot", "ThreeDSurfacePlot"}
+
+
 def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -130,11 +133,23 @@ def harvest_reference_inventory(
             )
             continue
         status = json.loads(status_path.read_text(encoding="utf-8"))
+        failure_detail = status.get("failure_code")
+        tex_logs = list((case_root / "raw_media").glob("Tex/*.log"))
+        if any("standalone.cls" in path.read_text(encoding="utf-8", errors="replace") for path in tex_logs):
+            failure_detail = "missing_runtime_dependency_standalone_cls"
+        elif (
+            status.get("status") != "completed"
+            and scene["scene_class"] in UPSTREAM_SAVE_LAST_FRAME_SCENES
+            and (status.get("exit_codes") or {}).get("render") == 0
+            and not (status.get("raw_render") or {}).get("path")
+        ):
+            failure_detail = "upstream_save_last_frame_no_mp4"
         row = {
             "case_id": scene["case_id"],
             "scene_class": scene["scene_class"],
             "status": status.get("status"),
             "failure_code": status.get("failure_code"),
+            "failure_detail": failure_detail,
             "slurm": status.get("slurm", {}),
             "raw_render": status.get("raw_render"),
             "reference": status.get("reference"),
