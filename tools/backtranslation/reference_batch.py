@@ -12,7 +12,7 @@ import json
 import textwrap
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from .reference import ReferencePreparationError, validate_model_visible_reference
 from .registry import load_registry, sha256_file, verify_source_root
@@ -150,6 +150,12 @@ def harvest_reference_inventory(
             "status": status.get("status"),
             "failure_code": status.get("failure_code"),
             "failure_detail": failure_detail,
+            "started_at": status.get("started_at"),
+            "finished_at": status.get("finished_at"),
+            "pipeline_commit": status.get("pipeline_commit"),
+            "upstream_commit": status.get("upstream_commit"),
+            "exit_codes": status.get("exit_codes", {}),
+            "recovery": status.get("recovery"),
             "slurm": status.get("slurm", {}),
             "raw_render": status.get("raw_render"),
             "reference": status.get("reference"),
@@ -197,6 +203,113 @@ def harvest_reference_inventory(
     }
 
 
+def combine_reference_runs(
+    registry: Mapping[str, Any],
+    protocol: Mapping[str, Any],
+    runs: Sequence[tuple[str, Path]],
+    *,
+    retrieval_root: str | None = None,
+) -> dict[str, Any]:
+    """Combine initial and recovery runs without erasing failed attempts.
+
+    A recovery array normally schedules only a subset of the ten cases. Missing
+    rows from such a run are therefore not counted as attempts; only persisted
+    ``status.json`` rows enter the ledger. The selected outcome is the latest
+    successful attempt, or the latest persisted failure when no attempt
+    completed. The result contains no wall-clock generation timestamp, so the
+    same immutable run directories produce byte-identical JSON.
+    """
+
+    if not runs:
+        raise ReferenceBatchError("At least one reference run is required")
+    run_ids = [run_id for run_id, _ in runs]
+    if len(run_ids) != len(set(run_ids)):
+        raise ReferenceBatchError("Reference run IDs must be unique")
+
+    attempts_by_case: dict[str, list[dict[str, Any]]] = {
+        scene["case_id"]: [] for scene in registry["scenes"]
+    }
+    run_ledger: list[dict[str, Any]] = []
+    observed_times: list[str] = []
+    total_attempts = 0
+
+    for run_id, run_root in runs:
+        inventory = harvest_reference_inventory(registry, protocol, run_root)
+        persisted = [
+            row for row in inventory["cases"]
+            if row.get("failure_code") != "missing_job_evidence"
+        ]
+        commits = sorted({
+            row["pipeline_commit"] for row in persisted if row.get("pipeline_commit")
+        })
+        upstream_commits = sorted({
+            row["upstream_commit"] for row in persisted if row.get("upstream_commit")
+        })
+        scheduled = [row["case_id"] for row in persisted]
+        run_record: dict[str, Any] = {
+            "run_id": run_id,
+            "scheduled_case_ids": scheduled,
+            "attempt_count": len(persisted),
+            "pipeline_commits": commits,
+            "upstream_commits": upstream_commits,
+        }
+        if retrieval_root:
+            run_record["retrieval_root"] = f"{retrieval_root.rstrip('/')}/runs/{run_id}"
+        run_ledger.append(run_record)
+        for row in persisted:
+            attempt = {"run_id": run_id, **row}
+            attempts_by_case[row["case_id"]].append(attempt)
+            total_attempts += 1
+            if row.get("finished_at"):
+                observed_times.append(row["finished_at"])
+
+    cases: list[dict[str, Any]] = []
+    completed = 0
+    for scene in registry["scenes"]:
+        attempts = attempts_by_case[scene["case_id"]]
+        successful_indices = [
+            index for index, attempt in enumerate(attempts)
+            if attempt.get("status") == "completed"
+        ]
+        selected_index = successful_indices[-1] if successful_indices else (
+            len(attempts) - 1 if attempts else None
+        )
+        final_status = (
+            attempts[selected_index].get("status") if selected_index is not None else "missing"
+        )
+        if final_status == "completed":
+            completed += 1
+        cases.append({
+            "case_id": scene["case_id"],
+            "scene_class": scene["scene_class"],
+            "attempt_count": len(attempts),
+            "selected_attempt_index": selected_index,
+            "final_status": final_status,
+            "attempts": attempts,
+        })
+
+    return {
+        "schema_version": "backtranslation-reference-combined-inventory/v1",
+        "observed_at": max(observed_times) if observed_times else None,
+        "registry_id": registry["registry_id"],
+        "claim_scope": registry["benchmark_claim"],
+        "contamination": registry["contamination"],
+        "upstream": registry["upstream"],
+        "license_snapshot": registry["license_snapshot"],
+        "denominator": len(registry["scenes"]),
+        "completed": completed,
+        "failed_or_missing": len(registry["scenes"]) - completed,
+        "attempt_count": total_attempts,
+        "runs": run_ledger,
+        "conditions": {
+            "human_reference": "measured_from_pinned_source",
+            "one_shot": "blocked_no_true_video_input_provider_and_external_sandbox",
+            "self_refined": "blocked_no_true_video_input_provider_and_external_sandbox",
+        },
+        "cases": cases,
+    }
+
+
 def _write_json(path: Path, value: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -215,6 +328,15 @@ def parser() -> argparse.ArgumentParser:
     harvest.add_argument("--protocol", type=Path, required=True)
     harvest.add_argument("--run-root", type=Path, required=True)
     harvest.add_argument("--output", type=Path, required=True)
+    combine = subparsers.add_parser("combine")
+    combine.add_argument("--registry", type=Path, required=True)
+    combine.add_argument("--protocol", type=Path, required=True)
+    combine.add_argument(
+        "--run", action="append", required=True, metavar="RUN_ID=PATH",
+        help="Immutable initial or recovery run directory; repeat in chronological order.",
+    )
+    combine.add_argument("--retrieval-root")
+    combine.add_argument("--output", type=Path, required=True)
     return result
 
 
@@ -224,9 +346,21 @@ def main() -> int:
     if args.command == "extract":
         manifest = extract_registered_scenes(registry, args.source_root, args.output_source)
         _write_json(args.output_manifest, manifest)
-    else:
+    elif args.command == "harvest":
         protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
         inventory = harvest_reference_inventory(registry, protocol, args.run_root)
+        _write_json(args.output, inventory)
+    else:
+        protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
+        runs: list[tuple[str, Path]] = []
+        for value in args.run:
+            run_id, separator, raw_path = value.partition("=")
+            if not separator or not run_id or not raw_path:
+                raise ReferenceBatchError(f"Invalid --run value: {value!r}")
+            runs.append((run_id, Path(raw_path)))
+        inventory = combine_reference_runs(
+            registry, protocol, runs, retrieval_root=args.retrieval_root
+        )
         _write_json(args.output, inventory)
     return 0
 

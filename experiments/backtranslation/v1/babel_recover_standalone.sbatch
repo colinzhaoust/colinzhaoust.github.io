@@ -14,8 +14,14 @@ ROOT=${BACKTRANSLATION_BABEL_ROOT:-/home/xinranz3/4blue2brown_explore/backtransl
 PROJECT="$ROOT/project"
 SOURCE_ROOT="$ROOT/upstream/manim"
 RUN_ROOT="$ROOT/runs/${SLURM_ARRAY_JOB_ID}"
-ARCHIVE="$ROOT/dependencies/standalone-v1.5a-texlive-r77682.tar.xz"
-EXPECTED_ARCHIVE_SHA256=6daa00b081106b1c240a11732155287d9933e612f3e9a045ee40824f68b0ba98
+STANDALONE_ARCHIVE="$ROOT/dependencies/standalone-v1.5a-texlive-r77682.tar.xz"
+STANDALONE_SOURCE_ARCHIVE="$ROOT/dependencies/standalone-v1.5a-ctan-20250222.zip"
+EXPECTED_STANDALONE_SHA256=6daa00b081106b1c240a11732155287d9933e612f3e9a045ee40824f68b0ba98
+EXPECTED_STANDALONE_SOURCE_SHA256=25078d6ff117e08f524dad6979bf682e6b3dc8eacfa035219c279d31f439bc49
+PREVIEW_ARCHIVE="$ROOT/dependencies/preview-v14.0.6-texlive-r71662.tar.xz"
+PREVIEW_SOURCE_ARCHIVE="$ROOT/dependencies/preview-v14.0.6-ctan-20240630.zip"
+EXPECTED_PREVIEW_SHA256=91fad28da99be4fee077ea2779f609b341c0d0e1b4816623ab85e635665e32f9
+EXPECTED_PREVIEW_SOURCE_SHA256=3059a3b0a43a4cbbff029064dc9c7200c96eefc09756368758be78b4c6894cbc
 MANIM=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/manim
 PYTHON=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/python
 FFMPEG=/home/xinranz3/4blue2brown_explore/envs/paper2manim/bin/ffmpeg
@@ -42,19 +48,32 @@ STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 PIPELINE_COMMIT=${BACKTRANSLATION_PIPELINE_COMMIT:-$(git rev-parse HEAD 2>/dev/null || printf unknown)}
 UPSTREAM_COMMIT=$(git -C "$SOURCE_ROOT" rev-parse HEAD 2>/dev/null || printf unknown)
 
-# The archive is pre-staged and hash-pinned. It is CTAN's official TeX Live
-# runtime package, avoiding an undeclared ydocstrip build dependency. Extraction
-# remains case-local; no global TeX tree or upstream scene source is changed.
+# The archives are pre-staged and hash-pinned official CTAN/TeX Live packages.
+# Runtime archives avoid undeclared docstrip build dependencies; matching source
+# archives are retained for license compliance. Extraction remains case-local;
+# no global TeX tree or upstream scene source is changed.
 DEPENDENCY_EXIT=0
-ACTUAL_ARCHIVE_SHA256=$(sha256sum "$ARCHIVE" 2>/dev/null | awk '{print $1}')
-if [ "$ACTUAL_ARCHIVE_SHA256" != "$EXPECTED_ARCHIVE_SHA256" ]; then
+ACTUAL_STANDALONE_SHA256=$(sha256sum "$STANDALONE_ARCHIVE" 2>/dev/null | awk '{print $1}')
+ACTUAL_STANDALONE_SOURCE_SHA256=$(sha256sum "$STANDALONE_SOURCE_ARCHIVE" 2>/dev/null | awk '{print $1}')
+ACTUAL_PREVIEW_SHA256=$(sha256sum "$PREVIEW_ARCHIVE" 2>/dev/null | awk '{print $1}')
+ACTUAL_PREVIEW_SOURCE_SHA256=$(sha256sum "$PREVIEW_SOURCE_ARCHIVE" 2>/dev/null | awk '{print $1}')
+if [ "$ACTUAL_STANDALONE_SHA256" != "$EXPECTED_STANDALONE_SHA256" ] \
+  || [ "$ACTUAL_STANDALONE_SOURCE_SHA256" != "$EXPECTED_STANDALONE_SOURCE_SHA256" ] \
+  || [ "$ACTUAL_PREVIEW_SHA256" != "$EXPECTED_PREVIEW_SHA256" ] \
+  || [ "$ACTUAL_PREVIEW_SOURCE_SHA256" != "$EXPECTED_PREVIEW_SOURCE_SHA256" ]; then
   DEPENDENCY_EXIT=66
 else
-  tar -xJf "$ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
+  tar -xJf "$STANDALONE_ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
+  if [ "$DEPENDENCY_EXIT" -eq 0 ]; then
+    tar -xJf "$PREVIEW_ARCHIVE" -C "$TEXMF_ROOT" || DEPENDENCY_EXIT=$?
+  fi
 fi
 export TEXINPUTS="$TEXMF_ROOT/tex//:"
 
-export ARCHIVE EXPECTED_ARCHIVE_SHA256 ACTUAL_ARCHIVE_SHA256 DEPENDENCY_EXIT TEX_INSTALL
+export STANDALONE_ARCHIVE STANDALONE_SOURCE_ARCHIVE EXPECTED_STANDALONE_SHA256 EXPECTED_STANDALONE_SOURCE_SHA256
+export ACTUAL_STANDALONE_SHA256 ACTUAL_STANDALONE_SOURCE_SHA256
+export PREVIEW_ARCHIVE PREVIEW_SOURCE_ARCHIVE EXPECTED_PREVIEW_SHA256 EXPECTED_PREVIEW_SOURCE_SHA256
+export ACTUAL_PREVIEW_SHA256 ACTUAL_PREVIEW_SOURCE_SHA256 DEPENDENCY_EXIT TEXMF_ROOT
 "$PYTHON" - "$CASE_ROOT/private/dependency-provenance.json" <<'PY'
 import hashlib
 import json
@@ -62,25 +81,62 @@ import os
 import sys
 from pathlib import Path
 
-install = Path(os.environ["TEX_INSTALL"])
-derived = {}
-for name in ("standalone.cls", "standalone.sty", "standalone.cfg", "standalone.tex"):
-    path = install / name
-    derived[name] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+texmf = Path(os.environ["TEXMF_ROOT"])
+
+def hashes(relative_paths):
+    result = {}
+    for relative in relative_paths:
+        path = texmf / relative
+        result[relative] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+    return result
+
 payload = {
     "schema_version": "backtranslation-job-local-dependency/v1",
-    "name": "standalone",
-    "version": "1.5a",
-    "tex_live_revision": 77682,
-    "source": "https://mirrors.ctan.org/systems/texlive/tlnet/archive/standalone.tar.xz",
-    "archive_filename": Path(os.environ["ARCHIVE"]).name,
-    "expected_archive_sha256": os.environ["EXPECTED_ARCHIVE_SHA256"],
-    "actual_archive_sha256": os.environ.get("ACTUAL_ARCHIVE_SHA256") or None,
-    "license": "LPPL-1.3-or-later",
-    "copyright": "Copyright (c) 2010-2025 Martin Scharrer",
     "installation_scope": "slurm_job_local_texmf",
     "dependency_exit": int(os.environ["DEPENDENCY_EXIT"]),
-    "derived_files_sha256": derived,
+    "packages": [
+        {
+            "name": "standalone",
+            "version": "1.5a",
+            "tex_live_revision": 77682,
+            "runtime_url": "https://mirrors.ctan.org/systems/texlive/tlnet/archive/standalone.tar.xz",
+            "runtime_archive_filename": Path(os.environ["STANDALONE_ARCHIVE"]).name,
+            "expected_runtime_sha256": os.environ["EXPECTED_STANDALONE_SHA256"],
+            "actual_runtime_sha256": os.environ.get("ACTUAL_STANDALONE_SHA256") or None,
+            "source_url": "https://mirrors.ctan.org/macros/latex/contrib/standalone.zip",
+            "source_archive_filename": Path(os.environ["STANDALONE_SOURCE_ARCHIVE"]).name,
+            "expected_source_sha256": os.environ["EXPECTED_STANDALONE_SOURCE_SHA256"],
+            "actual_source_sha256": os.environ.get("ACTUAL_STANDALONE_SOURCE_SHA256") or None,
+            "license": "LPPL-1.3-or-later",
+            "copyright": "Copyright (c) 2010-2025 Martin Scharrer",
+            "derived_files_sha256": hashes([
+                "tex/latex/standalone/standalone.cls",
+                "tex/latex/standalone/standalone.sty",
+                "tex/latex/standalone/standalone.cfg",
+                "tex/latex/standalone/standalone.tex",
+            ]),
+        },
+        {
+            "name": "preview",
+            "version": "14.0.6",
+            "tex_live_revision": 71662,
+            "runtime_url": "https://mirrors.ctan.org/systems/texlive/tlnet/archive/preview.tar.xz",
+            "runtime_archive_filename": Path(os.environ["PREVIEW_ARCHIVE"]).name,
+            "expected_runtime_sha256": os.environ["EXPECTED_PREVIEW_SHA256"],
+            "actual_runtime_sha256": os.environ.get("ACTUAL_PREVIEW_SHA256") or None,
+            "source_url": "https://mirrors.ctan.org/macros/latex/contrib/preview.zip",
+            "source_archive_filename": Path(os.environ["PREVIEW_SOURCE_ARCHIVE"]).name,
+            "expected_source_sha256": os.environ["EXPECTED_PREVIEW_SOURCE_SHA256"],
+            "actual_source_sha256": os.environ.get("ACTUAL_PREVIEW_SOURCE_SHA256") or None,
+            "license": "GPL-3.0-only",
+            "copyright": "AUCTeX/preview-latex contributors",
+            "derived_files_sha256": hashes([
+                "tex/latex/preview/preview.sty",
+                "tex/latex/preview/prtightpage.def",
+                "tex/latex/preview/prauctex.def",
+            ]),
+        },
+    ],
 }
 Path(sys.argv[1]).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 PY
