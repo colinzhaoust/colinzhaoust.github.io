@@ -1,6 +1,37 @@
 {
-  "schema_version": "real-video-matrix-report/0.1.0",
-  "experiment_id": "q8-real-video-matrix/0.1.0",
+  "schema_version": "real-video-matrix-report/0.2.0",
+  "experiment_id": "q8-real-video-matrix/0.2.0",
+  "completion_contract": {
+    "contract_id": "q8-video-cell/0.2.0",
+    "rule_version": "paper-media-completion-rules/0.1.0",
+    "required_stages": [
+      "render",
+      "probe",
+      "review",
+      "provenance",
+      "cost_accounting"
+    ],
+    "required_deliverable_roles": [
+      "rendered_video"
+    ],
+    "successful_stage_states": [
+      "succeeded"
+    ],
+    "terminal_run_statuses": {
+      "full_allowed": [
+        "completed"
+      ],
+      "full_forbidden": [
+        "failed",
+        "stopped",
+        "running"
+      ]
+    },
+    "smoke_stages": [],
+    "placeholder_origins": [
+      "synthetic_fixture"
+    ]
+  },
   "axis": {
     "pipelines": [
       "code2video",
@@ -25,9 +56,11 @@
       "cell_id": "q8:code2video:transformers:r1",
       "pipeline_id": "code2video",
       "topic_id": "transformers",
-      "completion": "partial",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "stopped",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
+      "input_lineage_note": "The historical adapter consumed a compact topic string, not the paper JSON or PDF.",
       "repository_revision": {
         "availability": "unknown",
         "archive_hash": "sha256:e60b1a084034b818dd572ae750e51aa77cb6f8a197f1da57f3f38d3c12a89235",
@@ -40,14 +73,50 @@
         "token_usage": 31154
       },
       "cost": {
-        "availability": "unavailable",
-        "reason": "Token counts survived but the historical WInE rate card and billed usage receipt did not."
+        "measured_usd": null,
+        "currency": "USD",
+        "coverage": [],
+        "excluded_coverage": [
+          "api",
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Token counts survived, but billing, compute, labor, storage, and asset costs were not reconciled."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "blocked"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
           "local_path": "progress_site/assets/videos/code2video_transformer.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/code2video_transformer.mp4",
             "exists": true,
             "content_hash": "sha256:4217f8aeb97bd7659b24ccf8773770bcb049a8fd023559c80b53b800adaa7488",
             "media": {
@@ -63,31 +132,44 @@
           "role": "run_summary",
           "local_path": "runs/reproductions/code2video_transformer/transformer_run/run_summary.json",
           "observed": {
+            "path": "runs/reproductions/code2video_transformer/transformer_run/run_summary.json",
             "exists": true,
             "content_hash": "sha256:710c8204b126ff3fb25c5461fadac8c054bd3336c5376c64a25b345a9654bd80"
           }
         }
       ],
-      "quality_reviews": [
-        "runs/reproductions/code2video_transformer/probe/probe_report.json",
-        "runs/reproductions/code2video_transformer/probe/vlm_review.json"
+      "reviews": [
+        {
+          "event_id": "review:q8:code2video:transformers:vlm",
+          "rubric_id": "legacy-video-vlm",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "model",
+          "evaluator_id": "wine-gemini-2.5-flash",
+          "result": "needs_revision",
+          "evidence_refs": [
+            "runs/reproductions/code2video_transformer/probe/vlm_review.json"
+          ],
+          "reviewed_at": "2026-07-07T00:00:00Z"
+        }
       ],
       "missing_requirements": [
         "upstream Git commit",
         "historical rate-card/billing reconciliation",
         "paper-native input"
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/transformers.json",
         "exists": true,
         "content_hash": "sha256:2e1bf11625ab53e14cdc0dd3ad850414b94f044191cc5aab7eaeba555b2804df"
-      }
+      },
+      "completion": "partial"
     },
     {
       "cell_id": "q8:code2video:dpo:r1",
       "pipeline_id": "code2video",
       "topic_id": "dpo",
-      "completion": "blocked",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "blocked",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
       "repository_revision": {
@@ -95,29 +177,67 @@
         "archive_hash": "sha256:e60b1a084034b818dd572ae750e51aa77cb6f8a197f1da57f3f38d3c12a89235"
       },
       "cost": {
-        "availability": "measured",
-        "amount_usd": 0,
-        "basis": "No real DPO provider run was submitted."
+        "measured_usd": 0,
+        "currency": "USD",
+        "coverage": [
+          "api"
+        ],
+        "excluded_coverage": [
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Zero provider spend only: no real DPO run was submitted; all other categories are excluded."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "blocked"
+        },
+        {
+          "id": "probe",
+          "status": "skipped"
+        },
+        {
+          "id": "review",
+          "status": "skipped"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "succeeded"
+        }
+      ],
       "artifacts": [],
-      "quality_reviews": [],
+      "reviews": [],
       "attempts": [
         "Repository and adapter were proven on three other topics; no historical DPO invocation or provider receipt exists."
       ],
       "blocker": "A new paid-provider Code2Video run needs a predeclared WInE rate card/reservation and pinned upstream commit; dummy baseline-coverage media is explicitly excluded.",
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/dpo.json",
         "exists": true,
         "content_hash": "sha256:7883e0f57d8cf1b7c49412e4ff6a98793b6dd6ffd9b56029e402468fa993de7b"
-      }
+      },
+      "completion": "blocked"
     },
     {
       "cell_id": "q8:code2video:feynrl:r1",
       "pipeline_id": "code2video",
       "topic_id": "feynrl",
-      "completion": "partial",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "stopped",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
+      "input_lineage_note": "The historical adapter consumed a compact FeynRL/P3O topic string, not the paper JSON, PDF, or code repository.",
       "repository_revision": {
         "availability": "unknown",
         "archive_hash": "sha256:e60b1a084034b818dd572ae750e51aa77cb6f8a197f1da57f3f38d3c12a89235",
@@ -130,14 +250,50 @@
         "token_usage": 33424
       },
       "cost": {
-        "availability": "unavailable",
-        "reason": "Token counts survived but the historical WInE rate card and billed usage receipt did not."
+        "measured_usd": null,
+        "currency": "USD",
+        "coverage": [],
+        "excluded_coverage": [
+          "api",
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Token counts survived, but billing, compute, labor, storage, and asset costs were not reconciled."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "blocked"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
           "local_path": "progress_site/assets/videos/code2video_feynrl_p3o.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/code2video_feynrl_p3o.mp4",
             "exists": true,
             "content_hash": "sha256:f187ed9cf5e5432e9d68ab0a9ffa3d93cc43df5e60842710aa2ea14044f56ad0",
             "media": {
@@ -153,33 +309,47 @@
           "role": "run_summary",
           "local_path": "runs/reproductions/code2video_feynrl_p3o/feynrl_p3o_run/run_summary.json",
           "observed": {
+            "path": "runs/reproductions/code2video_feynrl_p3o/feynrl_p3o_run/run_summary.json",
             "exists": true,
             "content_hash": "sha256:de0bad419ed98d10ee7a8540bd2df2196da58b5e9f9aa11f495e59029caefa17"
           }
         }
       ],
-      "quality_reviews": [
-        "runs/reproductions/code2video_feynrl_p3o/probe/probe_report.json",
-        "runs/reproductions/code2video_feynrl_p3o/probe/vlm_review.json"
+      "reviews": [
+        {
+          "event_id": "review:q8:code2video:feynrl:vlm",
+          "rubric_id": "legacy-video-vlm",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "model",
+          "evaluator_id": "wine-gemini-2.5-flash",
+          "result": "needs_revision",
+          "evidence_refs": [
+            "runs/reproductions/code2video_feynrl_p3o/probe/vlm_review.json"
+          ],
+          "reviewed_at": "2026-07-07T00:00:00Z"
+        }
       ],
       "missing_requirements": [
         "upstream Git commit",
         "historical rate-card/billing reconciliation",
         "paper/code-native input"
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/feynrl.json",
         "exists": true,
         "content_hash": "sha256:357484b344f3d48edd6517fcb72f3a3c8ca82193c3014db31ca8022151cac3bc"
-      }
+      },
+      "completion": "partial"
     },
     {
       "cell_id": "q8:code2video:rope:r1",
       "pipeline_id": "code2video",
       "topic_id": "rope",
-      "completion": "partial",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "stopped",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
+      "input_lineage_note": "The historical adapter consumed a compact RoPE topic string, not the paper JSON or PDF.",
       "repository_revision": {
         "availability": "unknown",
         "archive_hash": "sha256:e60b1a084034b818dd572ae750e51aa77cb6f8a197f1da57f3f38d3c12a89235",
@@ -192,14 +362,50 @@
         "token_usage": 26852
       },
       "cost": {
-        "availability": "unavailable",
-        "reason": "Token counts survived but the historical WInE rate card and billed usage receipt did not."
+        "measured_usd": null,
+        "currency": "USD",
+        "coverage": [],
+        "excluded_coverage": [
+          "api",
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Token counts survived, but billing, compute, labor, storage, and asset costs were not reconciled."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "blocked"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
           "local_path": "progress_site/assets/videos/code2video_rope.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/code2video_rope.mp4",
             "exists": true,
             "content_hash": "sha256:c722304c501276b0f23c912af9c823e102bbc6e448329d55899959d622edc933",
             "media": {
@@ -215,33 +421,47 @@
           "role": "run_summary",
           "local_path": "runs/reproductions/code2video_rope/rope_run/run_summary.json",
           "observed": {
+            "path": "runs/reproductions/code2video_rope/rope_run/run_summary.json",
             "exists": true,
             "content_hash": "sha256:4329dc6522b184637795dca741e0b25730492ee344672e4ab23ca856cc41ddd8"
           }
         }
       ],
-      "quality_reviews": [
-        "runs/reproductions/code2video_rope/probe/probe_report.json",
-        "runs/reproductions/code2video_rope/probe/vlm_review.json"
+      "reviews": [
+        {
+          "event_id": "review:q8:code2video:rope:vlm",
+          "rubric_id": "legacy-video-vlm",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "model",
+          "evaluator_id": "wine-gemini-2.5-flash",
+          "result": "needs_revision",
+          "evidence_refs": [
+            "runs/reproductions/code2video_rope/probe/vlm_review.json"
+          ],
+          "reviewed_at": "2026-07-07T00:00:00Z"
+        }
       ],
       "missing_requirements": [
         "upstream Git commit",
         "historical rate-card/billing reconciliation",
         "paper-native input"
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/rope.json",
         "exists": true,
         "content_hash": "sha256:e94b6a4c34488f81a32172720a5d21bd8d6ae3d3c0909430e7989f8da1b59d21"
-      }
+      },
+      "completion": "partial"
     },
     {
       "cell_id": "q8:paper2manim:transformers:r1",
       "pipeline_id": "paper2manim",
       "topic_id": "transformers",
-      "completion": "partial",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "stopped",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
+      "input_lineage_note": "Legacy compatibility/fanout run; the immutable paper input snapshot was not retained.",
       "repository_revision": {
         "availability": "unknown",
         "archive_hash": "sha256:82134455bd80579db93e41d40aa054e94a92c04709f14d504479a458411ca7fe",
@@ -252,15 +472,51 @@
         "run_id": "20260709-020953-a06b09"
       },
       "cost": {
-        "availability": "unavailable",
-        "reason": "Legacy batch did not retain provider usage/rate-card reconciliation."
+        "measured_usd": null,
+        "currency": "USD",
+        "coverage": [],
+        "excluded_coverage": [
+          "api",
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Legacy batch did not retain provider, compute, labor, storage, or asset cost reconciliation."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "blocked"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
           "local_path": "progress_site/assets/upstream-batch-20260709/videos/paper2manim_transformers_attention_fanout.mp4",
           "remote_path": "/home/xinranz3/4blue2brown_explore/runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020953-a06b09/final/transformers_attention_fanout.mp4",
           "observed": {
+            "path": "progress_site/assets/upstream-batch-20260709/videos/paper2manim_transformers_attention_fanout.mp4",
             "exists": true,
             "content_hash": "sha256:960c77fa2fe1ef316bd49cb56d7fbd645ff7dffafb317ac03c32a8952fd95557",
             "media": {
@@ -273,25 +529,38 @@
           }
         }
       ],
-      "quality_reviews": [
-        "Babel media probe passed; dated experiment review reports tiny/low-density elements."
+      "reviews": [
+        {
+          "event_id": "review:q8:paper2manim:transformers:dated",
+          "rubric_id": "legacy-experiment-review",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "human",
+          "evaluator_id": "project-review",
+          "result": "needs_revision",
+          "evidence_refs": [
+            "docs/experiments/reproduction-suite-transformers-feynrl-rope.md"
+          ],
+          "reviewed_at": "2026-07-09T00:00:00Z"
+        }
       ],
       "missing_requirements": [
         "upstream Git commit",
         "provider cost reconciliation",
         "immutable paper snapshot"
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/transformers.json",
         "exists": true,
         "content_hash": "sha256:2e1bf11625ab53e14cdc0dd3ad850414b94f044191cc5aab7eaeba555b2804df"
-      }
+      },
+      "completion": "partial"
     },
     {
       "cell_id": "q8:paper2manim:dpo:r1",
       "pipeline_id": "paper2manim",
       "topic_id": "dpo",
-      "completion": "blocked",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "blocked",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "native",
       "repository_revision": {
@@ -299,29 +568,67 @@
         "archive_hash": "sha256:82134455bd80579db93e41d40aa054e94a92c04709f14d504479a458411ca7fe"
       },
       "cost": {
-        "availability": "measured",
-        "amount_usd": 0,
-        "basis": "No real DPO provider run was submitted."
+        "measured_usd": 0,
+        "currency": "USD",
+        "coverage": [
+          "api"
+        ],
+        "excluded_coverage": [
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Zero provider spend only: no real DPO run was submitted; all other categories are excluded."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "blocked"
+        },
+        {
+          "id": "probe",
+          "status": "skipped"
+        },
+        {
+          "id": "review",
+          "status": "skipped"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "succeeded"
+        }
+      ],
       "artifacts": [],
-      "quality_reviews": [],
+      "reviews": [],
       "attempts": [
         "Legacy Paper2Manim batches covered Transformers, FeynRL/P3O, and RoPE only; baseline-coverage DPO preview is synthetic and excluded."
       ],
       "blocker": "A new provider-backed native-paper run needs a pinned upstream commit, immutable DPO paper snapshot, and budget reservation.",
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/dpo.json",
         "exists": true,
         "content_hash": "sha256:7883e0f57d8cf1b7c49412e4ff6a98793b6dd6ffd9b56029e402468fa993de7b"
-      }
+      },
+      "completion": "blocked"
     },
     {
       "cell_id": "q8:paper2manim:feynrl:r1",
       "pipeline_id": "paper2manim",
       "topic_id": "feynrl",
-      "completion": "partial",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "stopped",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
+      "input_lineage_note": "Legacy compatibility/fanout run; the immutable paper input snapshot was not retained.",
       "repository_revision": {
         "availability": "unknown",
         "archive_hash": "sha256:82134455bd80579db93e41d40aa054e94a92c04709f14d504479a458411ca7fe",
@@ -332,15 +639,51 @@
         "run_id": "20260709-020756-ba60d6"
       },
       "cost": {
-        "availability": "unavailable",
-        "reason": "Legacy batch did not retain provider usage/rate-card reconciliation."
+        "measured_usd": null,
+        "currency": "USD",
+        "coverage": [],
+        "excluded_coverage": [
+          "api",
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Legacy batch did not retain provider, compute, labor, storage, or asset cost reconciliation."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "blocked"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
           "local_path": "progress_site/assets/upstream-batch-20260709/videos/paper2manim_feynrl_p3o_ess_fanout.mp4",
           "remote_path": "/home/xinranz3/4blue2brown_explore/runs/reproductions/upstream_batch_20260709/paper2manim_runs/20260709-020756-ba60d6/final/feynrl_p3o_ess_fanout.mp4",
           "observed": {
+            "path": "progress_site/assets/upstream-batch-20260709/videos/paper2manim_feynrl_p3o_ess_fanout.mp4",
             "exists": true,
             "content_hash": "sha256:0cf4d2b7c8268be7953eabe8253699652f59add5ff72dc4d9fc490de1928edcc",
             "media": {
@@ -353,27 +696,41 @@
           }
         }
       ],
-      "quality_reviews": [
-        "Babel media probe passed; dated experiment review reports visually sparse output."
+      "reviews": [
+        {
+          "event_id": "review:q8:paper2manim:feynrl:dated",
+          "rubric_id": "legacy-experiment-review",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "human",
+          "evaluator_id": "project-review",
+          "result": "needs_revision",
+          "evidence_refs": [
+            "docs/experiments/reproduction-suite-transformers-feynrl-rope.md"
+          ],
+          "reviewed_at": "2026-07-09T00:00:00Z"
+        }
       ],
       "missing_requirements": [
         "upstream Git commit",
         "provider cost reconciliation",
         "immutable paper snapshot"
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/feynrl.json",
         "exists": true,
         "content_hash": "sha256:357484b344f3d48edd6517fcb72f3a3c8ca82193c3014db31ca8022151cac3bc"
-      }
+      },
+      "completion": "partial"
     },
     {
       "cell_id": "q8:paper2manim:rope:r1",
       "pipeline_id": "paper2manim",
       "topic_id": "rope",
-      "completion": "partial",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "stopped",
       "implementation_origin": "upstream_repository",
       "input_contract_mode": "adapted",
+      "input_lineage_note": "Legacy compatibility/fanout run; the immutable paper input snapshot was not retained.",
       "repository_revision": {
         "availability": "unknown",
         "archive_hash": "sha256:82134455bd80579db93e41d40aa054e94a92c04709f14d504479a458411ca7fe",
@@ -384,14 +741,50 @@
         "repair": "compatibility/no-LaTeX fanout repair"
       },
       "cost": {
-        "availability": "unavailable",
-        "reason": "Legacy run did not retain provider usage/rate-card reconciliation."
+        "measured_usd": null,
+        "currency": "USD",
+        "coverage": [],
+        "excluded_coverage": [
+          "api",
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": null,
+          "usd_conversion": null
+        },
+        "basis": "Legacy run did not retain provider, compute, labor, storage, or asset cost reconciliation."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "blocked"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "blocked"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
           "local_path": "progress_site/assets/videos/paper2manim_rope_fanout_repaired.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/paper2manim_rope_fanout_repaired.mp4",
             "exists": true,
             "content_hash": "sha256:ac64af7ca3b4dcaccf8c0accee03c3516f33fca5555fcdd21253157c769a2cd4",
             "media": {
@@ -407,55 +800,131 @@
           "role": "storyboard",
           "local_path": "runs/reproductions/paper2manim_rope/20260707-192411-6500a3/storyboard.json",
           "observed": {
+            "path": "runs/reproductions/paper2manim_rope/20260707-192411-6500a3/storyboard.json",
             "exists": true,
             "content_hash": "sha256:8a53826c8bf04c829709bd9187268eba24a9df878c4125601915623f63fdecf2"
           }
         }
       ],
-      "quality_reviews": [
-        "Local media probe and documented repair review exist."
+      "reviews": [
+        {
+          "event_id": "review:q8:paper2manim:rope:dated",
+          "rubric_id": "legacy-experiment-review",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "human",
+          "evaluator_id": "project-review",
+          "result": "needs_revision",
+          "evidence_refs": [
+            "docs/experiments/reproduction-suite-transformers-feynrl-rope.md"
+          ],
+          "reviewed_at": "2026-07-07T00:00:00Z"
+        }
       ],
       "missing_requirements": [
         "upstream Git commit",
         "provider cost reconciliation",
         "immutable paper snapshot"
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/rope.json",
         "exists": true,
         "content_hash": "sha256:e94b6a4c34488f81a32172720a5d21bd8d6ae3d3c0909430e7989f8da1b59d21"
-      }
+      },
+      "completion": "partial"
     },
     {
       "cell_id": "q8:inhouse_v0:transformers:r1",
       "pipeline_id": "inhouse_v0",
       "topic_id": "transformers",
-      "completion": "full",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "completed",
       "implementation_origin": "project_native",
-      "input_contract_mode": "native",
+      "input_contract_mode": "source_embedded",
+      "input_lineage_note": "Manual method reproduction: paper concepts are embedded in the pinned Manim scene; neither the topic reference JSON nor the paper PDF was consumed at runtime.",
+      "execution_inputs": [
+        {
+          "role": "scene_source",
+          "path": "scenes/inhouse_paper_explainer_suite.py",
+          "selector": "TransformerCoreExplainer",
+          "consumed": true,
+          "observed": {
+            "path": "scenes/inhouse_paper_explainer_suite.py",
+            "exists": true,
+            "content_hash": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+          }
+        }
+      ],
+      "reference_materials": [
+        {
+          "role": "topic_reference",
+          "path": "experiments/reproductions/paper_specs/transformers.json",
+          "consumed": false
+        },
+        {
+          "role": "suite_registry",
+          "path": "data/inhouse_paper_video_specs.json",
+          "consumed": false
+        }
+      ],
       "repository_revision": {
         "availability": "pinned",
         "commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",
-        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a"
+        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a",
+        "source_hashes": {
+          "scenes/inhouse_paper_explainer_suite.py": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+        }
       },
       "execution": {
-        "runner": "tools/run_inhouse_video_suite.py",
+        "runner": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch",
         "scene": "TransformerCoreExplainer",
-        "babel_recipe": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch"
+        "babel_job_id": "9313462"
       },
       "cost": {
-        "availability": "measured",
-        "amount_usd": 0,
+        "measured_usd": 0,
+        "currency": "USD",
         "coverage": [
           "api"
         ],
-        "basis": "Deterministic Manim render with no paid provider call."
+        "excluded_coverage": [
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": 320,
+          "usd_conversion": null
+        },
+        "basis": "Zero provider spend only. Babel compute is disclosed as wall time but not converted to USD; labor, storage, and assets are excluded."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "succeeded"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "succeeded"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
-          "local_path": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/TransformerCoreExplainer.mp4",
+          "local_path": "progress_site/assets/videos/TransformerCoreExplainer.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/TransformerCoreExplainer.mp4",
             "exists": true,
             "content_hash": "sha256:74836b59e3596b76392da8da9f3cf2a74ec8d9b9c095502d0abee86c3dda70a1",
             "media": {
@@ -473,46 +942,120 @@
           "content_hash": "sha256:652fc4d035d57765fa7bddc38a5ff8b40180cc195b3500cb4217e657eb8da6c4"
         }
       ],
-      "quality_reviews": [
-        "runs/reproductions/render_eval/probe_report.json",
-        "docs/experiments/reproduction-suite-transformers-feynrl-rope.md"
+      "reviews": [
+        {
+          "event_id": "review:q8:inhouse:transformers:technical",
+          "rubric_id": "q8-render-probe",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "automatic",
+          "evaluator_id": "tools/probe_rendered_videos.py",
+          "result": "pass",
+          "evidence_refs": [
+            "experiments/real_video_matrix/v1/babel/9313462-result.json"
+          ],
+          "reviewed_at": "2026-07-16T03:23:06Z"
+        }
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/transformers.json",
         "exists": true,
         "content_hash": "sha256:2e1bf11625ab53e14cdc0dd3ad850414b94f044191cc5aab7eaeba555b2804df"
-      }
+      },
+      "completion": "full"
     },
     {
       "cell_id": "q8:inhouse_v0:dpo:r1",
       "pipeline_id": "inhouse_v0",
       "topic_id": "dpo",
-      "completion": "full",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "completed",
       "implementation_origin": "project_native",
-      "input_contract_mode": "native",
+      "input_contract_mode": "source_embedded",
+      "input_lineage_note": "Manual method reproduction: paper concepts are embedded in the pinned Manim scene; neither the topic reference JSON nor the paper PDF was consumed at runtime.",
+      "execution_inputs": [
+        {
+          "role": "scene_source",
+          "path": "scenes/inhouse_paper_explainer_suite.py",
+          "selector": "DPOPreferenceExplainer",
+          "consumed": true,
+          "observed": {
+            "path": "scenes/inhouse_paper_explainer_suite.py",
+            "exists": true,
+            "content_hash": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+          }
+        }
+      ],
+      "reference_materials": [
+        {
+          "role": "topic_reference",
+          "path": "experiments/reproductions/paper_specs/dpo.json",
+          "consumed": false
+        },
+        {
+          "role": "suite_registry",
+          "path": "data/inhouse_paper_video_specs.json",
+          "consumed": false
+        }
+      ],
       "repository_revision": {
         "availability": "pinned",
         "commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",
-        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a"
+        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a",
+        "source_hashes": {
+          "scenes/inhouse_paper_explainer_suite.py": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+        }
       },
       "execution": {
-        "runner": "tools/run_inhouse_video_suite.py",
+        "runner": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch",
         "scene": "DPOPreferenceExplainer",
-        "babel_recipe": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch"
+        "babel_job_id": "9313462"
       },
       "cost": {
-        "availability": "measured",
-        "amount_usd": 0,
+        "measured_usd": 0,
+        "currency": "USD",
         "coverage": [
           "api"
         ],
-        "basis": "Deterministic Manim render with no paid provider call."
+        "excluded_coverage": [
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": 320,
+          "usd_conversion": null
+        },
+        "basis": "Zero provider spend only. Babel compute is disclosed as wall time but not converted to USD; labor, storage, and assets are excluded."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "succeeded"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "succeeded"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
-          "local_path": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/DPOPreferenceExplainer.mp4",
+          "local_path": "progress_site/assets/videos/DPOPreferenceExplainer.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/DPOPreferenceExplainer.mp4",
             "exists": true,
             "content_hash": "sha256:710605246c9c5d30208a22c244bccf9786fe6967305791e967f8f6f12a059680",
             "media": {
@@ -530,47 +1073,125 @@
           "content_hash": "sha256:02054b00b64536b6993c808119829d2e8324d680714e525a3ee0958e3141b21d"
         }
       ],
-      "quality_reviews": [
-        "runs/inhouse_eval/vlm_reviews/DPOPreferenceExplainer.wine.json",
-        "docs/experiments/paper-video-agent-codebase-implementation.md"
+      "reviews": [
+        {
+          "event_id": "review:q8:inhouse:dpo:technical",
+          "rubric_id": "q8-render-probe",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "automatic",
+          "evaluator_id": "tools/probe_rendered_videos.py",
+          "result": "pass",
+          "evidence_refs": [
+            "experiments/real_video_matrix/v1/babel/9313462-result.json"
+          ],
+          "reviewed_at": "2026-07-16T03:23:06Z"
+        }
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/dpo.json",
         "exists": true,
         "content_hash": "sha256:7883e0f57d8cf1b7c49412e4ff6a98793b6dd6ffd9b56029e402468fa993de7b"
-      }
+      },
+      "completion": "full"
     },
     {
       "cell_id": "q8:inhouse_v0:feynrl:r1",
       "pipeline_id": "inhouse_v0",
       "topic_id": "feynrl",
-      "completion": "full",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "completed",
       "implementation_origin": "project_native",
-      "input_contract_mode": "native",
+      "input_contract_mode": "source_embedded",
+      "input_lineage_note": "Manual method reproduction: FeynRL/P3O concepts are embedded in the pinned Manim scene; neither the topic reference JSON, paper PDF, nor code repository was consumed at runtime.",
+      "execution_inputs": [
+        {
+          "role": "scene_source",
+          "path": "scenes/inhouse_paper_explainer_suite.py",
+          "selector": "FeynRLESSMiniLesson",
+          "consumed": true,
+          "observed": {
+            "path": "scenes/inhouse_paper_explainer_suite.py",
+            "exists": true,
+            "content_hash": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+          }
+        }
+      ],
+      "reference_materials": [
+        {
+          "role": "topic_reference",
+          "path": "experiments/reproductions/paper_specs/feynrl.json",
+          "consumed": false
+        },
+        {
+          "role": "suite_registry",
+          "path": "data/inhouse_paper_video_specs.json",
+          "consumed": false
+        },
+        {
+          "role": "code_reference",
+          "revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752",
+          "consumed": false
+        }
+      ],
       "repository_revision": {
         "availability": "pinned",
         "commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",
         "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a",
-        "code_repository": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752"
+        "source_hashes": {
+          "scenes/inhouse_paper_explainer_suite.py": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+        }
       },
       "execution": {
-        "runner": "tools/run_inhouse_video_suite.py",
+        "runner": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch",
         "scene": "FeynRLESSMiniLesson",
-        "babel_recipe": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch"
+        "babel_job_id": "9313462"
       },
       "cost": {
-        "availability": "measured",
-        "amount_usd": 0,
+        "measured_usd": 0,
+        "currency": "USD",
         "coverage": [
           "api"
         ],
-        "basis": "Deterministic Manim render with no paid provider call."
+        "excluded_coverage": [
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": 320,
+          "usd_conversion": null
+        },
+        "basis": "Zero provider spend only. Babel compute is disclosed as wall time but not converted to USD; labor, storage, and assets are excluded."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "succeeded"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "succeeded"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
-          "local_path": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/FeynRLESSMiniLesson.mp4",
+          "local_path": "progress_site/assets/videos/FeynRLESSMiniLesson.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/FeynRLESSMiniLesson.mp4",
             "exists": true,
             "content_hash": "sha256:7f2a75368d969d2ecf0584ca2bc4c7eb2c3d3d71a2f6c5bd6f7d2b0c812ffe50",
             "media": {
@@ -588,46 +1209,120 @@
           "content_hash": "sha256:f79c5cd56b92c608e0edb0f848373195cdbd95e4a16a40b075023bbd13d7bdb8"
         }
       ],
-      "quality_reviews": [
-        "runs/reproductions/render_eval/probe_report.json",
-        "runs/inhouse_eval/vlm_reviews/FeynRLESSMiniLesson.wine.json"
+      "reviews": [
+        {
+          "event_id": "review:q8:inhouse:feynrl:technical",
+          "rubric_id": "q8-render-probe",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "automatic",
+          "evaluator_id": "tools/probe_rendered_videos.py",
+          "result": "pass",
+          "evidence_refs": [
+            "experiments/real_video_matrix/v1/babel/9313462-result.json"
+          ],
+          "reviewed_at": "2026-07-16T03:23:06Z"
+        }
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/feynrl.json",
         "exists": true,
         "content_hash": "sha256:357484b344f3d48edd6517fcb72f3a3c8ca82193c3014db31ca8022151cac3bc"
-      }
+      },
+      "completion": "full"
     },
     {
       "cell_id": "q8:inhouse_v0:rope:r1",
       "pipeline_id": "inhouse_v0",
       "topic_id": "rope",
-      "completion": "full",
+      "completion_contract_id": "q8-video-cell/0.2.0",
+      "status": "completed",
       "implementation_origin": "project_native",
-      "input_contract_mode": "native",
+      "input_contract_mode": "source_embedded",
+      "input_lineage_note": "Manual method reproduction: paper concepts are embedded in the pinned Manim scene; neither the topic reference JSON nor the paper PDF was consumed at runtime.",
+      "execution_inputs": [
+        {
+          "role": "scene_source",
+          "path": "scenes/inhouse_paper_explainer_suite.py",
+          "selector": "RoPERotationExplainer",
+          "consumed": true,
+          "observed": {
+            "path": "scenes/inhouse_paper_explainer_suite.py",
+            "exists": true,
+            "content_hash": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+          }
+        }
+      ],
+      "reference_materials": [
+        {
+          "role": "topic_reference",
+          "path": "experiments/reproductions/paper_specs/rope.json",
+          "consumed": false
+        },
+        {
+          "role": "suite_registry",
+          "path": "data/inhouse_paper_video_specs.json",
+          "consumed": false
+        }
+      ],
       "repository_revision": {
         "availability": "pinned",
         "commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",
-        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a"
+        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a",
+        "source_hashes": {
+          "scenes/inhouse_paper_explainer_suite.py": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+        }
       },
       "execution": {
-        "runner": "tools/run_inhouse_video_suite.py",
+        "runner": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch",
         "scene": "RoPERotationExplainer",
-        "babel_recipe": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch"
+        "babel_job_id": "9313462"
       },
       "cost": {
-        "availability": "measured",
-        "amount_usd": 0,
+        "measured_usd": 0,
+        "currency": "USD",
         "coverage": [
           "api"
         ],
-        "basis": "Deterministic Manim render with no paid provider call."
+        "excluded_coverage": [
+          "local_compute",
+          "labor",
+          "storage",
+          "assets"
+        ],
+        "resource_usage": {
+          "wall_time_seconds": 320,
+          "usd_conversion": null
+        },
+        "basis": "Zero provider spend only. Babel compute is disclosed as wall time but not converted to USD; labor, storage, and assets are excluded."
       },
+      "stages": [
+        {
+          "id": "render",
+          "status": "succeeded"
+        },
+        {
+          "id": "probe",
+          "status": "succeeded"
+        },
+        {
+          "id": "review",
+          "status": "succeeded"
+        },
+        {
+          "id": "provenance",
+          "status": "succeeded"
+        },
+        {
+          "id": "cost_accounting",
+          "status": "succeeded"
+        }
+      ],
       "artifacts": [
         {
           "role": "rendered_video",
-          "local_path": "runs/inhouse_manim_media/videos/inhouse_paper_explainer_suite/480p15/RoPERotationExplainer.mp4",
+          "local_path": "progress_site/assets/videos/RoPERotationExplainer.mp4",
           "observed": {
+            "path": "progress_site/assets/videos/RoPERotationExplainer.mp4",
             "exists": true,
             "content_hash": "sha256:cf5ee6fbbb8e4c1c6b353547a39dd7fe8458339f908eb63d25b30ce426336332",
             "media": {
@@ -645,15 +1340,26 @@
           "content_hash": "sha256:a58d3a4816e100a276d4a36f30f2b0b217f312d2a123c3aef78fcbc3a5db688d"
         }
       ],
-      "quality_reviews": [
-        "runs/reproductions/render_eval/probe_report.json",
-        "docs/experiments/reproduction-suite-transformers-feynrl-rope.md"
+      "reviews": [
+        {
+          "event_id": "review:q8:inhouse:rope:technical",
+          "rubric_id": "q8-render-probe",
+          "rubric_version": "0.1.0",
+          "evaluator_type": "automatic",
+          "evaluator_id": "tools/probe_rendered_videos.py",
+          "result": "pass",
+          "evidence_refs": [
+            "experiments/real_video_matrix/v1/babel/9313462-result.json"
+          ],
+          "reviewed_at": "2026-07-16T03:23:06Z"
+        }
       ],
-      "input_snapshot": {
+      "topic_reference_snapshot": {
         "path": "experiments/reproductions/paper_specs/rope.json",
         "exists": true,
         "content_hash": "sha256:e94b6a4c34488f81a32172720a5d21bd8d6ae3d3c0909430e7989f8da1b59d21"
-      }
+      },
+      "completion": "full"
     }
   ],
   "design_reconciliation": {
@@ -675,6 +1381,7 @@
       "state": "COMPLETED",
       "role": "fresh deterministic in-house v0 four-topic render and probe",
       "recipe": "experiments/real_video_matrix/v1/babel/run_inhouse_v0.sbatch",
+      "harvest_input": "experiments/real_video_matrix/v1/babel/9313462-harvest-input.json",
       "elapsed": "00:05:20",
       "exit_code": "0:0",
       "evidence": "experiments/real_video_matrix/v1/babel/9313462-result.json"

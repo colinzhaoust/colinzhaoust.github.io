@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "q8-babel-harvest-input-0.1.0.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "capture_note", "accounting", "source", "cost", "artifacts", "validation"],
+  "properties": {
+    "schema_version": {"const": "q8-babel-harvest-input/0.1.0"},
+    "capture_note": {"type": "string", "minLength": 1},
+    "accounting": {
+      "type": "object",
+      "required": ["slurm_job_id", "state", "exit_code", "host", "started_at", "ended_at", "wall_time_seconds"]
+    },
+    "source": {
+      "type": "object",
+      "required": ["project_commit", "scene_path", "scene_sha256", "reference_registry_path", "reference_registry_sha256", "reference_registry_consumed_at_runtime", "note"]
+    },
+    "cost": {
+      "type": "object",
+      "required": ["measured_api_cost_usd", "coverage", "excluded_coverage", "provenance"]
+    },
+    "artifacts": {"type": "array", "minItems": 4, "maxItems": 4},
+    "validation": {
+      "type": "object",
+      "required": ["validator", "result", "sampled_frames_per_video", "all_sampled_frames_non_background", "remote_probe_report", "remote_artifact_root"]
+    }
+  }
+}

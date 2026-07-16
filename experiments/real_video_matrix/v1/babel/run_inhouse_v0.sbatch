@@ -33,15 +33,18 @@ end_epoch=$(date +%s)
 ended=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 {
   printf '{\n'
-  printf '  "schema_version": "q8-babel-result/0.1.0",\n'
+  printf '  "schema_version": "q8-babel-runtime-capture/0.2.0",\n'
   printf '  "slurm_job_id": "%s",\n' "${SLURM_JOB_ID:-unknown}"
   printf '  "host": "%s",\n' "$(hostname)"
   printf '  "started_at": "%s",\n' "$started"
   printf '  "ended_at": "%s",\n' "$ended"
   printf '  "wall_time_seconds": %s,\n' "$((end_epoch-start_epoch))"
-  printf '  "source_commit": "03d970e",\n'
+  printf '  "source_commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",\n'
+  printf '  "consumed_source": "scenes/inhouse_paper_explainer_suite.py",\n'
+  printf '  "reference_registry": "data/inhouse_paper_video_specs.json",\n'
+  printf '  "reference_registry_consumed_at_runtime": false,\n'
   printf '  "measured_api_cost_usd": 0,\n'
-  printf '  "cost_provenance": "deterministic local Manim render; no paid provider call",\n'
+  printf '  "cost_provenance": "zero provider spend only; compute recorded as wall time and not converted to USD",\n'
   printf '  "probe_report": "%s"\n' "$OUT/probe/probe_report.json"
   printf '}\n'
 } > "$OUT/result.json"
