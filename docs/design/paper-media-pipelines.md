@@ -6,6 +6,8 @@ Last updated: 2026-07-15
 
 Discussion record: [2026-07-15 paper media roadmap](../discussions/2026-07-15-paper-media-roadmap.md)
 
+Detailed execution design: [Integrated Slides + Manim Pipeline and Backtranslation Loop](integrated-pipeline-backtranslation-loop.md)
+
 ## 1. Purpose and scope
 
 This document defines the durable architecture and evidence contract for the project's paper-to-video, paper-to-slides, integrated slides-plus-Manim, bottom-up formula explainer, and backtranslation work.
