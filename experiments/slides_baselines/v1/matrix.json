@@ -1,0 +1,119 @@
+{
+  "schema_version": "paper-to-slides-matrix/1.0.0",
+  "experiment_id": "paper-to-slides-four-family-20260715-v1",
+  "thread": "paper_to_slides",
+  "decision_ref": "docs/discussions/2026-07-15-paper-media-roadmap.md#23-slide-baselines",
+  "input_contract": "native_paper_pdf",
+  "completion_contract": {
+    "id": "paper-to-slides-deck/1.0.0",
+    "full_requires": [
+      "editable_deck",
+      "static_render",
+      "artifact_hashes",
+      "technical_validation",
+      "semantic_review",
+      "presentation_review",
+      "reconciled_cost"
+    ],
+    "partial": "At least one useful method-produced artifact exists, but a full requirement is missing.",
+    "smoke": "Only setup, import, parse, or other non-deck native stage completed.",
+    "blocked": "No method-produced artifact; a named preflight, infrastructure, provider, or budget gate prevented execution."
+  },
+  "budget_policy": {
+    "id": "pilot-budget-2026-07-15/v1",
+    "currency": "USD",
+    "cell_limit_usd": 15.0,
+    "experiment_limit_usd": 200.0,
+    "paid_stage_policy": "fail_closed_when_rate_card_or_projection_unknown",
+    "provider_rate_card": {
+      "availability": "unavailable",
+      "reason": "CMU WInE aliases do not expose a frozen project rate card or per-run usage ledger."
+    },
+    "free_probe_measured_usd": 0.0,
+    "compute_accounting": "Record Slurm resources and elapsed time separately; do not misreport institutional compute as USD 0."
+  },
+  "papers": [
+    {
+      "id": "transformers",
+      "title": "Attention Is All You Need",
+      "source_url": "https://arxiv.org/pdf/1706.03762",
+      "source_revision": "arxiv:1706.03762; frozen Babel snapshot from 2026-07-16 UTC",
+      "retrieved_at": "2026-07-16T03:23:07Z",
+      "content_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+      "snapshot_state": "frozen"
+    },
+    {
+      "id": "dpo",
+      "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+      "source_url": "https://arxiv.org/pdf/2305.18290",
+      "source_revision": "arxiv:2305.18290; frozen Babel snapshot from 2026-07-16 UTC",
+      "retrieved_at": "2026-07-16T03:23:07Z",
+      "content_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+      "snapshot_state": "frozen"
+    },
+    {
+      "id": "feynrl",
+      "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
+      "source_url": "https://arxiv.org/pdf/2605.12380",
+      "source_revision": "arxiv:2605.12380; frozen Babel snapshot",
+      "retrieved_at": "2026-07-16T03:23:07Z",
+      "content_sha256": "19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
+      "snapshot_state": "frozen"
+    },
+    {
+      "id": "rope",
+      "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+      "source_url": "https://arxiv.org/pdf/2104.09864",
+      "source_revision": "arxiv:2104.09864; frozen Babel snapshot from 2026-07-16 UTC",
+      "retrieved_at": "2026-07-16T03:23:07Z",
+      "content_sha256": "e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+      "snapshot_state": "frozen"
+    }
+  ],
+  "pipelines": [
+    {
+      "id": "deeppresenter_current",
+      "role": "selected",
+      "repository": "https://github.com/icip-cas/PPTAgent",
+      "commit_sha": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "license_spdx": "MIT",
+      "license_sha256": "e1faa9265adfb5feb24c4be691b5c39b559dec4f0414d9ec3a1157cf94faaf8b",
+      "native_entrypoint": "pptagent",
+      "selection_reason": "Current reflective, environment-grounded presenter path; explicitly excludes pptagent_legacy.",
+      "known_preflight": "Requires the documented sandbox/host runtime, browser conversion surface, and model configuration."
+    },
+    {
+      "id": "slidegen",
+      "role": "selected",
+      "repository": "https://github.com/Y-Research-SBU/SlideGen",
+      "commit_sha": "f9416e4c99e83dfe368d26bb8c74e02889da8b3a",
+      "license_spdx": "MIT",
+      "license_sha256": "fd88b41d9a41ecbb0e813a76564ec8c281b65e187e4ca464ea0f787b141f2525",
+      "native_entrypoint": "python -m SlidesAgent.new_pipeline_logtime",
+      "selection_reason": "Specialized multi-agent paper-to-PPTX pipeline with formula and figure mapping.",
+      "known_preflight": "Vendored Docling requires docling-parse<=4.7.3 API; unconstrained install selected incompatible 5.2.0."
+    },
+    {
+      "id": "arcdeck",
+      "role": "selected",
+      "repository": "https://github.com/RehgLab/ArcDeck",
+      "commit_sha": "47c54ae7f5deeb1640ed89367c388ada22484fef",
+      "license_spdx": "MIT",
+      "license_sha256": "3e42a4c95a1977f17fc45337960a15ea6828a13d6d087ceff1e6f99b22679486",
+      "native_entrypoint": "python -m slide_generation.arcdeck",
+      "selection_reason": "Narrative discourse-tree and commitment-planning approach diversifies the planning layer despite acknowledged SlideGen visual ancestry.",
+      "known_preflight": "Broad unpinned requirements and no release/tag; full run must use this exact commit and captured environment."
+    },
+    {
+      "id": "paper2slides_fast_academic_short",
+      "role": "fallback",
+      "repository": "https://github.com/HKUDS/Paper2Slides",
+      "commit_sha": "0785051d1f52814097e94c44751e3f12b83f7c8a",
+      "license_spdx": "MIT",
+      "license_sha256": "804ee173a7f604efd7d4932d94f1c7fdbac7f2f2770aa3007ecc7670ea76fd35",
+      "native_entrypoint": "python -m paper2slides --output slides --style academic --length short --fast",
+      "selection_reason": "Declared fallback only if ArcDeck cannot complete the controlled pilot or backend independence becomes decisive.",
+      "known_preflight": "Text planning works through WInE; configured Gemini endpoint does not support image output."
+    }
+  ]
+}

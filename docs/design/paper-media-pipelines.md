@@ -255,7 +255,11 @@ This section defines the logical contract; implementing its schema and validator
 
 - schema/version, run/cell IDs, start/end timestamps, status, and experiment configuration ID;
 - pipeline ID/variant, repository and full SHA, composite lineage, completion contract, and stage records;
-- input paper/code snapshots, content hashes, canonical family, artifact granularity, and adapter record when applicable;
+- typed input snapshots required by the native contract, with content hashes,
+  canonical family, artifact granularity, and adapter record when applicable;
+  paper and code/repository snapshots are both required only when both are
+  consumed as inputs (the separately pinned pipeline repository is not an
+  input-code snapshot);
 - license snapshot with retrieval timestamp, source revision, license-content hash, and redistribution conclusion;
 - immutable model identifiers, prompt/tool-policy hashes, dependency/container state, hardware, exact command, and hashed config references;
 - budget policy, atomic reservations, rate-card snapshot, measured/estimated costs, currency, and accounting coverage;

@@ -96,14 +96,58 @@ class SchemaTests(unittest.TestCase):
             with self.subTest(missing_ref=missing_ref), self.assertRaisesRegex(ManifestValidationError, "source-coverage"):
                 validate_canonical(manifest)
 
-    def test_paper_threads_still_require_paper_and_repository_sources(self):
+    def test_video_and_integrated_threads_require_paper_and_repository_sources(self):
         for missing_type in ("paper", "repository"):
-            manifest = load_valid()
-            removed_ids = {item["source_id"] for item in manifest["input"]["source_snapshots"] if item["source_type"] == missing_type}
-            manifest["input"]["source_snapshots"] = [item for item in manifest["input"]["source_snapshots"] if item["source_type"] != missing_type]
-            manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["source_ref"] not in removed_ids]
-            with self.subTest(missing_type=missing_type), self.assertRaisesRegex(ManifestValidationError, "thread-minimum-coverage"):
-                validate_canonical(manifest)
+            for thread in ("real_video_pipelines", "slides_plus_manim"):
+                manifest = load_valid()
+                manifest["thread"] = thread
+                removed_ids = {item["source_id"] for item in manifest["input"]["source_snapshots"] if item["source_type"] == missing_type}
+                manifest["input"]["source_snapshots"] = [item for item in manifest["input"]["source_snapshots"] if item["source_type"] != missing_type]
+                manifest["license_ledger"] = [item for item in manifest["license_ledger"] if item["source_ref"] not in removed_ids]
+                with self.subTest(thread=thread, missing_type=missing_type), self.assertRaisesRegex(ManifestValidationError, "thread-minimum-coverage"):
+                    validate_canonical(manifest)
+
+    def test_paper_to_slides_native_input_requires_paper_but_not_code_repository(self):
+        manifest = load_valid()
+        manifest["thread"] = "paper_to_slides"
+        repository_ids = {
+            item["source_id"]
+            for item in manifest["input"]["source_snapshots"]
+            if item["source_type"] == "repository"
+        }
+        manifest["input"]["source_snapshots"] = [
+            item for item in manifest["input"]["source_snapshots"]
+            if item["source_type"] != "repository"
+        ]
+        manifest["license_ledger"] = [
+            item for item in manifest["license_ledger"]
+            if item["source_ref"] not in repository_ids
+        ]
+        validate_canonical(manifest)
+        public = project_public_manifest(manifest, generated_at="2026-07-15T13:00:00Z")
+        public_source_types = {
+            item["source_type"] for item in public["input"]["source_snapshots"]
+        }
+        self.assertIn("paper", public_source_types)
+        self.assertNotIn("repository", public_source_types)
+
+        manifest = load_valid()
+        manifest["thread"] = "paper_to_slides"
+        paper_ids = {
+            item["source_id"]
+            for item in manifest["input"]["source_snapshots"]
+            if item["source_type"] == "paper"
+        }
+        manifest["input"]["source_snapshots"] = [
+            item for item in manifest["input"]["source_snapshots"]
+            if item["source_type"] != "paper"
+        ]
+        manifest["license_ledger"] = [
+            item for item in manifest["license_ledger"]
+            if item["source_ref"] not in paper_ids
+        ]
+        with self.assertRaisesRegex(ManifestValidationError, "thread-minimum-coverage"):
+            validate_canonical(manifest)
 
     def test_legacy_paper_code_source_shape_remains_compatible(self):
         manifest = load_legacy_paper_sources()
