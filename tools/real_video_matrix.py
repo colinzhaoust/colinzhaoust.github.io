@@ -32,6 +32,16 @@ STAGE_STATES = {"succeeded", "failed", "skipped", "not_started", "running", "blo
 COST_CATEGORIES = {"api", "local_compute", "labor", "storage", "assets"}
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
+APPROVED_SOURCE_REVISIONS = {
+    "inhouse_v0": {
+        "availability": "pinned",
+        "commit": "03d970e7f1cc6ddc9f0ffd0bf3edc1a46ae0e432",
+        "scene_blob": "8a4d6535f14257ce7726d89478f1db526d54831a",
+        "source_hashes": {
+            "scenes/inhouse_paper_explainer_suite.py": "sha256:457c7dcf3f82aff4b37d4af8a81f9a2d7e307f454db3dfb677b8d50d54c94119"
+        },
+    }
+}
 
 
 class MatrixValidationError(ValueError):
@@ -83,14 +93,16 @@ def _repo_path(value: Any, label: str) -> str:
 
 def _validate_review(review: dict[str, Any], cell_id: str) -> None:
     required = {
-        "event_id", "rubric_id", "rubric_version", "evaluator_type",
+        "event_id", "subject_ref", "rubric_id", "rubric_version", "evaluator_type",
         "evaluator_id", "result", "evidence_refs", "reviewed_at",
     }
     _require(required <= set(review), f"review-unstructured:{cell_id}")
     _require(review["result"] in {"pass", "needs_revision", "informational"}, f"review-result:{cell_id}")
     _require(bool(review["evidence_refs"]), f"review-no-evidence:{cell_id}")
     for ref in review["evidence_refs"]:
-        _repo_path(ref, f"review:{cell_id}")
+        _require(isinstance(ref, dict), f"review-evidence-unstructured:{cell_id}")
+        _repo_path(ref.get("path"), f"review:{cell_id}")
+        _require(bool(SHA256.fullmatch(ref.get("content_hash", ""))), f"review-evidence-unhashed:{cell_id}")
 
 
 def validate_config(config: dict[str, Any]) -> None:
@@ -138,6 +150,8 @@ def validate_config(config: dict[str, Any]) -> None:
             source_hashes = revision.get("source_hashes", {})
             _require(bool(source_hashes), f"pinned-source-hashes-missing:{cell_id}")
             _require(all(SHA256.fullmatch(value or "") for value in source_hashes.values()), f"pinned-source-hash-invalid:{cell_id}")
+            approved = APPROVED_SOURCE_REVISIONS.get(cell.get("pipeline_id"))
+            _require(revision == approved, f"pinned-revision-not-approved:{cell_id}")
 
         cost = cell.get("cost", {})
         coverage = set(cost.get("coverage", []))
@@ -154,11 +168,12 @@ def validate_config(config: dict[str, Any]) -> None:
             _require(usage.get("usd_conversion") is None, f"compute-exclusion-contradiction:{cell_id}")
 
         for artifact in cell.get("artifacts", []):
+            _require(bool(artifact.get("artifact_id")), f"artifact-id-missing:{cell_id}")
+            _require(bool(SHA256.fullmatch(artifact.get("content_hash", ""))), f"artifact-unhashed:{cell_id}")
             if artifact.get("local_path"):
                 _repo_path(artifact["local_path"], f"artifact:{cell_id}")
             else:
                 _require(bool(artifact.get("remote_path")), f"artifact-unlocated:{cell_id}")
-                _require(bool(SHA256.fullmatch(artifact.get("content_hash", ""))), f"remote-artifact-unhashed:{cell_id}")
         for execution_input in cell.get("execution_inputs", []):
             if execution_input.get("path"):
                 _repo_path(execution_input["path"], f"execution-input:{cell_id}")
@@ -183,7 +198,7 @@ def _derive_cell_completion(cell: dict[str, Any], contract: dict[str, Any]) -> s
         content_hash = observed.get("content_hash") or artifact.get("content_hash")
         if not content_hash:
             continue
-        artifact_id = f"artifact:{cell['cell_id']}:{index}"
+        artifact_id = artifact["artifact_id"]
         validation_id = f"validation:{cell['cell_id']}:{index}"
         artifacts.append({
             "artifact_id": artifact_id,
@@ -229,6 +244,8 @@ def materialize(config: dict[str, Any], root: Path) -> dict[str, Any]:
             if observed["exists"] and path.suffix.lower() == ".mp4":
                 observed["media"] = media_probe(path)
             artifact["observed"] = observed
+            if observed.get("content_hash"):
+                _require(observed["content_hash"] == artifact["content_hash"], f"artifact-hash-mismatch:{cell['cell_id']}:{artifact['artifact_id']}")
 
         cell["completion"] = _derive_cell_completion(cell, contract)
         if cell["completion"] == "full":
@@ -247,9 +264,26 @@ def materialize(config: dict[str, Any], root: Path) -> dict[str, Any]:
                 path = execution_input.get("path")
                 observed_hash = execution_input.get("observed", {}).get("content_hash")
                 _require(declared_hashes.get(path) == observed_hash, f"full-input-hash-mismatch:{cell['cell_id']}:{path}")
+            local_by_id = {item["artifact_id"]: item for item in local_deliverables}
             for review in cell["reviews"]:
+                _require(review["result"] == "pass", f"full-review-not-pass:{cell['cell_id']}:{review['event_id']}")
+                subject = local_by_id.get(review["subject_ref"])
+                _require(subject is not None, f"full-review-subject-mismatch:{cell['cell_id']}:{review['event_id']}")
                 for evidence_ref in review["evidence_refs"]:
-                    _require((root / evidence_ref).is_file(), f"full-review-evidence-missing:{cell['cell_id']}:{evidence_ref}")
+                    evidence_path = root / evidence_ref["path"]
+                    _require(evidence_path.is_file(), f"full-review-evidence-missing:{cell['cell_id']}:{evidence_ref['path']}")
+                    _require(sha256_file(evidence_path) == evidence_ref["content_hash"], f"full-review-evidence-hash-mismatch:{cell['cell_id']}:{evidence_ref['path']}")
+                    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                    bindings = evidence.get("reviews", [])
+                    _require(
+                        any(
+                            item.get("subject_ref") == review["subject_ref"]
+                            and item.get("artifact_content_hash") == subject["content_hash"]
+                            and item.get("result") == "pass"
+                            for item in bindings
+                        ),
+                        f"full-review-binding-missing:{cell['cell_id']}:{review['event_id']}",
+                    )
         cells.append(cell)
     counts = Counter(cell["completion"] for cell in cells)
     return {

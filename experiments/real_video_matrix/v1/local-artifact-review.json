@@ -1,0 +1,12 @@
+{
+  "schema_version": "q8-local-artifact-review/0.1.0",
+  "reviewed_at": "2026-07-16T03:23:06Z",
+  "validator": "ffprobe plus SHA-256 inventory",
+  "scope_note": "This review validates the committed local MP4 bytes only. It does not prove that those bytes were produced by Babel job 9313462 or by the pinned source revision.",
+  "reviews": [
+    {"subject_ref": "artifact:q8:inhouse_v0:transformers:r1:local_render", "cell_id": "q8:inhouse_v0:transformers:r1", "topic": "transformers", "scene": "TransformerCoreExplainer", "artifact_content_hash": "sha256:74836b59e3596b76392da8da9f3cf2a74ec8d9b9c095502d0abee86c3dda70a1", "result": "pass", "media": {"duration_seconds": 11.466667, "size_bytes": 280717, "width": 854, "height": 480, "frame_rate": "15/1"}},
+    {"subject_ref": "artifact:q8:inhouse_v0:dpo:r1:local_render", "cell_id": "q8:inhouse_v0:dpo:r1", "topic": "dpo", "scene": "DPOPreferenceExplainer", "artifact_content_hash": "sha256:710605246c9c5d30208a22c244bccf9786fe6967305791e967f8f6f12a059680", "result": "pass", "media": {"duration_seconds": 11.733333, "size_bytes": 259214, "width": 854, "height": 480, "frame_rate": "15/1"}},
+    {"subject_ref": "artifact:q8:inhouse_v0:feynrl:r1:local_render", "cell_id": "q8:inhouse_v0:feynrl:r1", "topic": "feynrl", "scene": "FeynRLESSMiniLesson", "artifact_content_hash": "sha256:7f2a75368d969d2ecf0584ca2bc4c7eb2c3d3d71a2f6c5bd6f7d2b0c812ffe50", "result": "pass", "media": {"duration_seconds": 14.266667, "size_bytes": 334240, "width": 854, "height": 480, "frame_rate": "15/1"}},
+    {"subject_ref": "artifact:q8:inhouse_v0:rope:r1:local_render", "cell_id": "q8:inhouse_v0:rope:r1", "topic": "rope", "scene": "RoPERotationExplainer", "artifact_content_hash": "sha256:cf5ee6fbbb8e4c1c6b353547a39dd7fe8458339f908eb63d25b30ce426336332", "result": "pass", "media": {"duration_seconds": 16.533333, "size_bytes": 363718, "width": 854, "height": 480, "frame_rate": "15/1"}}
+  ]
+}

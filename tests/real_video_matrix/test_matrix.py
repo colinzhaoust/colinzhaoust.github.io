@@ -38,42 +38,63 @@ class MatrixContractTests(unittest.TestCase):
 
     def test_completion_is_derived_from_q5_contract(self):
         report = materialize(load_config(), ROOT)
-        self.assertEqual({"full": 4, "partial": 6, "blocked": 2}, report["summary"])
+        self.assertEqual({"full": 0, "partial": 10, "blocked": 2}, report["summary"])
         self.assertEqual(12, report["denominator"])
         self.assertEqual(12, sum(report["summary"].values()))
 
-    def test_full_gate_rejects_shallow_provenance_review_artifact_and_cost(self):
+    def _full_candidate(self):
         config = load_config()
-        full_id = next(cell["cell_id"] for cell in config["cells"] if cell["status"] == "completed")
+        cell = next(cell for cell in config["cells"] if cell["pipeline_id"] == "inhouse_v0")
+        cell["status"] = "completed"
+        next(stage for stage in cell["stages"] if stage["id"] == "provenance")["status"] = "succeeded"
+        return config, cell["cell_id"]
+
+    def test_full_gate_binds_revision_artifact_review_and_cost(self):
+        config, full_id = self._full_candidate()
+        report = materialize(config, ROOT)
+        self.assertEqual("full", next(cell for cell in report["cells"] if cell["cell_id"] == full_id)["completion"])
         mutations = []
-        broken = load_config()
-        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["repository_revision"] = {"availability": "pinned"}
-        mutations.append((broken, "pinned-revision-invalid", validate_config))
-        broken = load_config()
-        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["reviews"] = ["not-a-review-event"]
-        mutations.append((broken, "review-unstructured", validate_config))
-        broken = load_config()
+        broken, _ = self._full_candidate()
+        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["repository_revision"]["commit"] = "a" * 40
+        mutations.append((broken, "pinned-revision-not-approved", validate_config))
+        broken, _ = self._full_candidate()
         next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["cost"]["excluded_coverage"] = []
         mutations.append((broken, "cost-coverage-incomplete", validate_config))
-        broken = load_config()
-        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["repository_revision"]["source_hashes"]["scenes/inhouse_paper_explainer_suite.py"] = "sha256:" + "b" * 64
-        mutations.append((broken, "full-input-hash-mismatch", lambda value: materialize(value, ROOT)))
-        broken = load_config()
+        broken, _ = self._full_candidate()
         cell = next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)
-        cell["artifacts"] = [{"role": "rendered_video", "remote_path": "/remote/video.mp4", "content_hash": "sha256:" + "a" * 64}]
+        local = next(item for item in cell["artifacts"] if item["role"] == "rendered_video")
+        local["local_path"] = "progress_site/assets/videos/DPOPreferenceExplainer.mp4"
+        mutations.append((broken, "artifact-hash-mismatch", lambda value: materialize(value, ROOT)))
+        broken, _ = self._full_candidate()
+        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["reviews"][0]["result"] = "needs_revision"
+        mutations.append((broken, "full-review-not-pass", lambda value: materialize(value, ROOT)))
+        broken, _ = self._full_candidate()
+        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["reviews"][0]["subject_ref"] = "artifact:wrong"
+        mutations.append((broken, "full-review-subject-mismatch", lambda value: materialize(value, ROOT)))
+        broken, _ = self._full_candidate()
+        next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)["reviews"][0]["evidence_refs"][0]["content_hash"] = "sha256:" + "c" * 64
+        mutations.append((broken, "full-review-evidence-hash-mismatch", lambda value: materialize(value, ROOT)))
+        broken, _ = self._full_candidate()
+        cell = next(cell for cell in broken["cells"] if cell["cell_id"] == full_id)
+        cell["artifacts"] = [{"artifact_id": "artifact:remote", "role": "rendered_video", "remote_path": "/remote/video.mp4", "content_hash": "sha256:" + "a" * 64}]
         mutations.append((broken, "full-local-deliverable-missing", lambda value: materialize(value, ROOT)))
         for value, error, validator in mutations:
             with self.subTest(error=error), self.assertRaisesRegex((MatrixValidationError, TypeError), error):
                 validator(value)
 
-    def test_full_artifacts_are_clean_checkout_safe_and_git_tracked(self):
+    def test_observed_artifacts_are_clean_checkout_safe_and_git_tracked(self):
         config = load_config()
-        for cell in (item for item in config["cells"] if item["status"] == "completed"):
+        for cell in (item for item in config["cells"] if item["artifacts"]):
             local = next(artifact["local_path"] for artifact in cell["artifacts"] if artifact["role"] == "rendered_video")
             self.assertTrue((ROOT / local).is_file())
             if (ROOT / ".git").exists():
                 proc = subprocess.run(["git", "ls-files", "--error-unmatch", local], cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 self.assertEqual(0, proc.returncode, local)
+
+    def test_committed_report_is_byte_reproducible(self):
+        expected = ROOT / "experiments" / "real_video_matrix" / "v1" / "report.json"
+        rendered = json.dumps(materialize(load_config(), ROOT), indent=2, ensure_ascii=False) + "\n"
+        self.assertEqual(expected.read_text(encoding="utf-8"), rendered)
 
     def test_inhouse_is_source_embedded_not_paper_native(self):
         report = materialize(load_config(), ROOT)
