@@ -59,7 +59,7 @@ ul { margin:8px 0; padding-left:22px; }
 <li>Remaining before 7/19: author pass on the draft; optional Sonnet PDDL sampling, accuracy-cost Pareto figure, Figure 1 redraw.</li>
 </ul></div>
 <div class="entry"><h2>2026-07-09 (late night 2) — COLM scope finalized; static-first cascade validated offline</h2><ul>
-<li><strong>Scope split (Colin&#x27;s call)</strong>: COLM workshop = updated original experiments + decoding dimension + performance×efficiency under different routing logics; the core narrative returns to pivot&#x27;s original meaning — *most queries are solvable with the cheapest static configuration; reserve the expensive path for the queries that need it*. v2 (learned router / PivotBench / MATH-500 at scale) is a separate track.</li>
+<li><strong>Scope split (Colin&#x27;s call)</strong>: COLM workshop = updated original experiments + decoding dimension + performance×efficiency under different routing logics; the core narrative returns to pivot&#x27;s original meaning — <em>most queries are solvable with the cheapest static configuration; reserve the expensive path for the queries that need it</em>. v2 (learned router / PivotBench / MATH-500 at scale) is a separate track.</li>
 <li><strong>Static-first cascade validated offline</strong> (stored 5-sample outputs, zero new inference, gemini-2.0-flash): run cheapest static-random first; escalate to a retrieval method only when the 5 samples disagree:</li>
 <li>SQA: <strong>82.9</strong> (24% escalated) vs always-static 80.0 / always-dynamic 81.0 / k-fold router 82.4</li>
 <li>GPQA: <strong>70.2</strong> (→MMR, 51% escalated) vs static 63.6 / dynamic 65.7 / MMR 67.2 — <strong>+3.0 over the best fixed method</strong></li>
