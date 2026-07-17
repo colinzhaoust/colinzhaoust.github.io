@@ -39,27 +39,27 @@ ul { margin:8px 0; padding-left:22px; }
 <div class="sub">adaptive test-time strategy pivoting · updated 2026-07-16</div>
 
 <div class="panel"><h3>Current phase</h3>
-<p><strong>COLM 2026 Efficient Reasoning workshop — final polish</strong> · deadline 2026-07-19 AoE</p>
-<p><a href="https://github.com/colinzhaoust/pivot_overleaf">Paper repo (Overleaf sync)</a> · <a href="https://github.com/colinzhaoust/pivot_overleaf/blob/main/colm2026/main.tex">colm2026/main.tex</a> · <a href="https://github.com/colinzhaoust/pivot_overleaf/blob/main/colm2026/pivot_v2.tex">v2 working draft</a></p></div>
+<p><strong>Workshop submission — final polish</strong> · deadline 2026-07-19 AoE</p>
+<p><a href="https://github.com/colinzhaoust/pivot_overleaf">Paper repo (Overleaf sync)</a> · <a href="https://github.com/colinzhaoust/pivot_overleaf/blob/main/colm2026/main.tex">current draft</a> · <a href="https://github.com/colinzhaoust/pivot_overleaf/blob/main/colm2026/pivot_v2.tex">v2 working draft</a></p></div>
 
 <div class="panel"><h3>Headline results (cheapest-first cascade)</h3>
 <div class="stats"><div class="stat"><div class="k">SQA</div><div class="v">cascade 82.9 (best fixed 81.0, 24% escalation)</div></div><div class="stat"><div class="k">GPQA</div><div class="v">cascade 70.2 (best fixed 67.2, 51% escalation)</div></div><div class="stat"><div class="k">MATH-500</div><div class="v">cascade 83.3 = always-dynamic, 38% retrieval</div></div><div class="stat"><div class="k">PDDL·Haiku</div><div class="v">cascade 88 @ 3.5 calls (best fixed 72)</div></div></div></div>
 
-<div class="panel"><h3>Next up</h3><ul><li>Author pass on colm2026/main.tex (new cascade section + abstract)</li><li>Optional hardening: Sonnet PDDL sampling, accuracy-cost Pareto figure, Figure 1 redraw</li><li>v2 (strategy routing from query history): kick off E2 k-fold competence profiling</li></ul></div>
+<div class="panel"><h3>Next up</h3><ul><li>Author pass on the draft (new cascade section + abstract)</li><li>Optional hardening: Sonnet PDDL sampling, accuracy-cost Pareto figure, Figure 1 redraw</li><li>v2 (strategy routing from query history): kick off E2 k-fold competence profiling</li></ul></div>
 
 <h1 style="font-size:1.2rem;margin-top:44px">Timeline</h1>
 <div class="entry"><h2>2026-07-16 — Progress site launched</h2><ul>
-<li>Static tracking site generated from this changelog (gen_progress_site.py), deployed to github.io/pivot-progress.</li>
+<li>Static tracking site generated from this changelog (gen_progress_site.py), deployed to github.io (unlisted path).</li>
 </ul></div>
-<div class="entry"><h2>2026-07-10 — MATH-500 integrated; cascade closes the loop on four tasks; new COLM section pushed</h2><ul>
+<div class="entry"><h2>2026-07-10 — MATH-500 integrated; cascade closes the loop on four tasks; new routing section pushed</h2><ul>
 <li>MATH-500 added as a task in pivot-novel (pool = 877 s1K math traces, HF MATH-500 test set, balanced-brace boxed extraction + LaTeX normalization eval, local BGE embeddings; demo cache reused from aime24). signal_check.py now supports --samples / --temperature / --emb.</li>
 <li><strong>Haiku PDDL 10-sample</strong>: cascade static(≤5)+validator→dynamic reaches <strong>88% at 3.5 avg calls</strong> — above the best fixed arm (static 72), static best-of-10 (78), and even the greedy dynamic/static oracle (84).</li>
 <li><strong>Haiku MATH-500 (150q × 5 samples)</strong>: dynamic 83.3 &gt;&gt; static 72.0 (retrieved s1K reasoning traces are load-bearing for math). Cascade with unanimous-agreement escalation = <strong>83.3 at 38% retrieval usage</strong> — starting from the &quot;wrong&quot; cheap arm costs nothing: the agreement signal recovers full dynamic-level accuracy.</li>
-<li>New COLM section &quot;Routing Logics under a Cost Lens&quot; (4-task cascade table + cost accounting + ex-ante/post-hoc positioning vs ETH cascade-routing); threshold ablation moved to appendix; main text exactly 10 pages; pushed (3 commits).</li>
+<li>New paper section &quot;Routing Logics under a Cost Lens&quot; (4-task cascade table + cost accounting + ex-ante/post-hoc positioning vs ETH cascade-routing); threshold ablation moved to appendix; main text exactly 10 pages; pushed (3 commits).</li>
 <li>Remaining before 7/19: author pass on the draft; optional Sonnet PDDL sampling, accuracy-cost Pareto figure, Figure 1 redraw.</li>
 </ul></div>
-<div class="entry"><h2>2026-07-09 (late night 2) — COLM scope finalized; static-first cascade validated offline</h2><ul>
-<li><strong>Scope split (Colin&#x27;s call)</strong>: COLM workshop = updated original experiments + decoding dimension + performance×efficiency under different routing logics; the core narrative returns to pivot&#x27;s original meaning — <em>most queries are solvable with the cheapest static configuration; reserve the expensive path for the queries that need it</em>. v2 (learned router / PivotBench / MATH-500 at scale) is a separate track.</li>
+<div class="entry"><h2>2026-07-09 (late night 2) — Workshop scope finalized; static-first cascade validated offline</h2><ul>
+<li><strong>Scope split (Colin&#x27;s call)</strong>: workshop version = updated original experiments + decoding dimension + performance×efficiency under different routing logics; the core narrative returns to pivot&#x27;s original meaning — <em>most queries are solvable with the cheapest static configuration; reserve the expensive path for the queries that need it</em>. v2 (learned router / PivotBench / MATH-500 at scale) is a separate track.</li>
 <li><strong>Static-first cascade validated offline</strong> (stored 5-sample outputs, zero new inference, gemini-2.0-flash): run cheapest static-random first; escalate to a retrieval method only when the 5 samples disagree:</li>
 <li>SQA: <strong>82.9</strong> (24% escalated) vs always-static 80.0 / always-dynamic 81.0 / k-fold router 82.4</li>
 <li>GPQA: <strong>70.2</strong> (→MMR, 51% escalated) vs static 63.6 / dynamic 65.7 / MMR 67.2 — <strong>+3.0 over the best fixed method</strong></li>
@@ -69,7 +69,7 @@ ul { margin:8px 0; padding-left:22px; }
 <li>Direction locked: <strong>adaptive test-time strategy routing from query history</strong> (menu = context × decoding × budget × model; k-fold cold start on the pool + continual updates from verifier outcomes).</li>
 <li>Deep research (105 agents, 25/25 claims verified 3-0; full report in RESEARCH_ROUTING.md): closest works are RTR (WWW&#x27;26; model × strategy, no context dimension, frozen offline router) and BEST-Route (ICML&#x27;25; model × best-of-n, also frozen). <strong>Gap confirmed</strong>: nothing combines test-free cold start + a context/ICL dimension + continual updates.</li>
 <li><strong>E1 complete</strong> (zero new inference, stored cluster samples): verifier best-of-10 dominates greedy/self-consistency (Qwen-32B static 38→48, 7B static 0→12); SC-majority is flat or harmful; sample-until-valid averages 6.6–10.5 calls (adaptive cost).</li>
-<li>colm2026/pivot_v2.tex created and pushed: findings F1–F5, framing, E1 results, experiment plan E2–E5, related work + gap.</li>
+<li>pivot_v2.tex created and pushed: findings F1–F5, framing, E1 results, experiment plan E2–E5, related work + gap.</li>
 </ul></div>
 <div class="entry"><h2>2026-07-09 — Open-model signal check completed on the cluster (autonomous agent run)</h2><p>Qwen2.5-{7B, 32B, 72B} + Llama-3.3-70B × PDDL ID/OOD × dynamic/static (greedy, n=50), plus 7B/32B decoding ablations.</p>
 <table>
@@ -99,13 +99,13 @@ ul { margin:8px 0; padding-left:22px; }
 <li><strong>PDDL (Blocksworld) integrated into pivot-novel</strong> (from the original planning pipeline): 28,386 exemplars + 500 ID + 1,037 OOD test items; all gecko embedding / similarity / graph caches reused. New pure-Python blocksworld validator replaces the VAL binary — <strong>all 4,537 gold plans self-check as valid</strong>. End-to-end smoke test passed.</li>
 <li>signal_check.py: parallel methods × models × tasks grid runner with per-query stored outputs.</li>
 </ul></div>
-<div class="entry"><h2>2026-07-08 — COLM 2026 workshop version v1</h2><ul>
-<li><strong>Decision</strong>: target the Efficient Reasoning @ COLM 2026 workshop (deadline 7/19); narrative reframed from &quot;adaptive exemplar selection&quot; to &quot;test-free + zero-overhead adaptive ICL&quot;.</li>
-<li>Paper rebuilt on the COLM template (9 pages main): the test-free k-fold variant promoted to the main method; algorithm block + HITS equations in the main text; modern main table (Gemini 2.0 Flash) with FastGAS/CoverICL/IDEAL/MMR baselines; new efficiency section (selection overhead + token parity), router-audit analysis, variance appendix, oracle-headroom analysis; the Gemini 1.5 Pro four-task suite kept as the transductive setting (PDDL +8.0 is the largest margin).</li>
+<div class="entry"><h2>2026-07-08 — Workshop version v1</h2><ul>
+<li><strong>Decision</strong>: target an efficiency-focused workshop (deadline 7/19); narrative reframed from &quot;adaptive exemplar selection&quot; to &quot;test-free + zero-overhead adaptive ICL&quot;.</li>
+<li>Paper rebuilt on the venue template (9 pages main): the test-free k-fold variant promoted to the main method; algorithm block + HITS equations in the main text; modern main table (Gemini 2.0 Flash) with FastGAS/CoverICL/IDEAL/MMR baselines; new efficiency section (selection overhead + token parity), router-audit analysis, variance appendix, oracle-headroom analysis; the Gemini 1.5 Pro four-task suite kept as the transductive setting (PDDL +8.0 is the largest margin).</li>
 <li><strong>Honesty audit of stored results</strong> (constrains all claims): the single-query variant degenerates to dynamic (identical prompts on 490/490 SQA) — reported as a null result; AIME24 reruns swing ±10 EM — flagged and excluded from comparative claims; post-hoc hub-score switching only wins with per-task config cherry-picking — demoted to oracle analysis; the k-fold router&#x27;s interventions on SQA (28% of queries) causally improve that subset by +3.0; output tokens are flat across selection methods — &quot;fewer reasoning tokens&quot; story dropped in favor of token-parity.</li>
 </ul></div>
 <div class="entry"><h2>2026-02 → 2026-05 — Background</h2><ul>
-<li>ICLR 2026 submission (ratings 0/2/2) withdrawn in January; May ARR reviews raised the same concerns (test-set dependence, heuristic threshold, outdated baselines, small AIME).</li>
+<li>conference submission (ratings 0/2/2) withdrawn in January; a second round of reviews raised the same concerns (test-set dependence, heuristic threshold, outdated baselines, small AIME).</li>
 <li>100+ rebuttal-phase runs completed (k-fold/single-query variants, FastGAS/CoverICL/IDEAL/MMR baselines, BGE/Nomic/Arctic/MiniLM embeddings, threshold ablations, demo-count sweep, 3-seed variance runs).</li>
 <li>Codebase refactored from notebooks into modular pivot-novel.</li>
 </ul></div>
