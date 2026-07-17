@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
 }
 * { box-sizing:border-box; }
 body { margin:0; background:var(--bg); color:var(--fg);
-  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans SC",sans-serif; }
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 main { max-width:880px; margin:0 auto; padding:40px 20px 80px; }
 h1 { font-size:1.6rem; margin:0 0 4px; }
 .sub { color:var(--muted); margin-bottom:28px; }
@@ -45,124 +45,70 @@ ul { margin:8px 0; padding-left:22px; }
 <div class="panel"><h3>Headline results (cheapest-first cascade)</h3>
 <div class="stats"><div class="stat"><div class="k">SQA</div><div class="v">cascade 82.9 (best fixed 81.0, 24% escalation)</div></div><div class="stat"><div class="k">GPQA</div><div class="v">cascade 70.2 (best fixed 67.2, 51% escalation)</div></div><div class="stat"><div class="k">MATH-500</div><div class="v">cascade 83.3 = always-dynamic, 38% retrieval</div></div><div class="stat"><div class="k">PDDL·Haiku</div><div class="v">cascade 88 @ 3.5 calls (best fixed 72)</div></div></div></div>
 
-<div class="panel"><h3>Next up</h3><ul><li>作者过稿 colm2026/main.tex（新 cascade section + abstract）</li><li>可选：Sonnet PDDL 采样加固、accuracy-cost Pareto 图、Figure 1 重画</li><li>v2（strategy routing from query history）：E2 k-fold competence profiling 待启动</li></ul></div>
+<div class="panel"><h3>Next up</h3><ul><li>Author pass on colm2026/main.tex (new cascade section + abstract)</li><li>Optional hardening: Sonnet PDDL sampling, accuracy-cost Pareto figure, Figure 1 redraw</li><li>v2 (strategy routing from query history): kick off E2 k-fold competence profiling</li></ul></div>
 
 <h1 style="font-size:1.2rem;margin-top:44px">Timeline</h1>
-<div class="entry"><h2>2026-07-10 — MATH-500 接入 + cascade 三任务闭环，COLM 新 section 完成并 push</h2><ul>
-<li>MATH-500 task 接入 pivot-novel（pool=s1K 877、HF MATH-500、boxed 提取+LaTeX 归一化 eval、 BGE 本地 embedding；demo 缓存复用 aime24 的 bge）；signal_check.py 支持 --samples/--temperature/--emb</li>
-<li><strong>Haiku PDDL 10-sample</strong>：cascade static(≤5)+validator→dynamic = <strong>88% @ 3.5 calls</strong> （最强固定 arm 72、static-BoN@10 78、greedy oracle 84——全部超过）</li>
-<li><strong>Haiku MATH-500 150q×5s</strong>：dynamic 83.3 &gt;&gt; static 72.0（s1K 轨迹在数学上 load-bearing）； cascade（unanimous agreement）= <strong>83.3 @ 38% retrieval</strong>——便宜 arm 选错 11 分也能兜住， cascade 对 arm 选择鲁棒</li>
-<li>COLM main.tex 新 section &quot;Routing Logics under a Cost Lens&quot;（4 任务 cascade 表 + cost 账 + ETH ex-ante/post-hoc 定位），threshold 消融移 appendix，正文 10 页整，已 push（3 commits）</li>
-<li>待办：Sonnet PDDL 采样（可选加固）、作者过稿、7/19 提交</li>
+<div class="entry"><h2>2026-07-16 — Progress site launched</h2><ul>
+<li>Static tracking site generated from this changelog (gen_progress_site.py), deployed to github.io/pivot-progress.</li>
 </ul></div>
-<div class="entry"><h2>2026-07-09 — Babel 开源模型 signal check 完成（Fable agent 自主跑完）</h2><p>Qwen2.5-{7B,32B,72B} + Llama-3.3-70B × PDDL ID/OOD × dyn/static（greedy，n=50）</p>
-<p>+ 7B/32B decoding 消融。详见 babel <code>~/pivot-novel/results/signal_check/SUMMARY.md</code>。</p>
+<div class="entry"><h2>2026-07-10 — MATH-500 integrated; cascade closes the loop on four tasks; new COLM section pushed</h2><ul>
+<li>MATH-500 added as a task in pivot-novel (pool = 877 s1K math traces, HF MATH-500 test set, balanced-brace boxed extraction + LaTeX normalization eval, local BGE embeddings; demo cache reused from aime24). signal_check.py now supports --samples / --temperature / --emb.</li>
+<li><strong>Haiku PDDL 10-sample</strong>: cascade static(≤5)+validator→dynamic reaches <strong>88% at 3.5 avg calls</strong> — above the best fixed arm (static 72), static best-of-10 (78), and even the greedy dynamic/static oracle (84).</li>
+<li><strong>Haiku MATH-500 (150q × 5 samples)</strong>: dynamic 83.3 &gt;&gt; static 72.0 (retrieved s1K reasoning traces are load-bearing for math). Cascade with unanimous-agreement escalation = <strong>83.3 at 38% retrieval usage</strong> — starting from the &quot;wrong&quot; cheap arm costs nothing: the agreement signal recovers full dynamic-level accuracy.</li>
+<li>New COLM section &quot;Routing Logics under a Cost Lens&quot; (4-task cascade table + cost accounting + ex-ante/post-hoc positioning vs ETH cascade-routing); threshold ablation moved to appendix; main text exactly 10 pages; pushed (3 commits).</li>
+<li>Remaining before 7/19: author pass on the draft; optional Sonnet PDDL sampling, accuracy-cost Pareto figure, Figure 1 redraw.</li>
+</ul></div>
+<div class="entry"><h2>2026-07-09 (late night 2) — COLM scope finalized; static-first cascade validated offline</h2><ul>
+<li><strong>Scope split (Colin&#x27;s call)</strong>: COLM workshop = updated original experiments + decoding dimension + performance×efficiency under different routing logics; the core narrative returns to pivot&#x27;s original meaning — *most queries are solvable with the cheapest static configuration; reserve the expensive path for the queries that need it*. v2 (learned router / PivotBench / MATH-500 at scale) is a separate track.</li>
+<li><strong>Static-first cascade validated offline</strong> (stored 5-sample outputs, zero new inference, gemini-2.0-flash): run cheapest static-random first; escalate to a retrieval method only when the 5 samples disagree:</li>
+<li>SQA: <strong>82.9</strong> (24% escalated) vs always-static 80.0 / always-dynamic 81.0 / k-fold router 82.4</li>
+<li>GPQA: <strong>70.2</strong> (→MMR, 51% escalated) vs static 63.6 / dynamic 65.7 / MMR 67.2 — <strong>+3.0 over the best fixed method</strong></li>
+<li>76% / 49% of queries never touch retrieval infrastructure; the signal (agreement on the cheap arm) is free.</li>
+</ul></div>
+<div class="entry"><h2>2026-07-09 (late night) — v2 direction set; deep research done; E1 complete</h2><ul>
+<li>Direction locked: <strong>adaptive test-time strategy routing from query history</strong> (menu = context × decoding × budget × model; k-fold cold start on the pool + continual updates from verifier outcomes).</li>
+<li>Deep research (105 agents, 25/25 claims verified 3-0; full report in RESEARCH_ROUTING.md): closest works are RTR (WWW&#x27;26; model × strategy, no context dimension, frozen offline router) and BEST-Route (ICML&#x27;25; model × best-of-n, also frozen). <strong>Gap confirmed</strong>: nothing combines test-free cold start + a context/ICL dimension + continual updates.</li>
+<li><strong>E1 complete</strong> (zero new inference, stored cluster samples): verifier best-of-10 dominates greedy/self-consistency (Qwen-32B static 38→48, 7B static 0→12); SC-majority is flat or harmful; sample-until-valid averages 6.6–10.5 calls (adaptive cost).</li>
+<li>colm2026/pivot_v2.tex created and pushed: findings F1–F5, framing, E1 results, experiment plan E2–E5, related work + gap.</li>
+</ul></div>
+<div class="entry"><h2>2026-07-09 — Open-model signal check completed on the cluster (autonomous agent run)</h2><p>Qwen2.5-{7B, 32B, 72B} + Llama-3.3-70B × PDDL ID/OOD × dynamic/static (greedy, n=50), plus 7B/32B decoding ablations.</p>
 <table>
-<tr><th>model</th><th>ID dyn</th><th>ID sta</th><th>ID oracle</th><th>OOD dyn</th><th>OOD sta</th></tr>
-<tr><td>qwen-7b</td><td>6</td><td>0</td><td>6</td><td>0</td><td>0</td></tr>
-<tr><td>qwen-32b</td><td>26</td><td>38</td><td>40</td><td>0</td><td>0</td></tr>
-<tr><td>qwen-72b</td><td>40</td><td>44</td><td>60</td><td>4</td><td>0</td></tr>
-<tr><td>llama-70b</td><td>40</td><td>34</td><td>54</td><td>10</td><td>2</td></tr>
+<tr><th>model</th><th>ID dyn</th><th>ID static</th><th>ID oracle</th><th>OOD dyn</th><th>OOD static</th></tr>
+<tr><td>Qwen2.5-7B</td><td>6</td><td>0</td><td>6</td><td>0</td><td>0</td></tr>
+<tr><td>Qwen2.5-32B</td><td>26</td><td>38</td><td>40</td><td>0</td><td>0</td></tr>
+<tr><td>Qwen2.5-72B</td><td>40</td><td>44</td><td>60</td><td>4</td><td>0</td></tr>
+<tr><td>Llama-3.3-70B</td><td>40</td><td>34</td><td>54</td><td>10</td><td>2</td></tr>
 </table>
-<p>结论（与 API 模型结果合并）：</p>
-<p>1. 旧 &quot;dyn wins ID / static wins OOD&quot; 在所有 7 个模型上都不成立；OOD 对 &lt;70B 是 0（unsolvable）</p>
-<p>2. Oracle headroom 随能力涌现、在 mid-band 最大（qwen72 +16 / llama70 +14 / sonnet +14 / haiku +14；</p>
-<p>   gemini-3-flash ≈0）；ID winner 是 family-dependent（Qwen 偏 static，Llama 偏 dynamic）→ 固定规则死，需 model-aware router</p>
-<p>3. Decoding 不翻转 selection 胜负；SC-majority ≤ greedy；但 32B static pass@10=48 vs greedy 38</p>
-<p>   → diversity 存在而 majority 兑现不了 → <strong>validator-guided best-of-n 可以直接兑现</strong>（我们有免费 verifier）</p></div>
-<div class="entry"><h2>2026-07-09 (深夜) — v2 方向定稿 + deep research + E1 完成</h2><ul>
-<li>方向锁定：<strong>adaptive test-time strategy routing from query history</strong>（menu = context × decoding × budget × model；k-fold pool 冷启动 + verifier 结果 continual 更新）</li>
-<li>Deep research（105 agents，25 claims 全部 3-0 verified，报告在 <code>RESEARCH_ROUTING.md</code>）： 最近工作 RTR (WWW26, model×strategy, 无 context 维度, 离线冻结) 和 BEST-Route (ICML25, model×best-of-n, 同样冻结)；<strong>gap 确认</strong>：无人同时做 test-free 冷启动 + context 维度 + continual 更新</li>
-<li><strong>E1 完成</strong>（零新推理，babel 存量样本）：verifier-BoN@10 碾压 greedy/SC（32B static 38→48， 7B static 0→12），SC-majority 无效甚至有害；sample-until-valid 平均 6.6~10.5 calls（自适应成本）</li>
-<li><code>colm2026/pivot_v2.tex</code> 新建并两次 push：v1 findings F1-F5、framing、E1 结果、实验计划 E2-E5、 related work + gap。下一步：E2（k-fold competence profiling，v2 核心实验）</li>
-</ul></div>
-<div class="entry"><h2>2026-07-09 (深夜2) — COLM scope 定稿 + static-first cascade 离线验证</h2><p><strong>Scope 切分（Colin 决定）</strong>：COLM workshop = 原实验更新 + decoding 维度 + 不同 routing logic 的</p>
-<p>performance×efficiency 对比，核心叙事回归 pivot 本义 = &quot;大量 query 用最便宜的 static 配置即可解决，</p>
-<p>贵的路径只留给需要的题&quot;。v2（learned router / PivotBench / MATH-500）另起炉灶。</p>
-<p><strong>Static-first cascade 离线验证（存量 5-sample 数据，零新推理，gemini-2.0-flash）</strong>：</p>
-<p>策略 = 先用最便宜的 static-random 出 5 samples，agreement&lt;100% 才升级到 retrieval 方法：</p>
-<ul>
-<li>SQA: <strong>82.9</strong>（升级 24%）vs always-static 80.0 / always-dynamic 81.0 / kfold 82.4</li>
-<li>GPQA: <strong>70.2</strong>（→MMR，升级 51%）vs static 63.6 / dynamic 65.7 / MMR 67.2 —— <strong>+3.0 超全表最优</strong></li>
-<li>76%/49% 的 query 完全不需要 retrieval 基础设施；信号 = 便宜 arm 上的自一致性（post-hoc，免费）</li>
-<li>配合 babel 的 verifier-BoN 结果（PDDL 侧的升级信号），COLM 新 section 素材齐了</li>
-</ul></div>
-<div class="entry"><h2>2026-07-08 (later) — PDDL 接入 + 新 API backend + signal check</h2><p><strong>API 重构</strong>（together 弃用）：</p>
-<ul>
-<li>新增 <code>pivot-novel/backends.py</code>：统一 LLM backend——<strong>Bedrock</strong>（<code>API/callumz_accessKeys.csv</code>， boto3 converse；Claude haiku-4-5 / sonnet-4-6 / opus-4-6、DeepSeek v3.2/r1、gpt-oss、Llama、Qwen3） 和 <strong>Vertex AI</strong>（wine lab，<code>API/wine-vertex-ai.json</code>，project green-jet-429802-q4； gemini-2.5-flash/pro、gemini-3-flash-preview、gemini-3.1-pro-preview）。模型清单见 <code>API/NEW_KEYS_MODEL_ACCESS.md</code>。两个 backend 均 smoke test 通过</li>
-<li><code>llm.py</code> 加 <code>get_llm_client()</code> 工厂；<code>run_fast.py</code> 推理路径支持新 backend； 统一使用 <code>together</code> conda env（补装了 boto3）</li>
-</ul>
-<p><strong>PDDL 任务接入 pivot-novel</strong>（源自 xinran-planning-ase pipeline 研究）：</p>
-<ul>
-<li>数据：<code>pivot-repo/data/pddl/</code>（28,386 exemplars + 500 ID dev + 1,037 OOD 8-20 blocks）， gecko embeddings/sim index/graph index 全部有缓存可复用</li>
-<li>新增 <code>pddl_validator.py</code>：纯 Python blocksworld-4ops 模拟器替代 VAL 二进制， <strong>4,537 条 gold plans 全部自检通过（status=2）</strong></li>
-<li><code>data/prompts/evaluation/config/embeddings</code> 各加 <code>pddl</code>/<code>pddl-ood</code> 分支； prompt 模板与原 planning pipeline 一致（fix_gpt_prompt 版本）</li>
-<li>端到端 smoke test 通过（Claude Haiku, 3 queries）</li>
-</ul>
-<p><strong>Signal check</strong>（core question：最新模型上 dynamic-vs-static 信号还在吗）：</p>
-<ul>
-<li>新增 <code>signal_check.py</code>：methods × models × PDDL-ID/OOD 前 50 题（block 数分布已验证均匀）， temperature 0、单 sample、并行推理，结果存 <code>results/signal_check/</code></li>
-<li>首个 mini 结果（Haiku, n=6, ID）：dynamic 50.0 vs static 66.7 —— 待全量结果</li>
-</ul>
-<p>倒序记录。相关文档：COLM2026_DESIGN.md（design doc）、</p>
-<p>pivot-novel/colm_results_digest.md（结果盘点）、</p>
-<p>pivot-novel/experiment_digest.md（rebuttal 期实验设计）。</p></div>
-<div class="entry"><h2>2026-07-08 — COLM 2026 workshop 版本 v1</h2><p><strong>决策</strong>：转投 Efficient Reasoning @ COLM 2026 workshop（DDL 7/19），叙事从</p>
-<p>&quot;adaptive exemplar selection&quot; 重构为 &quot;test-free + zero-overhead adaptive ICL&quot;。</p>
-<p>Moonshot：之后以 &quot;coverage score 路由 test-time compute&quot; 为新 scope 冲 ICLR 27。</p>
-<p><strong>Paper</strong>（pivot_overleaf repo，commit <code>5e560b0</code>，新目录 <code>colm2026/</code>）：</p>
-<ul>
-<li>换 COLM 2026 模板，正文 9 页（上限 10）</li>
-<li>k-fold test-free 版本升级为主方法；加 Algorithm block + HITS 公式进正文</li>
-<li>主表换 Gemini 2.0 Flash + 新 baselines（FastGAS/CoverICL/IDEAL/MMR）+ test-access 列</li>
-<li>新增：efficiency section（selection 开销 + token parity）、router audit 分析（3.4）、 threshold/test-access 消融（Table 4）、run-to-run variance appendix、oracle headroom（3.7）</li>
-<li>旧 Gemini 1.5 Pro 四任务表保留为 transductive setting（PDDL +8.0 为最大 margin）</li>
-<li>本地编译验证通过，<code>main_preview.pdf</code> 为当前构建</li>
-</ul>
-<p><strong>数据复核（重要发现，约束了 claims，详见 design doc §1.2）</strong>：</p>
-<ul>
-<li><code>single_query</code> 变体 prompt 与 dynamic 完全相同（SQA 490/490）→ 其高分是噪声，改报 null result</li>
-<li>AIME24 同方法复跑波动 ±10 EM → 标 †、排除出 comparative claims</li>
-<li>post-hoc hub-score switching 只在 per-task 挑配置时赢 → 降级为 oracle 分析</li>
-<li>kfold router 在 SQA 触发 28% query，该子集 +3.0 EM（核心因果证据）；GPQA pool 太小（250）不稳定</li>
-<li>Token 分析：output tokens 各方法持平 → &quot;减少 reasoning tokens&quot; 故事不成立，改用 token parity</li>
-<li>AIME dynamic-gecko 主表数字统一为同 pipeline 的 26.7（旧 16.7 来自另一次 run）</li>
-</ul>
-<p><strong>新增文件</strong>：</p>
-<ul>
-<li><code>pivot_overleaf/colm2026/</code>（paper + 模板 + bib 增补：IDEAL/BGE/Nomic/Arctic/Otsu 等）</li>
-<li><code>pivot-novel/colm_results_digest.md</code>（137 runs 全盘点 + token 分析）</li>
-<li><code>COLM2026_DESIGN.md</code>、<code>CHANGELOG.md</code>（本文件）</li>
-</ul>
-<p><strong>待办</strong>（见 design doc §3）：P0 = 3-seed 复跑压噪声（~$25）+ 作者过稿；</p>
-<p>P1 = AIME 扩容、PDDL 上新 pipeline。</p></div>
-<div class="entry"><h2>2026-07-08 (晚) — Signal check 结果：旧信号反转，pivot idea 部分存活</h2><p>PDDL ID/OOD × dynamic/static × 3 新模型（n=50/格，temp 0，10-shot，结果在</p>
-<p><code>pivot-novel/results/signal_check/</code>）：</p>
+<p>Merged conclusions (with the API-model results below):</p>
+<p>1. The old &quot;dynamic wins ID / static wins OOD&quot; rule holds on <strong>none of 7 models</strong>; OOD collapses to 0 below 70B (unsolvable, not static-favoring).</p>
+<p>2. Oracle headroom <strong>emerges with capability and peaks in the mid-band</strong> (+16 Qwen-72B / +14 Llama-70B / +14 Sonnet / +14 Haiku; ≈0 for Gemini 3 Flash). The ID winner is family-dependent (Qwen leans static, Llama dynamic) → fixed rules are dead; routers must be model-aware.</p>
+<p>3. Decoding does not flip the selection winner; SC-majority ≤ greedy; but 32B static pass@10 = 48 vs greedy 38 → the diversity exists and majority voting cannot cash it — <strong>validator-guided best-of-n can</strong> (we have a free verifier).</p></div>
+<div class="entry"><h2>2026-07-08 (night) — API-model signal check: the old signal is reversed; the pivot idea partially survives</h2><p>PDDL ID/OOD × dynamic/static × 3 newest API models (n=50/cell, temp 0, 10-shot):</p>
 <table>
-<tr><th>Model</th><th>ID dyn</th><th>ID sta</th><th>OOD dyn</th><th>OOD sta</th><th>ID oracle</th><th>OOD oracle</th></tr>
-<tr><td>gemini-3-flash</td><td>98</td><td><strong>100</strong></td><td><strong>62</strong></td><td>60</td><td>100</td><td>64</td></tr>
-<tr><td>claude-sonnet-4-6</td><td>82</td><td><strong>84</strong></td><td><strong>68</strong></td><td>66</td><td><strong>98</strong></td><td><strong>76</strong></td></tr>
-<tr><td>claude-haiku-4-5</td><td>62</td><td><strong>70</strong></td><td><strong>44</strong></td><td>26</td><td><strong>84</strong></td><td>48</td></tr>
+<tr><th>Model</th><th>ID dyn</th><th>ID static</th><th>OOD dyn</th><th>OOD static</th><th>ID oracle</th><th>OOD oracle</th></tr>
+<tr><td>Gemini 3 Flash</td><td>98</td><td><strong>100</strong></td><td><strong>62</strong></td><td>60</td><td>100</td><td>64</td></tr>
+<tr><td>Claude Sonnet 4.6</td><td>82</td><td><strong>84</strong></td><td><strong>68</strong></td><td>66</td><td><strong>98</strong></td><td><strong>76</strong></td></tr>
+<tr><td>Claude Haiku 4.5</td><td>62</td><td><strong>70</strong></td><td><strong>44</strong></td><td>26</td><td><strong>84</strong></td><td>48</td></tr>
 </table>
-<p>三个结论：</p>
-<p>1. <strong>旧论文的 ID/OOD 方向在新模型上反转</strong>：三个模型都是 ID 上 static≥dynamic、</p>
-<p>   OOD 上 dynamic≥static（Haiku OOD 差 18 分）。&quot;低 coverage → 用 generic&quot; 的处方已失效。</p>
-<p>2. <strong>Per-query 异质性在中档模型上依然巨大</strong>：Sonnet 4.6 的 oracle 比最优单方法高</p>
-<p>   +14（ID）/+8（OOD），Haiku +14/+4——per-query routing 这个 meta-idea 有真实 headroom，</p>
-<p>   但 routing 信号需要重新学/设计，不能再用 &quot;低 coverage→static&quot; 的固定方向。</p>
-<p>3. <strong>最强模型饱和</strong>：gemini-3-flash ID 98-100、分歧 1/50——对 frontier 模型</p>
-<p>   selection 已几乎不重要；价值在 cheap/mid 模型（正是部署中省钱的场景）。</p>
-<p>另：<code>gemini-2.0-flash</code> 与 gecko embedding API 已下线，主表无法在原模型上复跑。</p>
-<p><strong>含义（待与 Colin 讨论）</strong>：renovate（把旧 claim 搬到新模型）不可行；</p>
-<p>建议 pivot scope → &quot;per-query context/compute routing for cost-efficient reasoning&quot;：</p>
-<p>用 zero-cost 信号预测每个 query 该给哪种 context（或哪个模型/多少算力），</p>
-<p>oracle gap 就是 motivation，COLM workshop 版可以先以 test-free + efficiency 故事投出去</p>
-<p>（其结果基于已完成的 2.0-flash runs，如实标注），大 refactor 走新 scope。</p></div>
-<div class="entry"><h2>2026-02 → 2026-05（背景，来自已有记录）</h2><ul>
-<li>ICLR 2026 投稿（0/2/2）1 月 withdraw；May ARR 三 reviewer 意见与 ICLR 高度重合 （test-set 依赖、阈值 heuristic、baselines 旧、AIME 小）。reviews 存于 <code>previous_reviews/</code>、 <code>rebuttal/</code>；两轮 rebuttal plan 在 <code>pivot-novel/rebuttal_plan{,_2nd}.md</code></li>
-<li>Rebuttal 期完成 100+ runs（<code>pivot-novel/results/</code>）：k-fold/single-query 变体、 FastGAS/CoverICL/IDEAL/MMR baselines、BGE/Nomic/Arctic/MiniLM embeddings、 threshold 消融（meanstd/percentile/otsu）、demo sweep {5,10,15}、3-seed variance runs、 pivot-adapt post-hoc 分析</li>
-<li>代码从 notebooks（<code>pivot-repo/</code>）重构为模块化 <code>pivot-novel/</code>；bedrock harness （Claude/GPT via <code>aws</code> env）就绪；babel cluster <code>~/pivot</code> 存有旧 PDDL/EXPLORA 实验</li>
+<p>1. <strong>The original paper&#x27;s ID/OOD direction is reversed</strong> on all three models (static ≥ dynamic on ID; dynamic ≥ static on OOD, by 18 points on Haiku). The &quot;low coverage → generic exemplars&quot; prescription no longer holds.</p>
+<p>2. <strong>Per-query heterogeneity remains large on mid-tier models</strong> (oracle +8 to +14) — the routing meta-idea has real headroom, but the routing signal must be redesigned.</p>
+<p>3. <strong>Frontier models saturate the task</strong> (Gemini 3 Flash: 98–100 on ID, 1/50 disagreement) — selection barely matters at the frontier; the value concentrates in the cheap/mid deployment tier.</p>
+<p>Also: gemini-2.0-flash and the gecko embedding API were shut down (404) — the original main-table model can no longer be re-run; all new runs use the Bedrock/Vertex backends.</p></div>
+<div class="entry"><h2>2026-07-08 (later) — PDDL integrated; new API backends; signal check built</h2><ul>
+<li><strong>API refactor</strong> (Together AI deprecated): new pivot-novel/backends.py with unified <strong>Bedrock</strong> (Claude Haiku 4.5 / Sonnet 4.6 / Opus 4.6, DeepSeek, Llama, Qwen3, gpt-oss) and <strong>Vertex AI</strong> (gemini-2.5-flash/pro, gemini-3-flash-preview, gemini-3.1-pro-preview) backends; both smoke-tested. llm.py gains a get_llm_client() factory; run_fast.py supports the new backends.</li>
+<li><strong>PDDL (Blocksworld) integrated into pivot-novel</strong> (from the original planning pipeline): 28,386 exemplars + 500 ID + 1,037 OOD test items; all gecko embedding / similarity / graph caches reused. New pure-Python blocksworld validator replaces the VAL binary — <strong>all 4,537 gold plans self-check as valid</strong>. End-to-end smoke test passed.</li>
+<li>signal_check.py: parallel methods × models × tasks grid runner with per-query stored outputs.</li>
+</ul></div>
+<div class="entry"><h2>2026-07-08 — COLM 2026 workshop version v1</h2><ul>
+<li><strong>Decision</strong>: target the Efficient Reasoning @ COLM 2026 workshop (deadline 7/19); narrative reframed from &quot;adaptive exemplar selection&quot; to &quot;test-free + zero-overhead adaptive ICL&quot;.</li>
+<li>Paper rebuilt on the COLM template (9 pages main): the test-free k-fold variant promoted to the main method; algorithm block + HITS equations in the main text; modern main table (Gemini 2.0 Flash) with FastGAS/CoverICL/IDEAL/MMR baselines; new efficiency section (selection overhead + token parity), router-audit analysis, variance appendix, oracle-headroom analysis; the Gemini 1.5 Pro four-task suite kept as the transductive setting (PDDL +8.0 is the largest margin).</li>
+<li><strong>Honesty audit of stored results</strong> (constrains all claims): the single-query variant degenerates to dynamic (identical prompts on 490/490 SQA) — reported as a null result; AIME24 reruns swing ±10 EM — flagged and excluded from comparative claims; post-hoc hub-score switching only wins with per-task config cherry-picking — demoted to oracle analysis; the k-fold router&#x27;s interventions on SQA (28% of queries) causally improve that subset by +3.0; output tokens are flat across selection methods — &quot;fewer reasoning tokens&quot; story dropped in favor of token-parity.</li>
+</ul></div>
+<div class="entry"><h2>2026-02 → 2026-05 — Background</h2><ul>
+<li>ICLR 2026 submission (ratings 0/2/2) withdrawn in January; May ARR reviews raised the same concerns (test-set dependence, heuristic threshold, outdated baselines, small AIME).</li>
+<li>100+ rebuttal-phase runs completed (k-fold/single-query variants, FastGAS/CoverICL/IDEAL/MMR baselines, BGE/Nomic/Arctic/MiniLM embeddings, threshold ablations, demo-count sweep, 3-seed variance runs).</li>
+<li>Codebase refactored from notebooks into modular pivot-novel.</li>
 </ul></div>
 
-<div class="foot">Generated from CHANGELOG.md by gen_progress_site.py · private working notes, not a publication</div>
+<div class="foot">Generated from the project changelog by gen_progress_site.py · private working notes, not a publication</div>
 </main></body></html>
