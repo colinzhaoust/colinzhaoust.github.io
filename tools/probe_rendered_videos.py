@@ -4,13 +4,54 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
+import re
 import shutil
 import subprocess
+from collections import Counter
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageStat
+
+
+def _safe_component(value: str) -> str:
+    component = re.sub(r"[^A-Za-z0-9._-]+", "_", value).strip("._")
+    return component or "root"
+
+
+def output_keys(videos: list[Path]) -> list[str]:
+    """Return deterministic, collision-free output keys for input videos.
+
+    A unique filename stem keeps the historical output layout. Duplicate stems
+    gain a parent-directory prefix (for example ``bt-001__reference``), with a
+    stable path digest only when those human-readable keys would still collide.
+    """
+
+    resolved = [video.resolve() for video in videos]
+    if len(set(resolved)) != len(resolved):
+        raise ValueError("duplicate video input resolves to the same file")
+
+    stem_counts = Counter(video.stem for video in videos)
+    candidates = [
+        video.stem
+        if stem_counts[video.stem] == 1
+        else f"{_safe_component(video.parent.name)}__{video.stem}"
+        for video in videos
+    ]
+    candidate_counts = Counter(candidates)
+    keys = []
+    for video, candidate in zip(videos, candidates):
+        if candidate_counts[candidate] == 1:
+            keys.append(candidate)
+            continue
+        identity = video.as_posix()
+        digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12]
+        keys.append(f"{candidate}__{digest}")
+    if len(set(keys)) != len(keys):
+        raise ValueError("could not derive unique output keys for video inputs")
+    return keys
 
 
 def run(cmd: list[str]) -> str:
@@ -112,12 +153,16 @@ def main() -> None:
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
+    videos = [Path(raw) for raw in args.videos]
+    try:
+        keys = output_keys(videos)
+    except ValueError as exc:
+        parser.error(str(exc))
+
     records = []
-    for raw in args.videos:
-        video = Path(raw)
+    for video, key in zip(videos, keys):
         meta = ffprobe(video)
-        stem = video.stem
-        frame_dir = out_dir / "frames" / stem
+        frame_dir = out_dir / "frames" / key
         times = [meta["duration_sec"] * frac for frac in (0.18, 0.52, 0.86)]
         frame_paths = []
         frame_metrics = []
@@ -137,7 +182,7 @@ def main() -> None:
             shutil.copyfile(best[1], final_frame)
             frame_paths.append(final_frame)
             frame_metrics.append({"path": str(final_frame), "timestamp": round(best[0], 3), **best[2]})
-        sheet = out_dir / "contact_sheets" / f"{stem}.png"
+        sheet = out_dir / "contact_sheets" / f"{key}.png"
         make_contact_sheet(frame_paths, sheet)
         records.append({"video": str(video), **meta, "frames": frame_metrics, "contact_sheet": str(sheet)})
 
@@ -145,7 +190,7 @@ def main() -> None:
     (out_dir / "probe_report.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
     lines = ["# Render Probe Report", ""]
     for rec in records:
-        lines.append(f"## {Path(rec['video']).stem}")
+        lines.append(f"## {Path(rec['contact_sheet']).stem}")
         lines.append(f"- video: `{rec['video']}`")
         lines.append(f"- duration: {rec['duration_sec']:.2f}s, size: {rec['width']}x{rec['height']}, fps: {rec['fps']}")
         lines.append(f"- contact sheet: `{rec['contact_sheet']}`")
