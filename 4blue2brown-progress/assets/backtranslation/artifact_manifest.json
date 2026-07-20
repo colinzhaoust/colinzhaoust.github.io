@@ -1,0 +1,391 @@
+{
+  "cases": [
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "f014f558c3839d42a10feb12e5a4423eb167f29a0dbb2ddf9f3329a8b17027ad",
+          "size_bytes": 426
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 7.5,
+          "sha256": "ac5bdadbff736066cd8230b9b242ce8e489214f3398357bf22011a57549aa21c",
+          "size_bytes": 43903
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "d5be00e67f406dc22e907062be0bf3a1f7cb5d8b012ce8111f08bea798487c13",
+          "size_bytes": 907
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "f3d2696f5c4c504a7719cdcaa1aa6e5c6e7be7fd1ba521176708a6eb871ec369",
+          "size_bytes": 800206
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "accaafc22bb7361b9d7c1b85cff83398fda664bda99bc39177d55dea38340e47",
+          "size_bytes": 1090
+        }
+      },
+      "case_id": "bt-001",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "OpeningManim",
+      "selected_run_id": "9329948",
+      "selected_slurm": {
+        "array_job_id": "9329948",
+        "array_task_id": "0",
+        "job_id": "9329949"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "9ee1f598e324df85f1cc5bfc9556a37f58889f42b58439c8b64a5ee4066104c9",
+          "size_bytes": 424
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 4.766504,
+          "sha256": "2187c22959c3407a8f63285b2bd8359376abbe0f1c0178fc6108871d76e05b55",
+          "size_bytes": 31023
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "20c00a724b77c15a99f3a4cfcfcc74f5ee14c79dfc428b0bdb7a01a80bcfb091",
+          "size_bytes": 910
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "fda7dd8889c8aa05681190d9fd5adfa01bf4ae94e8ed60f52fbaaea318c40138",
+          "size_bytes": 83791
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "e3d3dd994f3d51ad85771ff8aa56bd6f3d504e137afafd46f2ae71617ef52324",
+          "size_bytes": 1097
+        }
+      },
+      "case_id": "bt-002",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "SineCurveUnitCircle",
+      "selected_run_id": "9329948",
+      "selected_slurm": {
+        "array_job_id": "9329948",
+        "array_task_id": "1",
+        "job_id": "9329950"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "9aae243ebc6fa52eec271dc081740038a63d61dcb8993a148062976cf38090e0",
+          "size_bytes": 425
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 4.5,
+          "sha256": "6aa116ce8969e044bd3abcb54a101a28b2d709de0fb11f58ffd5de5338343f1e",
+          "size_bytes": 82163
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "6f3fd9f6d71be6d93dd435dd44fe2a73f04dd212c7bbdf504c74336703bc5365",
+          "size_bytes": 906
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "831546a0de174678aa10ca0fd446068a345db651b402527cc9d528c1d471fe0b",
+          "size_bytes": 229495
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "718615f1ce86f6ee894669473eea77c33ca315483301785349b94c80c0fea836",
+          "size_bytes": 901
+        }
+      },
+      "case_id": "bt-003",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "BooleanOperations",
+      "selected_run_id": "9314456",
+      "selected_slurm": {
+        "array_job_id": "9314456",
+        "array_task_id": "2",
+        "job_id": "9314459"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "7898d0b2319cc77f45872f9eaffc249c7ac391149e38cc614a28a74648bb852c",
+          "size_bytes": 424
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 1.0,
+          "sha256": "9f6a5ada0bc23f402836673c5b441cea1d9500be9d13a89ccc647c61be189b12",
+          "size_bytes": 28722
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "58cdec13bc78dfb0cc3141976377ad9b2e4a68b7de68253b5787741e6ec8a41d",
+          "size_bytes": 905
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "36cda4d8535a8353887b40f81c1e9a745ca3a06be88e36bb992ac58cfc2f10a2",
+          "size_bytes": 13356
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "394a2170a2ffbcfb435cf0630031e6646b4cf0e8ced8d6be97e5a95dd0f7483a",
+          "size_bytes": 1091
+        }
+      },
+      "case_id": "bt-004",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "ArgMinExample",
+      "selected_run_id": "9329948",
+      "selected_slurm": {
+        "array_job_id": "9329948",
+        "array_task_id": "2",
+        "job_id": "9329984"
+      }
+    },
+    {
+      "artifacts": {
+        "status": {
+          "path": "status.json",
+          "sha256": "6f931ac4a88504e1d9a8cd7e00b69c3fad555920e7e5b88aaa3a97db7249d5fa",
+          "size_bytes": 950
+        }
+      },
+      "case_id": "bt-005",
+      "failure_detail": "upstream_save_last_frame_no_mp4",
+      "final_status": "failed",
+      "scene_class": "GraphAreaPlot",
+      "selected_run_id": "9329948",
+      "selected_slurm": {
+        "array_job_id": "9329948",
+        "array_task_id": "3",
+        "job_id": "9329948"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "d5c6c37edf859e091b30b3dbc96dcc9381a5877c2fa3bcb9a3ff98d5affebb29",
+          "size_bytes": 424
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 3.0,
+          "sha256": "b81e783f9874bca95b11bbc921cb633f9516b705a89f75cf117be87b477cf507",
+          "size_bytes": 6606
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "8d5319b4cb886062ec65865a10f49f8a92d257ec1c1fc6a79ed7ff695be52e6f",
+          "size_bytes": 905
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "79bd9aa81b601f305cdfb6a75c0ff49f33c96bb7eb60b277a5b5d954135a0848",
+          "size_bytes": 11032
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "436fe2be2623beaf001a8012716afb393bf1f4c271ae321113cd9671cf1727c2",
+          "size_bytes": 898
+        }
+      },
+      "case_id": "bt-006",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "PointWithTrace",
+      "selected_run_id": "9314456",
+      "selected_slurm": {
+        "array_job_id": "9314456",
+        "array_task_id": "5",
+        "job_id": "9314483"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "01822225147755ec95098700124c1a2f9651f74548e5ef2f0b76194950f56fe6",
+          "size_bytes": 425
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 1.5,
+          "sha256": "172ab3dfa90ffa51ea41a4b266222cc3a0658ae6c7a0359b1f7cc7094ec85b5b",
+          "size_bytes": 33591
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "e5f68b4da39ed0477da997727358ca6e57bfa7c18f07f75d62e63f75df25b0e3",
+          "size_bytes": 906
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "553d31b0593c5cc398db0f6b70f332ed9778268bf57bcefd7e9d4a438ce7c20e",
+          "size_bytes": 119070
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "a77b3be60950f0fc621fb93ac532c12290d19d4516a9ff9c4d2662056303bd57",
+          "size_bytes": 904
+        }
+      },
+      "case_id": "bt-007",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "FollowingGraphCamera",
+      "selected_run_id": "9314456",
+      "selected_slurm": {
+        "array_job_id": "9314456",
+        "array_task_id": "6",
+        "job_id": "9314487"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "b30c91fe3a3dc00433151fb92457c5802e95e3b416e4edefd3c61fad396084ba",
+          "size_bytes": 426
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 6.0,
+          "sha256": "20fa42e7b818c2eb205697ec8b7c3c5a391df3774e77d0ae17110d52d1a59c34",
+          "size_bytes": 64113
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "e60ad566b14f3d3e98a8c0c500c280262a12eb722be79ebecec5349e1eaa2043",
+          "size_bytes": 907
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "aaae997f1ab19e6486e5d104c03b7d86d600cce311449c8c0e3ee850389ceebb",
+          "size_bytes": 158388
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "9f72c430761d2bdf4fdd2b8eed4d10245cf320da24e1dd9f6344a172ea8face3",
+          "size_bytes": 907
+        }
+      },
+      "case_id": "bt-008",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "MovingZoomedSceneAround",
+      "selected_run_id": "9314456",
+      "selected_slurm": {
+        "array_job_id": "9314456",
+        "array_task_id": "7",
+        "job_id": "9314489"
+      }
+    },
+    {
+      "artifacts": {
+        "ffprobe": {
+          "path": "reference-ffprobe.json",
+          "sha256": "34a96a32d2cc3d8974901f0346d2b44c9332cc1ea740b6fdc7648ecef92bc078",
+          "size_bytes": 424
+        },
+        "poster": {
+          "path": "poster.png",
+          "sample_fraction": 0.5,
+          "sample_time_seconds": 1.5,
+          "sha256": "f24bfc21cc4c385cd1421fc0058737253f51d238aa6d56b033c1fe3cc8eee6d0",
+          "size_bytes": 24666
+        },
+        "preparation_manifest": {
+          "path": "reference-preparation.json",
+          "sha256": "ceb425d326f1d541c9425e8a5e7e484dae053c3d643d471460e055413fc2cc18",
+          "size_bytes": 905
+        },
+        "reference": {
+          "path": "reference.mp4",
+          "sha256": "bc01526f93e2c42b2c35aa0aa409ef4fad9bbb812c0a0780c36e9e2a6e02b312",
+          "size_bytes": 42520
+        },
+        "status": {
+          "path": "status.json",
+          "sha256": "d9b260493bf86701c1e0047373992fdcaae09c9ab03b3ab6b0fb4642cb043c0c",
+          "size_bytes": 904
+        }
+      },
+      "case_id": "bt-009",
+      "failure_detail": null,
+      "final_status": "completed",
+      "scene_class": "ThreeDCameraRotation",
+      "selected_run_id": "9314456",
+      "selected_slurm": {
+        "array_job_id": "9314456",
+        "array_task_id": "8",
+        "job_id": "9314497"
+      }
+    },
+    {
+      "artifacts": {
+        "status": {
+          "path": "status.json",
+          "sha256": "b4b5a4d5f01a673282101db12fb5255b667da21c7b57ed61a9535602fc63b0e2",
+          "size_bytes": 760
+        }
+      },
+      "case_id": "bt-010",
+      "failure_detail": "upstream_save_last_frame_no_mp4",
+      "final_status": "failed",
+      "scene_class": "ThreeDSurfacePlot",
+      "selected_run_id": "9314456",
+      "selected_slurm": {
+        "array_job_id": "9314456",
+        "array_task_id": "9",
+        "job_id": "9314456"
+      }
+    }
+  ],
+  "conditions": {
+    "human_reference": "measured_from_pinned_source",
+    "one_shot": "blocked_no_true_video_input_provider_and_external_sandbox",
+    "self_refined": "blocked_no_true_video_input_provider_and_external_sandbox"
+  },
+  "inventory": {
+    "completed": 8,
+    "denominator": 10,
+    "path": "combined_reference_inventory.json",
+    "sha256": "fd040602862b968802976e3677d78f33cdf2354e957a64ccf9dc65a7b40fb514"
+  },
+  "license_notice_paths": [
+    "../../licenses/manim-LICENSE.txt",
+    "../../licenses/manim-LICENSE.community.txt"
+  ],
+  "schema_version": "backtranslation-reference-evidence-bundle/v1",
+  "source_manifest": {
+    "path": "source_manifest.json",
+    "sha256": "9e6cc8eb39b53e22487de6571f6aa1e4a9587b0990af8707219f9e8230fb36c7",
+    "size_bytes": 3725
+  }
+}

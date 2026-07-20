@@ -1,0 +1,35 @@
+{
+  "case_id": "bt-004",
+  "exit_codes": {
+    "job_local_dependency": 0,
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T17:50:54Z",
+  "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9329948/bt-004/raw-render",
+    "sha256": "408afdce3329b400b12f70aba9628f236d7d409ed249195fc42e0977dae34807"
+  },
+  "recovery": {
+    "dependency_provenance": "not_packaged",
+    "initial_slurm_task": "9314456_3",
+    "reason": "missing_runtime_dependency_standalone_cls"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-004/reference.mp4",
+    "sha256": "36cda4d8535a8353887b40f81c1e9a745ca3a06be88e36bb992ac58cfc2f10a2"
+  },
+  "scene_class": "ArgMinExample",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9329948",
+    "array_task_id": "2",
+    "job_id": "9329984"
+  },
+  "started_at": "2026-07-16T17:47:12Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}

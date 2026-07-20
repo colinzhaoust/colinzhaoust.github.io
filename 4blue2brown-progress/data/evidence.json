@@ -1,0 +1,82 @@
+{
+  "schema_version": "progress-site-evidence/1.0.0",
+  "snapshot_date": "2026-07-20",
+  "claim_policy": {
+    "full": "All required stages, deliverables, provenance, review, and cost fields pass the completion contract.",
+    "partial": "A qualifying artifact exists, but one or more completion requirements are missing.",
+    "smoke": "A real narrow run validates an early boundary, not the complete pipeline.",
+    "blocked": "No qualifying artifact exists for the declared cell."
+  },
+  "local_verification": {
+    "passed": 130,
+    "total": 130,
+    "suite_count": 6,
+    "suites": [
+      {"id": "paper_media_evidence", "passed": 30, "total": 30},
+      {"id": "backtranslation", "passed": 58, "total": 58},
+      {"id": "real_video_matrix", "passed": 9, "total": 9},
+      {"id": "slides_baselines", "passed": 6, "total": 6},
+      {"id": "formula_explainer", "passed": 14, "total": 14},
+      {"id": "slides_manim", "passed": 13, "total": 13}
+    ]
+  },
+  "threads": {
+    "real_video_pipelines": {
+      "denominator": 12,
+      "summary": {"full": 0, "partial": 10, "blocked": 2},
+      "pipelines": ["code2video", "paper2manim", "inhouse_v0"],
+      "topics": ["transformers", "dpo", "feynrl", "rope"],
+      "source": "../../experiments/real_video_matrix/v1/report.json",
+      "public_source": "../assets/manifests/real-video-matrix-report.json"
+    },
+    "paper_to_slides": {
+      "denominator": 12,
+      "summary": {"full": 0, "partial": 0, "smoke": 4, "blocked": 8},
+      "pipelines": ["deeppresenter_current", "slidegen", "arcdeck"],
+      "warning": "The four SlideGen outputs are native PDF-parse smoke artifacts, not generated slide decks.",
+      "source": "../../experiments/slides_baselines/v1/results.json",
+      "public_source": "../assets/manifests/paper-to-slides-results.json"
+    },
+    "slides_manim": {
+      "methodology_slots": {"smoke": 1},
+      "planned_missing": ["architecture_dataflow", "performance_comparison"],
+      "artifact": {
+        "source_run_ref": "babel:job:9313551",
+        "duration_seconds": 6.666,
+        "sha256": "86568917ad365c1dcbdaca7187c3848e7a4fe350e4c84398dde67be416d33c87",
+        "public_path": "../assets/formula-explainer/attention_softmax_9313551.mp4"
+      },
+      "source": "../../experiments/slides_manim/methodology_attention_softmax.slide-ir.json",
+      "public_source": "../assets/manifests/methodology-attention-softmax.slide-ir.json"
+    },
+    "bottom_up_formula_explainer": {
+      "demo_topics": 5,
+      "paper_families": 4,
+      "formulas": 7,
+      "primitives": 10,
+      "graph_nodes": 59,
+      "graph_edges": 72,
+      "source": "../../runs/formula_explainer/build/build_summary.json",
+      "graph_source": "../../runs/formula_explainer/build/canonical_graph_fragment.json",
+      "public_summary": "../assets/manifests/formula-build-summary.json",
+      "public_graph": "../assets/manifests/formula-canonical-graph.json"
+    },
+    "backtranslation": {
+      "denominator": 10,
+      "human_reference": {"normalized_video": 8, "source_exact_static_no_video": 2},
+      "one_shot": "blocked_no_true_video_input_provider_and_external_sandbox",
+      "self_refined": "blocked_no_true_video_input_provider_and_external_sandbox",
+      "attempt_count": 30,
+      "registry_id": "manim-community-gallery-v0.20.1-ten-scenes",
+      "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4",
+      "combined_inventory_sha256": "fd040602862b968802976e3677d78f33cdf2354e957a64ccf9dc65a7b40fb514",
+      "claim_scope": "Public source-available development set; not an unseen or contamination-free benchmark.",
+      "source": "../../experiments/backtranslation/v1/evidence/babel_20260716/combined_reference_inventory.json",
+      "public_inventory": "../assets/backtranslation/combined_reference_inventory.json",
+      "licenses": [
+        "../assets/backtranslation/manim-LICENSE.txt",
+        "../assets/backtranslation/manim-LICENSE.community.txt"
+      ]
+    }
+  }
+}

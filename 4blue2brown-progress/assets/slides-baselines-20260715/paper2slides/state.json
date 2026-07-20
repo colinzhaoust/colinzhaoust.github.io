@@ -1,6 +1,6 @@
 {
   "config": {
-    "input_path": "/home/xinranz3/4blue2brown_explore/slides_baselines_20260715/inputs/feynrl_2605.12380.pdf",
+    "input_path": "artifact://slides_baselines_20260715/inputs/feynrl_2605.12380.pdf",
     "content_type": "paper",
     "output_type": "slides",
     "style": "academic",

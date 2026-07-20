@@ -1,0 +1,111 @@
+{
+  "generated_at": "2026-07-16T04:34:23Z",
+  "generated_source": {
+    "path": "scenes.py",
+    "sha256": "a575e7c2d078837142dd26ad774500b8fbad4de8c1e259d2aa94b3647b6ca44f"
+  },
+  "license_notice_paths": [
+    "LICENSE",
+    "LICENSE.community"
+  ],
+  "registry_id": "manim-community-gallery-v0.20.1-ten-scenes",
+  "scenes": [
+    {
+      "case_id": "bt-001",
+      "class_line": 704,
+      "code_sha256": "4493b6529fb8ba62ce122e4857771e7e3b71a39ce48a382e62075e110cd77b24",
+      "directive_line": 700,
+      "scene_class": "OpeningManim"
+    },
+    {
+      "case_id": "bt-002",
+      "class_line": 762,
+      "code_sha256": "f88dbbe92752454cb0fa030ff9fc7724ecce588735000be1c486d54821eb8d2d",
+      "directive_line": 757,
+      "scene_class": "SineCurveUnitCircle"
+    },
+    {
+      "case_id": "bt-003",
+      "class_line": 99,
+      "code_sha256": "d695f16e090a4ffae4cf44c50ee2feeec8b6fa384ad42aa85058b9780e19a2ea",
+      "directive_line": 96,
+      "scene_class": "BooleanOperations"
+    },
+    {
+      "case_id": "bt-004",
+      "class_line": 355,
+      "code_sha256": "6b9760951ca0f6f273995a641571dd4775443c1d7cd1ff31af6f77a9e6def9cb",
+      "directive_line": 353,
+      "scene_class": "ArgMinExample"
+    },
+    {
+      "case_id": "bt-005",
+      "class_line": 384,
+      "code_sha256": "2d9679e9aa8523b5f1c66d92585ce08852be636695b2ce8a1f3c80b26e84c3f8",
+      "directive_line": 379,
+      "scene_class": "GraphAreaPlot"
+    },
+    {
+      "case_id": "bt-006",
+      "class_line": 291,
+      "code_sha256": "d51e088d7f31d3a20f2fa5996cb1b5e164f0a96dfa09edc46a2d8fee231075b0",
+      "directive_line": 287,
+      "scene_class": "PointWithTrace"
+    },
+    {
+      "case_id": "bt-007",
+      "class_line": 504,
+      "code_sha256": "c3b77cd1da6605dcca47b707ddc1d8e6331ffef7e0c69e40fcda0759bffd8fc0",
+      "directive_line": 498,
+      "scene_class": "FollowingGraphCamera"
+    },
+    {
+      "case_id": "bt-008",
+      "class_line": 534,
+      "code_sha256": "08416a524ae4bfb7e53e67ccec8c8479dc23ef81cd52d10806b24f6f8abb0943",
+      "directive_line": 529,
+      "scene_class": "MovingZoomedSceneAround"
+    },
+    {
+      "case_id": "bt-009",
+      "class_line": 638,
+      "code_sha256": "3183a2612392faad7e92bc4f30c091aa3db0faea6280d498f5bfc32c87bb1df2",
+      "directive_line": 634,
+      "scene_class": "ThreeDCameraRotation"
+    },
+    {
+      "case_id": "bt-010",
+      "class_line": 668,
+      "code_sha256": "ace9505560e9ae3e666fcb24c73591f4094510578477f8a8f28c72d3a2025b3e",
+      "directive_line": 664,
+      "scene_class": "ThreeDSurfacePlot"
+    }
+  ],
+  "schema_version": "backtranslation-reference-source-bundle/v1",
+  "source_verification": {
+    "commit_sha": "1157b746c37130685e0a02d8aa0871d1f164d5f4",
+    "licenses": [
+      {
+        "path": "LICENSE",
+        "sha256": "c6a922fc1cfaed7ac0f87aa1dc77ebf5a3c8d1ccc5ab01da33153f0d013bf019"
+      },
+      {
+        "path": "LICENSE.community",
+        "sha256": "78e87bb648bdf08c827dd398a11e29cbdf74c3203969d3738dba3eb09d5c2022"
+      }
+    ],
+    "scene_count": 10,
+    "source_root_mode": "git_checkout",
+    "source_sha256": "6b56c2cf4a61344b2a1fab5e0c1774a6f7e8ce6a5134149bd5e552f0eb82bb67"
+  },
+  "upstream": {
+    "commit_sha": "1157b746c37130685e0a02d8aa0871d1f164d5f4",
+    "release": "v0.20.1",
+    "repository": "https://github.com/ManimCommunity/manim",
+    "retrieved_at": "2026-07-15T17:30:00Z",
+    "source_blob_git_sha1": "6584daadd8a6673f5a05c621a912f37d24e83402",
+    "source_path": "docs/source/examples.rst",
+    "source_sha256": "6b56c2cf4a61344b2a1fab5e0c1774a6f7e8ce6a5134149bd5e552f0eb82bb67",
+    "source_url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/docs/source/examples.rst"
+  }
+}

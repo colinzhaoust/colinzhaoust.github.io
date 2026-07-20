@@ -1,0 +1,34 @@
+[
+  {
+    "video": "progress_site/assets/upstream-batch-20260709/videos/tea_feynrl_scene2_smoke.mp4",
+    "width": 854,
+    "height": 480,
+    "fps": "15/1",
+    "duration_sec": 33.133008,
+    "size_bytes": 911525,
+    "frames": [
+      {
+        "path": "runs/remote_checks/upstream_batch_20260709/tea_scene2_probe/frames/tea_feynrl_scene2_smoke/01.png",
+        "timestamp": 5.964,
+        "brightness": 5.28,
+        "non_background_fraction": 0.0372,
+        "entropy": 0.558
+      },
+      {
+        "path": "runs/remote_checks/upstream_batch_20260709/tea_scene2_probe/frames/tea_feynrl_scene2_smoke/02.png",
+        "timestamp": 18.129,
+        "brightness": 6.21,
+        "non_background_fraction": 0.0462,
+        "entropy": 0.807
+      },
+      {
+        "path": "runs/remote_checks/upstream_batch_20260709/tea_scene2_probe/frames/tea_feynrl_scene2_smoke/03.png",
+        "timestamp": 28.494,
+        "brightness": 6.03,
+        "non_background_fraction": 0.0452,
+        "entropy": 0.808
+      }
+    ],
+    "contact_sheet": "runs/remote_checks/upstream_batch_20260709/tea_scene2_probe/contact_sheets/tea_feynrl_scene2_smoke.png"
+  }
+]

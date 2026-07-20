@@ -1,0 +1,35 @@
+{
+  "case_id": "bt-002",
+  "exit_codes": {
+    "job_local_dependency": 0,
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T17:46:47Z",
+  "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9329948/bt-002/raw-render",
+    "sha256": "e179f7de4934cd83ec9a6c3c4c5d48c3573c48d592569166e40a84405376e921"
+  },
+  "recovery": {
+    "dependency_provenance": "not_packaged",
+    "initial_slurm_task": "9314456_1",
+    "reason": "missing_runtime_dependency_standalone_cls"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-002/reference.mp4",
+    "sha256": "fda7dd8889c8aa05681190d9fd5adfa01bf4ae94e8ed60f52fbaaea318c40138"
+  },
+  "scene_class": "SineCurveUnitCircle",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9329948",
+    "array_task_id": "1",
+    "job_id": "9329950"
+  },
+  "started_at": "2026-07-16T17:40:26Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}

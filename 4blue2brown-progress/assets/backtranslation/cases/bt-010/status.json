@@ -1,0 +1,29 @@
+{
+  "case_id": "bt-010",
+  "exit_codes": {
+    "normalization": 125,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": "render_error",
+  "finished_at": "2026-07-16T04:41:03Z",
+  "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+  "raw_render": {
+    "path": null,
+    "sha256": null
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-010/model_input/bt-010/reference.mp4",
+    "sha256": null
+  },
+  "scene_class": "ThreeDSurfacePlot",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9314456",
+    "array_task_id": "9",
+    "job_id": "9314456"
+  },
+  "started_at": "2026-07-16T04:40:55Z",
+  "status": "failed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}
