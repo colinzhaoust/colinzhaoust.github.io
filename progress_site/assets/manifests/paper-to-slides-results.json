@@ -1,0 +1,155 @@
+{
+  "schema_version": "paper-to-slides-results/1.0.0",
+  "experiment_id": "paper-to-slides-four-family-20260715-v1",
+  "recorded_at": "2026-07-16T03:33:00Z",
+  "matrix_summary": {
+    "full": 0,
+    "partial": 0,
+    "smoke": 4,
+    "blocked": 8,
+    "selected_cells": 12,
+    "warning": "The four SlideGen results are native PDF-parse smoke artifacts, not generated slide decks."
+  },
+  "input_freeze": {
+    "job_id": "9313499",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:00:02",
+    "retrieval_window": ["2026-07-16T03:23:07Z", "2026-07-16T03:23:08Z"],
+    "source_revisions": {
+      "transformers": "arxiv:1706.03762v7",
+      "dpo": "arxiv:2305.18290v3",
+      "feynrl": "arxiv:2605.12380v1",
+      "rope": "arxiv:2104.09864v5"
+    },
+    "version_binding": {
+      "verified_at": "2026-07-16T04:23:59Z",
+      "method": "Downloaded each exact versioned arXiv PDF on Babel and compared SHA-256 with the job 9313499 frozen input.",
+      "all_hashes_match": true,
+      "fresh_freeze_job_required": false,
+      "historical_download_note": "Job 9313499 used versionless arXiv URLs; the later byte-for-byte verification binds those retrieved files to the exact revisions above."
+    },
+    "provider_calls": 0,
+    "provider_cost_measured_usd": 0.0
+  },
+  "pipeline_results": [
+    {
+      "pipeline_id": "deeppresenter_current",
+      "commit_sha": "2419d30b134a71486523e95ded60b32489fd3c61",
+      "papers": ["transformers", "dpo", "feynrl", "rope"],
+      "completion": "blocked",
+      "blocker": "Documented current runtime requires sandbox/host and browser conversion surfaces; Babel lacks Docker, Apptainer/Singularity, Node/npm/npx, Playwright, LibreOffice/soffice, uv, and uvx.",
+      "evidence": "artifact://slides_baselines_20260715/runs/pptagent/environment_probe.txt",
+      "provider_calls": 0,
+      "provider_cost_measured_usd": 0.0,
+      "compute_cost_usd": null
+    },
+    {
+      "pipeline_id": "slidegen",
+      "commit_sha": "f9416e4c99e83dfe368d26bb8c74e02889da8b3a",
+      "completion": "smoke",
+      "patch_level": "compatibility",
+      "patch": "Dependency-only pin docling-parse==4.7.3; method code unchanged.",
+      "probe_job": {
+        "job_id": "9313479",
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "elapsed": "00:09:40",
+        "artifact_sha256": "042ded56f89954b087f34303ecdeecb07b1a24c0a1b049a653240d88f7672f75"
+      },
+      "array_job_id": "9313502",
+      "dependency": "afterok:9313479",
+      "max_concurrency": 2,
+      "provider_calls": 0,
+      "provider_cost_measured_usd": 0.0,
+      "compute_cost_usd": null,
+      "cells": [
+        {
+          "paper_id": "transformers",
+          "job_id": "9313502_0",
+          "job_id_raw": "9313559",
+          "state": "COMPLETED",
+          "exit_code": "0:0",
+          "elapsed_seconds": 107,
+          "slurm": {"cpus": 4, "memory": "32G"},
+          "input_sha256": "bdfaa68d8984f0dc02beaca527b76f207d99b666d31d1da728ee0728182df697",
+          "artifact": {
+            "path": "artifact://slides_baselines_20260715/runs/slidegen-parse-matrix/9313502_0/transformers.md",
+            "bytes": 47257,
+            "sha256": "0d7abafee4eedba1ce15fe0aeffc0f4099cdedc0c7959131d5c6560deef91f41"
+          }
+        },
+        {
+          "paper_id": "dpo",
+          "job_id": "9313502_1",
+          "job_id_raw": "9313560",
+          "state": "COMPLETED",
+          "exit_code": "0:0",
+          "elapsed_seconds": 110,
+          "slurm": {"cpus": 4, "memory": "32G"},
+          "input_sha256": "92cb3a2b71362acda98a789b03d88688fd33cf5fcf13f81d2b1de30ee7d3b67a",
+          "artifact": {
+            "path": "artifact://slides_baselines_20260715/runs/slidegen-parse-matrix/9313502_1/dpo.md",
+            "bytes": 132662,
+            "sha256": "03e6c21931ba89dd4cb9762390bf2308510fa01ace79ecaf36bbb01ec43bab74"
+          }
+        },
+        {
+          "paper_id": "feynrl",
+          "job_id": "9313502_2",
+          "job_id_raw": "9313566",
+          "state": "COMPLETED",
+          "exit_code": "0:0",
+          "elapsed_seconds": 58,
+          "slurm": {"cpus": 4, "memory": "32G"},
+          "input_sha256": "19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
+          "artifact": {
+            "path": "artifact://slides_baselines_20260715/runs/slidegen-parse-matrix/9313502_2/feynrl.md",
+            "bytes": 61127,
+            "sha256": "042ded56f89954b087f34303ecdeecb07b1a24c0a1b049a653240d88f7672f75"
+          }
+        },
+        {
+          "paper_id": "rope",
+          "job_id": "9313502_3",
+          "job_id_raw": "9313502",
+          "state": "COMPLETED",
+          "exit_code": "0:0",
+          "elapsed_seconds": 58,
+          "slurm": {"cpus": 4, "memory": "32G"},
+          "input_sha256": "e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+          "artifact": {
+            "path": "artifact://slides_baselines_20260715/runs/slidegen-parse-matrix/9313502_3/rope.md",
+            "bytes": 61428,
+            "sha256": "6e859c9c7f77ec7937677ef3332aad71e9d3afa39c604a300c33468ba27b3189"
+          }
+        }
+      ]
+    },
+    {
+      "pipeline_id": "arcdeck",
+      "commit_sha": "47c54ae7f5deeb1640ed89367c388ada22484fef",
+      "papers": ["transformers", "dpo", "feynrl", "rope"],
+      "completion": "blocked",
+      "blocker": "Full provider stage failed closed: no frozen WInE rate card or per-run usage ledger. Upstream requirements are also broad and unpinned.",
+      "provider_calls": 0,
+      "provider_cost_measured_usd": 0.0,
+      "provider_cost_estimated_usd": null,
+      "compute_cost_usd": null
+    }
+  ],
+  "fallback_result": {
+    "pipeline_id": "paper2slides_fast_academic_short",
+    "commit_sha": "0785051d1f52814097e94c44751e3f12b83f7c8a",
+    "paper_id": "feynrl",
+    "job_ids": ["9304985", "9305012", "9305040"],
+    "completion": "partial",
+    "selected_matrix_cell": false,
+    "artifact": "output/feynrl_2605.12380/paper/fast/slides_academic_short/checkpoint_plan.json",
+    "artifact_bytes": 37808,
+    "missing": ["editable_deck", "static_render", "reconciled_cost", "semantic_review", "presentation_review"],
+    "provider_cost_measured_usd": null,
+    "provider_cost_estimated_usd": null,
+    "cost_state": "unknown_not_zero"
+  }
+}

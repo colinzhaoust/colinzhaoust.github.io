@@ -1,0 +1,15 @@
+{
+  "benchmark_paper_family_count": 4,
+  "canonical_graph_fragment_ref": "runs/formula_explainer/build/canonical_graph_fragment.json",
+  "demo_topic_count": 5,
+  "formula_count": 7,
+  "primitive_count": 10,
+  "schema_version": "formula-explainer-build/0.1.0",
+  "topic_composition_refs": [
+    "topic_compositions/transformers_core.json",
+    "topic_compositions/attention_softmax_lookup.json",
+    "topic_compositions/dpo.json",
+    "topic_compositions/feynrl.json",
+    "topic_compositions/rope.json"
+  ]
+}

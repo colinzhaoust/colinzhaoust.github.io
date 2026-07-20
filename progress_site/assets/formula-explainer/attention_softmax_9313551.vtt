@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:02.400
+The sourced softmax formula is decomposed into exponentiation and normalization.
+
+00:02.400 --> 00:04.300
+Three raw token scores are exponentiated, preserving their relative order.
+
+00:04.300 --> 00:06.666
+The values are normalized to 0.245, 0.665, and 0.090, which sum to one.

@@ -1,0 +1,1286 @@
+{
+  "edges": [
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:attention.exp.visualized_by.project.softmax_probability_flow",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.attention.softmax"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:attention.exp",
+      "target_ref": "primitive:project.softmax_probability_flow"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:attention.normalize.visualized_by.project.softmax_probability_flow",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.attention.softmax"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:attention.normalize",
+      "target_ref": "primitive:project.softmax_probability_flow"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:attention.softmax.contains.attention.exp",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:attention.softmax",
+      "target_ref": "operation:attention.exp"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:attention.softmax.contains.attention.normalize",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:attention.softmax",
+      "target_ref": "operation:attention.normalize"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:attention.softmax.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.attention.softmax"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:attention.softmax",
+      "target_ref": "scene:attention.softmax"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:attention_softmax_lookup.contains.attention.softmax",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:attention_softmax_lookup",
+      "target_ref": "formula:attention.softmax"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:dpo.contains.dpo.objective",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:dpo",
+      "target_ref": "formula:dpo.objective"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:dpo.log_ratios.visualized_by.project.preference_margin_flow",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.dpo.objective"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:dpo.log_ratios",
+      "target_ref": "primitive:project.preference_margin_flow"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:dpo.log_sigmoid.visualized_by.project.preference_margin_flow",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.dpo.objective"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:dpo.log_sigmoid",
+      "target_ref": "primitive:project.preference_margin_flow"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:dpo.margin.visualized_by.project.preference_margin_flow",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.dpo.objective"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:dpo.margin",
+      "target_ref": "primitive:project.preference_margin_flow"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:dpo.objective.contains.dpo.log_ratios",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:dpo.objective",
+      "target_ref": "operation:dpo.log_ratios"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:dpo.objective.contains.dpo.log_sigmoid",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:dpo.objective",
+      "target_ref": "operation:dpo.log_sigmoid"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:dpo.objective.contains.dpo.margin",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:dpo.objective",
+      "target_ref": "operation:dpo.margin"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:dpo.objective.contains.dpo.scale",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:dpo.objective",
+      "target_ref": "operation:dpo.scale"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:dpo.objective.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.dpo.objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:dpo.objective",
+      "target_ref": "scene:dpo.objective"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:dpo.scale.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.dpo.objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:dpo.scale",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:feynrl.behavior_kl.visualized_by.project.ess_tradeoff_gauge",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.behavior_kl",
+      "target_ref": "primitive:project.ess_tradeoff_gauge"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:feynrl.cap.visualized_by.project.ess_tradeoff_gauge",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.cap",
+      "target_ref": "primitive:project.ess_tradeoff_gauge"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.contains.feynrl.ess",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:feynrl",
+      "target_ref": "formula:feynrl.ess"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.contains.feynrl.p3o_objective",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:feynrl",
+      "target_ref": "formula:feynrl.p3o_objective"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.ess.contains.feynrl.ess",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.ess",
+      "target_ref": "operation:feynrl.ess"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.ess.contains.feynrl.mean_ratio",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.ess",
+      "target_ref": "operation:feynrl.mean_ratio"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.ess.contains.feynrl.mean_square",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.ess",
+      "target_ref": "operation:feynrl.mean_square"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:feynrl.ess.visualized_by.project.ess_tradeoff_gauge",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.ess"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.ess",
+      "target_ref": "primitive:project.ess_tradeoff_gauge"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.ess.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.ess"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.ess",
+      "target_ref": "scene:feynrl.ess"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.mean_ratio.visualized_by.manim.bar_chart",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.ess"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.mean_ratio",
+      "target_ref": "primitive:manim.bar_chart"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.mean_square.visualized_by.manim.bar_chart",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.ess"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.mean_square",
+      "target_ref": "primitive:manim.bar_chart"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.negate_score_term.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.negate_score_term",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.objective_sum.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.objective_sum",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.off_policy_weight.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.off_policy_weight",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.9,
+      "edge_id": "edge:feynrl.p3o.calculate_ess.implements.feynrl.ess",
+      "edge_type": "implements",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.ess"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "code:feynrl.p3o.calculate_ess",
+      "target_ref": "formula:feynrl.ess"
+    },
+    {
+      "confidence": 0.9,
+      "edge_id": "edge:feynrl.p3o.compute_policy_loss.implements.feynrl.p3o_objective",
+      "edge_type": "implements",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "code:feynrl.p3o.compute_policy_loss",
+      "target_ref": "formula:feynrl.p3o_objective"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.behavior_kl",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.behavior_kl"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.cap",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.cap"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.negate_score_term",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.negate_score_term"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.objective_sum",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.objective_sum"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.off_policy_weight",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.off_policy_weight"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.raw_score_term",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.raw_score_term"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.stopgrad",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.stopgrad"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.contains.feynrl.weighted_behavior_kl",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "operation:feynrl.weighted_behavior_kl"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:feynrl.p3o_objective.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:feynrl.p3o_objective",
+      "target_ref": "scene:feynrl.p3o_objective"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.raw_score_term.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.raw_score_term",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.stopgrad.visualized_by.project.formula_operation_walk",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.stopgrad",
+      "target_ref": "primitive:project.formula_operation_walk"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:feynrl.weighted_behavior_kl.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.feynrl.p3o_objective"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:feynrl.weighted_behavior_kl",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:rope.contains.rope.relative",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:rope",
+      "target_ref": "formula:rope.relative"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:rope.relative.contains.rope.relative_dot",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:rope.relative",
+      "target_ref": "operation:rope.relative_dot"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:rope.relative.contains.rope.relative_offset",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:rope.relative",
+      "target_ref": "operation:rope.relative_offset"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:rope.relative.contains.rope.rotate_key",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:rope.relative",
+      "target_ref": "operation:rope.rotate_key"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:rope.relative.contains.rope.rotate_query",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:rope.relative",
+      "target_ref": "operation:rope.rotate_query"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:rope.relative.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.rope.relative"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:rope.relative",
+      "target_ref": "scene:rope.relative"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:rope.relative_dot.visualized_by.project.rope_relative_rotation",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.rope.relative"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:rope.relative_dot",
+      "target_ref": "primitive:project.rope_relative_rotation"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:rope.relative_offset.visualized_by.project.rope_relative_rotation",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.rope.relative"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:rope.relative_offset",
+      "target_ref": "primitive:project.rope_relative_rotation"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:rope.rotate_key.visualized_by.manim.axes_vector",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.rope.relative"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:rope.rotate_key",
+      "target_ref": "primitive:manim.axes_vector"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:rope.rotate_query.visualized_by.manim.axes_vector",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.rope.relative"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:rope.rotate_query",
+      "target_ref": "primitive:manim.axes_vector"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.attention.contains.transformers.mix",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.attention",
+      "target_ref": "operation:transformers.mix"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.attention.contains.transformers.qk",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.attention",
+      "target_ref": "operation:transformers.qk"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.attention.contains.transformers.scale",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.attention",
+      "target_ref": "operation:transformers.scale"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.attention.contains.transformers.softmax",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.attention",
+      "target_ref": "operation:transformers.softmax"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.attention.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.attention"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.attention",
+      "target_ref": "scene:transformers.attention"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:transformers.concat.visualized_by.project.multihead_fanout",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.multihead"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.concat",
+      "target_ref": "primitive:project.multihead_fanout"
+    },
+    {
+      "confidence": null,
+      "edge_id": "edge:transformers.head_projection.visualized_by.project.multihead_fanout",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.multihead"
+      ],
+      "match_state": "unresolved",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.head_projection",
+      "target_ref": "primitive:project.multihead_fanout"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:transformers.mix.visualized_by.manim.bar_chart",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.attention"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.mix",
+      "target_ref": "primitive:manim.bar_chart"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.multihead.contains.transformers.concat",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.multihead",
+      "target_ref": "operation:transformers.concat"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.multihead.contains.transformers.head_projection",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.multihead",
+      "target_ref": "operation:transformers.head_projection"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.multihead.contains.transformers.output_projection",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.multihead",
+      "target_ref": "operation:transformers.output_projection"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers.multihead.visualized_by.scene",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.multihead"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "formula:transformers.multihead",
+      "target_ref": "scene:transformers.multihead"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:transformers.output_projection.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.multihead"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.output_projection",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:transformers.qk.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.attention"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.qk",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:transformers.scale.visualized_by.manim.transform",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.attention"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.scale",
+      "target_ref": "primitive:manim.transform"
+    },
+    {
+      "confidence": 0.8,
+      "edge_id": "edge:transformers.softmax.visualized_by.project.softmax_probability_flow",
+      "edge_type": "visualized_by",
+      "evidence_refs": [
+        "artifact:formula_ir.transformers.attention"
+      ],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "operation:transformers.softmax",
+      "target_ref": "primitive:project.softmax_probability_flow"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers_core.contains.transformers.attention",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:transformers_core",
+      "target_ref": "formula:transformers.attention"
+    },
+    {
+      "confidence": 1.0,
+      "edge_id": "edge:transformers_core.contains.transformers.multihead",
+      "edge_type": "contains",
+      "evidence_refs": [],
+      "match_state": "candidate",
+      "publishable": true,
+      "review_ref": null,
+      "source_ref": "topic:transformers_core",
+      "target_ref": "formula:transformers.multihead"
+    }
+  ],
+  "migrations": [],
+  "nodes": [
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "code:feynrl.p3o.calculate_ess",
+      "node_type": "code",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "code:feynrl.p3o.compute_policy_loss",
+      "node_type": "code",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:attention.softmax",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:dpo.objective",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:feynrl.ess",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:feynrl.p3o_objective",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:rope.relative",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:transformers.attention",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "formula:transformers.multihead",
+      "node_type": "formula",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:attention.exp",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:attention.normalize",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:dpo.log_ratios",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:dpo.log_sigmoid",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:dpo.margin",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:dpo.scale",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.behavior_kl",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.cap",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.ess",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.mean_ratio",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.mean_square",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.negate_score_term",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.objective_sum",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.off_policy_weight",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.raw_score_term",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.stopgrad",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:feynrl.weighted_behavior_kl",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:rope.relative_dot",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:rope.relative_offset",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:rope.rotate_key",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:rope.rotate_query",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.concat",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.head_projection",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.mix",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.output_projection",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.qk",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.scale",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "inferred",
+      "node_id": "operation:transformers.softmax",
+      "node_type": "operation",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:manim.axes_vector",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:manim.bar_chart",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:manim.text",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:manim.transform",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:project.ess_tradeoff_gauge",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:project.formula_operation_walk",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "planned_missing",
+      "node_id": "primitive:project.multihead_fanout",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:project.preference_margin_flow",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:project.rope_relative_rotation",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "primitive:project.softmax_probability_flow",
+      "node_type": "primitive",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:attention.softmax",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:dpo.objective",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:feynrl.ess",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:feynrl.p3o_objective",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:rope.relative",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:transformers.attention",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "scene:transformers.multihead",
+      "node_type": "scene",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "topic:attention_softmax_lookup",
+      "node_type": "topic",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "topic:dpo",
+      "node_type": "topic",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "topic:feynrl",
+      "node_type": "topic",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "topic:rope",
+      "node_type": "topic",
+      "publishable": true
+    },
+    {
+      "aliases": [],
+      "coverage_state": "observed",
+      "node_id": "topic:transformers_core",
+      "node_type": "topic",
+      "publishable": true
+    }
+  ]
+}

@@ -1,0 +1,302 @@
+{
+  "content_type": "paper",
+  "content": {
+    "paper_info": "**Title**: Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training\n**Authors**: Rasool Fakoor (Boson AI), Murdock Aubry (Boson AI), Nicholas Stranges (Boson AI), Alexander J. Smola (Boson AI)",
+    "figures": "",
+    "tables": "",
+    "equations": "",
+    "motivation": "",
+    "solution": "",
+    "results": "",
+    "contributions": "",
+    "raw_rag_results": {
+      "paper_info": [
+        {
+          "query": "List the paper title, author names and their institutional affiliations.",
+          "answer": "**Title**: Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training\n**Authors**: Rasool Fakoor (Boson AI), Murdock Aubry (Boson AI), Nicholas Stranges (Boson AI), Alexander J. Smola (Boson AI)",
+          "mode": "direct_markdown_extraction",
+          "success": true
+        }
+      ],
+      "figures": [
+        {
+          "query": "Describe the architecture or framework diagram. What are the main components shown?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ],
+      "tables": [
+        {
+          "query": "Show the main performance comparison table with all methods and metrics. Include exact numbers.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "Show the ablation study table with all variants and their results.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "Show any dataset statistics table with sizes, splits, and other details.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ],
+      "equations": [
+        {
+          "query": "What is the core model formulation or main equation? Show the exact formula and notation.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ],
+      "motivation": [
+        {
+          "query": "What problem or task does this paper aim to solve? Describe the specific challenges.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What are the limitations or drawbacks of existing approaches mentioned in the introduction or related work?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What gap or unmet need motivates this research? How is it different from prior work?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ],
+      "solution": [
+        {
+          "query": "What method, approach, or framework does this paper propose? Provide an overview.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What are the main components, modules, or steps of the proposed method?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "Describe the system design, model structure, or theoretical framework. Include any architecture diagrams or tables if present.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What are the key equations, formulas, or mathematical formulations? Show the notation and mathematical expressions.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What objective function, optimization goal, or theoretical derivation is used?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What is the algorithm, procedure, or workflow? Describe the key steps.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What are the key parameters, settings, or implementation details mentioned?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ],
+      "results": [
+        {
+          "query": "What datasets, benchmarks, or experimental setups are used for evaluation?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What evaluation metrics or criteria are used to measure performance?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What are the main results shown in the main results table?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "How does the proposed method compare to baseline methods? Show the comparison.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What performance does the method achieve? Report the exact numbers from experiments.",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What ablation study or sensitivity analysis is conducted? What are the findings?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What analysis, case study, or discussion of the results is provided?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ],
+      "contributions": [
+        {
+          "query": "What are the main contributions listed in the introduction or conclusion?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What is novel or new about this work compared to existing methods?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        },
+        {
+          "query": "What limitations does the paper acknowledge? What future directions are suggested?",
+          "answer": null,
+          "mode": "fast_direct_with_vision",
+          "success": false,
+          "error": "Error code: 403 - {'error': {'message': \"key not allowed to access model. This key can only access models=['wine-gemini-2.5-flash', 'wine-llama3-2-90b-instruct', 'wine-llama3-1-70b-instruct-v1:0', 'wine-deepseek-r1', 'wine-gemini-2.5-pro', 'wine-claude-opus-4-6', 'wine-claude-sonnet-4-6', 'wine-gemini-3-pro-preview', 'wine-llama3-1-405b-instruct', 'wine-llama3-3-70b-instruct', 'wine-llama3-2-1b-instruct', 'wine-claude-haiku-4-5', 'wine-llama3-8b-instruct', 'wine-llama3-1-70b-instruct', 'wine-gemini-2.5-flash-lite', 'wine-gemini-3.1-pro-preview', 'wine-llama3-2-11b-instruct', 'wine-claude-sonnet-4-5', 'wine-llama3-70b-instruct', 'wine-gemini-3-flash-preview', 'wine-gemini-embedding-001', 'wine-llama3-2-3b-instruct', 'wine-qwen3-32b', 'wine-llama3-1-8b-instruct', 'wine-claude-opus-4-5', 'wine-deepseek-v3']. Tried to access gpt-4o\", 'type': 'key_model_access_denied', 'param': 'model', 'code': '403'}}"
+        }
+      ]
+    }
+  },
+  "origin": {
+    "tables": [
+      {
+        "id": "Table 1",
+        "caption": "Comparison of policy objectives, with $\\rho _ { t } = \\pi _ { \\theta } ( y _ { t } \\mid x , y _ { < t } ) / \\pi _ { \\mathrm { b } } ( y _ { t } \\mid x , y _ { < t } ) ,$ . Red/green: fixed hyper-parameters (high/low). Purple: auxiliary choices. Blue: batch-adaptive quantities. Auxiliary entropy and reference-policy KL terms are omitted.",
+        "html": "<table><tr><td>Method</td><td>Policy objective</td></tr><tr><td>GRPO /DAPO</td><td> − min (ρtA, clip (ρt, 1 − ∈e, 1 + ∈h) A)</td></tr><tr><td>GSPO</td><td>− min (Sθ(y)A, clip (Sθ(y), 1 − seq, 1 + εseq) A) , Sθ(y) = exp(Γ ∑t=1 10g pt)</td></tr><tr><td>Decoupled</td><td>−g(cli πprox min A, clip 0, Cw πθ πθ , − , 1 + h) A)) πb πpx πprx</td></tr><tr><td>P30</td><td>−sg(min{ρt, eB}) 1og πθ(yt | x, y&lt;t) A + (1 − eB) KL(πθ |πb)</td></tr></table>"
+      },
+      {
+        "id": "Table 2",
+        "caption": "Shared optimizer settings used across all experiments.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=1>Optimizer</td><td rowspan=1 colspan=1>AdamW</td></tr><tr><td rowspan=1 colspan=1>Learning rate</td><td rowspan=1 colspan=1>1e-5</td></tr><tr><td rowspan=1 colspan=1>Betas (β1, β2)</td><td rowspan=1 colspan=1>(0.9, 0.95)</td></tr><tr><td rowspan=1 colspan=1>Weight decay</td><td rowspan=1 colspan=1>0.01</td></tr><tr><td rowspan=1 colspan=1>Gradient clipping</td><td rowspan=1 colspan=1>1.0</td></tr><tr><td rowspan=1 colspan=1>LR scheduler</td><td rowspan=1 colspan=1>WarmupCosineLR (10% warmup ratio)</td></tr></table>"
+      },
+      {
+        "id": "Table 3",
+        "caption": "Per-experiment training configuration. Clip and temperature runs use the 4B model with a 6/2 GPU split; the FP8 ablation uses the 8B model with a $5 / 3$ split and a 16K-token rollout budget.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=2>Clip Runs</td><td rowspan=1 colspan=1>Temperature Runs</td><td rowspan=1 colspan=1>FP8 Runs</td></tr><tr><td rowspan=1 colspan=1>Model</td><td rowspan=1 colspan=2>Qwen3-4B-Thinking-2507</td><td rowspan=1 colspan=1>Qwen3-4B-Thinking-2507</td><td rowspan=1 colspan=1>Qwen3-8B-Base</td></tr><tr><td rowspan=1 colspan=1>Training / rollout GPU split</td><td rowspan=1 colspan=2>6 train + 2 rollout</td><td rowspan=1 colspan=1>6 train + 2 rollout</td><td rowspan=1 colspan=1>5 train + 3 rollout</td></tr><tr><td rowspan=1 colspan=1>Global train batch size</td><td rowspan=1 colspan=2>48</td><td rowspan=1 colspan=1>48</td><td rowspan=1 colspan=1>5</td></tr><tr><td rowspan=1 colspan=1>Train micro-batch / GPU</td><td rowspan=1 colspan=2>8</td><td rowspan=1 colspan=1>4</td><td rowspan=1 colspan=1>1</td></tr><tr><td rowspan=1 colspan=1>Gradient accumulation</td><td rowspan=1 colspan=2>1</td><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>1</td></tr><tr><td rowspan=1 colspan=1>Rollout batch size / GPU</td><td rowspan=1 colspan=2>64</td><td rowspan=1 colspan=1>64</td><td rowspan=1 colspan=1>16</td></tr><tr><td rowspan=1 colspan=1>Rollout samples / epoch</td><td rowspan=1 colspan=2>512</td><td rowspan=1 colspan=1>512</td><td rowspan=1 colspan=1>256</td></tr><tr><td rowspan=1 colspan=1>Max tokens</td><td rowspan=1 colspan=2>1024</td><td rowspan=1 colspan=1>4096</td><td rowspan=1 colspan=1>16384</td></tr><tr><td rowspan=1 colspan=1>Sampling temperature</td><td rowspan=1 colspan=2>1.0</td><td rowspan=1 colspan=1>T ∈ {0.6, 1.2}</td><td rowspan=1 colspan=1>1.0</td></tr><tr><td rowspan=1 colspan=1>GRPO clip setting</td><td rowspan=1 colspan=1>∈ ∈ {0.2, 0.4, 0.6}</td><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>∈ = 0.4</td><td rowspan=1 colspan=1>∈ = 0.4</td></tr></table>"
+      },
+      {
+        "id": "Table 4",
+        "caption": "Benchmark-evaluation settings grouped by rollout-length family. Separate 4K-token and 16K-token evaluation regimes are used in the paper, but the sampling policy and GPU allocation are otherwise held fixed across benchmarks and checkpoints.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hyper-parameter</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=2>Shared benchmark-evaluation settings</td></tr><tr><td rowspan=1 colspan=1>TemperatureTop-pGroup Size (nsamples)Rollout Batch Size / GPURollout GPUsData Workers</td><td rowspan=1 colspan=1>1.00.95161688</td></tr><tr><td rowspan=1 colspan=2>4K benchmark eval family (clip + temperature)</td></tr><tr><td rowspan=1 colspan=1>BenchmarksMax Response Tokens</td><td rowspan=1 colspan=1>AIME24, AIME25, AIME26, AMO-Bench, AMC4096</td></tr><tr><td rowspan=1 colspan=1>16Kbencl</td><td rowspan=1 colspan=1>16K benchmark eval family (baseline + FP8)</td></tr><tr><td rowspan=1 colspan=1>BenchmarksMax Response Tokens</td><td rowspan=1 colspan=1>AIME24, AIME25, AIME26, AMO-Bench, AMC16384</td></tr><tr><td rowspan=1 colspan=2>Model &amp; system configuration</td></tr><tr><td rowspan=1 colspan=1>PrecisionTensor Parallel Size</td><td rowspan=1 colspan=1>bfloat161</td></tr></table>"
+      },
+      {
+        "id": "Table 5",
+        "caption": "Compute layout for the reported runs, together with the accelerator SKU reported in the main text. The eight GPUs are partitioned differently across ablation families depending on whether the workload is optimizer-heavy or rollout-heavy.",
+        "html": "<table><tr><td rowspan=1 colspan=1>Hardware Attribute</td><td rowspan=1 colspan=1>Value</td></tr><tr><td rowspan=1 colspan=2>Accelerator Configuration</td></tr><tr><td rowspan=1 colspan=1>GPU ModelTotal GPUs per runEvaluation partitionTensor Parallel Size</td><td rowspan=1 colspan=1>NVIDIA H100 (as reported in Sec. 4)88 rollout GPUs1</td></tr><tr><td rowspan=1 colspan=2>Runtime Configuration</td></tr><tr><td rowspan=1 colspan=1>Training PrecisionRollout PrecisionDistributed TrainingAttention Backend</td><td rowspan=1 colspan=1>bfl oat16bfloat16; FP8 only in the mixed-precision ablationDeepSpeed ZeRO-3Flash Attention 2</td></tr><tr><td rowspan=1 colspan=2>Workload Summary</td></tr><tr><td rowspan=1 colspan=1>Training DatasetTraining ModelsEvaluation Rollout Batch Size / GPU</td><td rowspan=1 colspan=1>DeepScaleR-PreviewQwen3-4B-Thinking-2507 and Qwen3-8B-Base16</td></tr></table>"
+      },
+      {
+        "id": "Table 6",
+        "caption": "Software environment used for the reported experiments. The table records only the main CUDA and library versions needed to contextualize the reported pipeline.",
+        "html": "<table><tr><td>Environment Attribute</td><td>Value</td></tr><tr><td>Python version</td><td>Base environment 3.13.1 (recommended/tested)</td></tr><tr><td>NVIDIA driver CUDA toolkit</td><td>CUDA 12.x-compatible; driver version ≥ 525.85 recom- mended 12.2 (tested); toolkit versions ≥ 12.2 supported</td></tr><tr><td>PyTorch build Core training and rollout stack</td><td>CUDA 12.6 wheels</td></tr><tr><td>PyTorch / TorchVision</td><td>CUDA-enabled install</td></tr><tr><td>DeepSpeed</td><td>0.18.9</td></tr><tr><td>vLLM</td><td>0.19.0</td></tr><tr><td>Transformers</td><td>4.57.6</td></tr><tr><td>Ray FlashAttention</td><td>2.54.1</td></tr></table>"
+      },
+      {
+        "id": "Table 7",
+        "caption": "Benchmark results (pass $@ 1$ ) across trained checkpoints. Baseline rows report untrained Qwen3-4B-Thinking-2507 at two rollout lengths. Clip-variant GRPO shows mean $\\pm$ std across $\\epsilon \\in \\lbrace 0 . 2 , 0 . 4 , 0 . 6 \\rbrace$ . FP8 rows report individual checkpoints. Bold: best within each group per column.",
+        "html": "<table><tr><td>Training Method</td><td>AIME24</td><td>AIME25</td><td>AIME26</td><td>AMO-Bench</td><td>AMC</td></tr><tr><td>Baseline Model (4K tokens)</td><td>0.029</td><td>0.033</td><td>0.006</td><td>0.007</td><td>0.217</td></tr><tr><td>Baseline Model (16K tokens)</td><td>0.371</td><td>0.471</td><td>0.396</td><td>0.019</td><td>0.618</td></tr><tr><td colspan=\"6\">Clip Variants (∈ ∈ {0.2, 0.4, 0.6}, 4K tokens)</td></tr><tr><td>GRPO (clip avg) P30</td><td>0.176±0.039 0.165</td><td>0.160±0.123 0.183</td><td>0.126±0.087 0.160</td><td>0.012±0.007 0.010</td><td>0.381±0.195 0.493</td></tr><tr><td colspan=\"6\">FP8 Variants (BF16 train + FP8 rollout, 16K tokens)</td></tr><tr><td>FP8 Rollout GRPO Iter 15</td><td>0.154</td><td>0.250</td><td>0.160</td><td>0.021</td><td>0.499</td></tr><tr><td>FP8 Rollout GRPO Iter 30</td><td>0.002</td><td>0.000</td><td>0.002</td><td>0.019</td><td>0.029</td></tr><tr><td>FP8 Rollout P3O Iter 15</td><td>0.158</td><td>0.237</td><td>0.179</td><td>0.024</td><td>0.478</td></tr><tr><td>FP8 Rollout P3O Iter 30</td><td>0.173</td><td>0.254</td><td>0.175</td><td>0.026</td><td>0.529</td></tr></table>"
+      }
+    ],
+    "figures": [
+      {
+        "id": "Figure 1",
+        "caption": "Sensitivity of GRPO’s reward to the clip range $\\epsilon \\in \\{ 0 . 2 , 0 . 4 , 0 . 6 \\}$ (shaded region: $\\pm \\mathbf { 1 }$ std over clip values) versus P3O run once with no clip hyperparameter. P3O’s ESS-driven cap (Eq. (11)) removes this tuning burden while matching or exceeding the best GRPO variant across both model families.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/e4b10b5767f9d3803bdadd9dc0fd30d9b3a05148660a45a5542a4a65558c3972.jpg"
+      },
+      {
+        "id": "Figure 2",
+        "caption": "P3O is robust to off-policy data introduced through the varied sampling temperature of rollouts. Sampling rollouts at a temperature other than 1.0 introduces a distribution shift in the token-level log probabilities, creating off-policy data for Qwen3-4B-Thinking-2507. Corresponding Qwen2.5-1.5B results are deferred to Fig. 7.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/02cc61742c075bb71be568f3c315a2eaaf5c6b44636a5df09752b432590b0313.jpg"
+      },
+      {
+        "id": "Figure 3",
+        "caption": "P3O is robust to off-policy data introduced through the BF16 Train $\\mathbf { + F P 8 }$ Rollout training scheme. As accuracy collapse is observed in longer rollout lengths [33], a rollout length of 16,384 tokens was used in this experiment. The demonstrated robustness of P3O to off-policy data allows for the use of faster rollout generation strategies. In contrast, GRPO’s performance degrades significantly under the same conditions, highlighting its sensitivity to off-policy data.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/6327dc671ea4b9fb02b60080f78b24e1edc6d25a58d1a48c2f5d2249ca4994af.jpg"
+      },
+      {
+        "id": "Figure 4",
+        "caption": "Pass $@ k$ averaged over all five held-out benchmarks (AIME24/25/26, AMO-Bench, AMC). Left: clip-ratio variants at 4K-token evaluation; GRPO is averaged over $\\epsilon \\in \\{ 0 . 2 , 0 . 4 , 0 . 6 \\}$ . Ours matches or exceeds the averaged GRPO sweep without requiring a clip-ratio choice. Right: BF16-train $+ \\mathrm { F P 8 }$ -rollout variants at 16K-token evaluation. GRPO collapses by iter 30 (near-zero $\\mathrm { p a s s } @ k )$ while Ours retains strong performance.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/e3cbb59707104e9814086134c31ec5616312c9e3bd8255ee921e270162b93f30.jpg"
+      },
+      {
+        "id": "Figure 5",
+        "caption": "Asynchronous-training comparison between P3O and GRPO under one optimizer step per rollout epoch. Rollouts are generated by a stale policy while the learner continues updating, creating the off-policy lag discussed in the main text. In this one-step pipeline setting, P3O maintains a higher and more stable reward trajectory than GRPO across training. The corresponding twostep pipeline produces the same qualitative ordering and is omitted to avoid duplicating the same comparison with only a modest increase in late-training noise.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/56dac0cabfa9a10bbcb0926c55e7539ea0b9350ffc488b28d424ee9635dfe998.jpg"
+      },
+      {
+        "id": "Figure 6",
+        "caption": "Comparison of GRPO and P3O with respect to the mixing of off-policy data. A rollout length of 4,096 tokens was used in this experiment. This experiment uses Qwen3-8B [30] to generate rollouts for training Qwen3-4B-Thinking-2507, as it is from a different model family. Data was mixed at a $50 \\%$ ratio, meaning half of the rollouts were generated by the training model and half were generated by the separate policy.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/fad9d40cc2d44b1d1dbf94c2b6e27f881a3a438fe473535aac052fcb10444017.jpg"
+      },
+      {
+        "id": "Figure 6",
+        "caption": "Comparison of GRPO and P3O with respect to the mixing of off-policy data. A rollout length of 4,096 tokens was used in this experiment. This experiment uses Qwen3-8B [30] to generate rollouts for training Qwen3-4B-Thinking-2507, as it is from a different model family. Data was mixed at a $50 \\%$ ratio, meaning half of the rollouts were generated by the training model and half were generated by the separate policy.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/4238a3a98d6315e654446a752f9a50e59a0aa54af04ab49a94f7707b4c1a4713.jpg"
+      },
+      {
+        "id": "Figure 7",
+        "caption": "Temperature-robustness results for Qwen2.5-1.5B, corresponding to Fig. $\\mathbf { \\Gamma } ( \\mathbf { c } , \\mathbf { d } )$ . As in the main-text Qwen3-4B experiments, changing rollout temperature introduces a token-level distribution shift that degrades GRPO while P3O remains comparatively stable.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/b6d687324e2dbff208631a2a5e96c5da6ea4cb142ef83991e580a3db2f15148b.jpg"
+      },
+      {
+        "id": "Figure 9",
+        "caption": "Training curves for the two-anchor extension of P3O, P3O, and GRPO $( \\epsilon { = } 0 . 4 )$ on Qwen3-4B-Thinking at default temperature. All runs use the DeepSeek dataset with a rollout length of 4,096 tokens. Unlike the temperature-1.2 regime (Fig. 8), the two-anchor extension remains stable throughout training and achieves the highest final reward $( { \\approx } 0 . 5 0 )$ , slightly outpacing both P3O and GRPO with $\\epsilon { = } 0 . 4$ . The standard GRPO baseline (default $\\epsilon$ ) reached only ${ \\approx } 0 . 1 9$ reward in this setting and is excluded from the plot for clarity. Together with Fig. 8, these results suggest that the two-anchor extension’s instability is sensitive to temperature: at higher rollout temperatures the dual-anchor regularizer can destabilize training, whereas at the default temperature it performs comparably to or better than P3O.",
+        "path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/images/a59b3bd72d28dfab4605f7a7085702562d30304fba3639bab0f8a7f9685bb103.jpg"
+      }
+    ],
+    "base_path": "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto"
+  },
+  "markdown_paths": [
+    "artifact://slides_baselines_20260715/runs/paper2slides/output/feynrl_2605.12380/paper/rag_output/feynrl_2605.12380/auto/feynrl_2605.12380.md"
+  ]
+}

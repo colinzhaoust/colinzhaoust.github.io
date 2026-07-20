@@ -1,0 +1,1442 @@
+{
+  "attempt_count": 30,
+  "cases": [
+    {
+      "attempt_count": 6,
+      "attempts": [
+        {
+          "case_id": "bt-001",
+          "exit_codes": {
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_standalone_cls",
+          "finished_at": "2026-07-16T04:43:16Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": null,
+          "reference": {
+            "remote_relative_path": "cases/bt-001/model_input/bt-001/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9314456",
+          "scene_class": "OpeningManim",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "0",
+            "job_id": "9314457"
+          },
+          "started_at": "2026-07-16T04:35:41Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-001",
+          "exit_codes": {
+            "job_local_dependency": 1,
+            "normalization": 125,
+            "render": 125,
+            "source_verification": 125
+          },
+          "failure_code": "job_local_dependency_error",
+          "failure_detail": "job_local_dependency_error",
+          "finished_at": "2026-07-16T17:12:37Z",
+          "pipeline_commit": "5c8eecce6ce9b7d5cc6011b84b4eb054fe33fef7",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_0",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-001/model_input/bt-001/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329170",
+          "scene_class": "OpeningManim",
+          "slurm": {
+            "array_job_id": "9329170",
+            "array_task_id": "0",
+            "job_id": "9329171"
+          },
+          "started_at": "2026-07-16T17:12:23Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-001",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_preview_sty",
+          "finished_at": "2026-07-16T17:20:55Z",
+          "pipeline_commit": "3cf24acf71bc46e09542dbe8ff79d3a176de6050",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_0",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-001/model_input/bt-001/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329201",
+          "scene_class": "OpeningManim",
+          "slurm": {
+            "array_job_id": "9329201",
+            "array_task_id": "0",
+            "job_id": "9329203"
+          },
+          "started_at": "2026-07-16T17:19:10Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-001",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_dvisvgm",
+          "finished_at": "2026-07-16T17:27:10Z",
+          "pipeline_commit": "25da3567103ad7759a035ed48ef9f4381e02c3aa",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_0",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-001/model_input/bt-001/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329605",
+          "scene_class": "OpeningManim",
+          "slurm": {
+            "array_job_id": "9329605",
+            "array_task_id": "0",
+            "job_id": "9329608"
+          },
+          "started_at": "2026-07-16T17:25:30Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-001",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "render_error",
+          "finished_at": "2026-07-16T17:35:37Z",
+          "pipeline_commit": "1f741063e767aa8db5175b6ad3caa4154bde466b",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_0",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-001/model_input/bt-001/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329857",
+          "scene_class": "OpeningManim",
+          "slurm": {
+            "array_job_id": "9329857",
+            "array_task_id": "0",
+            "job_id": "9329858"
+          },
+          "started_at": "2026-07-16T17:31:33Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-001",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T17:48:21Z",
+          "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9329948/bt-001/raw-render",
+            "sha256": "8dbb10ddfec78df95614f27dc9ccf1e312d18a380e2088b5a21037ac63b08ab5"
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_0",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 15.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 800206,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-001/reference.mp4",
+            "sha256": "f3d2696f5c4c504a7719cdcaa1aa6e5c6e7be7fd1ba521176708a6eb871ec369"
+          },
+          "run_id": "9329948",
+          "scene_class": "OpeningManim",
+          "slurm": {
+            "array_job_id": "9329948",
+            "array_task_id": "0",
+            "job_id": "9329949"
+          },
+          "started_at": "2026-07-16T17:40:26Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-001",
+      "final_status": "completed",
+      "scene_class": "OpeningManim",
+      "selected_attempt_index": 5
+    },
+    {
+      "attempt_count": 6,
+      "attempts": [
+        {
+          "case_id": "bt-002",
+          "exit_codes": {
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_standalone_cls",
+          "finished_at": "2026-07-16T04:36:15Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": null,
+          "reference": {
+            "remote_relative_path": "cases/bt-002/model_input/bt-002/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9314456",
+          "scene_class": "SineCurveUnitCircle",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "1",
+            "job_id": "9314458"
+          },
+          "started_at": "2026-07-16T04:35:24Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-002",
+          "exit_codes": {
+            "job_local_dependency": 1,
+            "normalization": 125,
+            "render": 125,
+            "source_verification": 125
+          },
+          "failure_code": "job_local_dependency_error",
+          "failure_detail": "job_local_dependency_error",
+          "finished_at": "2026-07-16T17:12:37Z",
+          "pipeline_commit": "5c8eecce6ce9b7d5cc6011b84b4eb054fe33fef7",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_1",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-002/model_input/bt-002/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329170",
+          "scene_class": "SineCurveUnitCircle",
+          "slurm": {
+            "array_job_id": "9329170",
+            "array_task_id": "1",
+            "job_id": "9329172"
+          },
+          "started_at": "2026-07-16T17:12:23Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-002",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_preview_sty",
+          "finished_at": "2026-07-16T17:20:55Z",
+          "pipeline_commit": "3cf24acf71bc46e09542dbe8ff79d3a176de6050",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_1",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-002/model_input/bt-002/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329201",
+          "scene_class": "SineCurveUnitCircle",
+          "slurm": {
+            "array_job_id": "9329201",
+            "array_task_id": "1",
+            "job_id": "9329204"
+          },
+          "started_at": "2026-07-16T17:19:10Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-002",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_dvisvgm",
+          "finished_at": "2026-07-16T17:26:43Z",
+          "pipeline_commit": "25da3567103ad7759a035ed48ef9f4381e02c3aa",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_1",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-002/model_input/bt-002/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329605",
+          "scene_class": "SineCurveUnitCircle",
+          "slurm": {
+            "array_job_id": "9329605",
+            "array_task_id": "1",
+            "job_id": "9329609"
+          },
+          "started_at": "2026-07-16T17:25:13Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-002",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "render_error",
+          "finished_at": "2026-07-16T17:34:49Z",
+          "pipeline_commit": "1f741063e767aa8db5175b6ad3caa4154bde466b",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_1",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-002/model_input/bt-002/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329857",
+          "scene_class": "SineCurveUnitCircle",
+          "slurm": {
+            "array_job_id": "9329857",
+            "array_task_id": "1",
+            "job_id": "9329859"
+          },
+          "started_at": "2026-07-16T17:31:33Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-002",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T17:46:47Z",
+          "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9329948/bt-002/raw-render",
+            "sha256": "e179f7de4934cd83ec9a6c3c4c5d48c3573c48d592569166e40a84405376e921"
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_1",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 9.533008,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 83791,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-002/reference.mp4",
+            "sha256": "fda7dd8889c8aa05681190d9fd5adfa01bf4ae94e8ed60f52fbaaea318c40138"
+          },
+          "run_id": "9329948",
+          "scene_class": "SineCurveUnitCircle",
+          "slurm": {
+            "array_job_id": "9329948",
+            "array_task_id": "1",
+            "job_id": "9329950"
+          },
+          "started_at": "2026-07-16T17:40:26Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-002",
+      "final_status": "completed",
+      "scene_class": "SineCurveUnitCircle",
+      "selected_attempt_index": 5
+    },
+    {
+      "attempt_count": 1,
+      "attempts": [
+        {
+          "case_id": "bt-003",
+          "exit_codes": {
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T04:36:45Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9314456/bt-003/raw-render",
+            "sha256": "0e6a695c7ffa8a91956e58afb8efd00c39fd82a5e481403d90c84fe7fa390eba"
+          },
+          "recovery": null,
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 9.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 229495,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-003/reference.mp4",
+            "sha256": "831546a0de174678aa10ca0fd446068a345db651b402527cc9d528c1d471fe0b"
+          },
+          "run_id": "9314456",
+          "scene_class": "BooleanOperations",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "2",
+            "job_id": "9314459"
+          },
+          "started_at": "2026-07-16T04:35:23Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-003",
+      "final_status": "completed",
+      "scene_class": "BooleanOperations",
+      "selected_attempt_index": 0
+    },
+    {
+      "attempt_count": 6,
+      "attempts": [
+        {
+          "case_id": "bt-004",
+          "exit_codes": {
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_standalone_cls",
+          "finished_at": "2026-07-16T04:36:41Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": null,
+          "reference": {
+            "remote_relative_path": "cases/bt-004/model_input/bt-004/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9314456",
+          "scene_class": "ArgMinExample",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "3",
+            "job_id": "9314478"
+          },
+          "started_at": "2026-07-16T04:36:28Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-004",
+          "exit_codes": {
+            "job_local_dependency": 1,
+            "normalization": 125,
+            "render": 125,
+            "source_verification": 125
+          },
+          "failure_code": "job_local_dependency_error",
+          "failure_detail": "job_local_dependency_error",
+          "finished_at": "2026-07-16T17:12:59Z",
+          "pipeline_commit": "5c8eecce6ce9b7d5cc6011b84b4eb054fe33fef7",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_3",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-004/model_input/bt-004/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329170",
+          "scene_class": "ArgMinExample",
+          "slurm": {
+            "array_job_id": "9329170",
+            "array_task_id": "2",
+            "job_id": "9329174"
+          },
+          "started_at": "2026-07-16T17:12:53Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-004",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_preview_sty",
+          "finished_at": "2026-07-16T17:22:37Z",
+          "pipeline_commit": "3cf24acf71bc46e09542dbe8ff79d3a176de6050",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_3",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-004/model_input/bt-004/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329201",
+          "scene_class": "ArgMinExample",
+          "slurm": {
+            "array_job_id": "9329201",
+            "array_task_id": "2",
+            "job_id": "9329212"
+          },
+          "started_at": "2026-07-16T17:21:15Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-004",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_dvisvgm",
+          "finished_at": "2026-07-16T17:27:12Z",
+          "pipeline_commit": "25da3567103ad7759a035ed48ef9f4381e02c3aa",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_3",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-004/model_input/bt-004/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329605",
+          "scene_class": "ArgMinExample",
+          "slurm": {
+            "array_job_id": "9329605",
+            "array_task_id": "2",
+            "job_id": "9329836"
+          },
+          "started_at": "2026-07-16T17:26:53Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-004",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "render_error",
+          "finished_at": "2026-07-16T17:36:20Z",
+          "pipeline_commit": "1f741063e767aa8db5175b6ad3caa4154bde466b",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_3",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-004/model_input/bt-004/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329857",
+          "scene_class": "ArgMinExample",
+          "slurm": {
+            "array_job_id": "9329857",
+            "array_task_id": "2",
+            "job_id": "9329918"
+          },
+          "started_at": "2026-07-16T17:35:09Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-004",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T17:50:54Z",
+          "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9329948/bt-004/raw-render",
+            "sha256": "408afdce3329b400b12f70aba9628f236d7d409ed249195fc42e0977dae34807"
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_3",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 2.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 13356,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-004/reference.mp4",
+            "sha256": "36cda4d8535a8353887b40f81c1e9a745ca3a06be88e36bb992ac58cfc2f10a2"
+          },
+          "run_id": "9329948",
+          "scene_class": "ArgMinExample",
+          "slurm": {
+            "array_job_id": "9329948",
+            "array_task_id": "2",
+            "job_id": "9329984"
+          },
+          "started_at": "2026-07-16T17:47:12Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-004",
+      "final_status": "completed",
+      "scene_class": "ArgMinExample",
+      "selected_attempt_index": 5
+    },
+    {
+      "attempt_count": 6,
+      "attempts": [
+        {
+          "case_id": "bt-005",
+          "exit_codes": {
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_standalone_cls",
+          "finished_at": "2026-07-16T04:37:22Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": null,
+          "reference": {
+            "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9314456",
+          "scene_class": "GraphAreaPlot",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "4",
+            "job_id": "9314482"
+          },
+          "started_at": "2026-07-16T04:37:02Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-005",
+          "exit_codes": {
+            "job_local_dependency": 1,
+            "normalization": 125,
+            "render": 125,
+            "source_verification": 125
+          },
+          "failure_code": "job_local_dependency_error",
+          "failure_detail": "job_local_dependency_error",
+          "finished_at": "2026-07-16T17:12:57Z",
+          "pipeline_commit": "5c8eecce6ce9b7d5cc6011b84b4eb054fe33fef7",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_4",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329170",
+          "scene_class": "GraphAreaPlot",
+          "slurm": {
+            "array_job_id": "9329170",
+            "array_task_id": "3",
+            "job_id": "9329170"
+          },
+          "started_at": "2026-07-16T17:12:53Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-005",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_preview_sty",
+          "finished_at": "2026-07-16T17:22:20Z",
+          "pipeline_commit": "3cf24acf71bc46e09542dbe8ff79d3a176de6050",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_4",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329201",
+          "scene_class": "GraphAreaPlot",
+          "slurm": {
+            "array_job_id": "9329201",
+            "array_task_id": "3",
+            "job_id": "9329201"
+          },
+          "started_at": "2026-07-16T17:21:15Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-005",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "missing_runtime_dependency_dvisvgm",
+          "finished_at": "2026-07-16T17:27:23Z",
+          "pipeline_commit": "25da3567103ad7759a035ed48ef9f4381e02c3aa",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_4",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329605",
+          "scene_class": "GraphAreaPlot",
+          "slurm": {
+            "array_job_id": "9329605",
+            "array_task_id": "3",
+            "job_id": "9329605"
+          },
+          "started_at": "2026-07-16T17:27:21Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-005",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 1,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "render_error",
+          "finished_at": "2026-07-16T17:37:11Z",
+          "pipeline_commit": "1f741063e767aa8db5175b6ad3caa4154bde466b",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_4",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329857",
+          "scene_class": "GraphAreaPlot",
+          "slurm": {
+            "array_job_id": "9329857",
+            "array_task_id": "3",
+            "job_id": "9329857"
+          },
+          "started_at": "2026-07-16T17:35:40Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        },
+        {
+          "case_id": "bt-005",
+          "exit_codes": {
+            "job_local_dependency": 0,
+            "normalization": 125,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "upstream_save_last_frame_no_mp4",
+          "finished_at": "2026-07-16T17:53:42Z",
+          "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": {
+            "dependency_provenance": "not_packaged",
+            "initial_slurm_task": "9314456_4",
+            "reason": "missing_runtime_dependency_standalone_cls"
+          },
+          "reference": {
+            "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9329948",
+          "scene_class": "GraphAreaPlot",
+          "slurm": {
+            "array_job_id": "9329948",
+            "array_task_id": "3",
+            "job_id": "9329948"
+          },
+          "started_at": "2026-07-16T17:48:47Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-005",
+      "final_status": "failed",
+      "scene_class": "GraphAreaPlot",
+      "selected_attempt_index": 5
+    },
+    {
+      "attempt_count": 1,
+      "attempts": [
+        {
+          "case_id": "bt-006",
+          "exit_codes": {
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T04:43:06Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9314456/bt-006/raw-render",
+            "sha256": "d8b96329ed2c0946db72e695efb533d863b7182b2e60cbf5c33e6cafb329f4df"
+          },
+          "recovery": null,
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 6.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 11032,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-006/reference.mp4",
+            "sha256": "79bd9aa81b601f305cdfb6a75c0ff49f33c96bb7eb60b277a5b5d954135a0848"
+          },
+          "run_id": "9314456",
+          "scene_class": "PointWithTrace",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "5",
+            "job_id": "9314483"
+          },
+          "started_at": "2026-07-16T04:37:17Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-006",
+      "final_status": "completed",
+      "scene_class": "PointWithTrace",
+      "selected_attempt_index": 0
+    },
+    {
+      "attempt_count": 1,
+      "attempts": [
+        {
+          "case_id": "bt-007",
+          "exit_codes": {
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T04:37:49Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9314456/bt-007/raw-render",
+            "sha256": "06dbc1c4322ea2bc8d4d07e34034534a02cb27d65e29d394391f72bed0c02c74"
+          },
+          "recovery": null,
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 3.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 119070,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-007/reference.mp4",
+            "sha256": "553d31b0593c5cc398db0f6b70f332ed9778268bf57bcefd7e9d4a438ce7c20e"
+          },
+          "run_id": "9314456",
+          "scene_class": "FollowingGraphCamera",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "6",
+            "job_id": "9314487"
+          },
+          "started_at": "2026-07-16T04:37:34Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-007",
+      "final_status": "completed",
+      "scene_class": "FollowingGraphCamera",
+      "selected_attempt_index": 0
+    },
+    {
+      "attempt_count": 1,
+      "attempts": [
+        {
+          "case_id": "bt-008",
+          "exit_codes": {
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T04:39:38Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9314456/bt-008/raw-render",
+            "sha256": "c739a84d9bc1b0f45e01062addc14f358b4a54a6a9f37b6981f442cb90f0d984"
+          },
+          "recovery": null,
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 12.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 158388,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-008/reference.mp4",
+            "sha256": "aaae997f1ab19e6486e5d104c03b7d86d600cce311449c8c0e3ee850389ceebb"
+          },
+          "run_id": "9314456",
+          "scene_class": "MovingZoomedSceneAround",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "7",
+            "job_id": "9314489"
+          },
+          "started_at": "2026-07-16T04:38:08Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-008",
+      "final_status": "completed",
+      "scene_class": "MovingZoomedSceneAround",
+      "selected_attempt_index": 0
+    },
+    {
+      "attempt_count": 1,
+      "attempts": [
+        {
+          "case_id": "bt-009",
+          "exit_codes": {
+            "normalization": 0,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": null,
+          "failure_detail": null,
+          "finished_at": "2026-07-16T04:40:32Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": "babel:bt-reference-v1/9314456/bt-009/raw-render",
+            "sha256": "c63361a68ac013c90e631c0c0973df458ade58dd0e8c1ce6b6448233bd71c03e"
+          },
+          "recovery": null,
+          "reference": {
+            "media": {
+              "audio_stream_count": 0,
+              "codec": "h264",
+              "duration_seconds": 3.0,
+              "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+              "fps": 15.0,
+              "height": 480,
+              "pixel_format": "yuv420p",
+              "size_bytes": 42520,
+              "tags": {
+                "compatible_brands": "isomiso2avc1mp41",
+                "encoder": "Lavc libx264",
+                "handler_name": "VideoHandler",
+                "language": "und",
+                "major_brand": "isom",
+                "minor_version": "512"
+              },
+              "width": 854
+            },
+            "remote_relative_path": "cases/bt-009/reference.mp4",
+            "sha256": "bc01526f93e2c42b2c35aa0aa409ef4fad9bbb812c0a0780c36e9e2a6e02b312"
+          },
+          "run_id": "9314456",
+          "scene_class": "ThreeDCameraRotation",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "8",
+            "job_id": "9314497"
+          },
+          "started_at": "2026-07-16T04:39:49Z",
+          "status": "completed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-009",
+      "final_status": "completed",
+      "scene_class": "ThreeDCameraRotation",
+      "selected_attempt_index": 0
+    },
+    {
+      "attempt_count": 1,
+      "attempts": [
+        {
+          "case_id": "bt-010",
+          "exit_codes": {
+            "normalization": 125,
+            "render": 0,
+            "source_verification": 0
+          },
+          "failure_code": "render_error",
+          "failure_detail": "upstream_save_last_frame_no_mp4",
+          "finished_at": "2026-07-16T04:41:03Z",
+          "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+          "raw_render": {
+            "path": null,
+            "sha256": null
+          },
+          "recovery": null,
+          "reference": {
+            "remote_relative_path": "cases/bt-010/model_input/bt-010/reference.mp4",
+            "sha256": null
+          },
+          "run_id": "9314456",
+          "scene_class": "ThreeDSurfacePlot",
+          "slurm": {
+            "array_job_id": "9314456",
+            "array_task_id": "9",
+            "job_id": "9314456"
+          },
+          "started_at": "2026-07-16T04:40:55Z",
+          "status": "failed",
+          "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+        }
+      ],
+      "case_id": "bt-010",
+      "final_status": "failed",
+      "scene_class": "ThreeDSurfacePlot",
+      "selected_attempt_index": 0
+    }
+  ],
+  "claim_scope": "Public source-available development set; not an unseen or contamination-free benchmark.",
+  "completed": 8,
+  "conditions": {
+    "human_reference": "measured_from_pinned_source",
+    "one_shot": "blocked_no_true_video_input_provider_and_external_sandbox",
+    "self_refined": "blocked_no_true_video_input_provider_and_external_sandbox"
+  },
+  "contamination": {
+    "reason": "The selected scenes are public Manim Community gallery examples and may have appeared in model training data.",
+    "required_public_disclosure": "Results measure reconstruction on a public development set and do not establish out-of-distribution generalization.",
+    "risk": "high"
+  },
+  "denominator": 10,
+  "failed_or_missing": 2,
+  "license_snapshot": {
+    "declared_spdx": "MIT",
+    "files": [
+      {
+        "git_blob_sha1": "774f5965700a59c2c7df2d4c234209d1da333c3e",
+        "path": "LICENSE",
+        "sha256": "c6a922fc1cfaed7ac0f87aa1dc77ebf5a3c8d1ccc5ab01da33153f0d013bf019",
+        "url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/LICENSE"
+      },
+      {
+        "git_blob_sha1": "c1c149f1eb3dc7482fc221311f88707a5f0c24c6",
+        "path": "LICENSE.community",
+        "sha256": "78e87bb648bdf08c827dd398a11e29cbdf74c3203969d3738dba3eb09d5c2022",
+        "url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/LICENSE.community"
+      }
+    ],
+    "notice": "The upstream software and examples are MIT licensed. Preserve both upstream notices with redistributed source or substantial portions.",
+    "redistribution_conclusion": "allowed_with_notice",
+    "retrieved_at": "2026-07-15T17:30:00Z"
+  },
+  "observed_at": "2026-07-16T17:53:42Z",
+  "registry_id": "manim-community-gallery-v0.20.1-ten-scenes",
+  "runs": [
+    {
+      "attempt_count": 10,
+      "pipeline_commits": [
+        "98dc50cf56852857007dcde94d703999440fdfd5"
+      ],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9314456",
+      "run_id": "9314456",
+      "scheduled_case_ids": [
+        "bt-001",
+        "bt-002",
+        "bt-003",
+        "bt-004",
+        "bt-005",
+        "bt-006",
+        "bt-007",
+        "bt-008",
+        "bt-009",
+        "bt-010"
+      ],
+      "upstream_commits": [
+        "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+      ]
+    },
+    {
+      "attempt_count": 4,
+      "pipeline_commits": [
+        "5c8eecce6ce9b7d5cc6011b84b4eb054fe33fef7"
+      ],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9329170",
+      "run_id": "9329170",
+      "scheduled_case_ids": [
+        "bt-001",
+        "bt-002",
+        "bt-004",
+        "bt-005"
+      ],
+      "upstream_commits": [
+        "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+      ]
+    },
+    {
+      "attempt_count": 0,
+      "pipeline_commits": [],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9329194",
+      "run_id": "9329194",
+      "scheduled_case_ids": [],
+      "upstream_commits": []
+    },
+    {
+      "attempt_count": 4,
+      "pipeline_commits": [
+        "3cf24acf71bc46e09542dbe8ff79d3a176de6050"
+      ],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9329201",
+      "run_id": "9329201",
+      "scheduled_case_ids": [
+        "bt-001",
+        "bt-002",
+        "bt-004",
+        "bt-005"
+      ],
+      "upstream_commits": [
+        "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+      ]
+    },
+    {
+      "attempt_count": 4,
+      "pipeline_commits": [
+        "25da3567103ad7759a035ed48ef9f4381e02c3aa"
+      ],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9329605",
+      "run_id": "9329605",
+      "scheduled_case_ids": [
+        "bt-001",
+        "bt-002",
+        "bt-004",
+        "bt-005"
+      ],
+      "upstream_commits": [
+        "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+      ]
+    },
+    {
+      "attempt_count": 4,
+      "pipeline_commits": [
+        "1f741063e767aa8db5175b6ad3caa4154bde466b"
+      ],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9329857",
+      "run_id": "9329857",
+      "scheduled_case_ids": [
+        "bt-001",
+        "bt-002",
+        "bt-004",
+        "bt-005"
+      ],
+      "upstream_commits": [
+        "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+      ]
+    },
+    {
+      "attempt_count": 4,
+      "pipeline_commits": [
+        "73bbfd15ddbab968fdb087eb82f064c3108a7104"
+      ],
+      "retrieval_root": "babel:backtranslation_refs_20260715/runs/9329948",
+      "run_id": "9329948",
+      "scheduled_case_ids": [
+        "bt-001",
+        "bt-002",
+        "bt-004",
+        "bt-005"
+      ],
+      "upstream_commits": [
+        "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+      ]
+    }
+  ],
+  "schema_version": "backtranslation-reference-combined-inventory/v1",
+  "upstream": {
+    "commit_sha": "1157b746c37130685e0a02d8aa0871d1f164d5f4",
+    "release": "v0.20.1",
+    "repository": "https://github.com/ManimCommunity/manim",
+    "retrieved_at": "2026-07-15T17:30:00Z",
+    "source_blob_git_sha1": "6584daadd8a6673f5a05c621a912f37d24e83402",
+    "source_path": "docs/source/examples.rst",
+    "source_sha256": "6b56c2cf4a61344b2a1fab5e0c1774a6f7e8ce6a5134149bd5e552f0eb82bb67",
+    "source_url": "https://github.com/ManimCommunity/manim/blob/1157b746c37130685e0a02d8aa0871d1f164d5f4/docs/source/examples.rst"
+  }
+}

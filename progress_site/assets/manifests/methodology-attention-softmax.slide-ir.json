@@ -1,0 +1,127 @@
+{
+  "schema_version": "slide-ir/0.1.0",
+  "slide_id": "slide:methodology.attention_softmax",
+  "title": "Methodology: scores become attention weights",
+  "intent": "methodology",
+  "completion": "smoke",
+  "claims": [
+    "Scaled dot-product attention normalizes query-key scores with softmax before mixing values.",
+    "The embedded clip is a render smoke from Babel job 9313551, not full integrated-pipeline completion."
+  ],
+  "layout": {
+    "canvas": "16:9",
+    "template_id": "template:methodology.single_animation.v0"
+  },
+  "citations": [
+    {
+      "citation_id": "citation:attention.eq1",
+      "label": "Attention Is All You Need",
+      "url": "https://arxiv.org/pdf/1706.03762v7",
+      "revision": "arXiv:1706.03762v7",
+      "locator": "Section 3.2.1, page 4, Equation (1)"
+    }
+  ],
+  "static_elements": [
+    {"element_id": "element:title", "kind": "title", "content": "Methodology: scores become attention weights", "region": "top"},
+    {"element_id": "element:formula", "kind": "formula", "content": "weight_i = exp(score_i) / sum_j exp(score_j)", "region": "above_animation"},
+    {"element_id": "element:smoke_badge", "kind": "badge", "content": "SMOKE - Babel 9313551", "region": "top_right"},
+    {"element_id": "element:citation", "kind": "citation", "content": "Vaswani et al., 2017, Eq. (1)", "region": "footer"}
+  ],
+  "speaker_notes": "Explain exp then normalization. Do not describe this slide as full paper-to-slides integration; architecture and performance slots remain planned.",
+  "run_evidence": [
+    {
+      "evidence_id": "run_evidence:babel.9313551",
+      "source_run_ref": "babel:job:9313551",
+      "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464",
+      "evidence_path": "experiments/formula_explainer/babel_smoke_manifest.json",
+      "evidence_hash": "sha256:06295cd8395c852d6f355289fd48bdca4850224327483381fa1b46b850717fb6",
+      "locator": "jobs[job_id=9313551]",
+      "validation_status": "pass"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "artifact:scene_ir.attention_softmax.9313551",
+      "role": "scene_ir",
+      "path": "experiments/slides_manim/fixtures/attention_softmax_scene_ir.json",
+      "content_hash": "sha256:153fbe6b5bf42e0c0b83c49df83c26d7399254524d9d8f4678bf037ec58de9ae",
+      "media_type": "application/json",
+      "completion": "smoke",
+      "validation_status": "pass",
+      "understandable_without_playback": false,
+      "lineage": {"source_run_ref": "babel:job:9313551", "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464", "derivation_stage": "generated"}
+    },
+    {
+      "artifact_id": "artifact:video.attention_softmax.9313551",
+      "role": "rendered_video",
+      "path": "experiments/slides_manim/demo/assets/attention_softmax_9313551.mp4",
+      "content_hash": "sha256:86568917ad365c1dcbdaca7187c3848e7a4fe350e4c84398dde67be416d33c87",
+      "media_type": "video/mp4",
+      "completion": "smoke",
+      "validation_status": "pass",
+      "understandable_without_playback": false,
+      "lineage": {"source_run_ref": "babel:job:9313551", "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464", "derivation_stage": "rendered"}
+    },
+    {
+      "artifact_id": "artifact:poster.attention_softmax.9313551",
+      "role": "static_fallback",
+      "path": "experiments/slides_manim/demo/assets/attention_softmax_9313551_poster.png",
+      "content_hash": "sha256:4b304104a9f7f36d205c79c944768eb8fb77ed1d184950832d97f44c019413a0",
+      "media_type": "image/png",
+      "completion": "smoke",
+      "validation_status": "pass",
+      "understandable_without_playback": true,
+      "lineage": {"source_run_ref": "babel:job:9313551", "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464", "derivation_stage": "static_fallback"}
+    }
+  ],
+  "animation_slots": [
+    {
+      "slot_id": "animation_slot:methodology.attention_softmax",
+      "slot_version": "animation-slot/0.1.0",
+      "scene_ir_ref": "artifact:scene_ir.attention_softmax.9313551",
+      "rendered_artifact_ref": "artifact:video.attention_softmax.9313551",
+      "static_fallback_artifact_ref": "artifact:poster.attention_softmax.9313551",
+      "semantic_purpose": "methodology_formula_explanation",
+      "slide_region": {"x": 0.06, "y": 0.18, "width": 0.88, "height": 0.68, "unit": "normalized"},
+      "expected_duration_seconds": 6.666,
+      "playback_mode": "on_click",
+      "poster_frame_ref": "artifact:poster.attention_softmax.9313551",
+      "caption": "Raw attention scores pass through exponentiation and normalization to become weights summing to one.",
+      "alt_text": "Animation of three token-score bars transformed into normalized attention weights 0.245, 0.665, and 0.090, which sum to one.",
+      "aspect_ratio": "16:9",
+      "crop_policy": "contain_no_crop",
+      "artifact_hash": "sha256:86568917ad365c1dcbdaca7187c3848e7a4fe350e4c84398dde67be416d33c87",
+      "composite_lineage": {
+        "implementation_origin": "project_native",
+        "derivation_stage": "embedded",
+        "source_run_ref": "babel:job:9313551",
+        "source_commit": "853bb82d68f814b40e589ea8bfa086101b14e464",
+        "run_evidence_ref": "run_evidence:babel.9313551",
+        "parent_artifact_refs": [
+          "artifact:scene_ir.attention_softmax.9313551",
+          "artifact:video.attention_softmax.9313551",
+          "artifact:poster.attention_softmax.9313551"
+        ]
+      },
+      "requiredness": "required_for_comprehension"
+    }
+  ],
+  "planned_slots": [
+    {
+      "planned_slot_id": "planned_slot:architecture.attention_dataflow",
+      "status": "planned_missing",
+      "semantic_purpose": "architecture_dataflow",
+      "reason": "No reviewed Q/K/V dataflow SceneIR, render, or static fallback exists yet.",
+      "missing_requirements": ["scene_ir", "rendered_artifact", "static_fallback", "poster", "review"],
+      "expected_slot_contract_version": "animation-slot/0.1.0"
+    },
+    {
+      "planned_slot_id": "planned_slot:performance.attention_comparison",
+      "status": "planned_missing",
+      "semantic_purpose": "performance_comparison",
+      "reason": "No paper-grounded performance chart SceneIR or validated media pair exists yet.",
+      "missing_requirements": ["scene_ir", "rendered_artifact", "static_fallback", "poster", "review"],
+      "expected_slot_contract_version": "animation-slot/0.1.0"
+    }
+  ]
+}
