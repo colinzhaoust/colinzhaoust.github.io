@@ -1,0 +1,35 @@
+{
+  "case_id": "bt-001",
+  "exit_codes": {
+    "job_local_dependency": 0,
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T17:48:21Z",
+  "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9329948/bt-001/raw-render",
+    "sha256": "8dbb10ddfec78df95614f27dc9ccf1e312d18a380e2088b5a21037ac63b08ab5"
+  },
+  "recovery": {
+    "dependency_provenance": "not_packaged",
+    "initial_slurm_task": "9314456_0",
+    "reason": "missing_runtime_dependency_standalone_cls"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-001/reference.mp4",
+    "sha256": "f3d2696f5c4c504a7719cdcaa1aa6e5c6e7be7fd1ba521176708a6eb871ec369"
+  },
+  "scene_class": "OpeningManim",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9329948",
+    "array_task_id": "0",
+    "job_id": "9329949"
+  },
+  "started_at": "2026-07-16T17:40:26Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}

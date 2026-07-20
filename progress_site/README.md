@@ -23,9 +23,11 @@ Before publication:
 python3 progress_site/check_site.py
 ```
 
-The checker validates local assets and JSON, reconciles the six-suite aggregate,
-rejects private filesystem locators, and verifies that video URLs remain lazy
-until a visitor explicitly loads a clip.
+The checker validates local assets and JSON, verifies every Backtranslation
+artifact against its declared size and SHA-256, reconciles the six-suite
+aggregate, rejects private filesystem locators and baseline-coverage dummy
+references, and verifies that video URLs remain lazy until a visitor explicitly
+loads a clip.
 
 Key source material:
 

@@ -1,0 +1,32 @@
+{
+  "schema_version": "backtranslation-reference-preparation/v1",
+  "case_id": "bt-008",
+  "input_content_hash": "c739a84d9bc1b0f45e01062addc14f358b4a54a6a9f37b6981f442cb90f0d984",
+  "output_content_hash": "aaae997f1ab19e6486e5d104c03b7d86d600cce311449c8c0e3ee850389ceebb",
+  "output_media": {
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+    "duration_seconds": 12.0,
+    "size_bytes": 158388,
+    "codec": "h264",
+    "width": 854,
+    "height": 480,
+    "pixel_format": "yuv420p",
+    "fps": 15.0,
+    "audio_stream_count": 0,
+    "tags": {
+      "major_brand": "isom",
+      "minor_version": "512",
+      "compatible_brands": "isomiso2avc1mp41",
+      "language": "und",
+      "handler_name": "VideoHandler",
+      "encoder": "Lavc libx264"
+    }
+  },
+  "preparation_command": [
+    "ffmpeg",
+    "<INPUT_VIDEO>",
+    "--normalized-reference-policy-v1",
+    "854x480@15",
+    "<OUTPUT_REFERENCE>"
+  ]
+}

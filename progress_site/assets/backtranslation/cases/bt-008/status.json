@@ -1,0 +1,29 @@
+{
+  "case_id": "bt-008",
+  "exit_codes": {
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T04:39:38Z",
+  "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9314456/bt-008/raw-render",
+    "sha256": "c739a84d9bc1b0f45e01062addc14f358b4a54a6a9f37b6981f442cb90f0d984"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-008/reference.mp4",
+    "sha256": "aaae997f1ab19e6486e5d104c03b7d86d600cce311449c8c0e3ee850389ceebb"
+  },
+  "scene_class": "MovingZoomedSceneAround",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9314456",
+    "array_task_id": "7",
+    "job_id": "9314489"
+  },
+  "started_at": "2026-07-16T04:38:08Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}

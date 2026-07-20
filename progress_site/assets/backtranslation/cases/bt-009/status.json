@@ -1,0 +1,29 @@
+{
+  "case_id": "bt-009",
+  "exit_codes": {
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T04:40:32Z",
+  "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9314456/bt-009/raw-render",
+    "sha256": "c63361a68ac013c90e631c0c0973df458ade58dd0e8c1ce6b6448233bd71c03e"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-009/reference.mp4",
+    "sha256": "bc01526f93e2c42b2c35aa0aa409ef4fad9bbb812c0a0780c36e9e2a6e02b312"
+  },
+  "scene_class": "ThreeDCameraRotation",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9314456",
+    "array_task_id": "8",
+    "job_id": "9314497"
+  },
+  "started_at": "2026-07-16T04:39:49Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}
