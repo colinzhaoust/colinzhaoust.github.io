@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "experiments" / "backtranslation" / "v1" / "scene_registry.json"
 PROTOCOL_PATH = ROOT / "experiments" / "backtranslation" / "v1" / "protocol.json"
 FIXTURE_PATH = ROOT / "tests" / "fixtures" / "backtranslation" / "synthetic_fixture.json"
+TEST_PIPELINE_COMMIT = "0" * 40
 
 
 class OfflineFixture:

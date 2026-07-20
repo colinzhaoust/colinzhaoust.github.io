@@ -18,7 +18,7 @@ from tools.backtranslation.conditions import (
 )
 from tools.backtranslation.feedback import RenderResult
 
-from helpers import OfflineFixture, ROOT, fixture_code, load_json
+from helpers import OfflineFixture, ROOT, TEST_PIPELINE_COMMIT, fixture_code, load_json
 
 
 class OutsideRootRenderer:
@@ -281,7 +281,15 @@ class CliDryRunTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="backtranslation_cli_") as raw:
             work = Path(raw) / "work"
             proc = subprocess.run(
-                [sys.executable, "tools/run_backtranslation.py", "dry-run", "--work-dir", str(work)],
+                [
+                    sys.executable,
+                    "tools/run_backtranslation.py",
+                    "dry-run",
+                    "--work-dir",
+                    str(work),
+                    "--pipeline-commit",
+                    TEST_PIPELINE_COMMIT,
+                ],
                 cwd=ROOT,
                 text=True,
                 stdout=subprocess.PIPE,

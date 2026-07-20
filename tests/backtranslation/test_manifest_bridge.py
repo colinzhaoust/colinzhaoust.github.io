@@ -20,7 +20,15 @@ from tools.backtranslation.manifest_bridge import (
 )
 from tools.paper_media_evidence import ManifestValidationError, project_public_manifest, validate_canonical, validate_public
 
-from helpers import OfflineFixture, PROTOCOL_PATH, REGISTRY_PATH, ROOT, fixture_code, load_json
+from helpers import (
+    OfflineFixture,
+    PROTOCOL_PATH,
+    REGISTRY_PATH,
+    ROOT,
+    TEST_PIPELINE_COMMIT,
+    fixture_code,
+    load_json,
+)
 
 
 class ManifestBridgeTests(unittest.TestCase):
@@ -45,10 +53,7 @@ class ManifestBridgeTests(unittest.TestCase):
             expected_one_shot_hash=cls.one.final_code_hash or "", run_root=cls.self_root,
             adapter=cls.self_adapter, renderer=cls.renderer, policy=cls.fixture.policy,
         )
-        cls.commit = subprocess.run(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
-            stdout=subprocess.PIPE, check=True,
-        ).stdout.strip()
+        cls.commit = TEST_PIPELINE_COMMIT
         cls.bridge = PaperMediaEvidenceBridge(
             registry_path=REGISTRY_PATH, protocol_path=PROTOCOL_PATH,
             pipeline_repository="https://github.com/colinzhaoust/4blue2brown-progress",
@@ -297,7 +302,15 @@ class CanonicalCliDryRunTests(unittest.TestCase):
     def test_cli_dry_run_exercises_three_manifest_bridge(self) -> None:
         with tempfile.TemporaryDirectory(prefix="backtranslation_bridge_cli_") as raw:
             work = Path(raw) / "work"
-            command = [sys.executable, "tools/run_backtranslation.py", "dry-run", "--work-dir", str(work)]
+            command = [
+                sys.executable,
+                "tools/run_backtranslation.py",
+                "dry-run",
+                "--work-dir",
+                str(work),
+                "--pipeline-commit",
+                TEST_PIPELINE_COMMIT,
+            ]
             self.assertEqual(sys.executable, command[0])
             process = subprocess.run(
                 command,
