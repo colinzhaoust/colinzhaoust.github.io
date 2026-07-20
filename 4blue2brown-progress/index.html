@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="An evidence-led progress brief for 4blue2brown, a paper and code to inspectable Manim explainer research pipeline.">
     <title>4blue2brown · Evidence-led progress</title>
-    <link rel="stylesheet" href="styles.css?v=four-threads-1">
+    <link rel="stylesheet" href="styles.css?v=self-refine-1">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to evidence</a>
@@ -237,6 +237,79 @@
           <div><span class="badge badge-blocked">planned missing</span><strong>Architecture dataflow</strong><p>No reviewed Q/K/V dataflow SceneIR or media pair exists yet.</p></div>
           <div><span class="badge badge-blocked">planned missing</span><strong>Performance comparison</strong><p>No paper-grounded performance chart SceneIR or validated media pair exists yet.</p></div>
         </div>
+
+        <div class="self-refine-proof" aria-labelledby="self-refine-title">
+          <div class="self-refine-heading">
+            <div><p class="section-index">Five render, inspect, and repair rounds</p><h3 id="self-refine-title">The mechanism survived. The explanation changed.</h3></div>
+            <p>Compare the project-native v0, the first causal rewrite, and the fifth-round oral visual. Synthetic baseline-coverage media is excluded. Scores are structured self-review, not a human study.</p>
+          </div>
+
+          <div class="refine-topic-picker" role="group" aria-label="Choose a paper topic for the five-round comparison">
+            <button type="button" class="refine-topic selected" aria-pressed="true"
+              data-refine-topic="transformer" data-topic-title="Transformer" data-scores="12,14,16,17,18"
+              data-v0-video="assets/videos/TransformerCoreExplainer.mp4" data-v0-poster="assets/contact-sheets/TransformerCoreExplainer.png" data-v0-note="11.47 s · static summary pattern"
+              data-r1-video="assets/self-refine/transformer/round-1.mp4" data-r1-poster="assets/self-refine/transformer/round-1.png" data-r1-note="14.33 s · causal worked example"
+              data-r5-video="assets/self-refine/transformer/round-5.mp4" data-r5-poster="assets/self-refine/transformer/round-5.png" data-r5-track="assets/self-refine/transformer/round-5.vtt" data-r5-note="30.87 s · 18/20 · oral-ready visual">Transformer <small>18/20</small></button>
+            <button type="button" class="refine-topic" aria-pressed="false"
+              data-refine-topic="dpo" data-topic-title="DPO" data-scores="12,14,15,17,18"
+              data-v0-video="assets/videos/DPOPreferenceExplainer.mp4" data-v0-poster="assets/contact-sheets/DPOPreferenceExplainer.png" data-v0-note="11.73 s · undefined symbols and abstract result"
+              data-r1-video="assets/self-refine/dpo/round-1.mp4" data-r1-poster="assets/self-refine/dpo/round-1.png" data-r1-note="13.13 s · preference margin exposed"
+              data-r5-video="assets/self-refine/dpo/round-5.mp4" data-r5-poster="assets/self-refine/dpo/round-5.png" data-r5-track="assets/self-refine/dpo/round-5.vtt" data-r5-note="29.80 s · 18/20 · oral-ready visual">DPO <small>18/20</small></button>
+            <button type="button" class="refine-topic" aria-pressed="false"
+              data-refine-topic="ess" data-topic-title="ESS / FeynRL" data-scores="10,13,14,16,16"
+              data-v0-video="assets/videos/FeynRLESSMiniLesson.mp4" data-v0-poster="assets/contact-sheets/FeynRLESSMiniLesson.png" data-v0-note="14.27 s · dense and weakly causal"
+              data-r1-video="assets/self-refine/ess/round-1.mp4" data-r1-poster="assets/self-refine/ess/round-1.png" data-r1-note="13.60 s · explicit ratio batch"
+              data-r5-video="assets/self-refine/ess/round-5.mp4" data-r5-poster="assets/self-refine/ess/round-5.png" data-r5-track="assets/self-refine/ess/round-5.vtt" data-r5-note="30.27 s · 16/20 · narration recommended">ESS / FeynRL <small>16/20</small></button>
+            <button type="button" class="refine-topic" aria-pressed="false"
+              data-refine-topic="rope" data-topic-title="RoPE" data-scores="11,14,15,17,18"
+              data-v0-video="assets/videos/RoPERotationExplainer.mp4" data-v0-poster="assets/contact-sheets/RoPERotationExplainer.png" data-v0-note="16.53 s · structure without a worked relative shift"
+              data-r1-video="assets/self-refine/rope/round-1.mp4" data-r1-poster="assets/self-refine/rope/round-1.png" data-r1-note="14.73 s · 2D clock model"
+              data-r5-video="assets/self-refine/rope/round-5.mp4" data-r5-poster="assets/self-refine/rope/round-5.png" data-r5-track="assets/self-refine/rope/round-5.vtt" data-r5-note="31.33 s · 18/20 · oral-ready visual">RoPE <small>18/20</small></button>
+          </div>
+
+          <div class="refine-score-line" aria-live="polite">
+            <span>Internal score</span>
+            <ol aria-label="Transformer scores over five rounds" data-refine-score-list>
+              <li><small>R1</small><b>12</b></li><li><small>R2</small><b>14</b></li><li><small>R3</small><b>16</b></li><li><small>R4</small><b>17</b></li><li><small>R5</small><b>18</b></li>
+            </ol>
+            <strong data-refine-verdict>oral-ready visual</strong>
+          </div>
+
+          <div class="refine-comparison" aria-label="Original, first round, and fifth round video comparison">
+            <figure class="refine-column" data-refine-column="v0">
+              <div class="refine-column-label"><span>A</span><strong>Project-native v0</strong></div>
+              <div class="player-stage">
+                <img src="assets/contact-sheets/TransformerCoreExplainer.png" alt="Transformer project-native v0 contact sheet">
+                <button class="load-refinement-video" type="button" data-video-src="assets/videos/TransformerCoreExplainer.mp4" aria-label="Load Transformer project-native v0"><span aria-hidden="true">▶</span> Load v0</button>
+                <video controls preload="none" playsinline hidden aria-label="Transformer project-native v0"></video>
+              </div>
+              <figcaption><strong data-refine-name>Transformer</strong><span data-refine-note>11.47 s · static summary pattern</span></figcaption>
+            </figure>
+            <figure class="refine-column" data-refine-column="r1">
+              <div class="refine-column-label"><span>B</span><strong>Round 1</strong></div>
+              <div class="player-stage">
+                <img src="assets/self-refine/transformer/round-1.png" alt="Transformer round 1 contact sheet">
+                <button class="load-refinement-video" type="button" data-video-src="assets/self-refine/transformer/round-1.mp4" aria-label="Load Transformer round 1"><span aria-hidden="true">▶</span> Load round 1</button>
+                <video controls preload="none" playsinline hidden aria-label="Transformer round 1"></video>
+              </div>
+              <figcaption><strong>First causal rewrite</strong><span data-refine-note>14.33 s · causal worked example</span></figcaption>
+            </figure>
+            <figure class="refine-column final-column" data-refine-column="r5">
+              <div class="refine-column-label"><span>C</span><strong>Round 5</strong></div>
+              <div class="player-stage">
+                <img src="assets/self-refine/transformer/round-5.png" alt="Transformer round 5 contact sheet">
+                <button class="load-refinement-video" type="button" data-video-src="assets/self-refine/transformer/round-5.mp4" data-track-src="assets/self-refine/transformer/round-5.vtt" aria-label="Load Transformer round 5 with captions"><span aria-hidden="true">▶</span> Load final + captions</button>
+                <video controls preload="none" playsinline hidden aria-label="Transformer round 5"></video>
+              </div>
+              <figcaption><strong>Paper-grounded oral visual</strong><span data-refine-note>30.87 s · 18/20 · oral-ready visual</span></figcaption>
+            </figure>
+          </div>
+
+          <div class="refine-boundary">
+            <p><strong>Claim boundary:</strong> “oral-ready” means at least 16/20 on the local rubric, with no category below 3. The clips are silent visual segments with optional English captions. No independent audience study establishes that a general viewer will understand them.</p>
+            <div class="text-links"><a href="assets/self-refine/meta/audits.json">Five-round audit</a><a href="assets/self-refine/meta/comparison_manifest.json">Comparison manifest</a></div>
+          </div>
+        </div>
         <p class="source-note">Sources: <code>runs/formula_explainer/build/build_summary.json</code>, <code>canonical_graph_fragment.json</code>, and <code>experiments/slides_manim/methodology_attention_softmax.slide-ir.json</code>.</p>
       </section>
 
@@ -326,6 +399,6 @@
       <a class="back-top" href="#overview">Back to top ↑</a>
     </footer>
 
-    <script src="script.js?v=four-threads-1"></script>
+    <script src="script.js?v=self-refine-1"></script>
   </body>
 </html>

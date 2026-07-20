@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:05.500
+Start with one question: what does the token “it” refer to? Attention compares its query with every key in parallel.
+
+00:05.500 --> 00:11.500
+The dot products are raw scores. Softmax exponentiates and normalizes them into weights that sum to one.
+
+00:11.500 --> 00:17.800
+Those weights mix value vectors. Q says what to seek, K determines relevance, and V supplies the copied information.
+
+00:17.800 --> 00:23.000
+The paper replaces recurrent sequence steps with stacked attention and feed-forward blocks. This toy shows only one lookup.
+
+00:23.000 --> 00:30.867
+The authors report 28.4 BLEU on WMT14 English-to-German. Check: a zero softmax weight gives that value vector zero contribution.
