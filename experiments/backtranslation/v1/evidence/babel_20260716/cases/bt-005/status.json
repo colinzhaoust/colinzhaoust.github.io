@@ -1,0 +1,35 @@
+{
+  "case_id": "bt-005",
+  "exit_codes": {
+    "job_local_dependency": 0,
+    "normalization": 125,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": "render_error",
+  "finished_at": "2026-07-16T17:53:42Z",
+  "pipeline_commit": "73bbfd15ddbab968fdb087eb82f064c3108a7104",
+  "raw_render": {
+    "path": null,
+    "sha256": null
+  },
+  "recovery": {
+    "dependency_provenance": "not_packaged",
+    "initial_slurm_task": "9314456_4",
+    "reason": "missing_runtime_dependency_standalone_cls"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-005/model_input/bt-005/reference.mp4",
+    "sha256": null
+  },
+  "scene_class": "GraphAreaPlot",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9329948",
+    "array_task_id": "3",
+    "job_id": "9329948"
+  },
+  "started_at": "2026-07-16T17:48:47Z",
+  "status": "failed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}

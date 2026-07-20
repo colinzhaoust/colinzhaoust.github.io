@@ -1,0 +1,29 @@
+{
+  "case_id": "bt-006",
+  "exit_codes": {
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T04:43:06Z",
+  "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9314456/bt-006/raw-render",
+    "sha256": "d8b96329ed2c0946db72e695efb533d863b7182b2e60cbf5c33e6cafb329f4df"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-006/reference.mp4",
+    "sha256": "79bd9aa81b601f305cdfb6a75c0ff49f33c96bb7eb60b277a5b5d954135a0848"
+  },
+  "scene_class": "PointWithTrace",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9314456",
+    "array_task_id": "5",
+    "job_id": "9314483"
+  },
+  "started_at": "2026-07-16T04:37:17Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}

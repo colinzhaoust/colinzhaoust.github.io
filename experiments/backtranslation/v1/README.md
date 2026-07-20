@@ -89,6 +89,17 @@ Recovery runs are additive. They do not overwrite the first attempt:
 | `9329201` | 4 | `standalone` runtime loaded; LaTeX exposed missing `preview.sty` |
 | `9329605` | 4 | `standalone` and `preview` loaded; Manim exposed missing `dvisvgm` |
 | `9329857` | 4 | case-local `dvisvgm` ran, but relocatable kpathsea could not find the compute node's TeX data roots |
+| `9329948` | 4 | commit `73bbfd1`; 3 normalized references completed, while source-exact `GraphAreaPlot` exited render successfully but emitted no MP4 because it is a `:save_last_frame:` directive |
+
+The short-lived array `9329194` was cancelled before it wrote any case status;
+it is retained as a zero-attempt run in the combined ledger rather than being
+silently presented as measured evidence.
+
+The final human/reference result is **8/10 normalized MP4s**. The two retained
+failures are `GraphAreaPlot` and `ThreeDSurfacePlot`, both exact upstream
+`:save_last_frame:` examples. They remain `upstream_save_last_frame_no_mp4`;
+no animation was invented to fill either cell. The one-shot and self-refined
+conditions remain blocked as declared by the protocol.
 
 The combined inventory command retains every persisted attempt and selects the
 latest successful attempt per case. Missing rows in a subset recovery array do
@@ -98,11 +109,14 @@ not count as attempts:
 python -m tools.backtranslation.reference_batch combine \
   --registry experiments/backtranslation/v1/scene_registry.json \
   --protocol experiments/backtranslation/v1/protocol.json \
-  --retrieval-root babel:/home/xinranz3/4blue2brown_explore/backtranslation_refs_20260715 \
+  --retrieval-root babel:backtranslation_refs_20260715 \
   --run 9314456=/local/mirror/9314456 \
   --run 9329170=/local/mirror/9329170 \
+  --run 9329194=/local/mirror/9329194 \
   --run 9329201=/local/mirror/9329201 \
   --run 9329605=/local/mirror/9329605 \
+  --run 9329857=/local/mirror/9329857 \
+  --run 9329948=/local/mirror/9329948 \
   --output combined_reference_inventory.json
 ```
 
@@ -117,3 +131,29 @@ for the next registry version. The v1 outcomes remain failures, because a
 The file also records the coverage loss of replacing the Gaussian `Surface`
 example with an upstream-exact camera-animation example; a project-authored
 animated surface may be added only as a separately labeled derived stress test.
+
+## Checked-in evidence bundle
+
+`evidence/babel_20260716/` is a clean-checkout-safe, MIT-notice-preserving
+bundle of the final selected outcomes. It contains the deterministic combined
+30-attempt inventory, pinned-source manifest, status for all ten cases, and—for
+each of the eight completed cases—the normalized MP4, midpoint poster, ffprobe
+record, and private preparation manifest. `artifact_manifest.json` hashes every
+included artifact and records the selected Babel run/task.
+
+Rebuild the bundle from an immutable local mirror with:
+
+```sh
+python -m tools.backtranslation.package_reference_evidence \
+  --inventory /local/combined_reference_inventory.json \
+  --protocol experiments/backtranslation/v1/protocol.json \
+  --source-manifest /local/generated/source_manifest.json \
+  --run 9314456=/local/mirror/9314456 \
+  --run 9329170=/local/mirror/9329170 \
+  --run 9329194=/local/mirror/9329194 \
+  --run 9329201=/local/mirror/9329201 \
+  --run 9329605=/local/mirror/9329605 \
+  --run 9329857=/local/mirror/9329857 \
+  --run 9329948=/local/mirror/9329948 \
+  --output-root experiments/backtranslation/v1/evidence/babel_20260716
+```

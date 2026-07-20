@@ -1,0 +1,29 @@
+{
+  "case_id": "bt-007",
+  "exit_codes": {
+    "normalization": 0,
+    "render": 0,
+    "source_verification": 0
+  },
+  "failure_code": null,
+  "finished_at": "2026-07-16T04:37:49Z",
+  "pipeline_commit": "98dc50cf56852857007dcde94d703999440fdfd5",
+  "raw_render": {
+    "path": "babel:bt-reference-v1/9314456/bt-007/raw-render",
+    "sha256": "06dbc1c4322ea2bc8d4d07e34034534a02cb27d65e29d394391f72bed0c02c74"
+  },
+  "reference": {
+    "remote_relative_path": "cases/bt-007/reference.mp4",
+    "sha256": "553d31b0593c5cc398db0f6b70f332ed9778268bf57bcefd7e9d4a438ce7c20e"
+  },
+  "scene_class": "FollowingGraphCamera",
+  "schema_version": "backtranslation-reference-case/v1",
+  "slurm": {
+    "array_job_id": "9314456",
+    "array_task_id": "6",
+    "job_id": "9314487"
+  },
+  "started_at": "2026-07-16T04:37:34Z",
+  "status": "completed",
+  "upstream_commit": "1157b746c37130685e0a02d8aa0871d1f164d5f4"
+}
