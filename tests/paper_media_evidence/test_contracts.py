@@ -18,7 +18,7 @@ from tools.paper_media_evidence.validation import ManifestValidationError, valid
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = Path(__file__).parent / "fixtures" / "valid_full.json"
-LEGACY = ROOT / "progress_site" / "assets" / "baseline-coverage" / "manifests" / "manifest.json"
+LEGACY = Path(__file__).parent / "fixtures" / "legacy_baseline_manifest.json"
 
 
 def load_valid():
@@ -381,10 +381,10 @@ class MigrationTests(unittest.TestCase):
         source_location = {"kind": "repo_relative", "path": LEGACY.relative_to(ROOT).as_posix()}
         kwargs = {"source_location": source_location, "source_hash": "sha256:" + hashlib.sha256(raw).hexdigest()}
         first = migrate_legacy_baseline(legacy, **kwargs); second = migrate_legacy_baseline(legacy, **kwargs)
-        self.assertEqual(first, second); self.assertEqual(legacy, before); self.assertEqual(20, len(first))
-        self.assertEqual(25, sum(len(item["artifacts"]) for item in first))
-        self.assertEqual(20, sum(a["completion"] == "placeholder" for m in first for a in m["artifacts"]))
-        self.assertEqual(5, sum(a["completion"] == "partial" for m in first for a in m["artifacts"]))
+        self.assertEqual(first, second); self.assertEqual(legacy, before); self.assertEqual(3, len(first))
+        self.assertEqual(4, sum(len(item["artifacts"]) for item in first))
+        self.assertEqual(2, sum(a["completion"] == "placeholder" for m in first for a in m["artifacts"]))
+        self.assertEqual(2, sum(a["completion"] == "partial" for m in first for a in m["artifacts"]))
         for manifest in first:
             validate_canonical(manifest)
             with self.assertRaises(ManifestValidationError):

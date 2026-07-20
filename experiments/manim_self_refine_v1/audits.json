@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evaluation_type": "structured self-review, not a human comprehension study",
+  "oral_ready_rule": "at least 16/20 and no category below 3",
+  "rounds": [
+    {
+      "round": 1,
+      "change": "Replace static summary slides with question, worked example, causal mechanism, and takeaway.",
+      "scores": {"transformer": 12, "dpo": 12, "ess": 10, "rope": 11},
+      "critique": "Causal structure improved, but pacing was too fast; axes and angle traces were missing; ESS emphasis damaged readability; no paper claim or evidence."
+    },
+    {
+      "round": 2,
+      "change": "Slow holds, enlarge labels, label DPO axes, localize ESS emphasis, and trace RoPE angles.",
+      "scores": {"transformer": 14, "dpo": 14, "ess": 13, "rope": 14},
+      "critique": "Worked examples became readable, but every clip still explained only a generic concept rather than the paper contribution."
+    },
+    {
+      "round": 3,
+      "change": "Add the paper move and an explicit boundary for what the toy animation does not establish.",
+      "scores": {"transformer": 16, "dpo": 15, "ess": 14, "rope": 15},
+      "critique": "Paper framing worked, but there was no empirical result and no way to check whether a viewer could reconstruct the mechanism."
+    },
+    {
+      "round": 4,
+      "change": "Separate authors' reported evidence from a counterfactual learner check with a delayed answer.",
+      "scores": {"transformer": 17, "dpo": 17, "ess": 16, "rope": 17},
+      "critique": "The clips became complete oral visual segments; the final evidence page still read like a footnote, and the RoPE scene class retained a naming typo."
+    },
+    {
+      "round": 5,
+      "change": "Tighten final-page hierarchy, label abstract-sourced results, extend answer holds, fix the RoPE class name, and add timed captions.",
+      "scores": {"transformer": 18, "dpo": 18, "ess": 16, "rope": 18},
+      "critique": "Transformer, DPO, and RoPE meet the internal oral-ready bar. ESS is borderline oral-ready because the bridge from low ESS to cap/KL control still benefits from spoken narration."
+    }
+  ],
+  "limitations": [
+    "No independent human learner study was run.",
+    "The final videos are silent visual segments; WebVTT narration cues are supplied for standalone review.",
+    "Paper result cards paraphrase authors' abstracts and are not independent reproductions.",
+    "Local Manim Community 0.19.0 was used; the currently validated Babel backtranslation environment uses 0.20.1."
+  ]
+}

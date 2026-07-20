@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:05.600
+DPO starts from a chosen and rejected answer for the same prompt. The local goal is to raise the winner-loser gap.
+
+00:05.600 --> 00:11.500
+Subtract the frozen reference policy’s preference gap from the trainable policy’s gap. Beta controls update strength.
+
+00:11.500 --> 00:17.700
+A log-sigmoid loss rewards positive relative margin and smoothly penalizes negative margin.
+
+00:17.700 --> 00:22.400
+The paper turns reference-relative preference optimization into a supervised logistic objective. Data, beta, and the reference still matter.
+
+00:22.400 --> 00:29.800
+The authors report competitive results with a simpler loop. Check: if both gaps rise equally, their difference and the DPO margin stay fixed.

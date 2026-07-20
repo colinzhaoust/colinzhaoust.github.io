@@ -8,6 +8,12 @@ organized as an overview/ledger plus four research threads:
 3. the integrated Slides + Manim pipeline and bottom-up formula graph;
 4. backtranslation references and blocked generation conditions.
 
+Thread 03 also includes a five-round Manim self-refinement comparison for
+Transformer attention, DPO, normalized ESS, and RoPE. It exposes project-native
+v0, round 1, and round 5 clips through click-to-load players; final clips attach
+optional WebVTT narration cues. The published audit labels its scores as
+structured self-review rather than human-comprehension evidence.
+
 Open locally:
 
 ```bash

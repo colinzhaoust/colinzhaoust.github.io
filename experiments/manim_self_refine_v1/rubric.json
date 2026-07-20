@@ -1,0 +1,22 @@
+{
+  "schema_version": "manim-self-refine-rubric/1.0.0",
+  "target": "ICLR-oral-quality internal presentation rubric; not an acceptance claim",
+  "total_points": 20,
+  "oral_ready_threshold": 16,
+  "minimum_category_score": 3,
+  "categories": {
+    "readable_hierarchy": 4,
+    "mechanistic_continuity": 4,
+    "learner_reconstruction": 4,
+    "paper_grounding": 4,
+    "oral_readiness": 4
+  },
+  "required_evidence": [
+    "mp4",
+    "ffprobe",
+    "sampled_frames",
+    "contact_sheet",
+    "source_hash",
+    "self_audit"
+  ]
+}

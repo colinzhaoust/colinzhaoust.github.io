@@ -1,0 +1,130 @@
+[
+  {
+    "video": "runs/manim_self_refine_v1/round_1/videos/iclr_oral_explainers/480p15/ICLRTransformerExplainer.mp4",
+    "width": 854,
+    "height": 480,
+    "fps": "15/1",
+    "duration_sec": 14.333333,
+    "size_bytes": 394375,
+    "frames": [
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRTransformerExplainer/01.png",
+        "timestamp": 3.48,
+        "brightness": 242.81,
+        "non_background_fraction": 0.0896,
+        "entropy": 1.861
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRTransformerExplainer/02.png",
+        "timestamp": 7.903,
+        "brightness": 241.83,
+        "non_background_fraction": 0.0844,
+        "entropy": 2.271
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRTransformerExplainer/03.png",
+        "timestamp": 12.777,
+        "brightness": 231.8,
+        "non_background_fraction": 0.179,
+        "entropy": 2.571
+      }
+    ],
+    "contact_sheet": "runs/manim_self_refine_v1/round_1/probe/contact_sheets/ICLRTransformerExplainer.png"
+  },
+  {
+    "video": "runs/manim_self_refine_v1/round_1/videos/iclr_oral_explainers/480p15/ICLRDPOExplainer.mp4",
+    "width": 854,
+    "height": 480,
+    "fps": "15/1",
+    "duration_sec": 13.133333,
+    "size_bytes": 327871,
+    "frames": [
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRDPOExplainer/01.png",
+        "timestamp": 2.364,
+        "brightness": 243.39,
+        "non_background_fraction": 0.0604,
+        "entropy": 2.022
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRDPOExplainer/02.png",
+        "timestamp": 7.279,
+        "brightness": 244.19,
+        "non_background_fraction": 0.0928,
+        "entropy": 1.692
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRDPOExplainer/03.png",
+        "timestamp": 11.745,
+        "brightness": 243.44,
+        "non_background_fraction": 0.0521,
+        "entropy": 1.519
+      }
+    ],
+    "contact_sheet": "runs/manim_self_refine_v1/round_1/probe/contact_sheets/ICLRDPOExplainer.png"
+  },
+  {
+    "video": "runs/manim_self_refine_v1/round_1/videos/iclr_oral_explainers/480p15/ICLRESExplainer.mp4",
+    "width": 854,
+    "height": 480,
+    "fps": "15/1",
+    "duration_sec": 13.6,
+    "size_bytes": 373791,
+    "frames": [
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRESExplainer/01.png",
+        "timestamp": 2.898,
+        "brightness": 242.61,
+        "non_background_fraction": 0.0745,
+        "entropy": 2.532
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRESExplainer/02.png",
+        "timestamp": 7.522,
+        "brightness": 242.94,
+        "non_background_fraction": 0.0736,
+        "entropy": 1.724
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRESExplainer/03.png",
+        "timestamp": 11.696,
+        "brightness": 234.07,
+        "non_background_fraction": 0.1404,
+        "entropy": 2.267
+      }
+    ],
+    "contact_sheet": "runs/manim_self_refine_v1/round_1/probe/contact_sheets/ICLRESExplainer.png"
+  },
+  {
+    "video": "runs/manim_self_refine_v1/round_1/videos/iclr_oral_explainers/480p15/ICLRRRoPEExplainer.mp4",
+    "width": 854,
+    "height": 480,
+    "fps": "15/1",
+    "duration_sec": 14.733333,
+    "size_bytes": 342135,
+    "frames": [
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRRRoPEExplainer/01.png",
+        "timestamp": 3.552,
+        "brightness": 243.83,
+        "non_background_fraction": 0.0507,
+        "entropy": 1.518
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRRRoPEExplainer/02.png",
+        "timestamp": 8.111,
+        "brightness": 244.96,
+        "non_background_fraction": 0.0533,
+        "entropy": 1.482
+      },
+      {
+        "path": "runs/manim_self_refine_v1/round_1/probe/frames/ICLRRRoPEExplainer/03.png",
+        "timestamp": 13.121,
+        "brightness": 243.4,
+        "non_background_fraction": 0.0747,
+        "entropy": 1.782
+      }
+    ],
+    "contact_sheet": "runs/manim_self_refine_v1/round_1/probe/contact_sheets/ICLRRRoPEExplainer.png"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "started_at": "2026-07-08T10:00:00Z",
+  "finished_at": "2026-07-08T10:10:00Z",
+  "items": [
+    {
+      "adapter": "mock_renderer",
+      "paper_id": "attention",
+      "provider": "mock",
+      "video": "videos/mock_attention.mp4",
+      "rendered_at": "2026-07-08T10:01:00Z"
+    },
+    {
+      "adapter": "mock_renderer",
+      "paper_id": "transformers",
+      "provider": "mock",
+      "video": "videos/mock_transformers.mp4",
+      "rendered_at": "2026-07-08T10:02:00Z"
+    },
+    {
+      "adapter": "project_renderer",
+      "paper_id": "dpo",
+      "provider": "local",
+      "video": "videos/project_dpo.mp4",
+      "rendered_at": "2026-07-08T10:03:00Z"
+    },
+    {
+      "adapter": "project_renderer",
+      "paper_id": "rope",
+      "provider": "local",
+      "video": "videos/project_rope.mp4",
+      "rendered_at": "2026-07-08T10:04:00Z"
+    }
+  ]
+}
