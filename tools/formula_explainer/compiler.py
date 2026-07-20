@@ -42,12 +42,14 @@ def _canonical_node(node_id: str, node_type: str, coverage: str = "observed") ->
 
 
 def build_all(output_dir: Path) -> dict[str, Any]:
+    resolved_output = output_dir.resolve()
     try:
-        output_relative = output_dir.relative_to(ROOT)
+        output_relative = resolved_output.relative_to(ROOT.resolve())
     except ValueError as exc:
         raise FormulaExplainerValidationError(
             f"build output must be inside repository root {ROOT}: {output_dir}"
         ) from exc
+    output_dir = resolved_output
     validate_workspace()
     topics = load_json(TOPICS_PATH)
     registry = load_json(REGISTRY_PATH)

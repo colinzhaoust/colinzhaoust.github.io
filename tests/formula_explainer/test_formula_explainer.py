@@ -27,6 +27,14 @@ from tools.formula_explainer.validation import (
 
 
 class FormulaExplainerTests(unittest.TestCase):
+    def test_build_rejects_symlink_escape_from_repository(self):
+        with tempfile.TemporaryDirectory() as external, tempfile.TemporaryDirectory(dir=ROOT) as internal:
+            link = Path(internal) / "escaped-build"
+            link.symlink_to(external, target_is_directory=True)
+            with self.assertRaisesRegex(FormulaExplainerValidationError, "inside repository root"):
+                build_all(link)
+            self.assertFalse((Path(external) / "scene_ir").exists())
+
     def test_cli_rejects_invalid_input_without_traceback(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as temp:
             build_dir = Path(temp) / "build"
