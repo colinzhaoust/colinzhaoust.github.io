@@ -1,13 +1,13 @@
 WEBVTT
 
-00:00.000 --> 00:01.200
-Equation 2 starts from the on-policy score-function estimator.
+00:00.000 --> 00:02.550
+PPO, 2017: fixed epsilon clips the ratio contribution before the current batch is observed.
 
-00:01.200 --> 00:02.900
-Equation 4 adds a fixed clipping factor chosen before the batch.
+00:02.550 --> 00:05.850
+Original P3O, 2020: effective sample size controls both the off-policy cap and mixture weight.
 
-00:02.900 --> 00:04.600
-Equation 7 defines the behavior-to-current policy ratio.
+00:05.850 --> 00:09.150
+FeynRL: express the behavior-policy correction at every generated token.
 
-00:04.600 --> 00:06.800
-Equations 11 and 12 replace preset epsilon with batch-computed e B.
+00:09.150 --> 00:13.433
+FeynRL Equations 11 and 12: normalized e_B acts in the capped ratio and behavioral KL coefficient.

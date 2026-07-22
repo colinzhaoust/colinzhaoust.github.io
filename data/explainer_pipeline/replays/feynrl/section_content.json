@@ -108,13 +108,12 @@
           },
           {
             "type": "equation_thread",
-            "title": "From an on-policy estimator to a batch-adaptive objective",
+            "title": "Which paper introduced each control—and why FeynRL reuses P3O",
             "stages": [
-              {"equation": "Eq. 2 · score-function estimator", "formula": "Ê[∇θ log πθ · A]", "intent": "Establish the on-policy estimator.", "change": "Premise: samples come from the current policy."},
-              {"equation": "Eq. 4 · fixed clipping", "formula": "min{ρ_t A, clip(ρ_t,1−ε,1+ε)A}", "intent": "Limit ratio contributions with a preset clipping factor.", "change": "New control: ε is chosen before seeing the batch."},
-              {"equation": "Eqs. 5–7 · behavior-policy correction", "formula": "ρ_t(θ)=πθ(y_t|x,y_<t)/π_b(y_t|x,y_<t)", "intent": "Evaluate an update using samples from the behavior policy.", "change": "New observable: per-token policy ratio."},
-              {"equation": "Eq. 8 · behavioral KL", "formula": "objective + β KL(πθ || π_b)", "intent": "Regularize the current policy toward the behavior policy.", "change": "Separate off-policy regularization from clipping."},
-              {"equation": "Eqs. 11–12 · ESS and P3O", "formula": "e_B=Ê[ρ]²/Ê[ρ²] → min{ρ_t,e_B} + (1−e_B)KL", "intent": "Let the current batch set both controls.", "change": "Replacement: preset ε becomes batch-computed e_B."}
+              {"equation": "PPO (Schulman et al., 2017) · FeynRL Eq. 4", "paper": "Proximal Policy Optimization Algorithms", "year": "2017", "formula": "min{ρ_t A, clip(ρ_t,1−ε,1+ε)A}", "intent": "Use a fixed ε to limit how much a sampled ratio contributes.", "change": "Open question for this paper: ε is selected before the current batch reveals policy mismatch.", "source_url": "https://arxiv.org/abs/1707.06347"},
+              {"equation": "Original P3O (Fakoor et al., 2020) · Eqs. 1, 14–16", "paper": "P3O: Policy-on Policy-off Policy Optimization", "year": "2020", "formula": "J_on + λ J_off(c) + KL, with c=ESS and λ=1−ESS", "intent": "Interleave on-policy and off-policy gradients while effective sample size controls off-policy influence.", "change": "Inheritance: P3O already couples an importance-weight cap and mixing coefficient through ESS.", "source_url": "https://proceedings.mlr.press/v115/fakoor20a.html"},
+              {"equation": "FeynRL Eqs. 5–7 · token-level behavior-policy correction", "paper": "Trust the Batch, On- or Off-Policy", "year": "2026", "formula": "ρ_t(θ)=πθ(y_t|x,y_<t)/π_b(y_t|x,y_<t)", "intent": "Evaluate an update using samples from the behavior policy.", "change": "Adaptation: express the behavior correction at every generated token in language-model post-training.", "source_url": "https://openreview.net/forum?id=FOGhcI4iRk"},
+              {"equation": "FeynRL Eqs. 11–12 · normalized ESS and P3O", "paper": "Trust the Batch, On- or Off-Policy", "year": "2026", "formula": "e_B=Ê[ρ]²/Ê[ρ²] → min{ρ_t,e_B} + (1−e_B)KL", "intent": "Let the current batch set both controls.", "change": "The paper uses normalized e_B in both min{ρ_t,e_B} and (1−e_B) in one token-level objective.", "source_url": "https://openreview.net/forum?id=FOGhcI4iRk"}
             ],
             "folded": [
               {"equations": "Eqs. 9–10", "reason": "They expand Eq. 4 by advantage sign but introduce no new control variable; the appendix retains the algebra."}
@@ -126,11 +125,11 @@
             "media_id": "feynrl-lineage-micro",
             "poster_id": "feynrl-lineage-micro-poster",
             "captions_id": "feynrl-lineage-micro-captions",
-            "title": "Watch the control variable change",
-            "intro": "The clip does not merely list methods. Shared symbols persist while each equation adds or replaces one mathematical role.",
-            "observation": "The policy ratio first corrects behavior-policy sampling; normalized ESS then summarizes its concentration and supplies e_B.",
-            "consequence": "P3O's innovation is legible as a transition from a preset ε to a batch-computed value used in two places.",
-            "beats": ["on-policy estimator", "fixed ε", "behavior ratio", "batch e_B"],
+            "title": "Watch ownership and adaptation, not just symbol morphing",
+            "intro": "Each held frame names the source paper, the control it introduced, and the unresolved question carried into the next step.",
+            "observation": "PPO contributes fixed clipping; original P3O contributes ESS-controlled on/off-policy mixing; FeynRL specializes that control to per-token language-model ratios.",
+            "consequence": "The animation distinguishes inherited P3O structure from FeynRL's post-training formulation.",
+            "beats": ["PPO · fixed ε", "P3O · ESS controls off-policy use", "FeynRL · token ratio", "FeynRL · e_B in two terms"],
             "source_refs": ["feynrl-paper:eq2", "feynrl-paper:eq4", "feynrl-paper:eq7", "feynrl-paper:eq11-12"]
           },
           {

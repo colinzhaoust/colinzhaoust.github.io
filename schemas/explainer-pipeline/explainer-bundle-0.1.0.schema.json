@@ -4,7 +4,7 @@
   "title": "Interactive explainer bundle 0.1.0",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "paper_id", "source_packet", "concept_graph", "lesson_plan", "section_content", "formula_map", "generation"],
+  "required": ["schema_version", "paper_id", "source_packet", "concept_graph", "lesson_plan", "section_content", "formula_map", "code_map", "generation"],
   "properties": {
     "schema_version": {"const": "explainer-bundle/0.1.0"},
     "paper_id": {"type": "string", "minLength": 1},
@@ -15,6 +15,10 @@
     "formula_map": {
       "type": "object",
       "required": ["schema_version", "registry_ref", "manim_compatibility", "formulas", "formula_nodes", "manim_nodes", "edges"]
+    },
+    "code_map": {
+      "type": "object",
+      "required": ["schema_version", "formula_nodes", "code_nodes", "formula_code_edges", "dag_nodes", "dag_edges", "experiment_pipeline"]
     },
     "generation": {
       "type": "object",

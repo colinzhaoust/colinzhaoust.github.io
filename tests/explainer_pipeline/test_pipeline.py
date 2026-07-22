@@ -8,6 +8,7 @@ from pathlib import Path
 
 from tools.explainer_pipeline.common import DATA_ROOT, ROOT, resolve_repo_path, sha256_json
 from tools.explainer_pipeline.pipeline import replay_provider, run_pipeline
+from tools.explainer_pipeline.pricing import estimate_cost
 from tools.explainer_pipeline.renderer import RenderError, render_comparison_site, render_site
 from tools.explainer_pipeline.validation import ExplainerValidationError, validate_bundle
 
@@ -41,6 +42,11 @@ class ExplainerPipelineTests(unittest.TestCase):
                 self.assertEqual(len(bundle["formula_map"]["formulas"]), len(bundle["source_packet"]["formula_refs"]))
                 self.assertTrue(bundle["formula_map"]["edges"])
                 self.assertTrue(all(edge["source"].startswith("node:") for edge in bundle["formula_map"]["edges"]))
+                self.assertTrue(bundle["code_map"]["formula_code_edges"])
+                self.assertTrue(bundle["code_map"]["dag_edges"])
+                self.assertTrue(bundle["code_map"]["experiment_pipeline"])
+                self.assertTrue(all(trace["usage"] is None for trace in bundle["generation"]["stage_traces"]))
+                self.assertTrue(all(trace["cost"]["status"] == "not_recorded" for trace in bundle["generation"]["stage_traces"]))
 
     def test_comparison_site_writes_independent_traceable_run_bundles(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -97,6 +103,15 @@ class ExplainerPipelineTests(unittest.TestCase):
             for edge in mapping["edges"]:
                 targets_per_formula.setdefault(node_formula[edge["source"]], set()).add(edge["target"])
             self.assertTrue(all(len(targets) > 1 for targets in targets_per_formula.values()))
+
+    def test_live_usage_cost_is_estimated_only_with_a_matching_rate_card(self) -> None:
+        usage = {"input_tokens": 10_000, "output_tokens": 2_000, "reasoning_tokens": 500, "total_tokens": 12_000}
+        gpt = estimate_cost("bedrock_mantle", "openai.gpt-5.5", usage)
+        self.assertEqual("estimated", gpt["status"])
+        self.assertAlmostEqual(0.121, gpt["estimated_usd"])
+        unknown = estimate_cost("amazon_bedrock", "qwen.qwen3-32b-v1:0", usage)
+        self.assertEqual("rate_unavailable", unknown["status"])
+        self.assertIsNone(unknown["estimated_usd"])
 
     def test_metric_bars_have_rendered_exact_value_evidence(self) -> None:
         manifest = json.loads((ROOT / "experiments/explainer_pipeline/micro_scene_manifest.json").read_text(encoding="utf-8"))

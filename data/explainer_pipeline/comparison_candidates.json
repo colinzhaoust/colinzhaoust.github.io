@@ -6,17 +6,21 @@
       "label": "GPT-5.5 · Bedrock",
       "provider": "Amazon Bedrock Mantle",
       "model_id": "openai.gpt-5.5",
-      "status": "credential_required",
-      "note": "Verified Responses endpoint; no frozen local run exists yet.",
+      "status": "smoke_tested",
+      "model_summary": "OpenAI frontier reasoning model for complex professional work, served through Bedrock Mantle.",
+      "endpoint": "Bedrock Mantle · Responses API",
+      "note": "Smoke-tested locally on 2026-07-22. Public US East rate card: $5.50/M input and $33/M output.",
       "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-55.html"
     },
     {
       "candidate_id": "gemini-3-1-pro-wine",
-      "label": "Gemini 3.1 Pro · WInE",
-      "provider": "CMU WInE gateway",
-      "model_id": "gateway mapping required",
-      "status": "endpoint_mapping_required",
-      "note": "Use an immutable WInE model ID that resolves to Gemini 3.1 Pro Preview; the old Gemini 3 Pro Preview is deprecated.",
+      "label": "Gemini 3.1 Pro · Vertex/WInE credential",
+      "provider": "Google Vertex AI",
+      "model_id": "gemini-3.1-pro-preview",
+      "status": "smoke_tested",
+      "model_summary": "Google preview reasoning model; response and reasoning tokens share the output rate.",
+      "endpoint": "Vertex AI generateContent",
+      "note": "Smoke-tested locally on 2026-07-22. Standard ≤200K rate card: $2/M input and $12/M output.",
       "documentation_url": "https://ai.google.dev/gemini-api/docs/gemini-3"
     },
     {
@@ -24,18 +28,22 @@
       "label": "Qwen3 32B · Bedrock",
       "provider": "Amazon Bedrock Runtime",
       "model_id": "qwen.qwen3-32b-v1:0",
-      "status": "credential_required",
-      "note": "Verified Converse-compatible endpoint; no frozen local run exists yet.",
+      "status": "smoke_tested",
+      "model_summary": "Qwen's 32B dense model with hybrid thinking modes and a 32K context window.",
+      "endpoint": "Bedrock Runtime · Converse",
+      "note": "Smoke-tested locally on 2026-07-22; cost remains unavailable until a region-matched public rate is pinned.",
       "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-32b.html"
     },
     {
-      "candidate_id": "qwen-8b",
-      "label": "Qwen 8B · endpoint TBD",
-      "provider": "provider required",
-      "model_id": "model ID required",
-      "status": "endpoint_mapping_required",
-      "note": "Not assumed to be an Amazon Bedrock Qwen endpoint; bind a real provider and immutable model ID before rendering.",
-      "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards-qwen.html"
+      "candidate_id": "llama-3-1-8b-bedrock",
+      "label": "Llama 3.1 8B · Bedrock",
+      "provider": "Amazon Bedrock Runtime",
+      "model_id": "us.meta.llama3-1-8b-instruct-v1:0",
+      "status": "smoke_tested",
+      "model_summary": "8B instruction-tuned baseline used to test how a smaller model handles the same grounded planner contract.",
+      "endpoint": "Bedrock Runtime · Converse",
+      "note": "Smoke-tested locally on 2026-07-22. Bedrock has 8B models, but the available baseline is Llama rather than Qwen.",
+      "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-meta.html"
     }
   ]
 }

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -26,6 +27,8 @@ class StageResult:
     generation_mode: str
     response_sha256: str
     source_record: Optional[str] = None
+    usage: Optional[dict[str, int]] = None
+    duration_ms: int = 0
 
 
 class StageProvider(Protocol):
@@ -62,6 +65,8 @@ class ReplayProvider:
             generation_mode="frozen_replay",
             response_sha256=sha256_json(payload),
             source_record=repo_path(path),
+            usage=None,
+            duration_ms=0,
         )
 
 
@@ -112,11 +117,9 @@ class BedrockProvider:
             canonical_json(messages),
             "--inference-config",
             canonical_json({"maxTokens": self.max_tokens, "temperature": 0.2}),
-            "--query",
-            "output.message.content[0].text",
-            "--output",
-            "text",
+            "--output", "json",
         ]
+        started = time.monotonic()
         try:
             completed = subprocess.run(
                 command,
@@ -129,7 +132,12 @@ class BedrockProvider:
         except (OSError, subprocess.CalledProcessError) as exc:
             detail = getattr(exc, "stderr", "") or str(exc)
             raise ProviderError(f"Bedrock stage {stage} failed: {detail.strip()}") from exc
-        raw = completed.stdout.strip()
+        duration_ms = round((time.monotonic() - started) * 1000)
+        try:
+            response = json.loads(completed.stdout)
+            raw = response["output"]["message"]["content"][0]["text"].strip()
+        except (json.JSONDecodeError, KeyError, IndexError, TypeError) as exc:
+            raise ProviderError(f"Bedrock stage {stage} returned an invalid Converse response") from exc
         if raw.startswith("```"):
             raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
         try:
@@ -146,6 +154,8 @@ class BedrockProvider:
             model=self.model_id,
             generation_mode="live",
             response_sha256=sha256_json(payload),
+            usage=_bedrock_usage(response.get("usage", {})),
+            duration_ms=duration_ms,
         )
 
 
@@ -232,6 +242,7 @@ class OpenAICompatibleProvider:
             },
             method="POST",
         )
+        started = time.monotonic()
         try:
             with urllib.request.urlopen(request, timeout=self.timeout) as opened:
                 response = json.loads(opened.read().decode("utf-8"))
@@ -240,6 +251,7 @@ class OpenAICompatibleProvider:
             raise ProviderError(f"{self.provider_name} stage {stage} failed with HTTP {exc.code}: {detail}") from exc
         except (OSError, json.JSONDecodeError) as exc:
             raise ProviderError(f"{self.provider_name} stage {stage} request failed: {exc}") from exc
+        duration_ms = round((time.monotonic() - started) * 1000)
         if not isinstance(response, dict):
             raise ProviderError(f"{self.provider_name} stage {stage} returned a non-object response")
         raw = self._response_text(response).strip()
@@ -259,4 +271,123 @@ class OpenAICompatibleProvider:
             model=self.model_id,
             generation_mode="live",
             response_sha256=sha256_json(payload),
+            usage=_openai_usage(response.get("usage", {})),
+            duration_ms=duration_ms,
+        )
+
+
+def _bedrock_usage(raw: dict[str, Any]) -> dict[str, int]:
+    input_tokens = int(raw.get("inputTokens", 0) or 0)
+    output_tokens = int(raw.get("outputTokens", 0) or 0)
+    return {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "reasoning_tokens": 0,
+        "total_tokens": int(raw.get("totalTokens", input_tokens + output_tokens) or 0),
+    }
+
+
+def _openai_usage(raw: dict[str, Any]) -> dict[str, int]:
+    input_tokens = int(raw.get("input_tokens", raw.get("prompt_tokens", 0)) or 0)
+    output_tokens = int(raw.get("output_tokens", raw.get("completion_tokens", 0)) or 0)
+    details = raw.get("output_tokens_details", raw.get("completion_tokens_details", {})) or {}
+    reasoning_tokens = int(details.get("reasoning_tokens", 0) or 0)
+    return {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "reasoning_tokens": reasoning_tokens,
+        "total_tokens": int(raw.get("total_tokens", input_tokens + output_tokens) or 0),
+    }
+
+
+class VertexProvider:
+    """Vertex Gemini adapter. Credential paths are consumed locally and never traced."""
+
+    def __init__(
+        self,
+        *,
+        model_id: str,
+        credential_file: Path,
+        project_id: str,
+        location: str = "global",
+        max_tokens: int = 7000,
+        timeout: int = 180,
+    ) -> None:
+        self.model_id = model_id
+        self.credential_file = credential_file
+        self.project_id = project_id
+        self.location = location
+        self.max_tokens = max_tokens
+        self.timeout = timeout
+
+    def _token(self) -> str:
+        try:
+            from google.auth.transport.requests import Request
+            from google.oauth2 import service_account
+        except ImportError as exc:
+            raise ProviderError("Vertex mode requires google-auth") from exc
+        credentials = service_account.Credentials.from_service_account_file(
+            self.credential_file,
+            scopes=["https://www.googleapis.com/auth/cloud-platform"],
+        )
+        credentials.refresh(Request())
+        return str(credentials.token)
+
+    def generate(self, stage: str, paper_id: str, prompt: str) -> StageResult:
+        host = "aiplatform.googleapis.com" if self.location == "global" else f"{self.location}-aiplatform.googleapis.com"
+        url = (
+            f"https://{host}/v1/projects/{self.project_id}/locations/{self.location}"
+            f"/publishers/google/models/{self.model_id}:generateContent"
+        )
+        body = {
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.2, "maxOutputTokens": self.max_tokens},
+        }
+        request = urllib.request.Request(
+            url,
+            data=canonical_json(body).encode("utf-8"),
+            headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"},
+            method="POST",
+        )
+        started = time.monotonic()
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout) as opened:
+                response = json.loads(opened.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")[:1000]
+            raise ProviderError(f"Vertex stage {stage} failed with HTTP {exc.code}: {detail}") from exc
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ProviderError(f"Vertex stage {stage} request failed: {exc}") from exc
+        duration_ms = round((time.monotonic() - started) * 1000)
+        try:
+            raw = "".join(
+                part.get("text", "")
+                for part in response["candidates"][0]["content"]["parts"]
+                if isinstance(part, dict)
+            ).strip()
+        except (KeyError, IndexError, TypeError) as exc:
+            raise ProviderError(f"Vertex stage {stage} response contains no candidate text") from exc
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ProviderError(f"Vertex stage {stage} returned non-JSON output") from exc
+        usage_raw = response.get("usageMetadata", {})
+        usage = {
+            "input_tokens": int(usage_raw.get("promptTokenCount", 0) or 0),
+            "output_tokens": int(usage_raw.get("candidatesTokenCount", 0) or 0),
+            "reasoning_tokens": int(usage_raw.get("thoughtsTokenCount", 0) or 0),
+            "total_tokens": int(usage_raw.get("totalTokenCount", 0) or 0),
+        }
+        return StageResult(
+            stage=stage,
+            paper_id=paper_id,
+            payload=payload,
+            provider="google_vertex",
+            model=self.model_id,
+            generation_mode="live",
+            response_sha256=sha256_json(payload),
+            usage=usage,
+            duration_ms=duration_ms,
         )

@@ -23,6 +23,8 @@
       "label": "Reviewed reference",
       "description": "Human-reviewed frozen API outputs used as the reference run.",
       "status": "reviewed",
+      "model_summary": "Human-reviewed API-shaped JSON fixture. It is a reference condition, not a frontier-model benchmark result.",
+      "endpoint": "No live endpoint · frozen replay",
       "providers": [
         "reviewed_fixture"
       ],
@@ -32,18 +34,48 @@
       "generation_modes": [
         "frozen_replay"
       ],
+      "trace_summary": {
+        "stage_count": 6,
+        "input_tokens": null,
+        "output_tokens": null,
+        "reasoning_tokens": null,
+        "total_tokens": null,
+        "duration_ms": 0,
+        "estimated_cost_usd": null,
+        "measurement": "not_recorded"
+      },
       "papers": [
         {
           "paper_id": "feynrl",
           "bundle": "data/runs/reviewed-reference/feynrl.json",
-          "bundle_sha256": "ef872cdad650bfebbc36c6923da082f66aba356e0c2cb51163aff6cdc5cf6017",
-          "source_packet_sha256": "363989925d43f51dcf5a25c35003d79d6c2feef57bf737f4371e6f7f0cd90022"
+          "bundle_sha256": "b4a36a360f3d9f0e0bfa47328bf3a141af5e6ef9425fbc02aa523c2ae820afd4",
+          "source_packet_sha256": "9447214fff06437c6422220a1a2fee7acecd60a708f6936189bb1a873cb5d263",
+          "trace_summary": {
+            "stage_count": 3,
+            "input_tokens": null,
+            "output_tokens": null,
+            "reasoning_tokens": null,
+            "total_tokens": null,
+            "duration_ms": 0,
+            "estimated_cost_usd": null,
+            "measurement": "not_recorded"
+          }
         },
         {
           "paper_id": "rope",
           "bundle": "data/runs/reviewed-reference/rope.json",
-          "bundle_sha256": "47db41c7b18de944193a75c1d886b26a5ac7c66e223e50692b9f014b607e807b",
-          "source_packet_sha256": "0c38e80180b1e6907a5050da3527fa89e420a7b219a19c2760c4a7ef36dfcba1"
+          "bundle_sha256": "824f371fc24bb1785e0958e1d67b82c4943cb3b71de312bece88e110ad14ff32",
+          "source_packet_sha256": "b17ac1694525cea8baf3d5bd61a1898d130229107a66c3c25bbd1f0a4937c790",
+          "trace_summary": {
+            "stage_count": 3,
+            "input_tokens": null,
+            "output_tokens": null,
+            "reasoning_tokens": null,
+            "total_tokens": null,
+            "duration_ms": 0,
+            "estimated_cost_usd": null,
+            "measurement": "not_recorded"
+          }
         }
       ]
     }
@@ -72,17 +104,21 @@
       "label": "GPT-5.5 · Bedrock",
       "provider": "Amazon Bedrock Mantle",
       "model_id": "openai.gpt-5.5",
-      "status": "credential_required",
-      "note": "Verified Responses endpoint; no frozen local run exists yet.",
+      "status": "smoke_tested",
+      "model_summary": "OpenAI frontier reasoning model for complex professional work, served through Bedrock Mantle.",
+      "endpoint": "Bedrock Mantle · Responses API",
+      "note": "Smoke-tested locally on 2026-07-22. Public US East rate card: $5.50/M input and $33/M output.",
       "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-55.html"
     },
     {
       "candidate_id": "gemini-3-1-pro-wine",
-      "label": "Gemini 3.1 Pro · WInE",
-      "provider": "CMU WInE gateway",
-      "model_id": "gateway mapping required",
-      "status": "endpoint_mapping_required",
-      "note": "Use an immutable WInE model ID that resolves to Gemini 3.1 Pro Preview; the old Gemini 3 Pro Preview is deprecated.",
+      "label": "Gemini 3.1 Pro · Vertex/WInE credential",
+      "provider": "Google Vertex AI",
+      "model_id": "gemini-3.1-pro-preview",
+      "status": "smoke_tested",
+      "model_summary": "Google preview reasoning model; response and reasoning tokens share the output rate.",
+      "endpoint": "Vertex AI generateContent",
+      "note": "Smoke-tested locally on 2026-07-22. Standard ≤200K rate card: $2/M input and $12/M output.",
       "documentation_url": "https://ai.google.dev/gemini-api/docs/gemini-3"
     },
     {
@@ -90,18 +126,22 @@
       "label": "Qwen3 32B · Bedrock",
       "provider": "Amazon Bedrock Runtime",
       "model_id": "qwen.qwen3-32b-v1:0",
-      "status": "credential_required",
-      "note": "Verified Converse-compatible endpoint; no frozen local run exists yet.",
+      "status": "smoke_tested",
+      "model_summary": "Qwen's 32B dense model with hybrid thinking modes and a 32K context window.",
+      "endpoint": "Bedrock Runtime · Converse",
+      "note": "Smoke-tested locally on 2026-07-22; cost remains unavailable until a region-matched public rate is pinned.",
       "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-32b.html"
     },
     {
-      "candidate_id": "qwen-8b",
-      "label": "Qwen 8B · endpoint TBD",
-      "provider": "provider required",
-      "model_id": "model ID required",
-      "status": "endpoint_mapping_required",
-      "note": "Not assumed to be an Amazon Bedrock Qwen endpoint; bind a real provider and immutable model ID before rendering.",
-      "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards-qwen.html"
+      "candidate_id": "llama-3-1-8b-bedrock",
+      "label": "Llama 3.1 8B · Bedrock",
+      "provider": "Amazon Bedrock Runtime",
+      "model_id": "us.meta.llama3-1-8b-instruct-v1:0",
+      "status": "smoke_tested",
+      "model_summary": "8B instruction-tuned baseline used to test how a smaller model handles the same grounded planner contract.",
+      "endpoint": "Bedrock Runtime · Converse",
+      "note": "Smoke-tested locally on 2026-07-22. Bedrock has 8B models, but the available baseline is Llama rather than Qwen.",
+      "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-meta.html"
     }
   ]
 }

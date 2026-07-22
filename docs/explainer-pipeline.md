@@ -83,7 +83,10 @@ python3 -m tools.explainer_pipeline.cli build-comparison comparison.json --outpu
 Supported live adapters are:
 
 - Bedrock Runtime `Converse`, for models such as `qwen.qwen3-32b-v1:0`;
+- Google Vertex `generateContent`, including `gemini-3.1-pro-preview` with a local service-account file;
 - OpenAI-compatible HTTP, for WInE `chat/completions` and Bedrock Mantle `responses`.
+
+Every live stage records provider/model identity, input/output/reasoning/total tokens when the endpoint returns them, wall-clock API duration, and an estimated USD cost when a region- and tier-matched public rate card is pinned. Credential values, credential file paths, authorization headers, and request bodies are never written to the trace. Replay fixtures intentionally report token and cost as “not recorded,” rather than inventing zero-cost model usage.
 
 Examples (credentials are supplied only through the named environment variable or an untracked env file):
 
@@ -106,6 +109,15 @@ python3 -m tools.explainer_pipeline.cli run feynrl \
   --env-file /path/to/bedrock-mantle.env \
   --run-root runs/gpt-5-5/feynrl
 
+# Gemini 3.1 Pro Preview through Vertex AI
+python3 -m tools.explainer_pipeline.cli run feynrl \
+  --mode vertex \
+  --model-id gemini-3.1-pro-preview \
+  --credential-file /path/to/untracked-service-account.json \
+  --project-id '<project id>' \
+  --location global \
+  --run-root runs/gemini-3-1-pro/feynrl
+
 # WInE gateway; use the exact gateway model ID resolved for the experiment
 python3 -m tools.explainer_pipeline.cli run feynrl \
   --mode openai-compatible \
@@ -118,7 +130,7 @@ python3 -m tools.explainer_pipeline.cli run feynrl \
   --run-root runs/wine-gemini/feynrl
 ```
 
-As of the implementation date, Bedrock documents GPT-5.5 as `openai.gpt-5.5` on the Mantle Responses endpoint and Qwen3 32B as `qwen.qwen3-32b-v1:0` on Bedrock Runtime. Google documents `gemini-3.1-pro-preview`; the older Gemini 3 Pro Preview is deprecated. Qwen 8B is not assumed to be a Bedrock Qwen endpoint—its actual provider/model ID must be supplied before it can enter the matrix.
+As of the implementation date, Bedrock documents GPT-5.5 as `openai.gpt-5.5` on the Mantle Responses endpoint and Qwen3 32B as `qwen.qwen3-32b-v1:0` on Bedrock Runtime. Google documents `gemini-3.1-pro-preview`. Bedrock has 8B-class models, but the tested baseline is Llama 3.1 8B rather than a Qwen 8B endpoint; Ministral 3 8B is another documented Bedrock option.
 
 ## Paper-native sectioning
 
@@ -126,15 +138,23 @@ The generic contract requires a motivation and related-work entry and ends with 
 
 FeynRL:
 
-`motivation → related_work → ess → p3o → findings → limits → 07 Formula`
+`motivation → related_work → ess → p3o → findings → limits → 07 Formula → 08 Code`
 
 RoPE:
 
-`motivation → related_work → formulation → rope → findings → limits → 07 Formula`
+`motivation → related_work → formulation → rope → findings → limits → 07 Formula → 08 Code`
 
-Titles, questions, and mechanism labels preserve the papers' terminology. Code is placed next to the equation or mechanism it implements instead of being separated into a generic “Code” scene. `07 Formula` is compiled deterministically after the six generated learning sections; it is not another LLM-authored section.
+Titles, questions, and mechanism labels preserve the papers' terminology. Short code excerpts can still appear beside a mechanism. `07 Formula` and `08 Code` are compiled deterministically after the generated learning sections; neither is another LLM-authored section.
 
 The formula view is a bipartite capability graph. Formula and operation nodes come from the source packet's formula IR. Manim nodes come from `data/formula_explainer/primitive_registry.json`. Edges preserve three different claims: an implemented callable mapping, a compatible candidate, or an unresolved mapping. This makes missing animation capabilities visible instead of silently improvising a scene.
+
+The code-understanding view is a second evidence graph:
+
+- formula ↔ revision-pinned code symbol/line-range mappings;
+- a function/data DAG showing where the method changes computation;
+- an experiment pipeline showing which factor changes, what is trained, and which metric is read.
+
+These graphs are compiled from `code_understanding` in the source packet. A model may propose candidate links during grounding, but published confirmed edges must resolve to known formula IDs, repository IDs, DAG nodes, and local excerpt paths.
 
 ## Native Manim contract
 
@@ -145,16 +165,16 @@ The reviewed demos use text-light micro-scenes in `scenes/explainer_pipeline_nat
 
 This prevents the renderer from selecting only convenient equations or isolated result bars. The reviewed scenes include:
 
-- equation transitions for FeynRL Eqs. 2 → 4 → 7/8 → 11/12 and RoFormer Eqs. 3–16;
+- paper-owned equation transitions for PPO → original P3O → FeynRL and Transformer → Shaw → Transformer-XL → T5/TUPE/DeBERTa → RoFormer;
 - mechanism micro-scenes for normalized ESS, the P3O control coupling, and the RoPE relative identity;
 - result transitions that hold setting and metric fixed while iteration or sequence length changes;
 - a schematic, explicitly non-digitized long-term-decay animation for RoFormer Eqs. 35–37.
 
-- `FeynRLEquationLineageMicro`: Eqs. 2, 4, 7, 11, and 12 as a semantic formula transition;
+- `FeynRLEquationLineageMicro`: PPO fixed clipping → original P3O ESS coupling → FeynRL token-level ratios and normalized e_B;
 - `FeynRLEssMicro`: Eq. 11 with fixed token count and changing ratio concentration;
 - `FeynRLP3OMicro`: the two Eq. 12 controls coupled through the same e_B;
 - `FeynRLResultsMicro`: exact Table 7 iteration-15 → iteration-30 values under precision mismatch;
-- `RoPEEquationLineageMicro`: additive Eqs. 3–10 → Eq. 11 requirement → Eqs. 12–16 rotation;
+- `RoPEEquationLineageMicro`: paper-by-paper positional history, with each equation held long enough to expose its role and remaining limitation;
 - `RoPERelativeMicro`: the Eq. 16 collapse from separate rotations to n−m;
 - `RoPEDecayMicro`: schematic, explicitly non-digitized Eqs. 35–37 bound behavior;
 - `RoPEResultsMicro`: signed GLUE deltas and the exact RoFormer-512 → RoFormer-1024 comparison.

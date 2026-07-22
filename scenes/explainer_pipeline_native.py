@@ -99,44 +99,50 @@ class RoPERelativeMicro(PaperNativeScene):
 
 
 class FeynRLEquationLineageMicro(PaperNativeScene):
-    """Eq. 2 → 4 → 7/8 → 11/12: what changes and why."""
+    """PPO → original P3O → FeynRL: equation ownership and adaptation."""
 
     def construct(self) -> None:
         tag = Text("FEYNRL · EQUATION LINEAGE", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.45)
-        stage = Text("on-policy score-function estimator · Eq. 2", font_size=21, color=MUTED).next_to(tag, DOWN, buff=0.28)
-        equation = MathTex(r"\widehat g=\widehat{\mathbb E}[\nabla_\theta\log\pi_\theta\,A]", font_size=43, color=INK).move_to(UP * 0.45)
-        change = Text("sample from the current policy", font_size=22, color=CURRENT).next_to(equation, DOWN, buff=0.55)
-        source = self.source("FeynRL Eqs. (2), (4), (7–8), (11–12)")
-        self.play(FadeIn(tag), FadeIn(stage), Write(equation), FadeIn(change), FadeIn(source), run_time=1.0)
+        paper = Text("PPO · Schulman et al. · 2017", font="Menlo", font_size=18, color=BEHAVIOR, weight=BOLD).next_to(tag, DOWN, buff=0.28)
+        stage = Text("fixed clipping · reproduced as FeynRL Eq. 4", font_size=20, color=MUTED).next_to(paper, DOWN, buff=0.16)
+        equation = MathTex(r"\min\{\rho_tA,\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)A\}", font_size=38, color=INK).move_to(UP * 0.15)
+        change = Text("fixed ε is chosen before this batch is observed", font_size=21, color=WARNING).next_to(equation, DOWN, buff=0.52)
+        source = self.source("PPO (2017) → P3O (2020) → FeynRL Eqs. (4), (7), (11–12)")
+        self.play(FadeIn(tag), FadeIn(paper), FadeIn(stage), Write(equation), FadeIn(change), FadeIn(source), run_time=1.4)
+        self.wait(1.15)
 
         transitions = [
             (
-                "fixed clipping · Eq. 4",
-                MathTex(r"\widehat{\mathbb E}[\min\{\rho_tA,\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)A\}]", font_size=35, color=INK),
-                "preset ε bounds the ratio contribution",
-                WARNING,
+                "P3O · Fakoor et al. · 2020",
+                "on-policy + off-policy objective · P3O Eqs. 1, 14–16",
+                MathTex(r"\mathcal J_{on}+\lambda\mathcal J_{off}(c)+\operatorname{KL},\quad c=\operatorname{ESS},\ \lambda=1-\operatorname{ESS}", font_size=34, color=INK),
+                "ESS already controls both off-policy cap and mixture weight",
+                ADAPTIVE,
             ),
             (
-                "behavior-policy correction · Eq. 7",
+                "FeynRL · large-model post-training · 2026",
+                "per-token behavior-policy correction · Eq. 7",
                 MathTex(r"\rho_t(\theta)=\frac{\pi_\theta(y_t\mid x,y_{<t})}{\pi_b(y_t\mid x,y_{<t})}", font_size=43, color=INK),
-                "the ratio now exposes batch-specific mismatch",
+                "adapt P3O's correction to every generated token",
                 BEHAVIOR,
             ),
             (
-                "batch statistic + P3O · Eqs. 11–12",
+                "FeynRL · large-model post-training · 2026",
+                "normalized batch ESS + P3O · Eqs. 11–12",
                 MathTex(r"e_B=\frac{\widehat{\mathbb E}[\rho]^2}{\widehat{\mathbb E}[\rho^2]}", r"\quad\Longrightarrow\quad", r"\min\{\rho_t,e_B\}+(1-e_B)\operatorname{KL}", font_size=37),
-                "replace preset ε with one value computed from this batch",
+                "one measured e_B acts in two token-level terms",
                 ADAPTIVE,
             ),
         ]
-        for label, target, note, color in transitions:
+        for paper_label, label, target, note, color in transitions:
             target.move_to(equation)
+            next_paper = Text(paper_label, font="Menlo", font_size=18, color=color, weight=BOLD).move_to(paper)
             next_stage = Text(label, font_size=21, color=MUTED).move_to(stage)
             next_change = Text(note, font_size=22, color=color).move_to(change)
-            self.play(TransformMatchingTex(equation, target), Transform(stage, next_stage), Transform(change, next_change), run_time=1.35)
-            self.wait(0.35)
+            self.play(TransformMatchingTex(equation, target), Transform(paper, next_paper), Transform(stage, next_stage), Transform(change, next_change), run_time=2.25)
+            self.wait(1.05)
             equation = target
-        self.wait(0.7)
+        self.wait(1.0)
 
 
 class RoPEEquationLineageMicro(PaperNativeScene):
@@ -144,24 +150,29 @@ class RoPEEquationLineageMicro(PaperNativeScene):
 
     def construct(self) -> None:
         tag = Text("ROFORMER · EQUATION LINEAGE", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.45)
-        stage = Text("additive absolute position · Eqs. 3–4", font_size=21, color=MUTED).next_to(tag, DOWN, buff=0.28)
+        paper = Text("Transformer · Vaswani et al. · 2017", font="Menlo", font_size=18, color=BEHAVIOR, weight=BOLD).next_to(tag, DOWN, buff=0.28)
+        stage = Text("sinusoidal absolute position · RoFormer Eqs. 3–4", font_size=20, color=MUTED).next_to(paper, DOWN, buff=0.16)
         equation = MathTex(r"f_t(x_i,i)=W_t(x_i+p_i)", font_size=49, color=INK).move_to(UP * 0.45)
         change = Text("position is added before projection", font_size=22, color=CURRENT).next_to(equation, DOWN, buff=0.55)
-        source = self.source("RoFormer Eqs. (3–16)")
-        self.play(FadeIn(tag), FadeIn(stage), Write(equation), FadeIn(change), FadeIn(source), run_time=1.0)
+        source = self.source("Transformer (2017) → Shaw (2018) → Transformer-XL (2019) → RoFormer (2021)")
+        self.play(FadeIn(tag), FadeIn(paper), FadeIn(stage), Write(equation), FadeIn(change), FadeIn(source), run_time=1.4)
+        self.wait(1.15)
         transitions = [
-            ("relative terms in the score · Eqs. 5–10", MathTex(r"q_m^\top k_n+q_m^\top r_{m-n}+u^\top k_n+v^\top r_{m-n}", font_size=37, color=INK), "relative position appears as additive score terms", BEHAVIOR),
-            ("functional requirement · Eq. 11", MathTex(r"\langle f_q(x_m,m),f_k(x_n,n)\rangle=g(x_m,x_n,m-n)", font_size=41, color=INK), "state the desired dependence before choosing the operator", WARNING),
-            ("multiplicative rotary solution · Eqs. 12–16", MathTex(r"(R_mW^qx_m)^\top(R_nW^kx_n)=x_m^\top W^{q\top}R_{n-m}W^kx_n", font_size=36, color=INK), "absolute rotations combine into one relative rotation", ADAPTIVE),
+            ("Shaw et al. · 2018", "relative key · RoFormer Eq. 5", MathTex(r"q_m^\top(k_n+a^K_{m,n})", font_size=46, color=INK), "relative displacement is explicit, but still added to the key", BEHAVIOR),
+            ("Transformer-XL · Dai et al. · 2019", "decomposed relative score · RoFormer Eqs. 6–7", MathTex(r"q_m^\top k_n+q_m^\top r_{m-n}+u^\top k_n+v^\top r_{m-n}", font_size=37, color=INK), "separate content and position terms inside an additive score", BEHAVIOR),
+            ("T5 · TUPE · DeBERTa · 2020", "later relative-attention variants · RoFormer Eqs. 8–10", MathTex(r"\text{content score}+\text{selected position / bias terms}", font_size=39, color=INK), "change which additive interactions are retained or disentangled", WARNING),
+            ("RoFormer · Su et al. · 2021", "functional requirement · Eq. 11", MathTex(r"\langle f_q(x_m,m),f_k(x_n,n)\rangle=g(x_m,x_n,m-n)", font_size=41, color=INK), "ask for the relative relation before choosing an operator", WARNING),
+            ("RoFormer · Su et al. · 2021", "multiplicative rotary solution · Eqs. 12–16", MathTex(r"(R_mW^qx_m)^\top(R_nW^kx_n)=x_m^\top W^{q\top}R_{n-m}W^kx_n", font_size=36, color=INK), "two absolute rotations collapse into one relative rotation", ADAPTIVE),
         ]
-        for label, target, note, color in transitions:
+        for paper_label, label, target, note, color in transitions:
             target.move_to(equation)
+            next_paper = Text(paper_label, font="Menlo", font_size=18, color=color, weight=BOLD).move_to(paper)
             next_stage = Text(label, font_size=21, color=MUTED).move_to(stage)
             next_change = Text(note, font_size=22, color=color).move_to(change)
-            self.play(TransformMatchingTex(equation, target), Transform(stage, next_stage), Transform(change, next_change), run_time=1.35)
-            self.wait(0.35)
+            self.play(TransformMatchingTex(equation, target), Transform(paper, next_paper), Transform(stage, next_stage), Transform(change, next_change), run_time=2.25)
+            self.wait(1.05)
             equation = target
-        self.wait(0.7)
+        self.wait(1.0)
 
 
 class FeynRLResultsMicro(PaperNativeScene):

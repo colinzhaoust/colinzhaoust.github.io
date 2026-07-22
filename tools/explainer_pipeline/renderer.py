@@ -26,6 +26,22 @@ def _validated_run_id(value: str) -> str:
     return value
 
 
+def _trace_summary(traces: list[dict[str, Any]]) -> dict[str, Any]:
+    usage_records = [item["usage"] for item in traces if item.get("usage")]
+    costs = [item.get("cost", {}).get("estimated_usd") for item in traces]
+    estimated_costs = [value for value in costs if isinstance(value, (int, float))]
+    return {
+        "stage_count": len(traces),
+        "input_tokens": sum(item.get("input_tokens", 0) for item in usage_records) if usage_records else None,
+        "output_tokens": sum(item.get("output_tokens", 0) for item in usage_records) if usage_records else None,
+        "reasoning_tokens": sum(item.get("reasoning_tokens", 0) for item in usage_records) if usage_records else None,
+        "total_tokens": sum(item.get("total_tokens", 0) for item in usage_records) if usage_records else None,
+        "duration_ms": sum(item.get("duration_ms", 0) for item in traces),
+        "estimated_cost_usd": round(sum(estimated_costs), 6) if len(estimated_costs) == len(traces) else None,
+        "measurement": "recorded" if usage_records else "not_recorded",
+    }
+
+
 def render_comparison_site(
     runs: Iterable[dict[str, Any]],
     output_dir: Path,
@@ -77,6 +93,8 @@ def render_comparison_site(
                 "label": str(raw_run.get("label") or run_id),
                 "description": str(raw_run.get("description") or "Frozen validated model run."),
                 "status": str(raw_run.get("status") or "generated"),
+                "model_summary": str(raw_run.get("model_summary") or "Model identity is recorded by immutable provider and model IDs."),
+                "endpoint": str(raw_run.get("endpoint") or "frozen replay"),
                 "bundles": documents,
             }
         )
@@ -135,6 +153,7 @@ def render_comparison_site(
                     "bundle": bundle_path.relative_to(output_dir).as_posix(),
                     "bundle_sha256": sha256_json(rendered),
                     "source_packet_sha256": bundle["generation"]["source_packet_sha256"],
+                    "trace_summary": _trace_summary(bundle["generation"]["stage_traces"]),
                 }
             )
         catalog_runs.append(
@@ -143,9 +162,12 @@ def render_comparison_site(
                 "label": run["label"],
                 "description": run["description"],
                 "status": run["status"],
+                "model_summary": run["model_summary"],
+                "endpoint": run["endpoint"],
                 "providers": sorted({trace["provider"] for trace in traces}),
                 "models": sorted({trace["model"] for trace in traces}),
                 "generation_modes": sorted({trace["generation_mode"] for trace in traces}),
+                "trace_summary": _trace_summary(traces),
                 "papers": catalog_papers,
             }
         )
@@ -193,6 +215,8 @@ def render_site(
                 "label": "Reviewed reference",
                 "description": "Human-reviewed frozen API outputs used as the reference run.",
                 "status": "reviewed",
+                "model_summary": "Human-reviewed API-shaped JSON fixture. It is a reference condition, not a frontier-model benchmark result.",
+                "endpoint": "No live endpoint · frozen replay",
                 "bundles": list(bundles),
             }
         ],

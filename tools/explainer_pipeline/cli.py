@@ -8,7 +8,7 @@ from pathlib import Path
 from .common import DATA_ROOT, ROOT, load_json
 from .ingestion import IngestionError, ingest_source_packet
 from .pipeline import replay_provider, run_pipeline
-from .providers import BedrockProvider, OpenAICompatibleProvider, ProviderError
+from .providers import BedrockProvider, OpenAICompatibleProvider, ProviderError, VertexProvider
 from .renderer import render_comparison_site, render_site
 from .validation import ExplainerValidationError, validate_bundle_file
 
@@ -21,6 +21,15 @@ def _live_provider(args: argparse.Namespace):
     env_file = _resolve(args.env_file) if args.env_file else None
     if args.mode == "bedrock":
         return BedrockProvider(model_id=args.model_id, env_file=env_file)
+    if args.mode == "vertex":
+        if not args.credential_file or not args.project_id:
+            raise ValueError("--credential-file and --project-id are required for vertex mode")
+        return VertexProvider(
+            model_id=args.model_id,
+            credential_file=_resolve(args.credential_file),
+            project_id=args.project_id,
+            location=args.location,
+        )
     if not args.base_url:
         raise ValueError("--base-url is required for openai-compatible mode")
     return OpenAICompatibleProvider(
@@ -34,7 +43,7 @@ def _live_provider(args: argparse.Namespace):
 
 
 def _add_live_provider_arguments(parser: argparse.ArgumentParser, *, include_replay: bool) -> None:
-    modes = ("replay", "bedrock", "openai-compatible") if include_replay else ("bedrock", "openai-compatible")
+    modes = ("replay", "bedrock", "vertex", "openai-compatible") if include_replay else ("bedrock", "vertex", "openai-compatible")
     parser.add_argument("--mode", choices=modes, default="replay" if include_replay else "bedrock")
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--model-id", default="qwen.qwen3-32b-v1:0")
@@ -42,6 +51,9 @@ def _add_live_provider_arguments(parser: argparse.ArgumentParser, *, include_rep
     parser.add_argument("--api-path", default="chat/completions")
     parser.add_argument("--api-key-env", default="OPENAI_API_KEY")
     parser.add_argument("--provider-name", default="openai_compatible")
+    parser.add_argument("--credential-file", type=Path)
+    parser.add_argument("--project-id")
+    parser.add_argument("--location", default="global")
 
 
 def main() -> int:
@@ -141,6 +153,8 @@ def main() -> int:
                         "label": run_spec.get("label", run_spec["run_id"]),
                         "description": run_spec.get("description", "Frozen validated model run."),
                         "status": run_spec.get("status", "generated"),
+                        "model_summary": run_spec.get("model_summary", "Model identity is recorded by immutable provider and model IDs."),
+                        "endpoint": run_spec.get("endpoint", "recorded in run manifest"),
                         "bundles": [validate_bundle_file(path) for path in bundle_paths],
                     }
                 )

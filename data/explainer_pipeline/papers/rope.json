@@ -33,6 +33,35 @@
       ]
     }
   ],
+  "code_understanding": {
+    "formula_code_links": [
+      {"formula_id": "formula:rope.relative", "formula_label": "Eq. 16 · relative-position identity", "code_id": "roformer-readme", "symbol": "cos_pos / sin_pos", "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py", "line_start": 9, "line_end": 10, "role": "constructs the paired rotation phases", "state": "confirmed", "evidence_refs": ["rope-paper:eq14-16", "roformer-readme:rope-pseudocode"]},
+      {"formula_id": "formula:rope.relative", "formula_label": "Eq. 16 · relative-position identity", "code_id": "roformer-readme", "symbol": "qw2 / kw2 sign-swap", "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py", "line_start": 11, "line_end": 16, "role": "implements the 2D quarter-turn within every feature pair", "state": "confirmed", "evidence_refs": ["rope-paper:eq20-34", "roformer-readme:rope-pseudocode"]},
+      {"formula_id": "formula:rope.relative", "formula_label": "Eq. 16 · relative-position identity", "code_id": "roformer-readme", "symbol": "einsum attention", "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py", "line_start": 18, "line_end": 19, "role": "takes the inner product after both query and key are rotated", "state": "confirmed", "evidence_refs": ["rope-paper:eq16", "roformer-readme:rope-pseudocode"]}
+    ],
+    "nodes": [
+      {"id": "positions", "label": "sinusoidal position phases", "kind": "input", "detail": "one angle per position and feature pair"},
+      {"id": "cos-sin", "label": "cos_pos / sin_pos", "kind": "operation", "detail": "repeat each pair frequency"},
+      {"id": "qk", "label": "query / key projections", "kind": "input", "detail": "content representations before position"},
+      {"id": "swap", "label": "paired sign-swap", "kind": "operation", "detail": "[-x₂, x₁] for each 2D pair"},
+      {"id": "rotate", "label": "rotate q and k", "kind": "function", "detail": "x·cos + swap(x)·sin"},
+      {"id": "attention", "label": "einsum(qw, kw)", "kind": "output", "detail": "score depends on relative offset through R(n−m)"}
+    ],
+    "edges": [
+      {"source": "positions", "target": "cos-sin", "label": "phase tables"},
+      {"source": "qk", "target": "swap", "label": "pair features"},
+      {"source": "cos-sin", "target": "rotate", "label": "cos/sin coefficients"},
+      {"source": "qk", "target": "rotate", "label": "original vectors"},
+      {"source": "swap", "target": "rotate", "label": "quarter-turn vectors"},
+      {"source": "rotate", "target": "attention", "label": "rotated q and k"}
+    ],
+    "experiment_pipeline": [
+      {"id": "architecture", "label": "Replace position mechanism", "detail": "Transformer/RoFormer and Performer/RoPE comparisons", "source_refs": ["rope-paper:sec4"]},
+      {"id": "pretrain", "label": "Pre-train", "detail": "BookCorpus + Wikipedia MLM where applicable", "source_refs": ["rope-paper:sec4.2"]},
+      {"id": "finetune", "label": "Fine-tune by task", "detail": "translation, GLUE, and long-text classification settings differ", "source_refs": ["rope-paper:sec4"]},
+      {"id": "evaluate", "label": "Read metric in context", "detail": "BLEU, task scores, accuracy, and loss curves are not interchangeable", "source_refs": ["rope-paper:table1", "rope-paper:table2", "rope-paper:table5", "rope-paper:fig3"]}
+    ]
+  },
   "equation_coverage": [
     {"equation_ids": ["Eqs. 3–4"], "role": "prior_work", "thread_stage": "additive absolute position encoding", "intent": "Establish the additive construction used by learned and sinusoidal absolute position encodings.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["rope-paper:eq3-4"]},
     {"equation_ids": ["Eqs. 5–10"], "role": "prior_work", "thread_stage": "additive and decomposed relative position encoding", "intent": "Show how prior methods insert relative terms into the expanded attention score.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["rope-paper:eq5-10"]},
@@ -62,7 +91,7 @@
       "media_id": "rope-lineage-micro",
       "role": "video",
       "path": "data/explainer_pipeline/media/rope/lineage-micro.mp4",
-      "sha256": "6ad38dfec069ece68b9eb2b8f80f7f3a2bb9f52628dd4d77bbb832ab06c3e740",
+      "sha256": "8d29c49fc35205f88f7a41d235f26e1f2cf26f5e2d3005d7324e121e4a85b63c",
       "media_type": "video/mp4",
       "origin": "project_new",
       "caption": "Equation-transition scene from additive position encodings to the RoPE functional requirement and rotary solution."
@@ -71,7 +100,7 @@
       "media_id": "rope-lineage-micro-poster",
       "role": "poster",
       "path": "data/explainer_pipeline/media/rope/lineage-micro-poster.png",
-      "sha256": "69faee1f4abf5765968a07150d14071be0e5df6aa7c094bb3f51e7e8317f3356",
+      "sha256": "d94462c1e3e3e4937c15459bcf5f2fd07b6a67b86ba15a49061b7e53716cc275",
       "media_type": "image/png",
       "origin": "project_new",
       "caption": "Poster for the RoPE equation-lineage micro-video."
@@ -80,7 +109,7 @@
       "media_id": "rope-lineage-micro-captions",
       "role": "captions",
       "path": "data/explainer_pipeline/media/rope/lineage-micro.vtt",
-      "sha256": "a64519effa9012aff367282b7594886d46a9a1e7361ed6da5bcb21116df649dc",
+      "sha256": "08d1f0672c965e97afe120e79ce11f61c0da46d5f547d4b1a10ef19cc4ca6999",
       "media_type": "text/vtt",
       "origin": "project_new",
       "caption": "English captions for the RoPE equation-lineage micro-video."
@@ -171,7 +200,7 @@
     "paper_excerpts": [
       {
         "locator": "Sec. 1-2.3",
-        "text": "The paper reviews additive absolute and relative position encodings and motivates a multiplicative construction with sequence length flexibility, long-term decay, and compatibility with linear self-attention.",
+        "text": "The paper narrates a specific equation lineage: the Transformer adds learned or sinusoidal absolute position before projection (Eqs. 3-4); Shaw et al. add a learned relative key term (Eq. 5); Transformer-XL decomposes content and relative-position interactions (Eqs. 6-7); T5, TUPE, and DeBERTa retain, remove, or disentangle terms (Eqs. 8-10). The authors' shared diagnosis is that prior work modifies an additive decomposition, motivating a multiplicative construction.",
         "source_refs": ["rope-paper:sec1", "rope-paper:sec2"]
       },
       {
@@ -192,6 +221,6 @@
         "source_refs": ["roformer-readme:rope-pseudocode"]
       }
     ],
-    "claim_policy": "Use the paper's terms: formulation of relative position encoding, rotary position embedding, sequence length flexibility, long-term decay, and linear self-attention. Keep exact algebra separate from empirical findings and extrapolation claims."
+  "claim_policy": "Use the paper's terms: formulation of relative position encoding, rotary position embedding, sequence length flexibility, long-term decay, and linear self-attention. Attribute every related-work equation to its predecessor paper and distinguish what changed, what remained additive, and which question led to Eq. 11. Keep exact algebra separate from empirical findings and extrapolation claims."
   }
 }

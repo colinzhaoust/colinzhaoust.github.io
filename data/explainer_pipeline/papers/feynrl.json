@@ -33,6 +33,37 @@
       ]
     }
   ],
+  "code_understanding": {
+    "formula_code_links": [
+      {"formula_id": "formula:feynrl.ess", "formula_label": "Eq. 11 · normalized ESS", "code_id": "feynrl-p3o", "symbol": "calculate_ess", "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py", "line_start": 9, "line_end": 14, "role": "computes e_B from valid per-token ratios", "state": "confirmed", "evidence_refs": ["feynrl-paper:eq11", "feynrl-p3o:calculate_ess"]},
+      {"formula_id": "formula:feynrl.p3o_objective", "formula_label": "Eq. 12 · P3O objective", "code_id": "feynrl-p3o", "symbol": "p3o_terms", "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py", "line_start": 17, "line_end": 24, "role": "caps rho with e_B and weights behavioral KL by 1-e_B", "state": "confirmed", "evidence_refs": ["feynrl-paper:eq12", "feynrl-p3o:compute_policy_loss"]}
+    ],
+    "nodes": [
+      {"id": "valid-ratios", "label": "valid token ratios", "kind": "input", "detail": "exp(log πθ − log πold) after masking"},
+      {"id": "ess", "label": "calculate_ess", "kind": "function", "detail": "batch concentration statistic e_B"},
+      {"id": "rho", "label": "ratio.clamp(max=e_B)", "kind": "operation", "detail": "off-policy importance weight"},
+      {"id": "policy", "label": "detached policy term", "kind": "objective", "detail": "ρ · log πθ · advantage"},
+      {"id": "behavioral-kl", "label": "behavioral KL", "kind": "input", "detail": "distance from the behavior policy"},
+      {"id": "regularizer", "label": "(1 − e_B) · KL", "kind": "objective", "detail": "adaptive off-policy regularization"},
+      {"id": "loss", "label": "P3O policy loss", "kind": "output", "detail": "policy term + behavioral regularizer"}
+    ],
+    "edges": [
+      {"source": "valid-ratios", "target": "ess", "label": "measure concentration"},
+      {"source": "valid-ratios", "target": "rho", "label": "importance ratios"},
+      {"source": "ess", "target": "rho", "label": "sets cap"},
+      {"source": "rho", "target": "policy", "label": "detached weight"},
+      {"source": "ess", "target": "regularizer", "label": "sets 1 − e_B"},
+      {"source": "behavioral-kl", "target": "regularizer", "label": "penalty value"},
+      {"source": "policy", "target": "loss", "label": "add"},
+      {"source": "regularizer", "target": "loss", "label": "add"}
+    ],
+    "experiment_pipeline": [
+      {"id": "rollout", "label": "Generate rollouts", "detail": "vary clipping factor, sampling temperature, or rollout precision", "source_refs": ["feynrl-paper:sec4"]},
+      {"id": "update", "label": "Compute GRPO/P3O update", "detail": "same model family; objective is the controlled factor", "source_refs": ["feynrl-paper:sec4"]},
+      {"id": "train", "label": "Track training", "detail": "training reward over optimization steps", "source_refs": ["feynrl-paper:fig1", "feynrl-paper:fig2", "feynrl-paper:fig3"]},
+      {"id": "evaluate", "label": "Evaluate held-out problems", "detail": "pass@1 at reported checkpoints", "source_refs": ["feynrl-paper:table7"]}
+    ]
+  },
   "equation_coverage": [
     {"equation_ids": ["Eq. 2"], "role": "premise", "thread_stage": "on-policy score-function estimator", "intent": "Establish the estimator before changing the sampling distribution.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["feynrl-paper:eq2"]},
     {"equation_ids": ["Eq. 4"], "role": "prior_work", "thread_stage": "fixed clipping", "intent": "Show the fixed clipping factor used by PPO-style objectives.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["feynrl-paper:eq4"]},
@@ -64,7 +95,7 @@
       "media_id": "feynrl-lineage-micro",
       "role": "video",
       "path": "data/explainer_pipeline/media/feynrl/lineage-micro.mp4",
-      "sha256": "de378c004464052157935be8b28747c9dc37f734abdc5b95a7dd22e8ec9014bb",
+      "sha256": "68b3a985dd57d49d5fdeb66b1dc0456698ace607da055b05539c8e71c1405667",
       "media_type": "video/mp4",
       "origin": "project_new",
       "caption": "Equation-transition scene from the on-policy estimator and fixed clipping to the behavior ratio, ESS, and P3O."
@@ -73,7 +104,7 @@
       "media_id": "feynrl-lineage-micro-poster",
       "role": "poster",
       "path": "data/explainer_pipeline/media/feynrl/lineage-micro-poster.png",
-      "sha256": "a0f0df53b4eac6f57c2e80d5c2621ca20d24d70dd1c8ccaec7bee280b4358cea",
+      "sha256": "ff8894140bdf144b2a0c0880ca8af3dec26c4d1a5cf712b35a803095b53e22de",
       "media_type": "image/png",
       "origin": "project_new",
       "caption": "Poster for the FeynRL equation-lineage micro-video."
@@ -82,7 +113,7 @@
       "media_id": "feynrl-lineage-micro-captions",
       "role": "captions",
       "path": "data/explainer_pipeline/media/feynrl/lineage-micro.vtt",
-      "sha256": "f1929fa79ef5eb730541b1d0bd6a62fda8e555c37cc839e465b076be33fa13b8",
+      "sha256": "fad67bd5166bb14f368e5b750e2495c7c5fbe44ec5c4f050dc6c2fda797f587c",
       "media_type": "text/vtt",
       "origin": "project_new",
       "caption": "English captions for the FeynRL equation-lineage micro-video."
@@ -173,7 +204,7 @@
     "paper_excerpts": [
       {
         "locator": "Sec. 1 and Sec. 3",
-        "text": "The paper names a trust-region concern and an off-policy concern, argues that fixed clipping conflates them, and asks the current batch to measure behavior-policy mismatch through normalized effective sample size.",
+        "text": "The paper names a trust-region concern and an off-policy concern, argues that fixed clipping conflates them, and asks the current batch to measure behavior-policy mismatch through normalized effective sample size. Preserve ownership: PPO contributes fixed clipping; Fakoor et al.'s original P3O already sets its off-policy cap c to ESS and mixture coefficient lambda to one minus ESS; FeynRL formulates the corresponding normalized, per-token P3O objective for large-model post-training.",
         "source_refs": ["feynrl-paper:sec1", "feynrl-paper:sec3"]
       },
       {
@@ -194,6 +225,6 @@
         "source_refs": ["feynrl-p3o:calculate_ess", "feynrl-p3o:compute_policy_loss"]
       }
     ],
-    "claim_policy": "Use the paper's exact terms. Use exact numbers only with equation or table locators. Label figure readings as authors' reported findings. Do not rename P3O components or invent motivational slogans."
+    "claim_policy": "Use the paper's exact terms. Attribute fixed clipping to PPO, the ESS-controlled on/off-policy structure to original P3O, and the normalized per-token formulation to FeynRL. Use exact numbers only with equation or table locators. Label figure readings as authors' reported findings. Do not rename P3O components or invent motivational slogans."
   }
 }

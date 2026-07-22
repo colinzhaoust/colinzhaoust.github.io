@@ -124,12 +124,18 @@ def _grounding_prompt(
         "finding_coverage": [{"finding_id": "stable_id", "question": "experimental question", "setting": "controlled setting or factor", "metric": "paper metric", "evidence_kind": "exact_table|authors_reported_curve|algebraic_analysis", "takeaway": "source-faithful finding", "source_refs": [f"{paper_id}-paper:table-or-figure"]}],
         "paper_excerpts": [{"locator": "section/equation/table", "text": "source-faithful summary", "source_refs": [f"{paper_id}-paper:locator"]}],
         "code_notes": [{"locator": "path:symbol or lines", "text": "confirmed implementation observation", "source_refs": [f"{paper_id}-repo:path"]}],
+        "code_understanding": {
+            "formula_code_links": [{"formula_label": "paper equation label", "equation_ids": ["Eq. n"], "expression": "paper expression", "code_id": f"{paper_id}-repo", "symbol": "repository symbol", "path": "original/repository/path.py", "line_start": 1, "line_end": 2, "role": "how this code realizes the equation", "state": "candidate|confirmed", "evidence_refs": [f"{paper_id}-paper:eqN", f"{paper_id}-repo:path:symbol"]}],
+            "nodes": [{"id": "stable-id", "label": "function or data", "kind": "input|operation|function|objective|output", "detail": "source-faithful computational role"}],
+            "edges": [{"source": "node-id", "target": "node-id", "label": "data/control relation"}],
+            "experiment_pipeline": [{"id": "stable-id", "label": "experiment step", "detail": "factor, setting, or metric", "source_refs": [f"{paper_id}-paper:locator"]}],
+        },
     }
     return "\n\n".join(
         [
             "You are the source-grounding JSON API stage of a paper-and-repository explainer. No coding agent participates.",
             "Return only one JSON object matching the contract. Preserve the paper's terminology and stated motivation; do not coin substitute names. Put code beside the mechanism or equation it realizes. The section IDs should reflect the paper, not a universal slide template.",
-            "Audit the full numbered-equation thread and the paper's full experiment axes. Every equation family must be marked animate, explain, or fold; folded equations need an explicit reason. Every finding must be question → setting → metric → evidence kind → takeaway. Every paper excerpt needs a visible locator. Every code note needs a repository path or symbol. Do not generate HTML, Python, Manim code, or shell commands.",
+            "Audit the full numbered-equation thread and the paper's full experiment axes. Every equation family must be marked animate, explain, or fold; folded equations need an explicit reason. Every finding must be question → setting → metric → evidence kind → takeaway. Build code_understanding as equation-to-symbol mappings, a function/data DAG, and an experiment pipeline. Every paper excerpt needs a visible locator. Every code note and code-understanding edge needs a repository path or symbol. Do not generate HTML, Python, Manim code, or shell commands.",
             f"CONTRACT={canonical_json(contract)}",
             f"PAPER_TITLE={title}",
             f"PAPER_TEXT={paper_text[:MAX_PAPER_CHARS]}",
@@ -174,7 +180,7 @@ def ingest_source_packet(
     prompt = _grounding_prompt(paper_id, resolved_title, paper_text, repository_corpus)
     grounding = provider.generate("source_grounding", paper_id, prompt)
     payload = grounding.payload
-    required = {"central_question", "required_section_ids", "equation_coverage", "finding_coverage", "paper_excerpts", "code_notes"}
+    required = {"central_question", "required_section_ids", "equation_coverage", "finding_coverage", "paper_excerpts", "code_notes", "code_understanding"}
     if not required.issubset(payload):
         raise IngestionError(f"source grounding missing {sorted(required - set(payload))}")
     section_ids = payload["required_section_ids"]
@@ -212,6 +218,7 @@ def ingest_source_packet(
                 "line_end": line_count,
             }],
         }],
+        "code_understanding": payload["code_understanding"],
         "formula_refs": [],
         "equation_coverage": payload["equation_coverage"],
         "finding_coverage": payload["finding_coverage"],
@@ -235,6 +242,8 @@ def ingest_source_packet(
             "generation_mode": grounding.generation_mode,
             "prompt_sha256": sha256_json({"prompt": prompt}),
             "response_sha256": grounding.response_sha256,
+            "usage": grounding.usage,
+            "duration_ms": grounding.duration_ms,
         },
         "source_packet": packet,
     }

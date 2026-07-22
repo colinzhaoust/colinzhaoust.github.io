@@ -4,7 +4,7 @@
   "title": "Explainer source packet 0.1.0",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "paper_id", "title", "short_title", "audience", "central_question", "required_section_ids", "sources", "code_sources", "equation_coverage", "finding_coverage", "formula_refs", "scene_renderer", "media", "agent_input"],
+  "required": ["schema_version", "paper_id", "title", "short_title", "audience", "central_question", "required_section_ids", "sources", "code_sources", "code_understanding", "equation_coverage", "finding_coverage", "formula_refs", "scene_renderer", "media", "agent_input"],
   "properties": {
     "schema_version": {"const": "explainer-source-packet/0.1.0"},
     "paper_id": {"$ref": "#/$defs/id"},
@@ -59,6 +59,17 @@
             }
           }
         }
+      }
+    },
+    "code_understanding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formula_code_links", "nodes", "edges", "experiment_pipeline"],
+      "properties": {
+        "formula_code_links": {"type": "array", "items": {"type": "object"}},
+        "nodes": {"type": "array", "items": {"type": "object"}},
+        "edges": {"type": "array", "items": {"type": "object"}},
+        "experiment_pipeline": {"type": "array", "items": {"type": "object"}}
       }
     },
     "formula_refs": {"type": "array", "items": {"$ref": "#/$defs/path"}},

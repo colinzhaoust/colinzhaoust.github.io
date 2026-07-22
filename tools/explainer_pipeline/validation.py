@@ -46,6 +46,25 @@ def validate_source_packet(packet: dict[str, Any], check_local_assets: bool = Tr
                 continue
             if check_local_assets and not path.is_file():
                 errors.append(f"missing code excerpt path: {excerpt['path']}")
+    code_ids = {item.get("code_id") for item in packet.get("code_sources", [])}
+    formula_ids = set()
+    for formula_ref in packet.get("formula_refs", []):
+        try:
+            formula_ids.add(load_json(resolve_repo_path(formula_ref))["formula_id"])
+        except (OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"invalid formula ref {formula_ref}: {exc}")
+    understanding = packet.get("code_understanding", {})
+    for link in understanding.get("formula_code_links", []):
+        if link.get("formula_id") and link.get("formula_id") not in formula_ids:
+            errors.append(f"unknown formula in code link: {link.get('formula_id')}")
+        if not link.get("formula_id") and not link.get("equation_ids"):
+            errors.append("code link needs formula_id or equation_ids")
+        if link.get("code_id") not in code_ids:
+            errors.append(f"unknown code source in code link: {link.get('code_id')}")
+    dag_ids = {item.get("id") for item in understanding.get("nodes", [])}
+    for edge in understanding.get("edges", []):
+        if edge.get("source") not in dag_ids or edge.get("target") not in dag_ids:
+            errors.append(f"dangling code DAG edge: {edge}")
     renderer = packet.get("scene_renderer", {})
     if renderer.get("coding_agent_required") is not False:
         errors.append("scene renderer must not require a coding agent")
@@ -177,6 +196,11 @@ def validate_bundle(bundle: dict[str, Any], check_local_assets: bool = True) -> 
             errors.append(f"dangling formula-to-Manim edge: {edge.get('edge_id')}")
     if len(formula_map.get("formulas", [])) != len(packet.get("formula_refs", [])):
         errors.append("formula map inventory must match source packet formula refs")
+    code_map = bundle.get("code_map", {})
+    code_formula_ids = {item.get("formula_id") for item in code_map.get("formula_nodes", [])}
+    for edge in code_map.get("formula_code_edges", []):
+        if edge.get("source", "").removeprefix("formula:") not in code_formula_ids:
+            errors.append(f"dangling code-map formula edge: {edge.get('edge_id')}")
     if errors:
         raise ExplainerValidationError("explainer bundle invalid:\n" + "\n".join(f"- {item}" for item in errors))
 

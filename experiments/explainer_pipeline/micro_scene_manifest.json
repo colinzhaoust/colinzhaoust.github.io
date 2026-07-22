@@ -16,7 +16,7 @@
     {
       "scene_id": "FeynRLEquationLineageMicro",
       "artifact_ref": "data/explainer_pipeline/media/feynrl/lineage-micro.mp4",
-      "sha256": "de378c004464052157935be8b28747c9dc37f734abdc5b95a7dd22e8ec9014bb"
+      "sha256": "68b3a985dd57d49d5fdeb66b1dc0456698ace607da055b05539c8e71c1405667"
     },
     {
       "scene_id": "FeynRLEssMicro",
@@ -36,7 +36,7 @@
     {
       "scene_id": "RoPEEquationLineageMicro",
       "artifact_ref": "data/explainer_pipeline/media/rope/lineage-micro.mp4",
-      "sha256": "6ad38dfec069ece68b9eb2b8f80f7f3a2bb9f52628dd4d77bbb832ab06c3e740"
+      "sha256": "8d29c49fc35205f88f7a41d235f26e1f2cf26f5e2d3005d7324e121e4a85b63c"
     },
     {
       "scene_id": "RoPERelativeMicro",

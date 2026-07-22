@@ -7,17 +7,17 @@
   "generated_at": "2026-07-21T18:23:00-07:00",
   "payload": {
     "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
-    "promise": "Begin with the paper's formulation of relative position encoding, derive the rotary solution, map it to official pseudocode, and keep algebraic properties separate from reported findings.",
+    "promise": "Reconstruct the history from absolute addition to relative attention, turn that history into Eq. 11's design question, derive the rotary solution, map it to official pseudocode, and keep algebraic properties separate from reported findings.",
     "sections": [
       {
         "id": "motivation",
         "nav_label": "Motivation",
         "title": "Position information in self-attention",
-        "intent": "State the positional dependence that the authors want the query-key score to express before choosing a construction.",
-        "question": "How can position enter query and key representations while their inner product depends on relative position?",
-        "learning_goal": "State the paper's design requirement before seeing the rotary solution.",
+        "intent": "Start from why attention loses order, then explain why the history moves from absolute position vectors toward relative position in the score before stating RoFormer's construction.",
+        "question": "What information does each generation of position encoding add, and what remains unresolved before RoPE?",
+        "learning_goal": "Explain why Eq. 11 is the next question produced by the absolute-to-relative lineage.",
         "misconception": "Dot-product attention already contains token order without a positional construction.",
-        "summary": "The paper seeks a positional encoding with sequence length flexibility, long-term decay, and linear self-attention compatibility.",
+        "summary": "Content-only self-attention is permutation-equivariant; the paper traces how absolute and relative methods restore order, then asks for absolute query/key phases whose score depends on relative displacement.",
         "source_refs": [
           "rope-paper:sec1",
           "rope-paper:sec3.1"
@@ -30,9 +30,9 @@
       {
         "id": "related_work",
         "nav_label": "Related work",
-        "title": "Absolute and relative position encoding",
+        "title": "From absolute addition to relative attention",
         "intent": "Follow Eqs. 3–10 through additive and decomposed position terms so RoPE's multiplicative change is a visible answer to a known design thread.",
-        "question": "Which additive approaches does the paper compare with its multiplicative construction?",
+        "question": "What did Transformer, Shaw, Transformer-XL, T5/TUPE/DeBERTa each change in the attention equation?",
         "learning_goal": "Use the paper's categories for learned absolute, sinusoidal absolute, and relative position encoding.",
         "misconception": "RoPE is another vector added to token embeddings.",
         "summary": "The paper contrasts prior additive position encodings with a multiplicative transformation of queries and keys.",

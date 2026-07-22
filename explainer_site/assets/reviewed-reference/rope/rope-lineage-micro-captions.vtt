@@ -1,13 +1,19 @@
 WEBVTT
 
-00:00.000 --> 00:01.300
-Equations 3 and 4 add absolute position before projection.
+00:00.000 --> 00:02.550
+Transformer, 2017: add sinusoidal absolute position before projection.
 
-00:01.300 --> 00:03.000
-Equations 5 through 10 add relative terms to the attention score.
+00:02.550 --> 00:05.850
+Shaw et al., 2018: add a learned relative-position representation to the key.
 
-00:03.000 --> 00:04.700
-Equation 11 states the desired relative-position dependence.
+00:05.850 --> 00:09.150
+Transformer-XL, 2019: decompose content and relative-position score terms.
 
-00:04.700 --> 00:06.800
-Equations 12 through 16 satisfy it with multiplicative rotations.
+00:09.150 --> 00:12.450
+T5, TUPE, and DeBERTa: retain, simplify, or disentangle selected additive interactions.
+
+00:12.450 --> 00:15.750
+RoFormer Equation 11: state the desired dependence on m minus n before choosing an operator.
+
+00:15.750 --> 00:20.033
+RoFormer Equations 12 through 16: absolute rotations collapse to one relative rotation.

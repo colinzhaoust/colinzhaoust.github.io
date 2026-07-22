@@ -6,6 +6,8 @@ from typing import Any, Iterable
 
 from .common import DATA_ROOT, load_json, sha256_json
 from .formula_map import build_formula_map
+from .code_map import build_code_map
+from .pricing import estimate_cost
 from .prompts import build_prompt
 from .providers import ReplayProvider, StageProvider
 from .validation import validate_bundle, validate_source_packet, validate_stage_payload
@@ -47,6 +49,9 @@ def run_pipeline(
             "prompt_sha256": sha256_json({"prompt": prompt}),
             "response_sha256": result.response_sha256,
             "source_record": result.source_record,
+            "usage": result.usage,
+            "duration_ms": result.duration_ms,
+            "cost": estimate_cost(result.provider, result.model, result.usage),
         }
         traces.append(trace)
         _write_json(run_root / "stages" / f"{stage}.json", {"trace": trace, "payload": result.payload})
@@ -58,6 +63,7 @@ def run_pipeline(
         "lesson_plan": outputs["lesson_plan"],
         "section_content": outputs["section_content"],
         "formula_map": build_formula_map(packet),
+        "code_map": build_code_map(packet),
         "generation": {
             "pipeline_version": "explainer-pipeline/0.1.0",
             "source_packet_sha256": sha256_json(packet),

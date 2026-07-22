@@ -10,6 +10,16 @@
       "motivation": {
         "blocks": [
           {
+            "type": "prose",
+            "eyebrow": "Why position needs its own mechanism",
+            "heading": "Content similarity alone does not encode token order",
+            "paragraphs": [
+              "Without positional information, self-attention compares token representations but does not by itself distinguish a permutation of those tokens. The original Transformer restores absolute index by adding a position vector. The relative-position line of work asks a different question: can the attention score see how far and in which direction two tokens are separated?",
+              "RoFormer treats that history as a design constraint rather than a list of baselines. Its Eq. 11 asks for query and key functions that receive absolute positions m and n while their inner product depends explicitly on m−n. Rotation is derived as an answer after this requirement is stated."
+            ],
+            "source_refs": ["rope-paper:sec1", "rope-paper:sec2", "rope-paper:eq11"]
+          },
+          {
             "type": "paper_question",
             "label": "Paper's design question",
             "question": "Can absolute position m and n enter f_q and f_k while their inner product depends on the relative position m−n?",
@@ -102,13 +112,14 @@
           },
           {
             "type": "equation_thread",
-            "title": "The equation changes from additive terms to a multiplicative operator",
+            "title": "A paper-by-paper history of what position changes inside attention",
             "stages": [
-              {"equation": "Eqs. 3–4 · absolute position encoding", "formula": "f_t(x_i,i)=W_t(x_i+p_i)", "intent": "Add position before projection.", "change": "Position enters additively."},
-              {"equation": "Eqs. 5–10 · relative families", "formula": "q_mᵀk_n + q_mᵀr_{m−n} + uᵀk_n + vᵀr_{m−n}", "intent": "Insert relative displacement into the expanded attention score.", "change": "Relative terms remain additive or decomposed."},
-              {"equation": "Eq. 11 · functional requirement", "formula": "⟨f_q(x_m,m),f_k(x_n,n)⟩=g(x_m,x_n,m−n)", "intent": "Specify the desired dependence before proposing a solution.", "change": "Motivation becomes a mathematical constraint."},
-              {"equation": "Eqs. 12–13 · 2D solution", "formula": "f_q=(W^q x_m)e^{imθ}; f_k=(W^k x_n)e^{inθ}", "intent": "Solve the constraint through planar rotation.", "change": "Position becomes multiplicative."},
-              {"equation": "Eqs. 14–16 · d-dimensional RoPE", "formula": "(R_mW^qx_m)ᵀ(R_nW^kx_n)=x_mᵀW^{qᵀ}R_{n−m}W^kx_n", "intent": "Pair dimensions and expose relative position in the inner product.", "change": "Two absolute rotations collapse to R_{n−m}."}
+              {"equation": "Transformer (Vaswani et al., 2017) · RoFormer Eqs. 3–4", "paper": "Attention Is All You Need", "year": "2017", "formula": "f_t(x_i,i)=W_t(x_i+p_i)", "intent": "Add sinusoidal absolute position before projection.", "change": "Limitation carried forward: relative displacement is not explicit in the score.", "source_url": "https://papers.nips.cc/paper/7181-attention-is-all-you-need"},
+              {"equation": "Shaw et al. (2018) · RoFormer Eq. 5", "paper": "Self-Attention with Relative Position Representations", "year": "2018", "formula": "q_mᵀ(k_n + a^K_{m,n})", "intent": "Insert a learned relative-position representation into the compatibility term.", "change": "Advance: displacement becomes explicit, but it is still added to a content key.", "source_url": "https://aclanthology.org/N18-2074/"},
+              {"equation": "Transformer-XL (Dai et al., 2019) · RoFormer Eqs. 6–7", "paper": "Transformer-XL", "year": "2019", "formula": "q_mᵀk_n + q_mᵀr_{m−n} + uᵀk_n + vᵀr_{m−n}", "intent": "Decompose content–content, content–position, and global bias terms.", "change": "Advance: relative interactions are explicit, but the score is still an additive decomposition.", "source_url": "https://aclanthology.org/P19-1285/"},
+              {"equation": "T5 / TUPE / DeBERTa (2020) · RoFormer Eqs. 8–10", "paper": "Later relative-attention variants", "year": "2020", "formula": "content score + selected position/bias terms", "intent": "Retain, simplify, or disentangle selected content and position interactions.", "change": "RoFormer's shared diagnosis: each variant still edits terms in an additive decomposition.", "source_url": "https://arxiv.org/abs/2006.03654"},
+              {"equation": "RoFormer Eq. 11 · functional requirement", "paper": "RoFormer", "year": "2021", "formula": "⟨f_q(x_m,m),f_k(x_n,n)⟩=g(x_m,x_n,m−n)", "intent": "Ask for absolute-position functions whose inner product depends on m−n.", "change": "Design turn: state the relation before selecting the positional operator.", "source_url": "https://arxiv.org/abs/2104.09864"},
+              {"equation": "RoFormer Eqs. 12–16 · rotary solution", "paper": "RoFormer", "year": "2021", "formula": "(R_mW^qx_m)ᵀ(R_nW^kx_n)=x_mᵀW^{qᵀ}R_{n−m}W^kx_n", "intent": "Pair dimensions and apply absolute rotations to query and key.", "change": "Answer: two multiplicative absolute phases collapse to the relative phase R_{n−m}.", "source_url": "https://arxiv.org/abs/2104.09864"}
             ],
             "folded": [{"equations": "Eqs. 20–34", "reason": "Proof and efficient-realization steps repeat the paired rotation; code mapping and appendix preserve them without thirteen near-duplicate clips."}],
             "source_refs": ["rope-paper:eq3-16", "rope-paper:eq20-34"]
@@ -118,11 +129,11 @@
             "media_id": "rope-lineage-micro",
             "poster_id": "rope-lineage-micro-poster",
             "captions_id": "rope-lineage-micro-captions",
-            "title": "Watch addition become rotation",
-            "intro": "The related-work animation keeps the attention score as the anchor and changes only how position enters it.",
-            "observation": "Prior relative terms are additions to the expanded score; Eq. 11 states a requirement; RoPE satisfies it by multiplying query and key by rotations.",
-            "consequence": "The innovation is not another positional vector but a change in operator from addition to multiplication.",
-            "beats": ["x_i + p_i", "relative score terms", "functional requirement", "R_mᵀR_n"],
+            "title": "Pause on the problem each predecessor solved",
+            "intro": "The clip now holds each source long enough to read one equation and one limitation. The score remains the anchor; only the role of position changes.",
+            "observation": "Sinusoidal encoding adds absolute position; Shaw adds a relative key; Transformer-XL decomposes score terms; later variants edit them; RoPE changes the operator.",
+            "consequence": "Eq. 11 becomes the next scientific question: can absolute phases enter q and k while their dot product exposes m−n?",
+            "beats": ["Transformer · add p_i", "Shaw · add relative key", "Transformer-XL · decompose", "T5/TUPE/DeBERTa · edit terms", "RoFormer · constrain then rotate"],
             "source_refs": ["rope-paper:eq3-16"]
           },
           {
