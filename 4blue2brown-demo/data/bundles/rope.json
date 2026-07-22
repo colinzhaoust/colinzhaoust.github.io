@@ -51,40 +51,40 @@
       "entrypoint": "scenes/explainer_pipeline_native.py",
       "coding_agent_required": false,
       "scene_ids": [
-        "RoPEFormulationAndCode",
+        "RoPERelativeMicro",
         "RoPEFindings"
       ]
     },
     "media": [
       {
-        "media_id": "rope-formulation-code",
+        "media_id": "rope-relative-micro",
         "role": "video",
-        "path": "data/explainer_pipeline/media/rope/formulation-code.mp4",
-        "sha256": "488c414790ce4be8e669512429c52cf0544d0d214ef183e3926deb4088bb26f1",
+        "path": "data/explainer_pipeline/media/rope/relative-micro.mp4",
+        "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2",
         "media_type": "video/mp4",
         "origin": "project_new",
-        "caption": "New paper-native Manim scene for Eq. 11, Eqs. 14-16, and the official implementation pattern.",
-        "published_path": "assets/rope/rope-formulation-code.mp4"
+        "caption": "Five-second Manim scene for the Eq. 16 collapse from separate query/key rotations to n minus m.",
+        "published_path": "assets/rope/rope-relative-micro.mp4"
       },
       {
-        "media_id": "rope-formulation-code-poster",
+        "media_id": "rope-relative-micro-poster",
         "role": "poster",
-        "path": "data/explainer_pipeline/media/rope/formulation-code-poster.png",
-        "sha256": "b7a02e032833a512987e376e2fd1c4ff97418c4a07d2c28f9d18afb44abe40f6",
+        "path": "data/explainer_pipeline/media/rope/relative-micro-poster.png",
+        "sha256": "2c5b38ea48d16cbaeceafe51b3288db033ae7b62e943432400f82f684ec739de",
         "media_type": "image/png",
         "origin": "project_new",
-        "caption": "Poster for the new RoPE formulation and implementation scene.",
-        "published_path": "assets/rope/rope-formulation-code-poster.png"
+        "caption": "Poster for the relative-rotation micro-video.",
+        "published_path": "assets/rope/rope-relative-micro-poster.png"
       },
       {
-        "media_id": "rope-formulation-code-captions",
+        "media_id": "rope-relative-micro-captions",
         "role": "captions",
-        "path": "data/explainer_pipeline/media/rope/formulation-code.vtt",
-        "sha256": "a5d74bfa53a03fef59f666f80fd0a6f08525931bc80cb248610d2fc795f2b752",
+        "path": "data/explainer_pipeline/media/rope/relative-micro.vtt",
+        "sha256": "9953ddb34d9ee2e3b4bc5caf23a7e2f98ecba7fa79d7288482aba950514e3763",
         "media_type": "text/vtt",
         "origin": "project_new",
-        "caption": "English captions for the RoPE formulation and implementation scene.",
-        "published_path": "assets/rope/rope-formulation-code-captions.vtt"
+        "caption": "English captions for the relative-rotation micro-video.",
+        "published_path": "assets/rope/rope-relative-micro-captions.vtt"
       },
       {
         "media_id": "rope-findings",
@@ -538,26 +538,6 @@
               "rope-paper:eq11"
             ],
             "claim_label": "RoFormer Eq. 11"
-          },
-          {
-            "type": "video",
-            "media_id": "rope-formulation-code",
-            "poster_id": "rope-formulation-code-poster",
-            "captions_id": "rope-formulation-code-captions",
-            "title": "From Eq. 11 to Eqs. 14-16 and the implementation",
-            "caption": "A newly authored Manim scene joins the formal requirement, rotary solution, and official pseudocode.",
-            "beats": [
-              "Eq. 11 requirement",
-              "Query rotation",
-              "Key rotation",
-              "R at n−m",
-              "Efficient code"
-            ],
-            "source_refs": [
-              "rope-paper:eq11",
-              "rope-paper:eq14-16",
-              "roformer-readme:rope-pseudocode"
-            ]
           }
         ]
       },
@@ -599,6 +579,24 @@
               "rope-paper:eq14-16"
             ],
             "claim_label": "RoFormer Eqs. 14-16"
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-relative-micro",
+            "poster_id": "rope-relative-micro-poster",
+            "captions_id": "rope-relative-micro-captions",
+            "title": "Why the score contains n−m",
+            "intro": "The query and key still receive absolute-position rotations R_m and R_n. The relative term appears only when their inner product combines those rotations.",
+            "observation": "Because each rotation is orthogonal, (R_m)^T R_n equals R_{n−m}.",
+            "consequence": "The attention score depends on relative displacement even though q_m and k_n are constructed with their own absolute positions.",
+            "beats": [
+              "rotate q by m",
+              "rotate k by n",
+              "collapse to n−m"
+            ],
+            "source_refs": [
+              "rope-paper:eq14-16"
+            ]
           },
           {
             "type": "code",
@@ -815,9 +813,284 @@
       }
     ]
   },
+  "formula_map": {
+    "schema_version": "formula-manim-map/0.1.0",
+    "registry_ref": "data/formula_explainer/primitive_registry.json",
+    "manim_compatibility": {
+      "validated_render_versions": [
+        "0.19.0",
+        "0.20.1"
+      ],
+      "minimum_supported_version": null,
+      "render_evidence_refs": [
+        "experiments/explainer_pipeline/micro_scene_manifest.json",
+        "experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"
+      ],
+      "statement": "The formula primitives have observed render evidence on Manim 0.19.0 and 0.20.1. No minimum-version compatibility claim is made."
+    },
+    "formulas": [
+      {
+        "formula_id": "formula:rope.relative",
+        "title": "RoPE relative-position attention identity",
+        "latex": "(R_mW^qx_m)^T(R_nW^kx_n)=x_m^T(W^q)^TR_{n-m}W^kx_n",
+        "plain_text": "(R_m W_q x_m)^T (R_n W_k x_n) = x_m^T W_q^T R_(n-m) W_k x_n",
+        "source_anchor": {
+          "source_id": "paper:roformer",
+          "source_url": "https://arxiv.org/pdf/2104.09864v5",
+          "revision": "arXiv:2104.09864v5",
+          "content_hash": "sha256:e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+          "locator": "Section 3.2.2, page 5, Equation (16)",
+          "verification": "primary_source_visual"
+        }
+      }
+    ],
+    "formula_nodes": [
+      {
+        "node_id": "node:formula:rope.relative:display",
+        "formula_id": "formula:rope.relative",
+        "level": "formula",
+        "label": "RoPE relative-position attention identity",
+        "expression": "(R_m W_q x_m)^T (R_n W_k x_n) = x_m^T W_q^T R_(n-m) W_k x_n",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.rotate_query",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "rotation",
+        "expression": "rotate query",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.rotate_key",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "rotation",
+        "expression": "rotate key",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.relative_offset",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "subtract",
+        "expression": "relative offset",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.relative_dot",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "dot",
+        "expression": "relative dot",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      }
+    ],
+    "manim_nodes": [
+      {
+        "primitive_id": "manim.axes_vector",
+        "label": "manim.Axes+Arrow+Rotate",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "rotation",
+          "sine",
+          "cosine",
+          "dot"
+        ],
+        "animation_contract": "Axes remain fixed while vector rotation is animated around the origin.",
+        "limitations": [
+          "High-dimensional block rotations require a 2D pair decomposition."
+        ]
+      },
+      {
+        "primitive_id": "manim.math_tex",
+        "label": "manim.MathTex",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "formula_display"
+        ],
+        "animation_contract": "Use MathTex for paper equations; isolate semantic substrings before applying Write, Indicate, or TransformMatchingTex.",
+        "limitations": [
+          "Requires a working LaTeX toolchain in the render environment."
+        ]
+      },
+      {
+        "primitive_id": "manim.transform",
+        "label": "manim.Transform",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "add",
+          "subtract",
+          "multiply",
+          "divide",
+          "matmul",
+          "scale",
+          "concatenate",
+          "linear_projection"
+        ],
+        "animation_contract": "Source and target objects occupy compatible scene regions.",
+        "limitations": [
+          "Semantic token matching needs TransformMatchingTex or authored grouping."
+        ]
+      },
+      {
+        "primitive_id": "project.formula_operation_walk",
+        "label": "scenes.formula_explainer_scene.OperationWalk",
+        "origin": "project_reusable",
+        "origin_label": "Project reusable",
+        "status": "available",
+        "operations": [
+          "formula_operation_dag",
+          "stop_gradient"
+        ],
+        "animation_contract": "Every operation chip shows semantic operation text plus a non-color origin badge.",
+        "limitations": [
+          "The first renderer lays out a topological sequence rather than arbitrary branches."
+        ]
+      },
+      {
+        "primitive_id": "project.rope_relative_rotation",
+        "label": "scenes.explainer_primitives.RoPERelativeRotation",
+        "origin": "generated_one_off",
+        "origin_label": "Authored one-off",
+        "status": "available",
+        "operations": [
+          "rotation",
+          "dot",
+          "subtract"
+        ],
+        "animation_contract": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "limitations": [
+          "The geometry exposes the exact relative-rotation identity; a numeric equality fixture is still absent."
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "edge:node:formula:rope.relative:display:manim.math_tex",
+        "source": "node:formula:rope.relative:display",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_display",
+        "reason": "Typeset the paper equation as the stable visual anchor.",
+        "evidence_refs": [
+          "Section 3.2.2, page 5, Equation (16)"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:rope.relative:display:project.formula_operation_walk",
+        "source": "node:formula:rope.relative:display",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_display",
+        "reason": "Expose the equation's operation order before selecting specialized views.",
+        "evidence_refs": [
+          "Section 3.2.2, page 5, Equation (16)"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_query:manim.axes_vector",
+        "source": "node:op:rope.rotate_query",
+        "target": "manim.axes_vector",
+        "state": "implemented",
+        "operation_type": "rotation",
+        "reason": "Axes remain fixed while vector rotation is animated around the origin.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_query:project.rope_relative_rotation:alternative",
+        "source": "node:op:rope.rotate_query",
+        "target": "project.rope_relative_rotation",
+        "state": "candidate",
+        "operation_type": "rotation",
+        "reason": "Compatible registry operation; not selected by this formula IR. Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_key:manim.axes_vector",
+        "source": "node:op:rope.rotate_key",
+        "target": "manim.axes_vector",
+        "state": "implemented",
+        "operation_type": "rotation",
+        "reason": "Axes remain fixed while vector rotation is animated around the origin.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_key:project.rope_relative_rotation:alternative",
+        "source": "node:op:rope.rotate_key",
+        "target": "project.rope_relative_rotation",
+        "state": "candidate",
+        "operation_type": "rotation",
+        "reason": "Compatible registry operation; not selected by this formula IR. Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_offset:project.rope_relative_rotation",
+        "source": "node:op:rope.relative_offset",
+        "target": "project.rope_relative_rotation",
+        "state": "implemented",
+        "operation_type": "subtract",
+        "reason": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_offset:manim.transform:alternative",
+        "source": "node:op:rope.relative_offset",
+        "target": "manim.transform",
+        "state": "candidate",
+        "operation_type": "subtract",
+        "reason": "Compatible registry operation; not selected by this formula IR. Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_dot:project.rope_relative_rotation",
+        "source": "node:op:rope.relative_dot",
+        "target": "project.rope_relative_rotation",
+        "state": "implemented",
+        "operation_type": "dot",
+        "reason": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_dot:manim.axes_vector:alternative",
+        "source": "node:op:rope.relative_dot",
+        "target": "manim.axes_vector",
+        "state": "candidate",
+        "operation_type": "dot",
+        "reason": "Compatible registry operation; not selected by this formula IR. Axes remain fixed while vector rotation is animated around the origin.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      }
+    ]
+  },
   "generation": {
     "pipeline_version": "explainer-pipeline/0.1.0",
-    "source_packet_sha256": "2356cefa313b093a099e3b144e1f866c96575dacda255ba381feb3d151210ade",
+    "source_packet_sha256": "916667fdcc3115527aa5489dd3048afda8d732c629b1610395d74472bf0fea77",
     "stage_traces": [
       {
         "stage": "concept_graph",
@@ -825,7 +1098,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "aeb64819cd3083ade066948d3533c83492e392b05aa88fb904a667c1b0908640",
+        "prompt_sha256": "aff2e795611a2f4c64af449d054fa9bd14ac0b4dee277107df73867d06d25d86",
         "response_sha256": "36fbfaa302beefbf01e2fe6e85954c8837e2cb84f94f387a25e0821d40a6b314",
         "source_record": "data/explainer_pipeline/replays/rope/concept_graph.json"
       },
@@ -835,7 +1108,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "2f3b2981a56d3c3d93ed15c44b51829c7e65183af0ad14e2ca5befd4985928fe",
+        "prompt_sha256": "1951c1f989087900422f2df5a9e1bbd78231e583983cb3a350441939e7855abe",
         "response_sha256": "699e23050ce7ea9182d025d7bace6eb50200ff627d26d6e29656df266737f1cc",
         "source_record": "data/explainer_pipeline/replays/rope/lesson_plan.json"
       },
@@ -845,8 +1118,8 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "cca7bf472775263e528eb319aca22a0d10964157029fe805b9c703a2b9a7d11a",
-        "response_sha256": "b031bee0805d9d30ea16bc5eeb3b50dcc15a1ea91b41b83b3c97e0cbaf6c5de9",
+        "prompt_sha256": "c4230ea663f1a02a47003d1c7a3aac03c87a1ed472a3ef8c64675f134c40c5ec",
+        "response_sha256": "c623d140147bc90e78caa39d20ea4485485d77809b99a35b8f98122e7056442e",
         "source_record": "data/explainer_pipeline/replays/rope/section_content.json"
       }
     ],

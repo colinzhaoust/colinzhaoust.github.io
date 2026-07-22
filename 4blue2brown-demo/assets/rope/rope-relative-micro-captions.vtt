@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:01.550
+Equation 16 begins with position-dependent query and key rotations.
+
+00:01.550 --> 00:03.750
+The query rotates by m and the key rotates by n.
+
+00:03.750 --> 00:05.600
+Orthogonality combines them as a relative rotation at n minus m.

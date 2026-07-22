@@ -8,24 +8,45 @@
   "media": [
     {
       "paper_id": "feynrl",
-      "media_id": "feynrl-ess-p3o",
-      "path": "assets/feynrl/feynrl-ess-p3o.mp4",
-      "sha256": "8c8653812fb508ac04a109724a2928d14a7834858e6cb9aedef99b88895b60ca",
-      "size_bytes": 817264
+      "media_id": "feynrl-ess-micro",
+      "path": "assets/feynrl/feynrl-ess-micro.mp4",
+      "sha256": "4c463415fa93f920dbf95302b12e8d25599c702b96f26a5999417ae8af30676f",
+      "size_bytes": 117964
     },
     {
       "paper_id": "feynrl",
-      "media_id": "feynrl-ess-p3o-poster",
-      "path": "assets/feynrl/feynrl-ess-p3o-poster.png",
-      "sha256": "2b4a42950ffd4a516860e4f5ae0500ef906742cdf2aca6d63dd7c8f9bd9c7461",
-      "size_bytes": 249487
+      "media_id": "feynrl-ess-micro-poster",
+      "path": "assets/feynrl/feynrl-ess-micro-poster.png",
+      "sha256": "4e3ad31447784de0a72e41f53ddadf439cda5763b2544293cd6a0dcb810775e4",
+      "size_bytes": 68314
     },
     {
       "paper_id": "feynrl",
-      "media_id": "feynrl-ess-p3o-captions",
-      "path": "assets/feynrl/feynrl-ess-p3o-captions.vtt",
-      "sha256": "ed77ae7c9ad540fbeccf1bce11887620ef5af707c8b6075681201935aa3f6ee2",
-      "size_bytes": 486
+      "media_id": "feynrl-ess-micro-captions",
+      "path": "assets/feynrl/feynrl-ess-micro-captions.vtt",
+      "sha256": "7960c595fe2c239cc360951f00cdf9616ecf1c3ac738c03523d20bacc74de07a",
+      "size_bytes": 266
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro",
+      "path": "assets/feynrl/feynrl-p3o-micro.mp4",
+      "sha256": "3833b46cfed2553261537ce85b8c8b6506526b0993f9fb4fdcd24036d30be0c1",
+      "size_bytes": 126869
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro-poster",
+      "path": "assets/feynrl/feynrl-p3o-micro-poster.png",
+      "sha256": "25959d6fc7646b5a66ff63e2292c563d0811770c862d6d9de5b790a363829427",
+      "size_bytes": 85689
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro-captions",
+      "path": "assets/feynrl/feynrl-p3o-micro-captions.vtt",
+      "sha256": "26d920b9c42bc61315a317f258a6772874978001bcfdf4bd264fd715f735d00a",
+      "size_bytes": 242
     },
     {
       "paper_id": "feynrl",
@@ -50,24 +71,24 @@
     },
     {
       "paper_id": "rope",
-      "media_id": "rope-formulation-code",
-      "path": "assets/rope/rope-formulation-code.mp4",
-      "sha256": "488c414790ce4be8e669512429c52cf0544d0d214ef183e3926deb4088bb26f1",
-      "size_bytes": 645113
+      "media_id": "rope-relative-micro",
+      "path": "assets/rope/rope-relative-micro.mp4",
+      "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2",
+      "size_bytes": 121975
     },
     {
       "paper_id": "rope",
-      "media_id": "rope-formulation-code-poster",
-      "path": "assets/rope/rope-formulation-code-poster.png",
-      "sha256": "b7a02e032833a512987e376e2fd1c4ff97418c4a07d2c28f9d18afb44abe40f6",
-      "size_bytes": 220663
+      "media_id": "rope-relative-micro-poster",
+      "path": "assets/rope/rope-relative-micro-poster.png",
+      "sha256": "2c5b38ea48d16cbaeceafe51b3288db033ae7b62e943432400f82f684ec739de",
+      "size_bytes": 89313
     },
     {
       "paper_id": "rope",
-      "media_id": "rope-formulation-code-captions",
-      "path": "assets/rope/rope-formulation-code-captions.vtt",
-      "sha256": "a5d74bfa53a03fef59f666f80fd0a6f08525931bc80cb248610d2fc795f2b752",
-      "size_bytes": 493
+      "media_id": "rope-relative-micro-captions",
+      "path": "assets/rope/rope-relative-micro-captions.vtt",
+      "sha256": "9953ddb34d9ee2e3b4bc5caf23a7e2f98ecba7fa79d7288482aba950514e3763",
+      "size_bytes": 264
     },
     {
       "paper_id": "rope",
