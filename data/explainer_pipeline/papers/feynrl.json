@@ -1,7 +1,7 @@
 {
   "schema_version": "explainer-source-packet/0.1.0",
   "paper_id": "feynrl",
-  "title": "A New Policy Optimization Paradigm for LLM Reasoning",
+  "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
   "short_title": "FeynRL / P3O",
   "audience": "Readers who know policy gradients and want to understand the paper's on-policy and off-policy formulation.",
   "central_question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
@@ -33,6 +33,22 @@
       ]
     }
   ],
+  "equation_coverage": [
+    {"equation_ids": ["Eq. 2"], "role": "premise", "thread_stage": "on-policy score-function estimator", "intent": "Establish the estimator before changing the sampling distribution.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["feynrl-paper:eq2"]},
+    {"equation_ids": ["Eq. 4"], "role": "prior_work", "thread_stage": "fixed clipping", "intent": "Show the fixed clipping factor used by PPO-style objectives.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["feynrl-paper:eq4"]},
+    {"equation_ids": ["Eqs. 5–7"], "role": "bridge", "thread_stage": "behavior-policy correction", "intent": "Move the expectation to behavior-policy samples and define the per-token policy ratio.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["feynrl-paper:eq5-7"]},
+    {"equation_ids": ["Eq. 8"], "role": "bridge", "thread_stage": "behavioral KL regularization", "intent": "Separate the off-policy regularizer from the fixed clipping mechanism before P3O couples them through e_B.", "coverage": "explain", "animation_recipe": "none", "source_refs": ["feynrl-paper:eq8"]},
+    {"equation_ids": ["Eqs. 9–10"], "role": "prior_work", "thread_stage": "positive and negative advantage expansion", "intent": "Expose how Eq. 4 acts on the two advantage signs.", "coverage": "fold", "animation_recipe": "none", "fold_reason": "They expand the fixed-clipping objective by advantage sign but do not introduce a new control variable; the related-work transition keeps Eq. 4 visible and links this algebra to the appendix.", "source_refs": ["feynrl-paper:eq9-10"]},
+    {"equation_ids": ["Eq. 11"], "role": "mechanism", "thread_stage": "normalized effective sample size", "intent": "Compute the batch statistic that measures concentration of policy ratios.", "coverage": "animate", "animation_recipe": "metric_animation", "source_refs": ["feynrl-paper:eq11"]},
+    {"equation_ids": ["Eq. 12"], "role": "mechanism", "thread_stage": "Policy-on Policy-off Policy Optimization", "intent": "Use e_B in both the score-function weight and behavioral KL coefficient.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["feynrl-paper:eq12"]},
+    {"equation_ids": ["Eq. 13"], "role": "extension", "thread_stage": "two-anchor extension", "intent": "Separate behavior-policy mismatch from within-epoch policy drift and expose the potential issue discussed by the authors.", "coverage": "explain", "animation_recipe": "none", "source_refs": ["feynrl-paper:eq13", "feynrl-paper:appendix-fig8-9"]}
+  ],
+  "finding_coverage": [
+    {"finding_id": "clip_sensitivity", "question": "Does performance depend on choosing a clipping factor?", "setting": "GRPO with ε ∈ {0.2, 0.4, 0.6} versus one P3O objective", "metric": "training reward and held-out pass@1", "evidence_kind": "authors_reported_curve", "takeaway": "The paper reports sensitivity across fixed clip choices while P3O does not require a clip-ratio choice.", "source_refs": ["feynrl-paper:fig1", "feynrl-paper:table7"]},
+    {"finding_id": "temperature_mismatch", "question": "How does sampling-temperature mismatch affect training?", "setting": "Qwen3-4B with rollout temperature T=0.6 versus T=1.2", "metric": "training reward over steps", "evidence_kind": "authors_reported_curve", "takeaway": "The paper reports P3O remains robust while GRPO degrades at the larger mismatch.", "source_refs": ["feynrl-paper:fig2"]},
+    {"finding_id": "precision_mismatch", "question": "Does train–rollout precision mismatch cause late collapse?", "setting": "BF16 Train + FP8 Rollout at iterations 15 and 30", "metric": "average held-out pass@1", "evidence_kind": "exact_table", "takeaway": "Table 7 reports GRPO falling from 0.499 to 0.029 while P3O changes from 0.478 to 0.529.", "source_refs": ["feynrl-paper:fig3", "feynrl-paper:table7"]},
+    {"finding_id": "two_anchor_boundary", "question": "Does the two-anchor extension remain stable under temperature mismatch?", "setting": "default temperature versus T=1.2", "metric": "training reward over steps", "evidence_kind": "authors_reported_curve", "takeaway": "The appendix reports the extension can be stable at default temperature but becomes unstable at T=1.2, preserving an important claim boundary.", "source_refs": ["feynrl-paper:appendix-fig8-9"]}
+  ],
   "formula_refs": [
     "data/formula_explainer/formulas/feynrl/ess.json",
     "data/formula_explainer/formulas/feynrl/p3o_objective.json"
@@ -41,9 +57,36 @@
     "engine": "Manim Community 0.19.0",
     "entrypoint": "scenes/explainer_pipeline_native.py",
     "coding_agent_required": false,
-    "scene_ids": ["FeynRLEssMicro", "FeynRLP3OMicro", "FeynRLFindings"]
+    "scene_ids": ["FeynRLEquationLineageMicro", "FeynRLEssMicro", "FeynRLP3OMicro", "FeynRLResultsMicro"]
   },
   "media": [
+    {
+      "media_id": "feynrl-lineage-micro",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/feynrl/lineage-micro.mp4",
+      "sha256": "de378c004464052157935be8b28747c9dc37f734abdc5b95a7dd22e8ec9014bb",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "Equation-transition scene from the on-policy estimator and fixed clipping to the behavior ratio, ESS, and P3O."
+    },
+    {
+      "media_id": "feynrl-lineage-micro-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/feynrl/lineage-micro-poster.png",
+      "sha256": "a0f0df53b4eac6f57c2e80d5c2621ca20d24d70dd1c8ccaec7bee280b4358cea",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the FeynRL equation-lineage micro-video."
+    },
+    {
+      "media_id": "feynrl-lineage-micro-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/feynrl/lineage-micro.vtt",
+      "sha256": "f1929fa79ef5eb730541b1d0bd6a62fda8e555c37cc839e465b076be33fa13b8",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the FeynRL equation-lineage micro-video."
+    },
     {
       "media_id": "feynrl-ess-micro",
       "role": "video",
@@ -102,7 +145,7 @@
       "media_id": "feynrl-findings",
       "role": "video",
       "path": "data/explainer_pipeline/media/feynrl/findings.mp4",
-      "sha256": "1c6295a576373d0c820c47c2deffe973981d0310f87a966dbabfb53e70b90d0b",
+      "sha256": "4de7c7d9804ca931509c49ec7f24bfad96cf8a480b8978777c3745aa9583a33f",
       "media_type": "video/mp4",
       "origin": "project_new",
       "caption": "New Manim scene connecting Section 4's three experimental axes to exact Table 7 values."
@@ -111,7 +154,7 @@
       "media_id": "feynrl-findings-poster",
       "role": "poster",
       "path": "data/explainer_pipeline/media/feynrl/findings-poster.png",
-      "sha256": "cb2285d0b5e61ac734c4a5fa9ec133f99811aa80396dba4c64a9c4a82c3116a6",
+      "sha256": "b0201b4b75591bd48ea31d643d2dac9928be7e3176c6b532ba6375096ad22041",
       "media_type": "image/png",
       "origin": "project_new",
       "caption": "Poster for the FeynRL findings scene."
@@ -120,7 +163,7 @@
       "media_id": "feynrl-findings-captions",
       "role": "captions",
       "path": "data/explainer_pipeline/media/feynrl/findings.vtt",
-      "sha256": "bfd30844ca4c3b374ce6382aa0b849110d0514471582a795ba50db5b4e5c8f2f",
+      "sha256": "a63bc22a196c56910bfd9645c9ad5828eec6f350f56d1a7219e673c3975f79dc",
       "media_type": "text/vtt",
       "origin": "project_new",
       "caption": "English captions for the FeynRL findings scene."

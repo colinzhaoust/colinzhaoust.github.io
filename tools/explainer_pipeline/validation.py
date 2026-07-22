@@ -31,6 +31,12 @@ def validate_source_packet(packet: dict[str, Any], check_local_assets: bool = Tr
     source_ids = [item.get("source_id") for item in packet.get("sources", [])]
     if len(source_ids) != len(set(source_ids)):
         errors.append("source IDs must be unique")
+    finding_ids = [item.get("finding_id") for item in packet.get("finding_coverage", [])]
+    if len(finding_ids) != len(set(finding_ids)):
+        errors.append("finding coverage IDs must be unique")
+    for item in packet.get("equation_coverage", []):
+        if item.get("coverage") == "fold" and not item.get("fold_reason"):
+            errors.append(f"folded equations need a reason: {item.get('equation_ids')}")
     for code_source in packet.get("code_sources", []):
         for excerpt in code_source.get("excerpts", []):
             try:
@@ -82,7 +88,7 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
         if section_ids != required_ids:
             errors.append(f"lesson section order {section_ids} != required {required_ids}")
         for section in sections:
-            for field in ("title", "question", "learning_goal", "misconception", "summary", "medium"):
+            for field in ("title", "intent", "question", "learning_goal", "misconception", "summary", "medium"):
                 if not section.get(field):
                     errors.append(f"section {section.get('id')} missing {field}")
     elif stage == "section_content":
@@ -91,6 +97,7 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
             "line_chart", "bar_chart", "lineage", "numeric_fixture",
             "rotation", "limitation", "learner_check", "reported_trends",
             "paper_question", "related_reading",
+            "equation_thread", "result_story",
         }
         media_ids = {item.get("media_id") for item in packet.get("media", [])}
         code_ids = {item.get("code_id") for item in packet.get("code_sources", [])}
@@ -129,6 +136,13 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
                         for item in block.get("items", []):
                             if not str(item.get("url", "")).startswith("https://"):
                                 errors.append(f"section {section_id} related reading needs an https URL")
+                    if block_type == "equation_thread":
+                        if not block.get("stages") or not block.get("folded"):
+                            errors.append(f"section {section_id} equation thread needs stages and folded decisions")
+                    if block_type == "result_story":
+                        for field in ("question", "setting", "metric", "evidence_kind", "takeaway"):
+                            if not block.get(field):
+                                errors.append(f"section {section_id} result story needs {field}")
         appendix_entries = payload.get("appendix_entries", [])
         appendix_ids = [item.get("id") for item in appendix_entries if isinstance(item, dict)]
         if len(appendix_ids) != len(set(appendix_ids)):

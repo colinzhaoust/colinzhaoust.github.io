@@ -22,6 +22,7 @@ from explainer_primitives import (
     FormulaCodeBridge,
     INK,
     MUTED,
+    MetricBars,
     PAPER,
     PaperNativeScene,
     RoPERelativeRotation,
@@ -94,6 +95,134 @@ class RoPERelativeMicro(PaperNativeScene):
             run_time=1.5,
         )
         self.play(visual.labels.animate.set_opacity(1), run_time=0.65)
+        self.wait(0.9)
+
+
+class FeynRLEquationLineageMicro(PaperNativeScene):
+    """Eq. 2 → 4 → 7/8 → 11/12: what changes and why."""
+
+    def construct(self) -> None:
+        tag = Text("FEYNRL · EQUATION LINEAGE", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.45)
+        stage = Text("on-policy score-function estimator · Eq. 2", font_size=21, color=MUTED).next_to(tag, DOWN, buff=0.28)
+        equation = MathTex(r"\widehat g=\widehat{\mathbb E}[\nabla_\theta\log\pi_\theta\,A]", font_size=43, color=INK).move_to(UP * 0.45)
+        change = Text("sample from the current policy", font_size=22, color=CURRENT).next_to(equation, DOWN, buff=0.55)
+        source = self.source("FeynRL Eqs. (2), (4), (7–8), (11–12)")
+        self.play(FadeIn(tag), FadeIn(stage), Write(equation), FadeIn(change), FadeIn(source), run_time=1.0)
+
+        transitions = [
+            (
+                "fixed clipping · Eq. 4",
+                MathTex(r"\widehat{\mathbb E}[\min\{\rho_tA,\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)A\}]", font_size=35, color=INK),
+                "preset ε bounds the ratio contribution",
+                WARNING,
+            ),
+            (
+                "behavior-policy correction · Eq. 7",
+                MathTex(r"\rho_t(\theta)=\frac{\pi_\theta(y_t\mid x,y_{<t})}{\pi_b(y_t\mid x,y_{<t})}", font_size=43, color=INK),
+                "the ratio now exposes batch-specific mismatch",
+                BEHAVIOR,
+            ),
+            (
+                "batch statistic + P3O · Eqs. 11–12",
+                MathTex(r"e_B=\frac{\widehat{\mathbb E}[\rho]^2}{\widehat{\mathbb E}[\rho^2]}", r"\quad\Longrightarrow\quad", r"\min\{\rho_t,e_B\}+(1-e_B)\operatorname{KL}", font_size=37),
+                "replace preset ε with one value computed from this batch",
+                ADAPTIVE,
+            ),
+        ]
+        for label, target, note, color in transitions:
+            target.move_to(equation)
+            next_stage = Text(label, font_size=21, color=MUTED).move_to(stage)
+            next_change = Text(note, font_size=22, color=color).move_to(change)
+            self.play(TransformMatchingTex(equation, target), Transform(stage, next_stage), Transform(change, next_change), run_time=1.35)
+            self.wait(0.35)
+            equation = target
+        self.wait(0.7)
+
+
+class RoPEEquationLineageMicro(PaperNativeScene):
+    """Eqs. 3–16: additive terms become a multiplicative rotation."""
+
+    def construct(self) -> None:
+        tag = Text("ROFORMER · EQUATION LINEAGE", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.45)
+        stage = Text("additive absolute position · Eqs. 3–4", font_size=21, color=MUTED).next_to(tag, DOWN, buff=0.28)
+        equation = MathTex(r"f_t(x_i,i)=W_t(x_i+p_i)", font_size=49, color=INK).move_to(UP * 0.45)
+        change = Text("position is added before projection", font_size=22, color=CURRENT).next_to(equation, DOWN, buff=0.55)
+        source = self.source("RoFormer Eqs. (3–16)")
+        self.play(FadeIn(tag), FadeIn(stage), Write(equation), FadeIn(change), FadeIn(source), run_time=1.0)
+        transitions = [
+            ("relative terms in the score · Eqs. 5–10", MathTex(r"q_m^\top k_n+q_m^\top r_{m-n}+u^\top k_n+v^\top r_{m-n}", font_size=37, color=INK), "relative position appears as additive score terms", BEHAVIOR),
+            ("functional requirement · Eq. 11", MathTex(r"\langle f_q(x_m,m),f_k(x_n,n)\rangle=g(x_m,x_n,m-n)", font_size=41, color=INK), "state the desired dependence before choosing the operator", WARNING),
+            ("multiplicative rotary solution · Eqs. 12–16", MathTex(r"(R_mW^qx_m)^\top(R_nW^kx_n)=x_m^\top W^{q\top}R_{n-m}W^kx_n", font_size=36, color=INK), "absolute rotations combine into one relative rotation", ADAPTIVE),
+        ]
+        for label, target, note, color in transitions:
+            target.move_to(equation)
+            next_stage = Text(label, font_size=21, color=MUTED).move_to(stage)
+            next_change = Text(note, font_size=22, color=color).move_to(change)
+            self.play(TransformMatchingTex(equation, target), Transform(stage, next_stage), Transform(change, next_change), run_time=1.35)
+            self.wait(0.35)
+            equation = target
+        self.wait(0.7)
+
+
+class FeynRLResultsMicro(PaperNativeScene):
+    """Experimental questions first; exact Table 7 values where available."""
+
+    def construct(self) -> None:
+        tag = Text("FEYNRL · RESULT TRAJECTORIES", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.42)
+        question = Text("Does BF16 Train + FP8 Rollout cause late collapse?", font_size=28, color=INK, weight=BOLD).next_to(tag, DOWN, buff=0.32)
+        setting = Text("held-out average pass@1 · Table 7", font="Menlo", font_size=16, color=MUTED).next_to(question, DOWN, buff=0.16)
+        bars15 = MetricBars([("GRPO · iteration 15", 0.499, BEHAVIOR), ("P3O · iteration 15", 0.478, ADAPTIVE)], maximum=0.6).scale(1.05).move_to(DOWN * 0.1)
+        bars30 = MetricBars([("GRPO · iteration 30", 0.029, CORAL), ("P3O · iteration 30", 0.529, ADAPTIVE)], maximum=0.6).scale(1.05).move_to(bars15)
+        marker = Text("ITERATION 15", font="Menlo", font_size=17, color=MUTED).next_to(bars15, DOWN, buff=0.45)
+        source = self.source("Exact values · FeynRL Table 7")
+        self.play(FadeIn(tag), FadeIn(question), FadeIn(setting), FadeIn(bars15), FadeIn(marker), FadeIn(source), run_time=1.0)
+        next_marker = Text("ITERATION 30", font="Menlo", font_size=17, color=WARNING, weight=BOLD).move_to(marker)
+        self.play(Transform(bars15, bars30), Transform(marker, next_marker), run_time=1.8)
+        takeaway = Text("GRPO: 0.499 → 0.029     P3O: 0.478 → 0.529", font_size=24, color=INK, weight=BOLD).to_edge(DOWN, buff=0.7)
+        self.play(FadeIn(takeaway), run_time=0.55)
+        self.wait(0.9)
+
+
+class RoPEDecayMicro(PaperNativeScene):
+    """Eqs. 35–37: paired frequencies lose alignment with distance."""
+
+    def construct(self) -> None:
+        tag = Text("ROFORMER · LONG-TERM DECAY", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.42)
+        equation = MathTex(r"q_m^\top k_n=\Re\!\left[\sum_j h_j e^{i(m-n)\theta_j}\right]", font_size=43, color=INK).next_to(tag, DOWN, buff=0.35)
+        axes = Axes(x_range=[0, 16, 4], y_range=[0, 1.1, 0.25], x_length=8.5, y_length=3.3, axis_config={"color": RULE, "include_numbers": False}).shift(DOWN * 0.65)
+        curve = axes.plot(lambda x: 1 / (1 + 0.14 * x), x_range=[0, 16], color=ADAPTIVE, stroke_width=5)
+        dot = Dot(axes.c2p(0, 1), color=WARNING, radius=0.09)
+        x_label = Text("relative distance |m−n|", font_size=18, color=MUTED).next_to(axes, DOWN, buff=0.16)
+        note = Text("schematic bound shape · not digitized Figure 2", font="Menlo", font_size=14, color=MUTED).next_to(x_label, DOWN, buff=0.1)
+        source = self.source("RoFormer Eqs. (35–37) and Fig. 2")
+        self.play(FadeIn(tag), Write(equation), Create(axes), FadeIn(x_label), FadeIn(note), FadeIn(source), run_time=1.1)
+        self.play(Create(curve), MoveAlongPath(dot, curve), run_time=2.3)
+        self.wait(0.8)
+
+
+class RoPEResultsMicro(PaperNativeScene):
+    """Exact result slices reveal mixed GLUE and a long-sequence gain."""
+
+    def construct(self) -> None:
+        tag = Text("ROFORMER · RESULT TRAJECTORIES", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.42)
+        question = Text("Is RoFormer uniformly better across GLUE?", font_size=28, color=INK, weight=BOLD).next_to(tag, DOWN, buff=0.3)
+        labels = ["MRPC", "SST-2", "QNLI", "STS-B", "QQP", "MNLI-m"]
+        deltas = [0.6, -2.8, -2.5, 1.2, 15.2, -4.4]
+        rows = VGroup()
+        for label, delta in zip(labels, deltas):
+            name = Text(label, font="Menlo", font_size=16, color=INK)
+            number = Text(f"{delta:+.1f}", font="Menlo", font_size=18, color=ADAPTIVE if delta > 0 else CORAL, weight=BOLD)
+            glyph = Arrow(ORIGIN, (RIGHT if delta > 0 else LEFT) * (0.35 + min(abs(delta), 6) * 0.22), buff=0, stroke_width=6, color=ADAPTIVE if delta > 0 else CORAL)
+            rows.add(VGroup(name, glyph, number).arrange(RIGHT, buff=0.22))
+        rows.arrange(DOWN, aligned_edge=LEFT, buff=0.18).move_to(DOWN * 0.28)
+        note = Text("RoFormer − BERT · exact Table 2 task scores", font="Menlo", font_size=15, color=MUTED).next_to(rows, DOWN, buff=0.35)
+        source = self.source("Exact values · RoFormer Tables 2 and 5")
+        self.play(FadeIn(tag), FadeIn(question), LaggedStart(*[FadeIn(row, shift=RIGHT * 0.08) for row in rows], lag_ratio=0.1), FadeIn(note), FadeIn(source), run_time=1.3)
+        self.wait(0.65)
+        next_question = Text("Does a longer input help on CAIL2019-SCM?", font_size=28, color=INK, weight=BOLD).move_to(question)
+        cail = MetricBars([("RoFormer-512", 68.29, BEHAVIOR), ("RoFormer-1024", 69.79, ADAPTIVE)], maximum=72, decimals=2).scale(1.05).move_to(rows)
+        next_note = Text("test accuracy · exact Table 5", font="Menlo", font_size=15, color=MUTED).move_to(note)
+        self.play(Transform(question, next_question), FadeOut(rows), FadeIn(cail), Transform(note, next_note), run_time=1.3)
         self.wait(0.9)
 
 

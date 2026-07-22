@@ -137,6 +137,7 @@
         <span class="eyebrow">${esc(bundle.source_packet.short_title)} · ${esc(sectionPlan.nav_label)} · generated scene</span>
         <h1>${esc(sectionPlan.title)}</h1>
         <p class="promise">${esc(sectionPlan.summary)}</p>
+        <div class="intent-line"><b>INTENT</b><span>${esc(sectionPlan.intent)}</span></div>
         <div class="question-line"><b>QUESTION</b><span>${esc(sectionPlan.question)}</span></div>
       </header>
       <div class="blocks">${content.blocks.map((block) => renderBlock(block, bundle)).join("")}</div>`;
@@ -156,8 +157,14 @@
         <div class="question-line"><b>QUESTION</b><span>Which mappings are implemented, merely compatible, or still unresolved?</span></div>
       </header>
       <div class="blocks formula-blocks">
+        <section class="block equation-audit">
+          <span class="eyebrow">Equation coverage contract</span>
+          <h2>What is animated, explained, or folded</h2>
+          <p class="mapping-help">This inventory is produced during source grounding, before scene selection. A formula cannot disappear merely because no animation was authored for it.</p>
+          <div class="equation-audit-list">${bundle.source_packet.equation_coverage.map((item) => `<article class="coverage-${esc(item.coverage)}"><div><span class="coverage-state">${esc(item.coverage)}</span><strong>${item.equation_ids.map(esc).join(" · ")}</strong><small>${esc(item.role)} · ${esc(item.thread_stage)}</small></div><p>${esc(item.intent)}</p>${item.fold_reason ? `<p class="fold-reason">Folded: ${esc(item.fold_reason)}</p>` : ""}</article>`).join("")}</div>
+        </section>
         <section class="block formula-inventory">
-          <span class="eyebrow">Paper-native formula inventory</span>
+          <span class="eyebrow">Fully parsed Formula IR subset</span>
           <div class="formula-inventory-grid">${map.formulas.map((formula, index) => `<article>
             <span class="formula-index">F${String(index + 1).padStart(2, "0")}</span>
             <h2>${esc(formula.title)}</h2>
@@ -167,7 +174,7 @@
         </section>
         <section class="block mapping-lab">
           <div class="mapping-intro"><div><span class="eyebrow">Bipartite capability graph</span><h2>Fragments and operations ↔ render functions</h2></div><div class="mapping-legend">${Object.entries(edgeStateLabel).map(([stateName, label]) => `<span class="edge-${stateName}"><i></i>${esc(label)}</span>`).join("")}</div></div>
-          <p class="mapping-help">Focus either side to isolate its N-to-N mappings. Solid edges are backed by a callable implementation; dashed edges are compatible alternatives still awaiting scene-level selection.</p>
+          <p class="mapping-help">Focus either side to isolate its N-to-N mappings. Coverage nodes account for the complete equation audit; operation nodes add compiler-level detail where Formula IR exists. Solid edges are callable implementations; dashed edges await scene-level selection.</p>
           <div class="formula-bipartite" id="formula-bipartite">
             <svg class="mapping-lines" id="mapping-lines" aria-hidden="true"></svg>
             <div class="mapping-column formula-side"><h3>Formula layer</h3>${map.formula_nodes.map((node) => {
@@ -240,6 +247,8 @@
     comparison: (b) => `<section class="block"><div class="comparison">${b.columns.map((column) => `<article class="accent-${esc(column.accent)}"><span class="label">${esc(column.label)}</span><div class="question">${esc(column.question)}</div><div class="answer">${esc(column.answer)}</div></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
     learner_check: (b) => `<details class="block learner-check"><summary><span class="eyebrow">Pause and predict</span><h3>${esc(b.prompt)}</h3><button type="button" tabindex="-1">Reveal answer</button></summary><p class="answer">${esc(b.answer)}</p></details>`,
     lineage: (b) => `<section class="block"><span class="eyebrow">Conceptual lineage</span><div class="lineage-track" style="--count:${b.nodes.length}">${b.nodes.map((node, index) => `<article class="lineage-node" style="--node-color:${index === b.nodes.length - 1 ? "var(--orange)" : index > b.nodes.length / 2 ? "var(--green)" : "var(--violet)"}"><strong>${esc(node.label)}</strong><span>${esc(node.note)}</span></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
+    equation_thread: (b) => `<section class="block equation-thread"><span class="eyebrow">Equation lineage · source order</span><h2>${esc(b.title)}</h2><div class="equation-thread-list">${b.stages.map((stage, index) => `<article><span class="thread-index">${String(index + 1).padStart(2, "0")}</span><div><strong>${esc(stage.equation)}</strong><code>${esc(stage.formula)}</code><p>${esc(stage.intent)}</p><small>${esc(stage.change)}</small></div></article>`).join("")}</div><details class="folded-equations"><summary>${b.folded.length} folded equation famil${b.folded.length === 1 ? "y" : "ies"}</summary>${b.folded.map((item) => `<p><strong>${esc(item.equations)}</strong> ${esc(item.reason)}</p>`).join("")}</details>${refs(b.source_refs)}</section>`,
+    result_story: (b) => `<section class="block result-story"><div class="result-question"><span class="eyebrow">Experimental question</span><h2>${esc(b.question)}</h2></div><dl><div><dt>Setting / factor</dt><dd>${esc(b.setting)}</dd></div><div><dt>Metric</dt><dd>${esc(b.metric)}</dd></div><div><dt>Evidence</dt><dd><span class="claim-label">${esc(b.evidence_kind.replaceAll("_", " "))}</span>${esc(b.evidence)}</dd></div><div><dt>Takeaway</dt><dd>${esc(b.takeaway)}</dd></div></dl>${refs(b.source_refs)}</section>`,
     related_reading: (b) => `<section class="block related-reading"><span class="eyebrow">Primary-source links</span><h2>${esc(b.title)}</h2><div class="reading-grid">${b.items.map((item) => `<a href="${esc(item.url)}" target="_blank" rel="noreferrer"><strong>${esc(item.title)}</strong><span>${esc(item.relation)}</span><i aria-hidden="true">↗</i></a>`).join("")}</div>${refs(b.source_refs)}</section>`,
     numeric_fixture: (b) => `<section class="block"><span class="eyebrow">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="formula-display">${esc(b.formula)}</div><div class="fixture-grid">${b.fixtures.map((fixture) => { const max = Math.max(...fixture.values); return `<article class="fixture"><h3>${esc(fixture.label)}</h3><div class="weight-bars">${fixture.values.map((value) => `<i style="height:${Math.max(2, value / max * 100)}%;--bar-color:${accent(fixture.accent)}" title="${esc(value)}"></i>`).join("")}</div><div class="ess-readout"><span>ρ = [${fixture.values.map(esc).join(", ")}]</span><b>ESS ${esc(fixture.ess)}</b></div></article>`; }).join("")}</div><p>${esc(b.note)}</p>${refs(b.source_refs)}</section>`,
     video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); return `<section class="block"><span class="eyebrow">Manim where motion carries meaning</span><h2>${esc(b.title)}</h2><div class="video-frame"><video controls preload="metadata" poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="video-caption"><span>${esc(b.caption)}</span><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></div>${refs(b.source_refs)}</section>`; },

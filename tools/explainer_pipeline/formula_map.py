@@ -123,6 +123,51 @@ def build_formula_map(packet: dict[str, Any]) -> dict[str, Any]:
                     }
                 )
 
+    # Coverage nodes make the source-grounding audit visible even when a full
+    # operation-level Formula IR has not yet been authored for that equation.
+    # They are deliberately less granular than Formula IR nodes, but they keep
+    # every animate/explain decision connected to callable renderer functions.
+    for index, coverage in enumerate(packet.get("equation_coverage", []), start=1):
+        if coverage["coverage"] == "fold":
+            continue
+        coverage_id = f"coverage:{packet['paper_id']}:{index}"
+        node_id = f"node:{coverage_id}"
+        formula_nodes.append(
+            {
+                "node_id": node_id,
+                "formula_id": coverage_id,
+                "level": "equation coverage",
+                "label": f"{' · '.join(coverage['equation_ids'])} — {coverage['thread_stage']}",
+                "expression": coverage["intent"],
+                "source_locator": " · ".join(coverage["source_refs"]),
+            }
+        )
+        base_targets = [
+            ("manim.math_tex", "implemented", "Keep the paper equation visible as the stable anchor."),
+            ("project.formula_operation_walk", "candidate", "Expose operation order when a full Formula IR is available."),
+        ]
+        specialized = {
+            "formula_transition": "manim.transform_matching_tex",
+            "geometry": "project.rope_relative_rotation" if packet["paper_id"] == "rope" else "manim.axes_vector",
+            "metric_animation": "project.ess_tradeoff_gauge" if "effective sample size" in coverage["thread_stage"] else "project.metric_bars",
+            "none": "manim.math_tex",
+        }[coverage["animation_recipe"]]
+        if specialized != "manim.math_tex":
+            base_targets.append((specialized, "implemented" if coverage["coverage"] == "animate" else "candidate", primitives[specialized]["animation_contract"]))
+        for primitive_id, state, reason in base_targets:
+            manim_ids.add(primitive_id)
+            edges.append(
+                {
+                    "edge_id": f"edge:{node_id}:{primitive_id}",
+                    "source": node_id,
+                    "target": primitive_id,
+                    "state": state,
+                    "operation_type": coverage["animation_recipe"],
+                    "reason": reason,
+                    "evidence_refs": coverage["source_refs"],
+                }
+            )
+
     manim_nodes = []
     for primitive_id in sorted(manim_ids):
         primitive = primitives[primitive_id]

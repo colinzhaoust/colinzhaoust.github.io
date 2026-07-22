@@ -13,15 +13,19 @@ facts, rename paper terms, or convert candidate mappings into confirmed ones. Pr
 that appear verbatim in the paper or repository.""",
     "lesson_plan": """Return a JSON object with keys title, promise, sections, and appendix.
 Sections must be ordered learning transitions. Each section needs id, nav_label, title,
-question, learning_goal, misconception, summary, source_refs, medium, and deep_links.
+intent, question, learning_goal, misconception, summary, source_refs, medium, and deep_links.
 Use the exact section IDs requested in the input. Phrase motivation as the paper's own question
-or stated concern. Choose animation only when state change or geometry carries meaning.""",
+or stated concern. Intent must state why the authors need this section at this point in their
+argument, grounded in the source packet rather than a generic learning objective. Choose
+animation only when state change or geometry carries meaning.""",
     "section_content": """Return a JSON object with keys sections and appendix_entries.
 Each section maps to blocks chosen from paper_question, prose, comparison, related_reading,
-formula_steps, code, video, line_chart, bar_chart, lineage, numeric_fixture, rotation,
-limitation, and learner_check.
+formula_steps, code, video, micro_video, equation_thread, result_story, line_chart, bar_chart,
+lineage, numeric_fixture, rotation, limitation, and learner_check.
 Every factual claim needs source_refs. Result blocks must include exact source locators
-and reported/inferred labels. Use related_reading blocks only for primary-source HTTPS links
+and reported/inferred labels. Findings must be organized as question, setting, metric, evidence,
+and takeaway. Equation threads must account for every equation_coverage item, including an
+explicit folded list. Use related_reading blocks only for primary-source HTTPS links
 present in the paper's references or source packet. Integrate confirmed code beside the formula
 or mechanism it implements. Use a video block only when the source packet contains matching
 video, poster, and captions media IDs. Never generate Python, Manim code, HTML, or executable code.""",

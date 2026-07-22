@@ -51,15 +51,28 @@ The formula view is a bipartite capability graph. Formula and operation nodes co
 
 ## Native Manim contract
 
-The reviewed demos use text-light micro-scenes in `scenes/explainer_pipeline_native.py`:
+The reviewed demos use text-light micro-scenes in `scenes/explainer_pipeline_native.py`. Source grounding now produces two coverage contracts before lesson planning:
 
+- `equation_coverage`: every numbered equation family is marked `animate`, `explain`, or `fold`; folded families require a reason.
+- `finding_coverage`: every result is represented as experimental question, setting/factor, metric, evidence kind, and source-faithful takeaway.
+
+This prevents the renderer from selecting only convenient equations or isolated result bars. The reviewed scenes include:
+
+- equation transitions for FeynRL Eqs. 2 → 4 → 7/8 → 11/12 and RoFormer Eqs. 3–16;
+- mechanism micro-scenes for normalized ESS, the P3O control coupling, and the RoPE relative identity;
+- result transitions that hold setting and metric fixed while iteration or sequence length changes;
+- a schematic, explicitly non-digitized long-term-decay animation for RoFormer Eqs. 35–37.
+
+- `FeynRLEquationLineageMicro`: Eqs. 2, 4, 7, 11, and 12 as a semantic formula transition;
 - `FeynRLEssMicro`: Eq. 11 with fixed token count and changing ratio concentration;
 - `FeynRLP3OMicro`: the two Eq. 12 controls coupled through the same e_B;
-- `FeynRLFindings`: Section 4 experimental axes and exact Table 7 values;
+- `FeynRLResultsMicro`: exact Table 7 iteration-15 → iteration-30 values under precision mismatch;
+- `RoPEEquationLineageMicro`: additive Eqs. 3–10 → Eq. 11 requirement → Eqs. 12–16 rotation;
 - `RoPERelativeMicro`: the Eq. 16 collapse from separate rotations to n−m;
-- `RoPEFindings`: Section 3.3 properties, Table 1, and Figure 3 findings.
+- `RoPEDecayMicro`: schematic, explicitly non-digitized Eqs. 35–37 bound behavior;
+- `RoPEResultsMicro`: signed GLUE deltas and the exact RoFormer-512 → RoFormer-1024 comparison.
 
-The stock layer is Manim Community: `MathTex`, `Text`, `VGroup`, `Rectangle`, `Arrow`, `NumberLine`, and standard animations. The project layer lives in `scenes/explainer_primitives.py`: `RatioBars`, `EssTradeoffGauge`, `FormulaCodeBridge`, `RoPERelativeRotation`, and the shared paper-native scene shell. The website carries motivation, interpretation, and consequences; each micro-video is limited to one state change. The scenes do not reuse the earlier `progress_site/assets/self-refine` media. Captions, posters, video hashes, engine version, entrypoint, and scene IDs are part of each source packet.
+The stock layer is Manim Community: `MathTex`, `TransformMatchingTex`, `Text`, `VGroup`, `Rectangle`, `Arrow`, `Axes`, and standard animations. The project layer lives in `scenes/explainer_primitives.py`: `RatioBars`, `EssTradeoffGauge`, `FormulaCodeBridge`, `MetricBars`, `RoPERelativeRotation`, and the shared paper-native scene shell. The website carries motivation, interpretation, and consequences; each micro-video is limited to one state change. The scenes do not reuse the earlier `progress_site/assets/self-refine` media. Captions, posters, video hashes, engine version, entrypoint, and scene IDs are part of each source packet.
 
 Render the reviewed scenes directly:
 
@@ -67,8 +80,8 @@ Render the reviewed scenes directly:
 .venv-arm64/bin/manim -qm \
   --media_dir runs/explainer_pipeline/native_manim \
   scenes/explainer_pipeline_native.py \
-  FeynRLEssMicro FeynRLP3OMicro FeynRLFindings \
-  RoPERelativeMicro RoPEFindings
+  FeynRLEquationLineageMicro FeynRLEssMicro FeynRLP3OMicro FeynRLResultsMicro \
+  RoPEEquationLineageMicro RoPERelativeMicro RoPEDecayMicro RoPEResultsMicro
 ```
 
 For a new paper, the API can select only registered scene/media IDs. Adding a new reusable visual grammar is an ordinary repository change with review and tests; it is not delegated to a coding agent during generation.

@@ -120,6 +120,8 @@ def _grounding_prompt(
     contract = {
         "central_question": "one question using the paper's own motivation and terms",
         "required_section_ids": "5-7 stable snake_case IDs beginning with motivation and related_work, ending with findings and limits",
+        "equation_coverage": [{"equation_ids": ["Eq. n"], "role": "premise|prior_work|bridge|mechanism|analysis|extension", "thread_stage": "paper term", "intent": "why the authors introduce it here", "coverage": "animate|explain|fold", "animation_recipe": "formula_transition|geometry|metric_animation|none", "fold_reason": "required only when folded", "source_refs": [f"{paper_id}-paper:eqN"]}],
+        "finding_coverage": [{"finding_id": "stable_id", "question": "experimental question", "setting": "controlled setting or factor", "metric": "paper metric", "evidence_kind": "exact_table|authors_reported_curve|algebraic_analysis", "takeaway": "source-faithful finding", "source_refs": [f"{paper_id}-paper:table-or-figure"]}],
         "paper_excerpts": [{"locator": "section/equation/table", "text": "source-faithful summary", "source_refs": [f"{paper_id}-paper:locator"]}],
         "code_notes": [{"locator": "path:symbol or lines", "text": "confirmed implementation observation", "source_refs": [f"{paper_id}-repo:path"]}],
     }
@@ -127,7 +129,7 @@ def _grounding_prompt(
         [
             "You are the source-grounding JSON API stage of a paper-and-repository explainer. No coding agent participates.",
             "Return only one JSON object matching the contract. Preserve the paper's terminology and stated motivation; do not coin substitute names. Put code beside the mechanism or equation it realizes. The section IDs should reflect the paper, not a universal slide template.",
-            "Every paper excerpt needs a visible locator. Every code note needs a repository path or symbol. Do not generate HTML, Python, Manim code, or shell commands.",
+            "Audit the full numbered-equation thread and the paper's full experiment axes. Every equation family must be marked animate, explain, or fold; folded equations need an explicit reason. Every finding must be question → setting → metric → evidence kind → takeaway. Every paper excerpt needs a visible locator. Every code note needs a repository path or symbol. Do not generate HTML, Python, Manim code, or shell commands.",
             f"CONTRACT={canonical_json(contract)}",
             f"PAPER_TITLE={title}",
             f"PAPER_TEXT={paper_text[:MAX_PAPER_CHARS]}",
@@ -172,7 +174,7 @@ def ingest_source_packet(
     prompt = _grounding_prompt(paper_id, resolved_title, paper_text, repository_corpus)
     grounding = provider.generate("source_grounding", paper_id, prompt)
     payload = grounding.payload
-    required = {"central_question", "required_section_ids", "paper_excerpts", "code_notes"}
+    required = {"central_question", "required_section_ids", "equation_coverage", "finding_coverage", "paper_excerpts", "code_notes"}
     if not required.issubset(payload):
         raise IngestionError(f"source grounding missing {sorted(required - set(payload))}")
     section_ids = payload["required_section_ids"]
@@ -211,6 +213,8 @@ def ingest_source_packet(
             }],
         }],
         "formula_refs": [],
+        "equation_coverage": payload["equation_coverage"],
+        "finding_coverage": payload["finding_coverage"],
         "scene_renderer": {
             "engine": "Manim Community 0.19.0",
             "entrypoint": "scenes/explainer_pipeline_native.py",

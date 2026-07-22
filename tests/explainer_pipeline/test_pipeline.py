@@ -22,7 +22,7 @@ class ExplainerPipelineTests(unittest.TestCase):
             ]
             manifest = render_site(bundles, root / "site")
             self.assertEqual(manifest["papers"], ["feynrl", "rope"])
-            self.assertEqual(len(manifest["media"]), 15)
+            self.assertEqual(len(manifest["media"]), 24)
             self.assertTrue((root / "site" / "data" / "catalog.json").is_file())
             for bundle in bundles:
                 self.assertEqual(
@@ -51,6 +51,15 @@ class ExplainerPipelineTests(unittest.TestCase):
             for edge in mapping["edges"]:
                 targets_per_formula.setdefault(node_formula[edge["source"]], set()).add(edge["target"])
             self.assertTrue(all(len(targets) > 1 for targets in targets_per_formula.values()))
+
+    def test_metric_bars_have_rendered_exact_value_evidence(self) -> None:
+        manifest = json.loads((ROOT / "experiments/explainer_pipeline/micro_scene_manifest.json").read_text(encoding="utf-8"))
+        scenes = {item["scene_id"]: item for item in manifest["scenes"]}
+        for scene_id in ("FeynRLResultsMicro", "RoPEResultsMicro"):
+            artifact = ROOT / scenes[scene_id]["artifact_ref"]
+            self.assertTrue(artifact.is_file())
+            import hashlib
+            self.assertEqual(hashlib.sha256(artifact.read_bytes()).hexdigest(), scenes[scene_id]["sha256"])
 
     def test_manifest_hash_matches_exact_written_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -4,7 +4,7 @@
   "title": "Explainer source packet 0.1.0",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "paper_id", "title", "short_title", "audience", "central_question", "required_section_ids", "sources", "code_sources", "formula_refs", "scene_renderer", "media", "agent_input"],
+  "required": ["schema_version", "paper_id", "title", "short_title", "audience", "central_question", "required_section_ids", "sources", "code_sources", "equation_coverage", "finding_coverage", "formula_refs", "scene_renderer", "media", "agent_input"],
   "properties": {
     "schema_version": {"const": "explainer-source-packet/0.1.0"},
     "paper_id": {"$ref": "#/$defs/id"},
@@ -62,6 +62,44 @@
       }
     },
     "formula_refs": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+    "equation_coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["equation_ids", "role", "thread_stage", "intent", "coverage", "animation_recipe", "source_refs"],
+        "properties": {
+          "equation_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "role": {"enum": ["premise", "prior_work", "bridge", "mechanism", "analysis", "extension"]},
+          "thread_stage": {"type": "string", "minLength": 1},
+          "intent": {"type": "string", "minLength": 1},
+          "coverage": {"enum": ["animate", "explain", "fold"]},
+          "animation_recipe": {"enum": ["formula_transition", "geometry", "metric_animation", "none"]},
+          "fold_reason": {"type": "string", "minLength": 1},
+          "source_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        },
+        "allOf": [{"if": {"properties": {"coverage": {"const": "fold"}}}, "then": {"required": ["fold_reason"]}}]
+      }
+    },
+    "finding_coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "question", "setting", "metric", "evidence_kind", "takeaway", "source_refs"],
+        "properties": {
+          "finding_id": {"$ref": "#/$defs/id"},
+          "question": {"type": "string", "minLength": 1},
+          "setting": {"type": "string", "minLength": 1},
+          "metric": {"type": "string", "minLength": 1},
+          "evidence_kind": {"enum": ["exact_table", "authors_reported_curve", "algebraic_analysis"]},
+          "takeaway": {"type": "string", "minLength": 1},
+          "source_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
     "scene_renderer": {
       "type": "object",
       "additionalProperties": false,

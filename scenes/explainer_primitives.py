@@ -172,6 +172,42 @@ class FormulaCodeBridge(VGroup):
         self.add(box, lines)
 
 
+class MetricBars(VGroup):
+    """Text-light horizontal metric bars with a fixed numeric scale.
+
+    Rows are deterministic paper values. A scene can transform one MetricBars
+    instance into another to express a controlled setting change.
+    """
+
+    def __init__(
+        self,
+        rows: list[tuple[str, float, str]],
+        *,
+        maximum: float,
+        decimals: int = 3,
+        suffix: str = "",
+        width: float = 4.8,
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        items = VGroup()
+        for label, value, color in rows:
+            name = Text(label, font_size=18, color=INK)
+            if name.width > 2.55:
+                name.scale_to_fit_width(2.55)
+            slot = Rectangle(width=2.65, height=0.38, stroke_opacity=0, fill_opacity=0)
+            name.move_to(slot).align_to(slot, LEFT)
+            track = RoundedRectangle(width=width, height=0.34, corner_radius=0.05, fill_color=SOFT, fill_opacity=1, stroke_width=0)
+            fill = RoundedRectangle(width=max(0.05, width * value / maximum), height=0.34, corner_radius=0.05, fill_color=color, fill_opacity=1, stroke_width=0)
+            fill.align_to(track, LEFT)
+            number = DecimalNumber(value, num_decimal_places=decimals, font_size=18, color=color)
+            if suffix:
+                number.add(Text(suffix, font="Menlo", font_size=14, color=color).next_to(number, RIGHT, buff=0.04))
+            items.add(VGroup(VGroup(slot, name), VGroup(track, fill), number).arrange(RIGHT, buff=0.2))
+        items.arrange(DOWN, aligned_edge=LEFT, buff=0.22)
+        self.add(items)
+
+
 class RoPERelativeRotation(VGroup):
     """Visualize separate m/n rotations and their relative angle in one plane."""
 

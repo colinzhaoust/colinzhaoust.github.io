@@ -100,9 +100,12 @@ class FormulaExplainerTests(unittest.TestCase):
             for ref in verification["test_refs"]:
                 self.assertTrue((ROOT / ref.split("::", 1)[0]).is_file())
             for ref in verification["golden_scene_refs"]:
-                path_ref, job_ref = ref.split("#job:", 1)
-                self.assertTrue((ROOT / path_ref).is_file())
-                self.assertIn(job_ref, completed_jobs)
+                if "#job:" in ref:
+                    path_ref, job_ref = ref.split("#job:", 1)
+                    self.assertTrue((ROOT / path_ref).is_file())
+                    self.assertIn(job_ref, completed_jobs)
+                else:
+                    self.assertTrue((ROOT / ref).is_file())
 
     def test_formula_operations_are_supported_by_bound_primitives(self):
         registry = load_json(REGISTRY_PATH)

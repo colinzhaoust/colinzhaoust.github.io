@@ -1,10 +1,7 @@
 WEBVTT
 
-00:00.000 --> 00:04.300
-Section 4 tests clipping factor, sampling temperature, and BF16 training with FP8 rollout.
+00:00.000 --> 00:01.500
+Under BF16 Train plus FP8 Rollout, compare held-out average pass at one at iteration 15.
 
-00:04.300 --> 00:08.200
-Table 7 reports an AMC pass-at-one average of 0.381 for the GRPO clip variants and 0.493 for P3O.
-
-00:08.200 --> 00:12.500
-In the BF16 Train plus FP8 Rollout setting, the reported iteration-30 values are 0.029 for GRPO and 0.529 for P3O.
+00:01.500 --> 00:04.267
+At iteration 30, Table 7 reports 0.029 for GRPO and 0.529 for P3O.

@@ -80,6 +80,24 @@
       "limitations": ["Semantic token matching needs TransformMatchingTex or authored grouping."]
     },
     {
+      "primitive_id": "manim.transform_matching_tex",
+      "canonical_node_id": "primitive:manim.transform_matching_tex",
+      "version": "0.19.0-0.20.1",
+      "origin": "built_in",
+      "origin_badge": {"label": "Manim built-in", "color": "#16A34A", "icon": "library"},
+      "source_symbol": "manim.TransformMatchingTex",
+      "source_revision": "manim-community-v0.19.0-v0.20.1",
+      "operations": ["formula_transition", "add", "subtract", "multiply", "divide"],
+      "inputs": ["source_math_tex", "target_math_tex"],
+      "outputs": ["token_matched_transition"],
+      "visual_states": {"initial": "prior equation", "intermediate": "shared symbols persist", "terminal": "next equation"},
+      "animation_contract": "Keep shared mathematical tokens spatially continuous so the reader sees exactly what a method adds, removes, or replaces.",
+      "status": "available",
+      "used_by": ["formula:feynrl.p3o_objective", "formula:rope.relative"],
+      "verification": {"test_refs": [], "golden_scene_refs": ["experiments/explainer_pipeline/micro_scene_manifest.json"]},
+      "limitations": ["Requires semantic TeX grouping when equivalent expressions use different tokenization."]
+    },
+    {
       "primitive_id": "manim.axes_vector",
       "canonical_node_id": "primitive:manim.axes_vector",
       "version": "0.20.1",
@@ -210,6 +228,24 @@
       "used_by": ["formula:rope.relative"],
       "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["The geometry exposes the exact relative-rotation identity; a numeric equality fixture is still absent."]
+    },
+    {
+      "primitive_id": "project.metric_bars",
+      "canonical_node_id": "primitive:project.metric_bars",
+      "version": "0.1.0",
+      "origin": "project_reusable",
+      "origin_badge": {"label": "Project reusable", "color": "#7C3AED", "icon": "wrench"},
+      "source_symbol": "scenes.explainer_primitives.MetricBars",
+      "source_revision": "explainer-pipeline-native/0.3.0",
+      "operations": ["metric_animation", "compare", "ablation", "setting_transition"],
+      "inputs": ["labels", "exact_values", "fixed_axis_maximum"],
+      "outputs": ["metric_bar_rows"],
+      "visual_states": {"initial": "baseline setting", "intermediate": "controlled setting changes", "terminal": "paper metric comparison"},
+      "animation_contract": "Keep metric, scale, and row identity fixed while transforming only the controlled setting and sourced values.",
+      "status": "available",
+      "used_by": ["formula:feynrl.p3o_objective", "formula:rope.relative"],
+      "verification": {"test_refs": ["tests/explainer_pipeline/test_pipeline.py::ExplainerPipelineTests.test_metric_bars_have_rendered_exact_value_evidence"], "golden_scene_refs": ["experiments/explainer_pipeline/micro_scene_manifest.json"]},
+      "limitations": ["Exact numeric rows only; qualitative paper curves require an explicit schematic label."]
     },
     {
       "primitive_id": "project.multihead_fanout",

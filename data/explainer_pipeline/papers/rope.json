@@ -33,14 +33,85 @@
       ]
     }
   ],
+  "equation_coverage": [
+    {"equation_ids": ["Eqs. 3–4"], "role": "prior_work", "thread_stage": "additive absolute position encoding", "intent": "Establish the additive construction used by learned and sinusoidal absolute position encodings.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["rope-paper:eq3-4"]},
+    {"equation_ids": ["Eqs. 5–10"], "role": "prior_work", "thread_stage": "additive and decomposed relative position encoding", "intent": "Show how prior methods insert relative terms into the expanded attention score.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["rope-paper:eq5-10"]},
+    {"equation_ids": ["Eq. 11"], "role": "premise", "thread_stage": "formulation of relative position encoding", "intent": "State the functional requirement that the inner product depend on m−n.", "coverage": "animate", "animation_recipe": "formula_transition", "source_refs": ["rope-paper:eq11"]},
+    {"equation_ids": ["Eqs. 12–13"], "role": "mechanism", "thread_stage": "two-dimensional rotary solution", "intent": "Solve the functional requirement in the complex plane and make the rotation geometric.", "coverage": "animate", "animation_recipe": "geometry", "source_refs": ["rope-paper:eq12-13"]},
+    {"equation_ids": ["Eqs. 14–16"], "role": "mechanism", "thread_stage": "d-dimensional RoPE and relative identity", "intent": "Pair feature dimensions and use orthogonality to obtain R at n−m in the attention score.", "coverage": "animate", "animation_recipe": "geometry", "source_refs": ["rope-paper:eq14-16"]},
+    {"equation_ids": ["Eqs. 17–19"], "role": "analysis", "thread_stage": "linear self-attention compatibility", "intent": "Show how rotation can be inserted without changing the kernelized attention form.", "coverage": "explain", "animation_recipe": "none", "source_refs": ["rope-paper:eq17-19"]},
+    {"equation_ids": ["Eqs. 20–34"], "role": "analysis", "thread_stage": "proof and efficient realization", "intent": "Prove intermediate identities and derive the elementwise implementation.", "coverage": "fold", "animation_recipe": "none", "fold_reason": "These equations support the derivation and implementation but repeat the same pairwise rotation operation; the website keeps the official code mapping and appendix link instead of thirteen near-duplicate animations.", "source_refs": ["rope-paper:eq20-34", "roformer-readme:rope-pseudocode"]},
+    {"equation_ids": ["Eqs. 35–37"], "role": "analysis", "thread_stage": "long-term decay", "intent": "Decompose the rotary score by frequency and bound how it changes with relative distance.", "coverage": "animate", "animation_recipe": "metric_animation", "source_refs": ["rope-paper:eq35-37", "rope-paper:fig2"]}
+  ],
+  "finding_coverage": [
+    {"finding_id": "translation_bleu", "question": "Does the RoFormer architecture retain translation quality?", "setting": "WMT14 English-to-German", "metric": "BLEU", "evidence_kind": "exact_table", "takeaway": "Table 1 reports 27.5 for RoFormer and 27.3 for Transformer-base.", "source_refs": ["rope-paper:table1"]},
+    {"finding_id": "pretraining_convergence", "question": "Does RoPE change the shown pre-training optimization trajectory?", "setting": "BookCorpus + Wikipedia MLM and Performer comparisons", "metric": "training loss over steps", "evidence_kind": "authors_reported_curve", "takeaway": "Figure 3 reports faster convergence for RoFormer and for Performer equipped with RoPE; the curves are not digitized here.", "source_refs": ["rope-paper:fig3"]},
+    {"finding_id": "glue_task_deltas", "question": "Is RoFormer uniformly better across GLUE tasks?", "setting": "Six GLUE datasets under the paper's pre-training setup", "metric": "task-specific validation scores", "evidence_kind": "exact_table", "takeaway": "Table 2 is mixed: RoFormer is higher on MRPC, STS-B, and QQP, but lower on SST-2, QNLI, and MNLI in the reported setup.", "source_refs": ["rope-paper:table2"]},
+    {"finding_id": "long_sequence_legal", "question": "Does a longer sequence setting help on long legal text?", "setting": "CAIL2019-SCM with RoFormer-512 versus RoFormer-1024", "metric": "test accuracy", "evidence_kind": "exact_table", "takeaway": "Table 5 reports 68.29 at length 512 and 69.79 at length 1024; sequential training stages and other confounds remain relevant.", "source_refs": ["rope-paper:table5"]},
+    {"finding_id": "long_term_decay", "question": "How does the rotary score behave as relative distance grows?", "setting": "frequency-paired decomposition in Eqs. 35–37", "metric": "upper bound on the summed rotary contribution", "evidence_kind": "algebraic_analysis", "takeaway": "The paper derives a distance-dependent bound and presents Figure 2 as evidence of long-term decay.", "source_refs": ["rope-paper:eq35-37", "rope-paper:fig2"]}
+  ],
   "formula_refs": ["data/formula_explainer/formulas/rope/relative.json"],
   "scene_renderer": {
     "engine": "Manim Community 0.19.0",
     "entrypoint": "scenes/explainer_pipeline_native.py",
     "coding_agent_required": false,
-    "scene_ids": ["RoPERelativeMicro", "RoPEFindings"]
+    "scene_ids": ["RoPEEquationLineageMicro", "RoPERelativeMicro", "RoPEDecayMicro", "RoPEResultsMicro"]
   },
   "media": [
+    {
+      "media_id": "rope-lineage-micro",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/rope/lineage-micro.mp4",
+      "sha256": "6ad38dfec069ece68b9eb2b8f80f7f3a2bb9f52628dd4d77bbb832ab06c3e740",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "Equation-transition scene from additive position encodings to the RoPE functional requirement and rotary solution."
+    },
+    {
+      "media_id": "rope-lineage-micro-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/rope/lineage-micro-poster.png",
+      "sha256": "69faee1f4abf5765968a07150d14071be0e5df6aa7c094bb3f51e7e8317f3356",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the RoPE equation-lineage micro-video."
+    },
+    {
+      "media_id": "rope-lineage-micro-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/rope/lineage-micro.vtt",
+      "sha256": "a64519effa9012aff367282b7594886d46a9a1e7361ed6da5bcb21116df649dc",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the RoPE equation-lineage micro-video."
+    },
+    {
+      "media_id": "rope-decay-micro",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/rope/decay-micro.mp4",
+      "sha256": "8b0ff57e8de3f048eea9965b12aa4905dbd0e82d2cf2db962c12f5116775129c",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "Text-light schematic animation of the distance-dependent bound discussed in RoFormer Equations 35 through 37."
+    },
+    {
+      "media_id": "rope-decay-micro-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/rope/decay-micro-poster.png",
+      "sha256": "9ef3ae390b8f630efc3fdc54c92f1e6e862cb8ff8adb05a5ae461ace0c44a341",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the RoPE long-term-decay micro-video."
+    },
+    {
+      "media_id": "rope-decay-micro-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/rope/decay-micro.vtt",
+      "sha256": "8b03594dee34eaf4cd5afbecb789a93345c0634362e7dbc14e8856449ee230ae",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the RoPE long-term-decay micro-video."
+    },
     {
       "media_id": "rope-relative-micro",
       "role": "video",
@@ -72,7 +143,7 @@
       "media_id": "rope-findings",
       "role": "video",
       "path": "data/explainer_pipeline/media/rope/findings.mp4",
-      "sha256": "d1bf4b3c0807652da9bf0ddce18ea303d7dad2c6bbe288a0c73850dd1e8899aa",
+      "sha256": "99d85bc10e0a0b1725e7b2415d788885389fcbeb6513b29190b5d7cf6bce0175",
       "media_type": "video/mp4",
       "origin": "project_new",
       "caption": "New Manim scene connecting the paper's stated properties to Table 1 and Figure 3 findings."
@@ -81,7 +152,7 @@
       "media_id": "rope-findings-poster",
       "role": "poster",
       "path": "data/explainer_pipeline/media/rope/findings-poster.png",
-      "sha256": "9e11f38ac2c1336b917aa5fa147f8ef1afcf9dc3e947987fe0487eeeb04be424",
+      "sha256": "301a9946a523b59cab2c3175a5e677470ae6439db859160cad1e54e9663f26f3",
       "media_type": "image/png",
       "origin": "project_new",
       "caption": "Poster for the RoPE findings scene."
@@ -90,7 +161,7 @@
       "media_id": "rope-findings-captions",
       "role": "captions",
       "path": "data/explainer_pipeline/media/rope/findings.vtt",
-      "sha256": "ea7b2c8fa837b9c19b4fb5143b9682791be913f1336e9a9d6a2107741e4a9200",
+      "sha256": "97516f9a6b5129fe69758608a5d35a4b6014109f2404a82641a6a155d39a66f5",
       "media_type": "text/vtt",
       "origin": "project_new",
       "caption": "English captions for the RoPE findings scene."
