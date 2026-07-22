@@ -11,6 +11,7 @@
     "sections": [
       {
         "id": "motivation",
+        "role": "motivation",
         "nav_label": "Motivation",
         "title": "Position information in self-attention",
         "intent": "Start from why attention loses order, then explain why the history moves from absolute position vectors toward relative position in the score before stating RoFormer's construction.",
@@ -29,6 +30,7 @@
       },
       {
         "id": "related_work",
+        "role": "lineage",
         "nav_label": "Related work",
         "title": "From absolute addition to relative attention",
         "intent": "Follow Eqs. 3–10 through additive and decomposed position terms so RoPE's multiplicative change is a visible answer to a known design thread.",
@@ -46,6 +48,7 @@
       },
       {
         "id": "formulation",
+        "role": "formulation",
         "nav_label": "Formulation",
         "title": "Formulation of relative position encoding",
         "intent": "Turn the desired relative-position dependence into the functional requirement of Eq. 11 before deriving a solution.",
@@ -64,6 +67,7 @@
       },
       {
         "id": "rope",
+        "role": "mechanism",
         "nav_label": "RoPE",
         "title": "Rotary position embedding",
         "intent": "Generalize the two-dimensional rotary solution and show how orthogonality converts absolute rotations into the relative identity of Eq. 16.",
@@ -82,6 +86,7 @@
       },
       {
         "id": "findings",
+        "role": "evidence",
         "nav_label": "Findings",
         "title": "Properties and experimental findings",
         "intent": "Separate algebraic properties and decay analysis from empirical evidence on translation, pre-training, GLUE, and longer-sequence legal judgment.",
@@ -101,6 +106,7 @@
       },
       {
         "id": "limits",
+        "role": "limitations",
         "nav_label": "Limits",
         "title": "What follows from Eq. 16, and what does not",
         "intent": "Preserve the paper's own admitted explanatory gaps and avoid turning a relative-position identity into an unconditional extrapolation guarantee.",

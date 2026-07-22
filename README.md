@@ -11,10 +11,10 @@ Phase 1 is evidence-backed offline prototyping and integration design:
 - The four website/research threads and their evidence/publication rules have an accepted design.
 - The q-5 canonical evidence contract validates completion, lineage, costs, licenses, and fail-closed public projection.
 - The q-6 Manim gallery backtranslation harness has a pinned ten-scene registry, offline one-shot/self-refine protocol, deterministic feedback, and synthetic dry-run manifests.
-- The paper + code explainer has reviewed FeynRL/RoPE bundles, paper-native equation and finding coverage, a Formula-IR-to-Manim capability graph, deterministic micro-videos, and a comparison-ready static website.
-- Live JSON adapters now cover Bedrock Runtime and OpenAI-compatible endpoints such as WInE and Bedrock Mantle. The website selector accepts only complete, validated, frozen model runs with independent provenance.
+- The paper + code explainer has reviewed FeynRL/RoPE bundles, model-proposed section policies, paper-native equation and finding coverage, a Formula-IR-to-Manim capability graph, deterministic micro-videos, and a comparison-ready static website.
+- Live JSON adapters cover Bedrock Runtime, Vertex AI, and OpenAI-compatible endpoints such as WInE and Bedrock Mantle. Complete Gemini 3.1 Pro and GPT-5.5 FeynRL/RoPE runs are frozen; the incomplete Qwen3 32B row is reported but excluded from the selector.
 
-This is still a research pipeline rather than a production service. The cross-model paid runs and cost reconciliation have not been executed in the checked-in environment, and generalizing the reviewed FeynRL/RoPE visual grammar to arbitrary papers remains open.
+This is still a research pipeline rather than a production service. The first cross-model API matrix is complete for Gemini 3.1 Pro and GPT-5.5 with recorded tokens, API time, estimated cost, repairs, and harness normalizations. Generalizing the reviewed FeynRL/RoPE visual grammar to arbitrary papers—and defining a fair comprehension evaluation beyond schema validity—remains open.
 
 ## Artifacts
 
@@ -42,8 +42,8 @@ The earlier landscape audit found 174 lesson pages on `3Blue1Brown.com`, of whic
 
 ## Candidate next milestones
 
-1. Pre-render the same frozen FeynRL/RoPE packets with GPT-5.5, Gemini 3.1 Pro, and Qwen conditions after binding credentials and immutable endpoint IDs.
-2. Add reservation/reconciliation cost evidence and resolved provider-version metadata to every paid comparison run.
-3. Evaluate model differences in intent recovery, equation coverage, finding coverage, and learner comprehension—not just prose style.
+1. Add reservation/reconciliation cost evidence and resolved provider-version metadata to every paid comparison run.
+2. Evaluate model differences in intent recovery, equation coverage, finding coverage, and learner comprehension—not just prose style or schema validity.
+3. Test smaller-model recovery with section budgets and source-prefix contracts without relaxing the frozen comparison boundary.
 4. Generalize the Formula-IR/Manim registry and native scene selection to new papers without runtime coding agents.
 5. Continue publishing only complete validated runs from public manifest projections.

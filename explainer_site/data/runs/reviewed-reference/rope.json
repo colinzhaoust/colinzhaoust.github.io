@@ -16,6 +16,19 @@
       "findings",
       "limits"
     ],
+    "section_policy": {
+      "mode": "model_proposed",
+      "min_sections": 5,
+      "max_sections": 8,
+      "required_roles": [
+        "motivation",
+        "lineage",
+        "mechanism",
+        "evidence",
+        "limitations"
+      ],
+      "sequence_rule": "Begin with why self-attention needs position, let the historical equation thread produce the functional requirement, derive and implement the rotary solution, then separate algebraic properties, empirical evidence, and limitations."
+    },
     "sources": [
       {
         "source_id": "rope-paper",
@@ -818,6 +831,7 @@
     "sections": [
       {
         "id": "motivation",
+        "role": "motivation",
         "nav_label": "Motivation",
         "title": "Position information in self-attention",
         "intent": "Start from why attention loses order, then explain why the history moves from absolute position vectors toward relative position in the score before stating RoFormer's construction.",
@@ -836,6 +850,7 @@
       },
       {
         "id": "related_work",
+        "role": "lineage",
         "nav_label": "Related work",
         "title": "From absolute addition to relative attention",
         "intent": "Follow Eqs. 3–10 through additive and decomposed position terms so RoPE's multiplicative change is a visible answer to a known design thread.",
@@ -853,6 +868,7 @@
       },
       {
         "id": "formulation",
+        "role": "formulation",
         "nav_label": "Formulation",
         "title": "Formulation of relative position encoding",
         "intent": "Turn the desired relative-position dependence into the functional requirement of Eq. 11 before deriving a solution.",
@@ -871,6 +887,7 @@
       },
       {
         "id": "rope",
+        "role": "mechanism",
         "nav_label": "RoPE",
         "title": "Rotary position embedding",
         "intent": "Generalize the two-dimensional rotary solution and show how orthogonality converts absolute rotations into the relative identity of Eq. 16.",
@@ -889,6 +906,7 @@
       },
       {
         "id": "findings",
+        "role": "evidence",
         "nav_label": "Findings",
         "title": "Properties and experimental findings",
         "intent": "Separate algebraic properties and decay analysis from empirical evidence on translation, pre-training, GLUE, and longer-sequence legal judgment.",
@@ -908,6 +926,7 @@
       },
       {
         "id": "limits",
+        "role": "limitations",
         "nav_label": "Limits",
         "title": "What follows from Eq. 16, and what does not",
         "intent": "Preserve the paper's own admitted explanatory gaps and avoid turning a relative-position identity into an unconditional extrapolation guarantee.",
@@ -1184,6 +1203,16 @@
       "formulation": {
         "blocks": [
           {
+            "type": "paper_question",
+            "label": "State the requirement before choosing a construction",
+            "question": "Can f_q and f_k each receive absolute position while their inner product depends on m−n?",
+            "context": "Equation 11 is a functional requirement. The rotary construction is introduced only after the paper specifies what the attention score must expose.",
+            "source_refs": [
+              "rope-paper:eq11",
+              "rope-paper:sec3.1"
+            ]
+          },
+          {
             "type": "formula_steps",
             "formula": "⟨f_q(x_m,m), f_k(x_n,n)⟩ = g(x_m,x_n,m−n)",
             "steps": [
@@ -1219,6 +1248,11 @@
               "rope-paper:eq11"
             ],
             "claim_label": "RoFormer Eq. 11"
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Does Eq. 11 already require a rotation matrix?",
+            "answer": "No. It states the desired dependency of the inner product. Rotation is the paper's solution to that requirement, developed in the following equations."
           }
         ]
       },
@@ -1341,6 +1375,11 @@
               "rope-paper:sec3.4.2",
               "roformer-readme:rope-pseudocode"
             ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why can the implementation use elementwise cosine, sine, and negate-and-swap instead of building R_m?",
+            "answer": "R_m is block diagonal with independent 2D rotations. Each adjacent coordinate pair can therefore compute q cos(mθ)+q_perp sin(mθ) directly."
           }
         ]
       },
@@ -1534,6 +1573,56 @@
         ]
       }
     },
+    "animation_plan": [
+      {
+        "section_id": "related_work",
+        "media_id": "rope-lineage-micro",
+        "purpose": "Turn the paper's position-encoding history into a visible equation thread.",
+        "before_state": "HTML names what each predecessor changes",
+        "after_state": "Eq. 11 appears as the unresolved design requirement",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "rope",
+        "media_id": "rope-relative-micro",
+        "purpose": "Show separate absolute rotations collapsing to a relative score.",
+        "before_state": "Eqs. 14-16 are parsed symbolically",
+        "after_state": "the reader can explain why n-m appears",
+        "adjacent_block_index": 1
+      },
+      {
+        "section_id": "rope",
+        "media_id": "rope-frequency-pairs-micro",
+        "purpose": "Generalize one 2D rotation into parallel frequency pairs.",
+        "before_state": "the relative identity is understood in two dimensions",
+        "after_state": "the efficient d-dimensional realization is visible",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "findings",
+        "media_id": "rope-decay-micro",
+        "purpose": "Animate the direction of the derived distance-dependent analysis without digitizing Figure 2.",
+        "before_state": "the algebraic claim is separated from empirical results",
+        "after_state": "the reader knows what the schematic does and does not establish",
+        "adjacent_block_index": 1
+      },
+      {
+        "section_id": "findings",
+        "media_id": "rope-findings",
+        "purpose": "Show mixed GLUE deltas and the longer-sequence comparison as separate evidence.",
+        "before_state": "task and metric differences are named",
+        "after_state": "the result is not misread as uniform dominance",
+        "adjacent_block_index": 4
+      },
+      {
+        "section_id": "findings",
+        "media_id": "rope-translation-result-micro",
+        "purpose": "Place the exact WMT14 BLEU values on one shared scale.",
+        "before_state": "the translation setting and metric are fixed",
+        "after_state": "the 0.2 BLEU difference is read at the correct evidence level",
+        "adjacent_block_index": 5
+      }
+    ],
     "appendix_entries": [
       {
         "id": "rope-provenance",
@@ -2482,7 +2571,7 @@
   },
   "generation": {
     "pipeline_version": "explainer-pipeline/0.1.0",
-    "source_packet_sha256": "432b9b27e0ab9267089027f05d5c3e290b1a8a4d85dd4cc1ac1fc8dd411862fe",
+    "source_packet_sha256": "e351de41e1997542eee1b2da8cc5c4de667cd798a87da1760cf64c2db0d735e0",
     "stage_traces": [
       {
         "stage": "concept_graph",
@@ -2490,11 +2579,23 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "990d8995a4770305b14a588febd1f89955ceb69e0d2a8ae067cfaa7a85db96bb",
+        "prompt_sha256": "ff9e082d0f3fef3a4e614a6ba8ab16ed94a00b49c9ee9c9d9b217e49f9cd7493",
+        "final_prompt_sha256": "ff9e082d0f3fef3a4e614a6ba8ab16ed94a00b49c9ee9c9d9b217e49f9cd7493",
         "response_sha256": "36fbfaa302beefbf01e2fe6e85954c8837e2cb84f94f387a25e0821d40a6b314",
         "source_record": "data/explainer_pipeline/replays/rope/concept_graph.json",
         "usage": null,
         "duration_ms": 0,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "ff9e082d0f3fef3a4e614a6ba8ab16ed94a00b49c9ee9c9d9b217e49f9cd7493",
+            "response_sha256": "36fbfaa302beefbf01e2fe6e85954c8837e2cb84f94f387a25e0821d40a6b314",
+            "usage": null,
+            "duration_ms": 0
+          }
+        ],
         "cost": {
           "status": "not_recorded",
           "estimated_usd": null,
@@ -2507,11 +2608,23 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "1fa1150a13fa4558b7e6a894f805b701114a78800787177690fc6d1cb61f0f5c",
-        "response_sha256": "c31ac2781eb0c58875617aa672568b0d6c2c01b19aff73102bae28a183c06fc0",
+        "prompt_sha256": "b9168950a916c01c11f79cdc334f61d313358ce1f48d34ca477f3dfd7cbf873b",
+        "final_prompt_sha256": "b9168950a916c01c11f79cdc334f61d313358ce1f48d34ca477f3dfd7cbf873b",
+        "response_sha256": "7d490898b74adbc06909b3f4ba58dab4760fb721ac22db2e99aa4057813b39f7",
         "source_record": "data/explainer_pipeline/replays/rope/lesson_plan.json",
         "usage": null,
         "duration_ms": 0,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "b9168950a916c01c11f79cdc334f61d313358ce1f48d34ca477f3dfd7cbf873b",
+            "response_sha256": "7d490898b74adbc06909b3f4ba58dab4760fb721ac22db2e99aa4057813b39f7",
+            "usage": null,
+            "duration_ms": 0
+          }
+        ],
         "cost": {
           "status": "not_recorded",
           "estimated_usd": null,
@@ -2524,11 +2637,23 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "b731f76f1513a287d86d2ea9268f8efc57b723b4e8cc8f50197db056c869e804",
-        "response_sha256": "1b23bf4069d9341010924436655ea8b7708a5b7c261d14c1ccaee01e7402d935",
+        "prompt_sha256": "b216df22775e13591c5579c693e142f5daddfd90c5462ffdf2e01f18e1919b02",
+        "final_prompt_sha256": "b216df22775e13591c5579c693e142f5daddfd90c5462ffdf2e01f18e1919b02",
+        "response_sha256": "db6215ceddbfdef9629b8615575da834f5dc3724388765793ae9df4523703b3f",
         "source_record": "data/explainer_pipeline/replays/rope/section_content.json",
         "usage": null,
         "duration_ms": 0,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "b216df22775e13591c5579c693e142f5daddfd90c5462ffdf2e01f18e1919b02",
+            "response_sha256": "db6215ceddbfdef9629b8615575da834f5dc3724388765793ae9df4523703b3f",
+            "usage": null,
+            "duration_ms": 0
+          }
+        ],
         "cost": {
           "status": "not_recorded",
           "estimated_usd": null,

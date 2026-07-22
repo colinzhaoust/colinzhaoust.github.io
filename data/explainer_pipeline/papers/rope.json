@@ -6,6 +6,13 @@
   "audience": "Readers who understand dot-product attention and want the paper's formulation, implementation, and empirical findings.",
   "central_question": "Can absolute position be encoded in query and key representations while their inner product depends explicitly on relative position?",
   "required_section_ids": ["motivation", "related_work", "formulation", "rope", "findings", "limits"],
+  "section_policy": {
+    "mode": "model_proposed",
+    "min_sections": 5,
+    "max_sections": 8,
+    "required_roles": ["motivation", "lineage", "mechanism", "evidence", "limitations"],
+    "sequence_rule": "Begin with why self-attention needs position, let the historical equation thread produce the functional requirement, derive and implement the rotary solution, then separate algebraic properties, empirical evidence, and limitations."
+  },
   "sources": [
     {
       "source_id": "rope-paper",

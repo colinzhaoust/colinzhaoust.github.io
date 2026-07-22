@@ -1,0 +1,7 @@
+WEBVTT
+
+00:00.000 --> 00:01.500
+Under BF16 Train plus FP8 Rollout, compare held-out average pass at one at iteration 15.
+
+00:01.500 --> 00:04.267
+At iteration 30, Table 7 reports 0.029 for GRPO and 0.529 for P3O.

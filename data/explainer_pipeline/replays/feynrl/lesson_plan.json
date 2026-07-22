@@ -11,6 +11,7 @@
     "sections": [
       {
         "id": "motivation",
+        "role": "motivation",
         "nav_label": "Motivation",
         "title": "Trust-region concern and off-policy concern",
         "intent": "Separate two concerns that a fixed clipping factor treats as one: limiting each update and correcting mismatch between the behavior and current policies.",
@@ -29,6 +30,7 @@
       },
       {
         "id": "related_work",
+        "role": "lineage",
         "nav_label": "Related work",
         "title": "Fixed clipping and prior policy-optimization objectives",
         "intent": "Trace how the score-function estimator becomes an importance-weighted objective and then a fixed-clipped objective, so the precise change made by P3O is visible.",
@@ -47,6 +49,7 @@
       },
       {
         "id": "ess",
+        "role": "mechanism",
         "nav_label": "ESS",
         "title": "Effective sample size of policy ratios",
         "intent": "Introduce the batch statistic that P3O will use to replace a preset clipping factor and control off-policy regularization.",
@@ -64,6 +67,7 @@
       },
       {
         "id": "p3o",
+        "role": "mechanism",
         "nav_label": "P3O",
         "title": "Policy-on Policy-off Policy Optimization",
         "intent": "Show where the same batch-computed e_B enters the score-function weight and behavioral KL term of the adopted P3O objective.",
@@ -82,6 +86,7 @@
       },
       {
         "id": "findings",
+        "role": "evidence",
         "nav_label": "Findings",
         "title": "Experimental findings",
         "intent": "Test the claimed removal of clip-factor tuning and robustness to behavior-policy mismatch across temperature and precision changes.",
@@ -100,6 +105,7 @@
       },
       {
         "id": "limits",
+        "role": "limitations",
         "nav_label": "Limits",
         "title": "Potential issue and claim boundary",
         "intent": "Examine the paper's two-anchor extension and preserve the boundary between tested regimes and a general stability claim.",

@@ -39,6 +39,8 @@ class StageProvider(Protocol):
 class ReplayProvider:
     """Replay reviewed JSON API outputs while preserving the production stage boundary."""
 
+    supports_fragmented_sections = False
+
     def __init__(self, replay_root: Path) -> None:
         self.replay_root = replay_root
 
@@ -72,6 +74,8 @@ class ReplayProvider:
 
 class BedrockProvider:
     """Live JSON-only provider using the AWS Bedrock Converse CLI."""
+
+    supports_fragmented_sections = True
 
     def __init__(
         self,
@@ -161,6 +165,8 @@ class BedrockProvider:
 
 class OpenAICompatibleProvider:
     """JSON-only adapter for WInE and Bedrock Mantle style HTTP endpoints."""
+
+    supports_fragmented_sections = True
 
     def __init__(
         self,
@@ -302,6 +308,8 @@ def _openai_usage(raw: dict[str, Any]) -> dict[str, int]:
 
 class VertexProvider:
     """Vertex Gemini adapter. Credential paths are consumed locally and never traced."""
+
+    supports_fragmented_sections = True
 
     def __init__(
         self,

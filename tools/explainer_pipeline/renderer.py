@@ -32,6 +32,23 @@ def _trace_summary(traces: list[dict[str, Any]]) -> dict[str, Any]:
     estimated_costs = [value for value in costs if isinstance(value, (int, float))]
     return {
         "stage_count": len(traces),
+        "api_call_count": sum(item.get("attempt_count", 1) for item in traces),
+        "repair_count": sum(
+            max(0, item.get("attempt_count", 1) - item.get("section_call_count", 1))
+            for item in traces
+        ),
+        "structural_compilation_count": sum(
+            len(item.get("structural_normalizations", [])) for item in traces
+        ),
+        "corrective_normalization_count": sum(
+            operation.get("operation") in {
+                "discard_model_media_glue_before_materialization",
+                "keep_first_shared_appendix_entry",
+                "drop_repeated_animation_after_first_use",
+            }
+            for item in traces
+            for operation in item.get("structural_normalizations", [])
+        ),
         "input_tokens": sum(item.get("input_tokens", 0) for item in usage_records) if usage_records else None,
         "output_tokens": sum(item.get("output_tokens", 0) for item in usage_records) if usage_records else None,
         "reasoning_tokens": sum(item.get("reasoning_tokens", 0) for item in usage_records) if usage_records else None,
@@ -153,6 +170,12 @@ def render_comparison_site(
                     "bundle": bundle_path.relative_to(output_dir).as_posix(),
                     "bundle_sha256": sha256_json(rendered),
                     "source_packet_sha256": bundle["generation"]["source_packet_sha256"],
+                    "section_count": len(bundle["lesson_plan"]["sections"]),
+                    "block_count": sum(
+                        len(section["blocks"])
+                        for section in bundle["section_content"]["sections"].values()
+                    ),
+                    "animation_count": len(bundle["section_content"].get("animation_plan", [])),
                     "trace_summary": _trace_summary(bundle["generation"]["stage_traces"]),
                 }
             )

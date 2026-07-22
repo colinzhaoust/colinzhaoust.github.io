@@ -254,11 +254,26 @@
             "source_refs": [
               "feynrl-paper:eq11"
             ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "If all four policy ratios doubled but stayed equal, would normalized ESS fall?",
+            "answer": "No. Equation 11 is scale-normalized. Equal ratios still distribute weight uniformly, so normalized ESS remains 1; concentration, not the common scale, lowers it."
           }
         ]
       },
       "p3o": {
         "blocks": [
+          {
+            "type": "paper_question",
+            "label": "What Eq. 12 must do",
+            "question": "Once e_B measures effective support, how should the objective respond to a batch that is less reliable for the current policy?",
+            "context": "P3O uses the same batch statistic in two places: it limits the detached score-function weight and increases behavioral KL regularization.",
+            "source_refs": [
+              "feynrl-paper:eq11",
+              "feynrl-paper:eq12"
+            ]
+          },
           {
             "type": "formula_steps",
             "formula": "L_P3O = −sg(min{ρ_t,e_B}) log π_θ A_t + (1−e_B) KL(π_θ || π_b)",
@@ -350,16 +365,9 @@
             ]
           },
           {
-            "type": "prose",
-            "heading": "Why P3O rather than another clip schedule",
-            "paragraphs": [
-              "In the paper's formulation, e_B is computed from the same batch used for the update. The score-function term and the off-policy regularizer therefore respond to measured mismatch rather than to a clipping factor chosen in advance. The implementation keeps the equation and code in the same conceptual scene."
-            ],
-            "source_refs": [
-              "feynrl-paper:sec3",
-              "feynrl-paper:eq12",
-              "feynrl-p3o:compute_policy_loss"
-            ]
+            "type": "learner_check",
+            "prompt": "Why is P3O not simply PPO with e_B substituted for an upper clipping bound?",
+            "answer": "Equation 12 also scales the behavioral KL term by 1−e_B, and the score term uses a detached min{ρ_t,e_B} weight. The batch statistic therefore couples two controls rather than replacing one constant."
           }
         ]
       },
@@ -476,6 +484,14 @@
         ]
       }
     },
+    "animation_plan": [
+      {"section_id": "related_work", "media_id": "feynrl-lineage-micro", "purpose": "Show the objective lineage as a sequence of changed controls rather than another paragraph.", "before_state": "fixed clipping and prior policy-optimization objectives are named in HTML", "after_state": "the reader can locate the batch-adaptive control introduced by P3O", "adjacent_block_index": 2},
+      {"section_id": "related_work", "media_id": "feynrl-offpolicy-bridge-micro", "purpose": "Make the sampling-distribution change and its two mathematical consequences visible.", "before_state": "the on-policy estimator is established", "after_state": "the behavior ratio and behavioral KL have distinct roles", "adjacent_block_index": 3},
+      {"section_id": "ess", "media_id": "feynrl-ess-micro", "purpose": "Hold token count fixed while ratio concentration changes normalized ESS.", "before_state": "the reader has compared two numeric fixtures", "after_state": "ESS is understood as effective support, not batch size", "adjacent_block_index": 2},
+      {"section_id": "p3o", "media_id": "feynrl-p3o-micro", "purpose": "Couple the two Eq. 12 controls through the same batch statistic.", "before_state": "both objective terms are named", "after_state": "the reader sees why P3O is not a clip-bound substitution", "adjacent_block_index": 2},
+      {"section_id": "findings", "media_id": "feynrl-clip-result-micro", "purpose": "Collapse the clipping-factor sweep into one exact held-out comparison.", "before_state": "the experimental question and metric are fixed", "after_state": "the exact Table 7 comparison can be interpreted without axis ambiguity", "adjacent_block_index": 1},
+      {"section_id": "findings", "media_id": "feynrl-findings", "purpose": "Show the reported training change under the precision-mismatch setting.", "before_state": "the setting and evidence kind are explicit", "after_state": "the trajectory is tied back to the paper's reported finding", "adjacent_block_index": 4}
+    ],
     "appendix_entries": [
       {
         "id": "feynrl-provenance",

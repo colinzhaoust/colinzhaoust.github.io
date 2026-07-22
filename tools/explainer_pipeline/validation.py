@@ -78,7 +78,8 @@ def validate_source_packet(packet: dict[str, Any], check_local_assets: bool = Tr
             if not isinstance(line_start, int) or not isinstance(line_end, int) or line_start < 1 or line_end < line_start:
                 errors.append(f"invalid {label} line range: {path_value}:{line_start}-{line_end}")
                 return
-            line_count = sum(1 for _ in upstream_path.open(encoding="utf-8", errors="replace"))
+            with upstream_path.open(encoding="utf-8", errors="replace") as upstream_file:
+                line_count = sum(1 for _ in upstream_file)
             if line_end > line_count:
                 errors.append(f"{label} line range exceeds {path_value}: {line_end} > {line_count}")
 
@@ -129,8 +130,14 @@ def validate_source_packet(packet: dict[str, Any], check_local_assets: bool = Tr
         raise ExplainerValidationError("source packet invalid:\n" + "\n".join(f"- {item}" for item in errors))
 
 
-def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str, Any]) -> None:
+def validate_stage_payload(
+    stage: str,
+    payload: dict[str, Any],
+    packet: dict[str, Any],
+    prior_outputs: dict[str, Any] | None = None,
+) -> None:
     errors: list[str] = []
+    prior_outputs = prior_outputs or {}
     if stage == "concept_graph":
         required = {"thesis", "nodes", "edges", "unresolved"}
         if not required.issubset(payload):
@@ -140,15 +147,35 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
             if edge.get("source") not in node_ids or edge.get("target") not in node_ids:
                 errors.append(f"dangling concept edge: {edge}")
     elif stage == "lesson_plan":
-        required_ids = packet.get("required_section_ids", [])
         sections = payload.get("sections", [])
         section_ids = [item.get("id") for item in sections if isinstance(item, dict)]
-        if section_ids != required_ids:
-            errors.append(f"lesson section order {section_ids} != required {required_ids}")
+        policy = packet.get("section_policy", {"mode": "fixed"})
+        if policy.get("mode") == "model_proposed":
+            if not policy.get("min_sections", 3) <= len(sections) <= policy.get("max_sections", 10):
+                errors.append(
+                    f"lesson needs {policy.get('min_sections')}-{policy.get('max_sections')} sections; got {len(sections)}"
+                )
+            if len(section_ids) != len(set(section_ids)):
+                errors.append("lesson section IDs must be unique")
+            roles = [item.get("role") for item in sections if isinstance(item, dict)]
+            missing_roles = set(policy.get("required_roles", [])) - set(roles)
+            if missing_roles:
+                errors.append(f"lesson missing required roles {sorted(missing_roles)}")
+            if roles and roles[0] != "motivation":
+                errors.append("lesson must begin with the motivation role")
+            if roles and roles[-1] != "limitations":
+                errors.append("lesson must end with the limitations role")
+        else:
+            required_ids = packet.get("required_section_ids", [])
+            if section_ids != required_ids:
+                errors.append(f"lesson section order {section_ids} != required {required_ids}")
         for section in sections:
-            for field in ("title", "intent", "question", "learning_goal", "misconception", "summary", "medium"):
+            for field in ("role", "nav_label", "title", "intent", "question", "learning_goal", "misconception", "summary", "medium"):
                 if not section.get(field):
                     errors.append(f"section {section.get('id')} missing {field}")
+            deep_links = section.get("deep_links")
+            if not isinstance(deep_links, list) or any(not isinstance(item, str) or not item for item in deep_links):
+                errors.append(f"section {section.get('id')} deep_links must be appendix ID strings")
     elif stage == "section_content":
         allowed_blocks = {
             "prose", "comparison", "formula_steps", "code", "video", "micro_video",
@@ -157,13 +184,42 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
             "paper_question", "related_reading",
             "equation_thread", "result_story",
         }
+        required_block_fields = {
+            "paper_question": {"label", "question", "context"},
+            "prose": {"heading", "paragraphs"},
+            "comparison": {"columns"},
+            "lineage": {"nodes", "edges"},
+            "equation_thread": {"title", "stages", "folded"},
+            "formula_steps": {"formula", "claim_label", "steps"},
+            "numeric_fixture": {"title", "formula", "fixtures", "note", "claim_label"},
+            "rotation": {"title", "angle_label", "formula", "note", "claim_label"},
+            "code": {"code_source_id", "path", "symbol", "lines"},
+            "video": {"media_id", "poster_id", "captions_id", "title", "caption", "beats"},
+            "micro_video": {"media_id", "poster_id", "captions_id", "title", "intro", "observation", "consequence", "beats"},
+            "result_story": {"question", "setting", "metric", "evidence_kind", "evidence", "takeaway"},
+            "line_chart": {"title", "x_label", "y_label", "series", "claim_label"},
+            "bar_chart": {"title", "axis_min", "axis_max", "unit", "groups", "claim_label"},
+            "reported_trends": {"title", "items", "claim_label"},
+            "related_reading": {"title", "items"},
+            "limitation": {"items"},
+            "learner_check": {"prompt", "answer"},
+        }
         media_ids = {item.get("media_id") for item in packet.get("media", [])}
         code_ids = {item.get("code_id") for item in packet.get("code_sources", [])}
+        source_prefixes = {
+            item.get("source_id") for item in packet.get("sources", [])
+        } | code_ids
         sections = payload.get("sections")
         if not isinstance(sections, dict):
             errors.append("section_content.sections must be an object")
         else:
-            required_ids = packet.get("required_section_ids", [])
+            lesson_sections = prior_outputs.get("lesson_plan", {}).get("sections", [])
+            required_ids = (
+                [item.get("id") for item in lesson_sections]
+                if lesson_sections
+                else packet.get("required_section_ids", [])
+            )
+            role_by_id = {item.get("id"): item.get("role") for item in lesson_sections}
             if list(sections) != required_ids:
                 errors.append("section content order must match required section IDs")
             for section_id, value in sections.items():
@@ -171,13 +227,33 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
                 if not isinstance(blocks, list) or not blocks:
                     errors.append(f"section {section_id} must contain blocks")
                     continue
+                role = role_by_id.get(section_id)
+                if blocks and blocks[0].get("type") in {"video", "micro_video"}:
+                    errors.append(f"section {section_id} cannot begin with animation")
+                animation_count = sum(block.get("type") in {"video", "micro_video"} for block in blocks)
+                content_count = len(blocks) - animation_count
+                max_content_blocks = 6
+                if not 2 <= content_count <= max_content_blocks:
+                    errors.append(
+                        f"section {section_id} needs 2-{max_content_blocks} non-media blocks; got {content_count}"
+                    )
+                animation_limit = 3 if role == "evidence" else 2
+                if animation_count > animation_limit:
+                    errors.append(f"section {section_id} has {animation_count} animations; limit is {animation_limit}")
                 for index, block in enumerate(blocks):
                     block_type = block.get("type") if isinstance(block, dict) else None
                     if block_type not in allowed_blocks:
                         errors.append(f"section {section_id} block {index} has unsupported type {block_type}")
                         continue
+                    missing_fields = required_block_fields[block_type] - set(block)
+                    if missing_fields:
+                        errors.append(f"section {section_id} block {index} missing {sorted(missing_fields)}")
                     if block_type != "learner_check" and not block.get("source_refs"):
                         errors.append(f"section {section_id} block {index} needs source_refs")
+                    for source_ref in block.get("source_refs", []):
+                        prefix = str(source_ref).split(":", 1)[0]
+                        if prefix not in source_prefixes:
+                            errors.append(f"section {section_id} block {index} has unknown source prefix {prefix}")
                     if block_type in {"video", "micro_video"}:
                         for field in ("media_id", "poster_id", "captions_id"):
                             if block.get(field) not in media_ids:
@@ -190,6 +266,30 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
                         errors.append(f"section {section_id} code block has unknown code_source_id")
                     if block_type in {"bar_chart", "line_chart", "reported_trends"} and not block.get("claim_label"):
                         errors.append(f"section {section_id} result block needs claim_label")
+                    if block_type == "bar_chart":
+                        if not block.get("groups"):
+                            errors.append(f"section {section_id} bar chart needs at least one group")
+                        if not isinstance(block.get("axis_min"), (int, float)) or not isinstance(block.get("axis_max"), (int, float)):
+                            errors.append(f"section {section_id} bar chart needs numeric axis bounds")
+                        elif block["axis_max"] <= block["axis_min"]:
+                            errors.append(f"section {section_id} bar chart axis_max must exceed axis_min")
+                    if block_type == "line_chart":
+                        series = block.get("series")
+                        if not isinstance(series, list) or not series:
+                            errors.append(f"section {section_id} line chart needs at least one series")
+                        else:
+                            for series_index, item in enumerate(series):
+                                if not all(item.get(field) not in (None, "") for field in ("label", "accent")):
+                                    errors.append(f"section {section_id} line chart series {series_index} needs label and accent")
+                                points = item.get("points")
+                                if not isinstance(points, list) or not points:
+                                    errors.append(f"section {section_id} line chart series {series_index} needs points")
+                                elif any(not isinstance(point.get("x"), (int, float)) or not isinstance(point.get("y"), (int, float)) for point in points):
+                                    errors.append(f"section {section_id} line chart series {series_index} points need numeric x and y")
+                    if block_type == "formula_steps" and not block.get("steps"):
+                        errors.append(f"section {section_id} formula steps needs at least one step")
+                    if block_type == "code" and not block.get("lines"):
+                        errors.append(f"section {section_id} code block needs at least one line")
                     if block_type == "related_reading":
                         for item in block.get("items", []):
                             if not str(item.get("url", "")).startswith("https://"):
@@ -201,9 +301,38 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
                         for field in ("question", "setting", "metric", "evidence_kind", "takeaway"):
                             if not block.get(field):
                                 errors.append(f"section {section_id} result story needs {field}")
+        animation_plan = payload.get("animation_plan")
+        if not isinstance(animation_plan, list):
+            errors.append("section_content.animation_plan must be an array")
+        else:
+            planned = []
+            for decision in animation_plan:
+                for field in ("section_id", "media_id", "purpose", "before_state", "after_state", "adjacent_block_index"):
+                    if decision.get(field) in (None, ""):
+                        errors.append(f"animation plan decision needs {field}")
+                section_id = decision.get("section_id")
+                block_index = decision.get("adjacent_block_index")
+                blocks = sections.get(section_id, {}).get("blocks", []) if isinstance(sections, dict) else []
+                if not isinstance(block_index, int) or not 0 <= block_index < len(blocks):
+                    errors.append(f"animation plan has invalid block index for {section_id}: {block_index}")
+                    continue
+                block = blocks[block_index]
+                if block.get("type") not in {"video", "micro_video"} or block.get("media_id") != decision.get("media_id"):
+                    errors.append(f"animation plan does not match {section_id} block {block_index}")
+                planned.append((section_id, decision.get("media_id")))
+            selected = [
+                (section_id, block.get("media_id"))
+                for section_id, value in (sections or {}).items()
+                for block in value.get("blocks", [])
+                if block.get("type") in {"video", "micro_video"}
+            ] if isinstance(sections, dict) else []
+            if sorted(planned) != sorted(selected):
+                errors.append("animation_plan must account for every selected video exactly once")
         appendix_entries = payload.get("appendix_entries", [])
         appendix_ids = [item.get("id") for item in appendix_entries if isinstance(item, dict)]
-        if len(appendix_ids) != len(set(appendix_ids)):
+        if any(not isinstance(item, str) or not item for item in appendix_ids):
+            errors.append("appendix entry IDs must be non-empty strings")
+        elif len(appendix_ids) != len(set(appendix_ids)):
             errors.append("appendix entry IDs must be unique")
     else:
         errors.append(f"unsupported stage: {stage}")
@@ -222,9 +351,14 @@ def validate_bundle(bundle: dict[str, Any], check_local_assets: bool = True) -> 
     content_ids = list(bundle.get("section_content", {}).get("sections", {}))
     if section_ids != content_ids:
         errors.append("lesson plan and section content IDs/order must match")
-    appendix_ids = {item.get("id") for item in bundle.get("section_content", {}).get("appendix_entries", [])}
+    raw_appendix_ids = [item.get("id") for item in bundle.get("section_content", {}).get("appendix_entries", []) if isinstance(item, dict)]
+    appendix_ids = {item for item in raw_appendix_ids if isinstance(item, str)}
     for section in bundle.get("lesson_plan", {}).get("sections", []):
-        dangling = set(section.get("deep_links", [])) - appendix_ids
+        deep_links = section.get("deep_links", [])
+        if not isinstance(deep_links, list) or any(not isinstance(item, str) for item in deep_links):
+            errors.append(f"section {section.get('id')} has invalid appendix deep-link IDs")
+            continue
+        dangling = set(deep_links) - appendix_ids
         if dangling:
             errors.append(f"section {section.get('id')} has dangling appendix refs {sorted(dangling)}")
     formula_map = bundle.get("formula_map", {})

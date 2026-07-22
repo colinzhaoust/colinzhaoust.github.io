@@ -21,7 +21,9 @@ The responsibility split is strict:
 | Choose among allowed content/block and registered scene identifiers. | Compile Formula IR, resolve the Manim registry, render HTML and approved micro-videos, hash artifacts, and publish the static site. |
 | Never emit or execute Python, HTML, Manim source, or shell. | Never silently repair a model's scientific claim by changing its meaning. |
 
-The checked-in `reviewed-reference` is a human/Codex-reviewed target condition, not the output of a live candidate model. Its scientific narrative and teaching choices were iterated manually from paper/code evidence and user critique. Live GPT, Gemini, and Qwen endpoints have only passed connectivity smoke tests so far. The harness contributes repeatability, validation, deterministic Formula/Code maps, Manim rendering, and publication, but those mechanisms do not by themselves create the reference run's explanatory judgment.
+The checked-in `reviewed-reference` is a human/Codex-reviewed target condition, not the output of a live candidate model. Its scientific narrative and teaching choices were iterated manually from paper/code evidence and user critique. On 2026-07-22, the same frozen FeynRL/RoPE packets were also run end-to-end through Gemini 3.1 Pro Preview on Vertex AI and GPT-5.5 through Bedrock Mantle. Those live outputs are preserved without manual prose editing. Qwen3 32B passed connectivity and several individual scenes but did not complete the frozen matrix: its FeynRL ESS section exceeded the 2–6 non-media block budget on all three local repair attempts, so no incomplete Qwen bundle appears in the selector.
+
+The live matrix makes the attribution boundary measurable. The model chooses the concept graph, section split, prose/data blocks, source refs, and semantic animation plan. The harness validates and locally retries typed output, materializes registered media glue, resolves mechanical indexes, gives shared appendix/media IDs first-use ownership, removes duplicate animation reuse, renders, and hashes. The overview reports API calls, semantic repairs, harness compilation operations, and corrective normalizations separately; a structurally valid model run should not be confused with the reviewed reference's explanatory judgment.
 
 In the reviewed demo, source packets and model-stage outputs are frozen fixtures. In a production package, `source_grounding` is also a model API stage; the same harness records and validates its result before the three planning stages begin.
 
@@ -49,6 +51,30 @@ The run stores the extracted corpus, prompt/response hashes, source packet, stag
 ## Frozen model-run comparison
 
 The top-right selector switches complete runs, not a model-name label. Each selectable run has independent validated bundles, bundle hashes, source-packet hashes, provider/model IDs, generation mode, and per-stage prompt/response hashes. A candidate does not appear in the selector until every requested paper bundle exists and passes validation.
+
+The reusable matrix runner takes papers and provider definitions from one local JSON specification. Credential paths may appear only in an ignored local copy; the tracked example contains placeholders.
+
+```bash
+cp data/explainer_pipeline/model_matrix.example.json runs/model-matrix.local.json
+# Fill only the ignored local copy, then run three model rows in parallel.
+python3 -m tools.explainer_pipeline.cli model-matrix \
+  runs/model-matrix.local.json \
+  --run-root runs/explainer_pipeline/model-matrix \
+  --output explainer_site \
+  --workers 3
+```
+
+Models run in parallel, while each model processes papers sequentially. A paper uses one concept-graph call, one lesson-plan call, then one bounded content call per planned section. Each section is validated and repaired locally before merge. This avoids regenerating an entire website because one section has a bad media index or source prefix. Transport failures retry the original prompt; semantic failures receive validator feedback and the invalid typed payload. A failed model row does not cancel or contaminate completed rows.
+
+The first frozen live matrix produced:
+
+| Run | Papers complete | Sections (FeynRL / RoPE) | Blocks | Unique animations | Tokens | API time | Estimated API cost |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Gemini 3.1 Pro Preview | 2/2 | 6 / 6 | 32 / 35 | 5 / 6 | 262.2K | 11.2 min | $0.62 |
+| GPT-5.5 | 2/2 | 6 / 7 | 38 / 46 | 5 / 5 | 216.4K | 12.0 min | $2.97 |
+| Qwen3 32B | 0/2 published | incomplete | incomplete | incomplete | not reconciled | failed boundary | unavailable |
+
+These are recorded endpoint totals for this run, not general benchmark claims. Gemini produced a more compact curriculum; GPT-5.5 used more content blocks and split RoPE into seven sections. Both required deterministic media compilation; Qwen's incomplete row remains visible as a failure note instead of being promoted to the switcher.
 
 The default comparison is a planner comparison:
 
@@ -136,17 +162,16 @@ The comparison matrix is intentionally limited to GPT-5.5, Gemini 3.1 Pro, Qwen3
 
 ## Paper-native sectioning
 
-The generic contract requires a motivation and related-work entry and ends with findings and limits. The internal mechanism sections follow the source paper rather than a universal slide template.
+The source packet carries a section policy rather than a universal slide template. In `model_proposed` mode, the model chooses 5–8 stable sections while satisfying a prerequisite sequence: motivation first, required lineage/mechanism/evidence roles covered, and limitations last. Each planned section must state its intent, learner question, learning goal, likely misconception, summary, source refs, medium, and appendix IDs before content generation begins.
 
-FeynRL:
+The reviewed targets use:
 
-`motivation → related_work → ess → p3o → findings → limits → 07 Formula → 08 Code`
+- FeynRL: `motivation → related_work → ess → p3o → findings → limits`;
+- RoPE: `motivation → related_work → formulation → rope → findings → limits`.
 
-RoPE:
+Live models are allowed to split differently. In the frozen run, Gemini used six RoPE sections and separated algebraic properties from the rotary mechanism; GPT-5.5 used seven and separated formulation, RoPE, and properties. The renderer reads the validated lesson plan dynamically, so model-proposed IDs become navigation without changing HTML/CSS.
 
-`motivation → related_work → formulation → rope → findings → limits → 07 Formula → 08 Code`
-
-Titles, questions, and mechanism labels preserve the papers' terminology. Short code excerpts can still appear beside a mechanism. `07 Formula` and `08 Code` are compiled deterministically after the generated learning sections; neither is another LLM-authored section.
+Titles, questions, and mechanism labels preserve the papers' terminology. Short code excerpts can still appear beside a mechanism. Formula and Code views are compiled deterministically after the generated learning sections; neither is another LLM-authored section.
 
 The formula view is a bipartite capability graph. Formula and operation nodes come from the source packet's formula IR. Manim nodes come from `data/formula_explainer/primitive_registry.json`. Edges preserve three different claims: an implemented callable mapping, a compatible candidate, or an unresolved mapping. This makes missing animation capabilities visible instead of silently improvising a scene.
 

@@ -7,20 +7,33 @@ from pathlib import Path
 
 from .common import DATA_ROOT, ROOT, load_json
 from .ingestion import IngestionError, ingest_source_packet
+from .model_matrix import MatrixError, normalize_repeated_animation_media, run_model_matrix
 from .pipeline import replay_provider, run_pipeline
 from .providers import BedrockProvider, OpenAICompatibleProvider, ProviderError, VertexProvider
 from .renderer import render_comparison_site, render_site
-from .validation import ExplainerValidationError, validate_bundle_file
+from .validation import ExplainerValidationError, validate_bundle, validate_bundle_file
 
 
 def _resolve(path: Path) -> Path:
     return path if path.is_absolute() else ROOT / path
 
 
+def _validated_normalized_bundle(path: Path) -> dict:
+    bundle = validate_bundle_file(path)
+    normalize_repeated_animation_media(bundle)
+    validate_bundle(bundle)
+    return bundle
+
+
 def _live_provider(args: argparse.Namespace):
     env_file = _resolve(args.env_file) if args.env_file else None
     if args.mode == "bedrock":
-        return BedrockProvider(model_id=args.model_id, env_file=env_file)
+        return BedrockProvider(
+            model_id=args.model_id,
+            region=args.region,
+            env_file=env_file,
+            max_tokens=args.max_tokens,
+        )
     if args.mode == "vertex":
         if not args.credential_file or not args.project_id:
             raise ValueError("--credential-file and --project-id are required for vertex mode")
@@ -29,6 +42,8 @@ def _live_provider(args: argparse.Namespace):
             credential_file=_resolve(args.credential_file),
             project_id=args.project_id,
             location=args.location,
+            max_tokens=args.max_tokens,
+            timeout=args.timeout,
         )
     if not args.base_url:
         raise ValueError("--base-url is required for openai-compatible mode")
@@ -39,6 +54,8 @@ def _live_provider(args: argparse.Namespace):
         env_file=env_file,
         api_path=args.api_path,
         provider_name=args.provider_name,
+        max_tokens=args.max_tokens,
+        timeout=args.timeout,
     )
 
 
@@ -47,6 +64,10 @@ def _add_live_provider_arguments(parser: argparse.ArgumentParser, *, include_rep
     parser.add_argument("--mode", choices=modes, default="replay" if include_replay else "bedrock")
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--model-id", default="qwen.qwen3-32b-v1:0")
+    parser.add_argument("--region", default="us-east-1")
+    parser.add_argument("--max-tokens", type=int, default=8000)
+    parser.add_argument("--timeout", type=int, default=300)
+    parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument("--base-url")
     parser.add_argument("--api-path", default="chat/completions")
     parser.add_argument("--api-key-env", default="OPENAI_API_KEY")
@@ -91,6 +112,13 @@ def main() -> int:
     package.add_argument("--output", type=Path)
     _add_live_provider_arguments(package, include_replay=False)
 
+    matrix = sub.add_parser("model-matrix", help="run complete frozen paper bundles across several model providers")
+    matrix.add_argument("specification", type=Path)
+    matrix.add_argument("--run-root", type=Path, default=ROOT / "runs" / "explainer_pipeline" / "model-matrix")
+    matrix.add_argument("--output", type=Path, default=ROOT / "explainer_site")
+    matrix.add_argument("--workers", type=int, default=3)
+    matrix.add_argument("--no-resume", action="store_true")
+
     args = parser.parse_args()
     try:
         if args.command == "run":
@@ -101,7 +129,7 @@ def main() -> int:
                 if args.mode == "replay"
                 else _live_provider(args)
             )
-            bundle = run_pipeline(source, run_root, provider)
+            bundle = run_pipeline(source, run_root, provider, max_attempts=args.max_attempts)
             print(json.dumps(bundle["generation"], indent=2))
         elif args.command == "build-site":
             bundle_paths = args.bundle or [
@@ -155,7 +183,7 @@ def main() -> int:
                         "status": run_spec.get("status", "generated"),
                         "model_summary": run_spec.get("model_summary", "Model identity is recorded by immutable provider and model IDs."),
                         "endpoint": run_spec.get("endpoint", "recorded in run manifest"),
-                        "bundles": [validate_bundle_file(path) for path in bundle_paths],
+                        "bundles": [_validated_normalized_bundle(path) for path in bundle_paths],
                     }
                 )
             print(
@@ -168,6 +196,15 @@ def main() -> int:
                     indent=2,
                 )
             )
+        elif args.command == "model-matrix":
+            result = run_model_matrix(
+                _resolve(args.specification),
+                run_root=_resolve(args.run_root),
+                output_dir=_resolve(args.output),
+                workers=args.workers,
+                resume=not args.no_resume,
+            )
+            print(json.dumps(result, ensure_ascii=False, indent=2))
         else:
             run_root = _resolve(args.run_root or Path("runs") / "explainer_pipeline" / "packages" / args.paper_id)
             output = _resolve(args.output or run_root / "site")
@@ -183,10 +220,10 @@ def main() -> int:
                 audience=args.audience,
             )
             source_path = run_root / "source_packet.json"
-            bundle = run_pipeline(source_path, run_root / "pipeline", provider)
+            bundle = run_pipeline(source_path, run_root / "pipeline", provider, max_attempts=args.max_attempts)
             manifest = render_site([bundle], output)
             print(json.dumps({"source_packet": source_path.as_posix(), "site": output.as_posix(), "manifest": manifest}, indent=2))
-    except (ExplainerValidationError, IngestionError, ProviderError, OSError, json.JSONDecodeError, ValueError) as exc:
+    except (ExplainerValidationError, IngestionError, MatrixError, ProviderError, OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"explainer pipeline: FAIL\n{exc}", file=sys.stderr)
         return 2
     return 0

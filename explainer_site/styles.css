@@ -89,7 +89,21 @@ main { min-height: calc(100vh - 140px); }
 .question-line b, .intent-line b { color: var(--orange); font-family: var(--mono); font-size: .7rem; }
 .intent-line { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
 .intent-line b { color: var(--green); }
+.learning-contract { margin-top: 28px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-block: 1px solid var(--line-strong); }
+.learning-contract > div:not(.learning-modes) { padding: 18px 22px 18px 0; }
+.learning-contract > div:nth-child(2) { padding-left: 22px; border-left: 1px solid var(--line); }
+.learning-contract b { display: block; margin-bottom: 7px; color: var(--muted); font: 800 .58rem var(--mono); letter-spacing: .09em; }
+.learning-contract span { font: .86rem/1.48 var(--serif); }
+.learning-modes { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 18px; padding: 12px 0; border-top: 1px solid var(--line); }
+.learning-modes span { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font: 700 .63rem var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.learning-modes i { width: 21px; height: 21px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--orange); font-style: normal; }
 .blocks { display: grid; gap: clamp(36px, 6vw, 76px); padding-top: 44px; }
+.section-outcome { margin-top: clamp(58px, 9vw, 110px); display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(28px, 6vw, 80px); padding-block: 30px; border-block: 1px solid var(--line-strong); }
+.section-outcome strong { display: block; margin-top: 10px; max-width: 38ch; font: 600 1.2rem/1.35 var(--serif); }
+.section-outcome button { min-height: 90px; padding: 0; display: grid; align-content: center; gap: 8px; text-align: left; border: 0; color: var(--ink); background: transparent; cursor: pointer; }
+.section-outcome button:hover span { color: var(--violet); }
+.section-outcome small { color: var(--orange); font: 800 .6rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.section-outcome button span { font: 600 1rem/1.35 var(--serif); transition: color .18s cubic-bezier(.25, 1, .5, 1); }
 .block { min-width: 0; }
 .block h2, .block h3 { font-family: var(--serif); line-height: 1.12; }
 .block h2 { margin: 8px 0 18px; font-size: clamp(1.7rem, 3vw, 2.75rem); font-weight: 600; }
@@ -193,6 +207,15 @@ main { min-height: calc(100vh - 140px); }
 
 .chart { padding: 28px; border: 1px solid var(--line-strong); background: var(--paper-2); }
 .chart-bars { display: grid; gap: 18px; margin-top: 28px; }
+.line-chart-wrap { margin-top: 24px; }
+.line-chart-svg { display: block; width: 100%; height: auto; background: var(--paper-2); border: 1px solid var(--line); }
+.line-chart-svg line { stroke: var(--line-strong); stroke-width: 1.5; }
+.line-chart-svg polyline { fill: none; stroke: var(--series-color); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+.line-chart-svg circle { fill: var(--series-color); stroke: var(--paper); stroke-width: 2; }
+.line-chart-svg text { fill: var(--muted); font: 700 11px var(--mono); }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 12px 22px; margin-top: 14px; color: var(--muted); font: 700 .64rem var(--mono); }
+.chart-legend span { display: inline-flex; gap: 7px; align-items: center; }
+.chart-legend i { width: 18px; height: 3px; background: var(--legend-color); }
 .chart-row { display: grid; grid-template-columns: minmax(110px, 1fr) minmax(180px, 3fr) 80px; gap: 16px; align-items: center; }
 .chart-track { height: 30px; position: relative; background: var(--paper); border-left: 1px solid var(--ink); }
 .chart-fill { height: 100%; width: var(--width); min-width: 2px; background: var(--bar-color); }
@@ -421,6 +444,9 @@ footer { min-height: 80px; padding: 22px clamp(18px, 4vw, 52px); display: flex; 
   .lesson-header h1 { font-size: clamp(2.7rem, 15vw, 4.3rem); }
   .comparison, .fixture-grid, .formula-steps, .rotation-stage, .appendix-grid, .reading-grid, .formula-inventory-grid, .formula-showcase article, .micro-video, .result-story { grid-template-columns: 1fr; }
   .equation-audit-list article, .result-story dl div { grid-template-columns: 1fr; gap: 8px; }
+  .learning-contract, .section-outcome { grid-template-columns: 1fr; }
+  .learning-contract > div:nth-child(2) { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+  .learning-modes { grid-column: 1; }
   .equation-audit-list .fold-reason { grid-column: 1; }
   .lineage-track { grid-template-columns: 1fr; padding-left: 22px; padding-top: 0; }
   .lineage-track::before { top: 0; bottom: 0; left: 5px; right: auto; width: 1px; height: auto; }

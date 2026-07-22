@@ -120,6 +120,7 @@ def _grounding_prompt(
     contract = {
         "central_question": "one question using the paper's own motivation and terms",
         "required_section_ids": "5-7 stable snake_case IDs beginning with motivation and related_work, ending with findings and limits",
+        "section_policy": {"mode": "model_proposed", "min_sections": 5, "max_sections": 8, "required_roles": ["motivation", "lineage", "mechanism", "evidence", "limitations"], "sequence_rule": "paper-native prerequisite order"},
         "equation_coverage": [{"equation_ids": ["Eq. n"], "role": "premise|prior_work|bridge|mechanism|analysis|extension", "thread_stage": "paper term", "intent": "why the authors introduce it here", "coverage": "animate|explain|fold", "animation_recipe": "formula_transition|geometry|metric_animation|none", "fold_reason": "required only when folded", "source_refs": [f"{paper_id}-paper:eqN"]}],
         "finding_coverage": [{"finding_id": "stable_id", "question": "experimental question", "setting": "controlled setting or factor", "metric": "paper metric", "evidence_kind": "exact_table|authors_reported_curve|algebraic_analysis", "takeaway": "source-faithful finding", "source_refs": [f"{paper_id}-paper:table-or-figure"]}],
         "paper_excerpts": [{"locator": "section/equation/table", "text": "source-faithful summary", "source_refs": [f"{paper_id}-paper:locator"]}],
@@ -198,6 +199,13 @@ def ingest_source_packet(
         "audience": audience,
         "central_question": payload["central_question"],
         "required_section_ids": section_ids,
+        "section_policy": {
+            "mode": "model_proposed",
+            "min_sections": 5,
+            "max_sections": 8,
+            "required_roles": ["motivation", "lineage", "mechanism", "evidence", "limitations"],
+            "sequence_rule": "Begin with the paper's motivating question, teach prerequisites before each mechanism, connect formulas to original code, and end by separating evidence from limitations.",
+        },
         "sources": [{
             "source_id": f"{paper_id}-paper",
             "kind": "paper",

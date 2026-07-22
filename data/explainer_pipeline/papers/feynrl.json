@@ -6,6 +6,13 @@
   "audience": "Readers who know policy gradients and want to understand the paper's on-policy and off-policy formulation.",
   "central_question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
   "required_section_ids": ["motivation", "related_work", "ess", "p3o", "findings", "limits"],
+  "section_policy": {
+    "mode": "model_proposed",
+    "min_sections": 5,
+    "max_sections": 8,
+    "required_roles": ["motivation", "lineage", "mechanism", "evidence", "limitations"],
+    "sequence_rule": "Begin with the paper's motivating question, establish the prior objective and terminology before the mechanism, connect the mechanism to original code, then separate experimental evidence from limitations."
+  },
   "sources": [
     {
       "source_id": "feynrl-paper",

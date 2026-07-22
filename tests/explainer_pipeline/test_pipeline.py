@@ -4,9 +4,11 @@ import copy
 import json
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from tools.explainer_pipeline.common import DATA_ROOT, ROOT, resolve_repo_path, sha256_json
+from tools.explainer_pipeline.model_matrix import normalize_repeated_animation_media
 from tools.explainer_pipeline.pipeline import replay_provider, run_pipeline
 from tools.explainer_pipeline.pricing import estimate_cost
 from tools.explainer_pipeline.renderer import RenderError, render_comparison_site, render_site
@@ -163,6 +165,79 @@ class ExplainerPipelineTests(unittest.TestCase):
             bundle = json.loads((root / "explainer_bundle.json").read_text(encoding="utf-8"))
             manifest = json.loads((root / "run_manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["bundle_sha256"], sha256_json(bundle))
+
+    def test_section_policy_and_animation_plan_are_enforced(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = run_pipeline(DATA_ROOT / "papers" / "feynrl.json", Path(temporary), replay_provider())
+            policy = bundle["source_packet"]["section_policy"]
+            roles = {section["role"] for section in bundle["lesson_plan"]["sections"]}
+            self.assertLessEqual(set(policy["required_roles"]), roles)
+            selected = {
+                (section_id, block["media_id"])
+                for section_id, section in bundle["section_content"]["sections"].items()
+                for block in section["blocks"]
+                if block["type"] in {"video", "micro_video"}
+            }
+            planned = {
+                (item["section_id"], item["media_id"])
+                for item in bundle["section_content"]["animation_plan"]
+            }
+            self.assertEqual(selected, planned)
+
+    def test_repeated_animation_media_uses_first_section_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = run_pipeline(
+                DATA_ROOT / "papers" / "rope.json", Path(temporary), replay_provider()
+            )
+            decision = copy.deepcopy(bundle["section_content"]["animation_plan"][0])
+            source_section = decision["section_id"]
+            target_section = "rope"
+            source_block = next(
+                block
+                for block in bundle["section_content"]["sections"][source_section]["blocks"]
+                if block.get("media_id") == decision["media_id"]
+            )
+            target_blocks = bundle["section_content"]["sections"][target_section]["blocks"]
+            target_blocks.append(copy.deepcopy(source_block))
+            decision["section_id"] = target_section
+            decision["adjacent_block_index"] = len(target_blocks) - 1
+            bundle["section_content"]["animation_plan"].append(decision)
+
+            operations = normalize_repeated_animation_media(bundle)
+            self.assertEqual(1, len(operations))
+            self.assertEqual("drop_repeated_animation_after_first_use", operations[0]["operation"])
+            remaining = [
+                item
+                for item in bundle["section_content"]["animation_plan"]
+                if item["media_id"] == decision["media_id"]
+            ]
+            self.assertEqual(1, len(remaining))
+            validate_bundle(bundle)
+
+    def test_pipeline_retries_a_semantically_invalid_stage(self) -> None:
+        replay = replay_provider()
+
+        class InvalidOnceProvider:
+            def __init__(self) -> None:
+                self.failed = False
+
+            def generate(self, stage: str, paper_id: str, prompt: str):
+                result = replay.generate(stage, paper_id, prompt)
+                if stage == "lesson_plan" and not self.failed:
+                    self.failed = True
+                    return replace(result, payload={"title": "invalid"}, response_sha256="0" * 64)
+                return result
+
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = run_pipeline(
+                DATA_ROOT / "papers" / "rope.json",
+                Path(temporary),
+                InvalidOnceProvider(),
+                max_attempts=2,
+            )
+            trace = next(item for item in bundle["generation"]["stage_traces"] if item["stage"] == "lesson_plan")
+            self.assertEqual(2, trace["attempt_count"])
+            self.assertEqual(["invalid", "valid"], [item["status"] for item in trace["attempts"]])
 
     def test_dangling_appendix_link_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

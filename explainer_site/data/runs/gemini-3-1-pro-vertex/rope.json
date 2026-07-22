@@ -1,0 +1,2817 @@
+{
+  "schema_version": "explainer-bundle/0.1.0",
+  "paper_id": "rope",
+  "source_packet": {
+    "schema_version": "explainer-source-packet/0.1.0",
+    "paper_id": "rope",
+    "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+    "short_title": "RoPE / RoFormer",
+    "audience": "Readers who understand dot-product attention and want the paper's formulation, implementation, and empirical findings.",
+    "central_question": "Can absolute position be encoded in query and key representations while their inner product depends explicitly on relative position?",
+    "required_section_ids": [
+      "motivation",
+      "related_work",
+      "formulation",
+      "rope",
+      "findings",
+      "limits"
+    ],
+    "section_policy": {
+      "mode": "model_proposed",
+      "min_sections": 5,
+      "max_sections": 8,
+      "required_roles": [
+        "motivation",
+        "lineage",
+        "mechanism",
+        "evidence",
+        "limitations"
+      ],
+      "sequence_rule": "Begin with why self-attention needs position, let the historical equation thread produce the functional requirement, derive and implement the rotary solution, then separate algebraic properties, empirical evidence, and limitations."
+    },
+    "sources": [
+      {
+        "source_id": "rope-paper",
+        "kind": "paper",
+        "url": "https://arxiv.org/abs/2104.09864",
+        "revision": "arXiv:2104.09864v5",
+        "sha256": "e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+        "page_count": 14,
+        "retrieved_at": "2026-07-21"
+      }
+    ],
+    "code_sources": [
+      {
+        "code_id": "roformer-readme",
+        "repository": "https://github.com/ZhuiyiTechnology/roformer",
+        "revision": "dfc678ad506fc527ba17ead8db23cbe4d947a9b4",
+        "checkout_path": "external/RoFormer",
+        "mapping_state": "confirmed",
+        "excerpts": [
+          {
+            "path": "README.md",
+            "symbol": "RoPE attention pseudocode",
+            "line_start": 18,
+            "line_end": 32
+          },
+          {
+            "path": "finetune_scm.py",
+            "symbol": "CAIL2019-SCM data_generator / evaluate",
+            "line_start": 24,
+            "line_end": 141
+          }
+        ]
+      }
+    ],
+    "code_understanding": {
+      "formula_code_links": [
+        {
+          "formula_id": "formula:rope.relative",
+          "formula_label": "Eq. 16 · relative-position identity",
+          "code_id": "roformer-readme",
+          "symbol": "cos_pos / sin_pos",
+          "path": "README.md",
+          "line_start": 22,
+          "line_end": 23,
+          "role": "constructs the paired rotation phases",
+          "state": "confirmed",
+          "evidence_refs": [
+            "rope-paper:eq14-16",
+            "roformer-readme:rope-pseudocode"
+          ]
+        },
+        {
+          "formula_id": "formula:rope.relative",
+          "formula_label": "Eq. 16 · relative-position identity",
+          "code_id": "roformer-readme",
+          "symbol": "qw2 / kw2 sign-swap",
+          "path": "README.md",
+          "line_start": 24,
+          "line_end": 29,
+          "role": "implements the 2D quarter-turn within every feature pair",
+          "state": "confirmed",
+          "evidence_refs": [
+            "rope-paper:eq20-34",
+            "roformer-readme:rope-pseudocode"
+          ]
+        },
+        {
+          "formula_id": "formula:rope.relative",
+          "formula_label": "Eq. 16 · relative-position identity",
+          "code_id": "roformer-readme",
+          "symbol": "einsum attention",
+          "path": "README.md",
+          "line_start": 31,
+          "line_end": 32,
+          "role": "takes the inner product after both query and key are rotated",
+          "state": "confirmed",
+          "evidence_refs": [
+            "rope-paper:eq16",
+            "roformer-readme:rope-pseudocode"
+          ]
+        }
+      ],
+      "example": {
+        "label": "One CAIL2019-SCM triple through the official fine-tuning script",
+        "input": "A legal case A is paired once with candidate B and once with candidate C.",
+        "output": "The two sigmoid scores are compared and contribute one correct/incorrect evaluation decision."
+      },
+      "nodes": [
+        {
+          "id": "triple",
+          "label": "Load one A/B/C case",
+          "kind": "input",
+          "stage": "data",
+          "detail": "The label determines which candidate is the positive continuation for case A.",
+          "artifact": "(text A, positive, negative)",
+          "path": "finetune_scm.py",
+          "line_start": 24,
+          "line_end": 37
+        },
+        {
+          "id": "pairs",
+          "label": "Tokenize A+B and A+C",
+          "kind": "operation",
+          "stage": "data",
+          "detail": "The generator emits two paired sequences with labels 1 and 0, then pads the batch.",
+          "artifact": "batch_token_ids · batch_segment_ids · labels",
+          "path": "finetune_scm.py",
+          "line_start": 53,
+          "line_end": 76
+        },
+        {
+          "id": "roformer",
+          "label": "Run the RoFormer encoder",
+          "kind": "function",
+          "stage": "model",
+          "detail": "build_transformer_model loads model='roformer' before the task head.",
+          "artifact": "contextual token states",
+          "path": "finetune_scm.py",
+          "line_start": 79,
+          "line_end": 87
+        },
+        {
+          "id": "phase",
+          "label": "Construct cos/sin phases",
+          "kind": "operation",
+          "stage": "attention",
+          "detail": "The official README repeats the position frequencies across adjacent feature pairs.",
+          "artifact": "cos_pos · sin_pos",
+          "path": "README.md",
+          "line_start": 22,
+          "line_end": 23
+        },
+        {
+          "id": "rotate",
+          "label": "Rotate query and key pairs",
+          "kind": "operation",
+          "stage": "attention",
+          "detail": "Negate-and-swap companions implement q·cos + q⊥·sin and the same operation for k.",
+          "artifact": "rotated qw · kw",
+          "path": "README.md",
+          "line_start": 24,
+          "line_end": 29
+        },
+        {
+          "id": "attention",
+          "label": "Compute query-key scores",
+          "kind": "function",
+          "stage": "attention",
+          "detail": "The ordinary einsum now contains the relative-position identity from Eq. 16.",
+          "artifact": "attention score tensor a",
+          "path": "README.md",
+          "line_start": 31,
+          "line_end": 32
+        },
+        {
+          "id": "classifier",
+          "label": "Pool and score each pair",
+          "kind": "objective",
+          "stage": "task",
+          "detail": "Global average pooling and a sigmoid head produce one score for A+B and one for A+C.",
+          "artifact": "two sigmoid scores",
+          "path": "finetune_scm.py",
+          "line_start": 84,
+          "line_end": 94
+        },
+        {
+          "id": "decision",
+          "label": "Compare the pair scores",
+          "kind": "output",
+          "stage": "evaluate",
+          "detail": "Evaluation counts the example correct when the positive pair score exceeds the negative pair score.",
+          "artifact": "right / total accuracy",
+          "path": "finetune_scm.py",
+          "line_start": 102,
+          "line_end": 108
+        },
+        {
+          "id": "checkpoint",
+          "label": "Retain the best validation epoch",
+          "kind": "output",
+          "stage": "evaluate",
+          "detail": "The callback saves weights only when validation accuracy improves, then reports test accuracy.",
+          "artifact": "best_model_scm.weights",
+          "path": "finetune_scm.py",
+          "line_start": 111,
+          "line_end": 126
+        }
+      ],
+      "edges": [
+        {
+          "source": "triple",
+          "target": "pairs",
+          "label": "make positive and negative pair"
+        },
+        {
+          "source": "pairs",
+          "target": "roformer",
+          "label": "padded token IDs"
+        },
+        {
+          "source": "roformer",
+          "target": "phase",
+          "label": "inside self-attention"
+        },
+        {
+          "source": "phase",
+          "target": "rotate",
+          "label": "pairwise coefficients"
+        },
+        {
+          "source": "rotate",
+          "target": "attention",
+          "label": "rotated q and k"
+        },
+        {
+          "source": "attention",
+          "target": "classifier",
+          "label": "contextual states"
+        },
+        {
+          "source": "classifier",
+          "target": "decision",
+          "label": "rank two scores"
+        },
+        {
+          "source": "decision",
+          "target": "checkpoint",
+          "label": "aggregate validation accuracy"
+        },
+        {
+          "source": "checkpoint",
+          "target": "pairs",
+          "label": "next epoch loop",
+          "edge_kind": "loop"
+        }
+      ],
+      "experiment_pipeline": [
+        {
+          "id": "architecture",
+          "label": "Replace position mechanism",
+          "detail": "Transformer/RoFormer and Performer/RoPE comparisons",
+          "source_refs": [
+            "rope-paper:sec4"
+          ]
+        },
+        {
+          "id": "pretrain",
+          "label": "Pre-train",
+          "detail": "BookCorpus + Wikipedia MLM where applicable",
+          "source_refs": [
+            "rope-paper:sec4.2"
+          ]
+        },
+        {
+          "id": "finetune",
+          "label": "Fine-tune by task",
+          "detail": "translation, GLUE, and long-text classification settings differ",
+          "source_refs": [
+            "rope-paper:sec4"
+          ]
+        },
+        {
+          "id": "evaluate",
+          "label": "Read metric in context",
+          "detail": "BLEU, task scores, accuracy, and loss curves are not interchangeable",
+          "source_refs": [
+            "rope-paper:table1",
+            "rope-paper:table2",
+            "rope-paper:table5",
+            "rope-paper:fig3"
+          ]
+        }
+      ]
+    },
+    "equation_coverage": [
+      {
+        "equation_ids": [
+          "Eqs. 3–4"
+        ],
+        "role": "prior_work",
+        "thread_stage": "additive absolute position encoding",
+        "intent": "Establish the additive construction used by learned and sinusoidal absolute position encodings.",
+        "coverage": "animate",
+        "animation_recipe": "formula_transition",
+        "source_refs": [
+          "rope-paper:eq3-4"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eqs. 5–10"
+        ],
+        "role": "prior_work",
+        "thread_stage": "additive and decomposed relative position encoding",
+        "intent": "Show how prior methods insert relative terms into the expanded attention score.",
+        "coverage": "animate",
+        "animation_recipe": "formula_transition",
+        "source_refs": [
+          "rope-paper:eq5-10"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eq. 11"
+        ],
+        "role": "premise",
+        "thread_stage": "formulation of relative position encoding",
+        "intent": "State the functional requirement that the inner product depend on m−n.",
+        "coverage": "animate",
+        "animation_recipe": "formula_transition",
+        "source_refs": [
+          "rope-paper:eq11"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eqs. 12–13"
+        ],
+        "role": "mechanism",
+        "thread_stage": "two-dimensional rotary solution",
+        "intent": "Solve the functional requirement in the complex plane and make the rotation geometric.",
+        "coverage": "animate",
+        "animation_recipe": "geometry",
+        "source_refs": [
+          "rope-paper:eq12-13"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eqs. 14–16"
+        ],
+        "role": "mechanism",
+        "thread_stage": "d-dimensional RoPE and relative identity",
+        "intent": "Pair feature dimensions and use orthogonality to obtain R at n−m in the attention score.",
+        "coverage": "animate",
+        "animation_recipe": "geometry",
+        "source_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eqs. 17–19"
+        ],
+        "role": "analysis",
+        "thread_stage": "linear self-attention compatibility",
+        "intent": "Show how rotation can be inserted without changing the kernelized attention form.",
+        "coverage": "explain",
+        "animation_recipe": "none",
+        "source_refs": [
+          "rope-paper:eq17-19"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eqs. 20–34"
+        ],
+        "role": "analysis",
+        "thread_stage": "proof and efficient realization",
+        "intent": "Prove intermediate identities and derive the elementwise implementation.",
+        "coverage": "fold",
+        "animation_recipe": "none",
+        "fold_reason": "These equations support the derivation and implementation but repeat the same pairwise rotation operation; the website keeps the official code mapping and appendix link instead of thirteen near-duplicate animations.",
+        "source_refs": [
+          "rope-paper:eq20-34",
+          "roformer-readme:rope-pseudocode"
+        ]
+      },
+      {
+        "equation_ids": [
+          "Eqs. 35–37"
+        ],
+        "role": "analysis",
+        "thread_stage": "long-term decay",
+        "intent": "Decompose the rotary score by frequency and bound how it changes with relative distance.",
+        "coverage": "animate",
+        "animation_recipe": "metric_animation",
+        "source_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      }
+    ],
+    "finding_coverage": [
+      {
+        "finding_id": "translation_bleu",
+        "question": "Does the RoFormer architecture retain translation quality?",
+        "setting": "WMT14 English-to-German",
+        "metric": "BLEU",
+        "evidence_kind": "exact_table",
+        "takeaway": "Table 1 reports 27.5 for RoFormer and 27.3 for Transformer-base.",
+        "source_refs": [
+          "rope-paper:table1"
+        ]
+      },
+      {
+        "finding_id": "pretraining_convergence",
+        "question": "Does RoPE change the shown pre-training optimization trajectory?",
+        "setting": "BookCorpus + Wikipedia MLM and Performer comparisons",
+        "metric": "training loss over steps",
+        "evidence_kind": "authors_reported_curve",
+        "takeaway": "Figure 3 reports faster convergence for RoFormer and for Performer equipped with RoPE; the curves are not digitized here.",
+        "source_refs": [
+          "rope-paper:fig3"
+        ]
+      },
+      {
+        "finding_id": "glue_task_deltas",
+        "question": "Is RoFormer uniformly better across GLUE tasks?",
+        "setting": "Six GLUE datasets under the paper's pre-training setup",
+        "metric": "task-specific validation scores",
+        "evidence_kind": "exact_table",
+        "takeaway": "Table 2 is mixed: RoFormer is higher on MRPC, STS-B, and QQP, but lower on SST-2, QNLI, and MNLI in the reported setup.",
+        "source_refs": [
+          "rope-paper:table2"
+        ]
+      },
+      {
+        "finding_id": "long_sequence_legal",
+        "question": "Does a longer sequence setting help on long legal text?",
+        "setting": "CAIL2019-SCM with RoFormer-512 versus RoFormer-1024",
+        "metric": "test accuracy",
+        "evidence_kind": "exact_table",
+        "takeaway": "Table 5 reports 68.29 at length 512 and 69.79 at length 1024; sequential training stages and other confounds remain relevant.",
+        "source_refs": [
+          "rope-paper:table5"
+        ]
+      },
+      {
+        "finding_id": "long_term_decay",
+        "question": "How does the rotary score behave as relative distance grows?",
+        "setting": "frequency-paired decomposition in Eqs. 35–37",
+        "metric": "upper bound on the summed rotary contribution",
+        "evidence_kind": "algebraic_analysis",
+        "takeaway": "The paper derives a distance-dependent bound and presents Figure 2 as evidence of long-term decay.",
+        "source_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      }
+    ],
+    "formula_refs": [
+      "data/formula_explainer/formulas/rope/relative.json"
+    ],
+    "formula_showcase": [
+      {
+        "media_id": "rope-relative-micro",
+        "poster_id": "rope-relative-micro-poster",
+        "captions_id": "rope-relative-micro-captions",
+        "title": "Eqs. 14–16 · absolute rotations, relative score",
+        "focus": "R_m and R_n enter separately, then orthogonality collapses their product to R_{n−m}.",
+        "source_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "media_id": "rope-frequency-pairs-micro",
+        "poster_id": "rope-frequency-pairs-micro-poster",
+        "captions_id": "rope-frequency-pairs-micro-captions",
+        "title": "Eqs. 20–34 · parallel 2D rotations",
+        "focus": "Each adjacent coordinate pair uses the same position m with its own frequency θ_j.",
+        "source_refs": [
+          "rope-paper:eq20-34"
+        ]
+      },
+      {
+        "media_id": "rope-decay-micro",
+        "poster_id": "rope-decay-micro-poster",
+        "captions_id": "rope-decay-micro-captions",
+        "title": "Eqs. 35–37 · distance-dependent analysis",
+        "focus": "The schematic motion explains the direction of the derived bound without digitizing Figure 2.",
+        "source_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      }
+    ],
+    "scene_renderer": {
+      "engine": "Manim Community 0.19.0",
+      "entrypoint": "scenes/explainer_pipeline_native.py",
+      "coding_agent_required": false,
+      "scene_ids": [
+        "RoPEEquationLineageMicro",
+        "RoPERelativeMicro",
+        "RoPEFrequencyPairsMicro",
+        "RoPEDecayMicro",
+        "RoPETranslationResultMicro",
+        "RoPEResultsMicro"
+      ]
+    },
+    "media": [
+      {
+        "media_id": "rope-frequency-pairs-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/frequency-pairs-micro.mp4",
+        "sha256": "ebcd132062479d12581369860306dd432b2eeab3d38add059be142d5875e0b74",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Three adjacent feature pairs rotate at distinct frequencies inside the block-diagonal RoPE construction.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-frequency-pairs-micro.mp4"
+      },
+      {
+        "media_id": "rope-frequency-pairs-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/frequency-pairs-micro-poster.png",
+        "sha256": "aa4ee995b049d57a6e27560c7aaeed1f931cc408da6a628d06a90ff5210aaafe",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoPE paired-frequency micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-frequency-pairs-micro-poster.png"
+      },
+      {
+        "media_id": "rope-frequency-pairs-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/frequency-pairs-micro.vtt",
+        "sha256": "722ba5cdb03405ca24ef6903ced50fd56923ce23d10e489ba5623366a865ca17",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoPE paired-frequency micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-frequency-pairs-micro-captions.vtt"
+      },
+      {
+        "media_id": "rope-translation-result-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/translation-result-micro.mp4",
+        "sha256": "1accf06720ea1e80cab592233b71ab2d360a80c83d316839a52cc7e43bc4b818",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Exact WMT14 English-to-German BLEU comparison on a non-zero number line.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-translation-result-micro.mp4"
+      },
+      {
+        "media_id": "rope-translation-result-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/translation-result-micro-poster.png",
+        "sha256": "fd0f57d0a36dbd486bb349cf229d155e895b4c0ee13047a6f2729acde54ec66e",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoFormer translation-result micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-translation-result-micro-poster.png"
+      },
+      {
+        "media_id": "rope-translation-result-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/translation-result-micro.vtt",
+        "sha256": "0e8346af88100e8fd2904cddc9a88b09f59b3e4f324f18618bd0574518e75472",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoFormer translation-result micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-translation-result-micro-captions.vtt"
+      },
+      {
+        "media_id": "rope-lineage-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/lineage-micro.mp4",
+        "sha256": "8d29c49fc35205f88f7a41d235f26e1f2cf26f5e2d3005d7324e121e4a85b63c",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Equation-transition scene from additive position encodings to the RoPE functional requirement and rotary solution.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-lineage-micro.mp4"
+      },
+      {
+        "media_id": "rope-lineage-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/lineage-micro-poster.png",
+        "sha256": "d94462c1e3e3e4937c15459bcf5f2fd07b6a67b86ba15a49061b7e53716cc275",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoPE equation-lineage micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-lineage-micro-poster.png"
+      },
+      {
+        "media_id": "rope-lineage-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/lineage-micro.vtt",
+        "sha256": "08d1f0672c965e97afe120e79ce11f61c0da46d5f547d4b1a10ef19cc4ca6999",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoPE equation-lineage micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-lineage-micro-captions.vtt"
+      },
+      {
+        "media_id": "rope-decay-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/decay-micro.mp4",
+        "sha256": "8b0ff57e8de3f048eea9965b12aa4905dbd0e82d2cf2db962c12f5116775129c",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Text-light schematic animation of the distance-dependent bound discussed in RoFormer Equations 35 through 37.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-decay-micro.mp4"
+      },
+      {
+        "media_id": "rope-decay-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/decay-micro-poster.png",
+        "sha256": "9ef3ae390b8f630efc3fdc54c92f1e6e862cb8ff8adb05a5ae461ace0c44a341",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoPE long-term-decay micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-decay-micro-poster.png"
+      },
+      {
+        "media_id": "rope-decay-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/decay-micro.vtt",
+        "sha256": "8b03594dee34eaf4cd5afbecb789a93345c0634362e7dbc14e8856449ee230ae",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoPE long-term-decay micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-decay-micro-captions.vtt"
+      },
+      {
+        "media_id": "rope-relative-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/relative-micro.mp4",
+        "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Five-second Manim scene for the Eq. 16 collapse from separate query/key rotations to n minus m.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-relative-micro.mp4"
+      },
+      {
+        "media_id": "rope-relative-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/relative-micro-poster.png",
+        "sha256": "2c5b38ea48d16cbaeceafe51b3288db033ae7b62e943432400f82f684ec739de",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the relative-rotation micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-relative-micro-poster.png"
+      },
+      {
+        "media_id": "rope-relative-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/relative-micro.vtt",
+        "sha256": "9953ddb34d9ee2e3b4bc5caf23a7e2f98ecba7fa79d7288482aba950514e3763",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the relative-rotation micro-video.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-relative-micro-captions.vtt"
+      },
+      {
+        "media_id": "rope-findings",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/findings.mp4",
+        "sha256": "99d85bc10e0a0b1725e7b2415d788885389fcbeb6513b29190b5d7cf6bce0175",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "New Manim scene connecting the paper's stated properties to Table 1 and Figure 3 findings.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-findings.mp4"
+      },
+      {
+        "media_id": "rope-findings-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/findings-poster.png",
+        "sha256": "301a9946a523b59cab2c3175a5e677470ae6439db859160cad1e54e9663f26f3",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoPE findings scene.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-findings-poster.png"
+      },
+      {
+        "media_id": "rope-findings-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/findings.vtt",
+        "sha256": "97516f9a6b5129fe69758608a5d35a4b6014109f2404a82641a6a155d39a66f5",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoPE findings scene.",
+        "published_path": "assets/gemini-3-1-pro-vertex/rope/rope-findings-captions.vtt"
+      }
+    ],
+    "agent_input": {
+      "paper_excerpts": [
+        {
+          "locator": "Sec. 1-2.3",
+          "text": "The paper narrates a specific equation lineage: the Transformer adds learned or sinusoidal absolute position before projection (Eqs. 3-4); Shaw et al. add a learned relative key term (Eq. 5); Transformer-XL decomposes content and relative-position interactions (Eqs. 6-7); T5, TUPE, and DeBERTa retain, remove, or disentangle terms (Eqs. 8-10). The authors' shared diagnosis is that prior work modifies an additive decomposition, motivating a multiplicative construction.",
+          "source_refs": [
+            "rope-paper:sec1",
+            "rope-paper:sec2"
+          ]
+        },
+        {
+          "locator": "Eq. 11 and Eqs. 14-16",
+          "text": "Equation 11 formulates the relative-position requirement. Equations 14-16 give the rotary solution and show that the query-key inner product contains R at relative position n minus m.",
+          "source_refs": [
+            "rope-paper:eq11",
+            "rope-paper:eq14-16"
+          ]
+        },
+        {
+          "locator": "Sec. 4, Table 1 and Fig. 3",
+          "text": "Table 1 reports 27.5 BLEU for RoFormer and 27.3 for Transformer-base on WMT 2014 English-to-German. Figure 3 reports faster convergence in the shown language-model pre-training and Performer experiments.",
+          "source_refs": [
+            "rope-paper:table1",
+            "rope-paper:fig3"
+          ]
+        }
+      ],
+      "code_notes": [
+        {
+          "locator": "Official README.md:18-32",
+          "text": "The official pseudocode constructs the perpendicular companion, applies q cos plus q-perpendicular sin and the analogous key operation, then takes the standard attention dot product.",
+          "source_refs": [
+            "roformer-readme:rope-pseudocode"
+          ]
+        }
+      ],
+      "claim_policy": "Use the paper's terms: formulation of relative position encoding, rotary position embedding, sequence length flexibility, long-term decay, and linear self-attention. Attribute every related-work equation to its predecessor paper and distinguish what changed, what remained additive, and which question led to Eq. 11. Keep exact algebra separate from empirical findings and extrapolation claims."
+    }
+  },
+  "concept_graph": {
+    "thesis": "By formulating a functional requirement where the inner product of queries and keys depends explicitly on their relative position, Rotary Position Embedding (RoPE) replaces additive position encodings with a multiplicative, geometric rotation that preserves linear self-attention compatibility and exhibits long-term decay.",
+    "nodes": [
+      {
+        "id": "additive_absolute",
+        "label": "Eqs. 3-4: Additive absolute position",
+        "kind": "equation",
+        "era": "prior_work",
+        "summary": "The original Transformer adds learned or sinusoidal absolute position encodings to token embeddings before projection.",
+        "source_refs": [
+          "rope-paper:eq3-4"
+        ]
+      },
+      {
+        "id": "additive_relative",
+        "label": "Eqs. 5-10: Additive relative position",
+        "kind": "equation",
+        "era": "prior_work",
+        "summary": "Shaw et al., Transformer-XL, T5, TUPE, and DeBERTa modify the additive decomposition to insert, remove, or disentangle relative terms in the expanded attention score.",
+        "source_refs": [
+          "rope-paper:eq5-10"
+        ]
+      },
+      {
+        "id": "relative_requirement",
+        "label": "Eq. 11: Relative-position requirement",
+        "kind": "equation",
+        "era": "formulation",
+        "summary": "Formulates the requirement that the inner product of query and key must depend explicitly on the relative distance m minus n.",
+        "source_refs": [
+          "rope-paper:eq11"
+        ]
+      },
+      {
+        "id": "rotary_solution",
+        "label": "Eqs. 14-16: Rotary solution",
+        "kind": "equation",
+        "era": "mechanism",
+        "summary": "Solves the functional requirement by pairing feature dimensions and applying a rotation matrix, yielding an inner product containing R at relative position n minus m.",
+        "source_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "id": "rope_pseudocode",
+        "label": "RoPE attention pseudocode",
+        "kind": "code",
+        "era": "mechanism",
+        "summary": "Constructs the perpendicular companion, applies q cos plus q-perpendicular sin and the analogous key operation, then takes the standard attention dot product.",
+        "source_refs": [
+          "roformer-readme:rope-pseudocode"
+        ]
+      },
+      {
+        "id": "linear_attention",
+        "label": "Eqs. 17-19: Linear self-attention compatibility",
+        "kind": "equation",
+        "era": "analysis",
+        "summary": "Shows how the rotation can be inserted without changing the kernelized attention form, maintaining compatibility with linear self-attention.",
+        "source_refs": [
+          "rope-paper:eq17-19"
+        ]
+      },
+      {
+        "id": "long_term_decay",
+        "label": "Eqs. 35-37: Long-term decay",
+        "kind": "equation",
+        "era": "analysis",
+        "summary": "Decomposes the rotary score by frequency and derives a distance-dependent bound showing how the rotary contribution decays as relative distance grows.",
+        "source_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      },
+      {
+        "id": "translation_bleu",
+        "label": "Table 1: Translation BLEU",
+        "kind": "finding",
+        "era": "evidence",
+        "summary": "Reports 27.5 BLEU for RoFormer and 27.3 for Transformer-base on WMT 2014 English-to-German.",
+        "source_refs": [
+          "rope-paper:table1"
+        ]
+      },
+      {
+        "id": "pretraining_convergence",
+        "label": "Fig. 3: Pre-training convergence",
+        "kind": "finding",
+        "era": "evidence",
+        "summary": "Reports faster convergence in language-model pre-training for RoFormer and for Performer equipped with RoPE.",
+        "source_refs": [
+          "rope-paper:fig3"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "additive_absolute",
+        "target": "additive_relative",
+        "relation": "extends",
+        "teaching_point": "Prior work recognized the need for relative position but kept modifying an additive decomposition."
+      },
+      {
+        "source": "additive_relative",
+        "target": "relative_requirement",
+        "relation": "motivates",
+        "teaching_point": "The shared diagnosis that prior work modifies an additive decomposition motivates a functional requirement for a multiplicative construction."
+      },
+      {
+        "source": "relative_requirement",
+        "target": "rotary_solution",
+        "relation": "solves",
+        "teaching_point": "A two-dimensional geometric rotation satisfies the requirement, collapsing absolute rotations into a relative score."
+      },
+      {
+        "source": "rotary_solution",
+        "target": "rope_pseudocode",
+        "relation": "implements",
+        "teaching_point": "The elementwise implementation avoids full matrix multiplication by constructing a perpendicular companion and applying cos/sin phases."
+      },
+      {
+        "source": "rotary_solution",
+        "target": "linear_attention",
+        "relation": "enables",
+        "teaching_point": "The rotation can be applied directly to the features, maintaining compatibility with linear self-attention."
+      },
+      {
+        "source": "rotary_solution",
+        "target": "long_term_decay",
+        "relation": "analyzes",
+        "teaching_point": "The frequency-paired decomposition provides a theoretical bound showing the rotary contribution decays over long distances."
+      },
+      {
+        "source": "rotary_solution",
+        "target": "translation_bleu",
+        "relation": "evaluates",
+        "teaching_point": "RoPE retains and slightly improves translation quality compared to the baseline Transformer."
+      },
+      {
+        "source": "rotary_solution",
+        "target": "pretraining_convergence",
+        "relation": "evaluates",
+        "teaching_point": "Replacing the position mechanism with RoPE yields faster convergence in pre-training."
+      }
+    ],
+    "unresolved": [
+      "Table 2 shows mixed results on GLUE tasks (higher on MRPC, STS-B, and QQP, but lower on SST-2, QNLI, and MNLI), leaving the exact task-specific benefits of RoPE partially unexplained.",
+      "Table 5 reports higher accuracy on long legal text with length 1024 versus 512, but sequential training stages and other confounds make it difficult to isolate sequence length flexibility from other factors."
+    ]
+  },
+  "lesson_plan": {
+    "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+    "promise": "Understand how RoFormer formulates a functional requirement for relative position encoding and solves it with a geometric rotation that preserves linear self-attention and exhibits long-term decay.",
+    "sections": [
+      {
+        "id": "motivation_absolute_position",
+        "role": "motivation",
+        "nav_label": "Motivation",
+        "title": "The Need for Position in Self-Attention",
+        "intent": "Begin the paper's argument by establishing the additive construction used by learned and sinusoidal absolute position encodings, setting the baseline for why self-attention needs position.",
+        "question": "How do standard Transformers encode position information before projection?",
+        "learning_goal": "Understand the additive absolute position encoding baseline.",
+        "misconception": "Self-attention inherently understands token order without explicit position encodings.",
+        "summary": "The original Transformer adds learned or sinusoidal absolute position encodings to token embeddings before projection (Eqs. 3-4). This additive approach forms the baseline that subsequent relative position methods attempt to improve.",
+        "source_refs": [
+          "rope-paper:sec1",
+          "rope-paper:eq3-4"
+        ],
+        "medium": "animation",
+        "deep_links": []
+      },
+      {
+        "id": "equation_lineage_formulation",
+        "role": "lineage",
+        "nav_label": "Equation Lineage",
+        "title": "From Additive Decompositions to a Functional Requirement",
+        "intent": "Trace the historical equation thread to show that prior work merely modified an additive decomposition, which motivates the need for a new functional requirement (Eq. 11).",
+        "question": "Can absolute position be encoded in query and key representations while their inner product depends explicitly on relative position?",
+        "learning_goal": "Trace the historical equation thread from additive relative position to the formulation of relative position encoding in Eq. 11.",
+        "misconception": "Prior relative position methods fundamentally changed the additive nature of the position encodings.",
+        "summary": "Shaw et al. add a learned relative key term (Eq. 5); Transformer-XL decomposes content and relative-position interactions (Eqs. 6-7); T5, TUPE, and DeBERTa retain, remove, or disentangle terms (Eqs. 8-10). The shared diagnosis that prior work remains an additive decomposition motivates the functional requirement (Eq. 11) that the query-key inner product must depend explicitly on relative distance m minus n.",
+        "source_refs": [
+          "rope-paper:sec2",
+          "rope-paper:eq5-10",
+          "rope-paper:eq11"
+        ],
+        "medium": "animation",
+        "deep_links": []
+      },
+      {
+        "id": "rotary_position_embedding",
+        "role": "mechanism",
+        "nav_label": "Rotary Solution",
+        "title": "Deriving and Implementing Rotary Position Embedding",
+        "intent": "Derive the mechanism that solves the functional requirement established in the previous section, moving from the complex plane to a d-dimensional geometric rotation and its efficient implementation.",
+        "question": "How does a geometric rotation satisfy the relative-position requirement?",
+        "learning_goal": "Understand how pairing feature dimensions and applying a rotation matrix yields an inner product containing R at relative position n minus m.",
+        "misconception": "RoPE requires full matrix multiplications for the rotation matrix.",
+        "summary": "Equations 12-13 solve the requirement in the complex plane, and Equations 14-16 extend this to a d-dimensional geometric rotation by pairing feature dimensions. The official pseudocode implements this efficiently by constructing a perpendicular companion, applying q cos plus q-perpendicular sin (and the analogous key operation), and then taking the standard attention dot product.",
+        "source_refs": [
+          "rope-paper:eq12-13",
+          "rope-paper:eq14-16",
+          "roformer-readme:rope-pseudocode"
+        ],
+        "medium": "animation",
+        "deep_links": [
+          "rope_proof_identities"
+        ]
+      },
+      {
+        "id": "algebraic_properties",
+        "role": "analysis",
+        "nav_label": "Algebraic Properties",
+        "title": "Linear Self-Attention and Long-Term Decay",
+        "intent": "Separate exact algebra from the core mechanism to prove that the rotary solution preserves linear self-attention compatibility and exhibits a theoretically bounded long-term decay.",
+        "question": "How does the rotary score behave as relative distance grows, and is it compatible with linear self-attention?",
+        "learning_goal": "Recognize that RoPE preserves linear self-attention compatibility and exhibits long-term decay.",
+        "misconception": "Applying rotations to queries and keys prevents the use of kernelized linear attention.",
+        "summary": "The rotation can be inserted without changing the kernelized attention form, maintaining compatibility with linear self-attention (Eqs. 17-19). Furthermore, a frequency-paired decomposition provides a theoretical bound showing the rotary contribution decays as relative distance grows (Eqs. 35-37).",
+        "source_refs": [
+          "rope-paper:eq17-19",
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ],
+        "medium": "animation",
+        "deep_links": []
+      },
+      {
+        "id": "empirical_evidence",
+        "role": "evidence",
+        "nav_label": "Empirical Evidence",
+        "title": "Translation, Pre-training, and Sequence Length Flexibility",
+        "intent": "Transition from theoretical properties to empirical evidence, demonstrating how the rotary mechanism impacts translation quality, pre-training convergence, and sequence length flexibility.",
+        "question": "Does replacing the position mechanism with RoPE improve translation quality and pre-training convergence?",
+        "learning_goal": "Evaluate the empirical benefits of RoFormer in translation, pre-training, and long-text classification.",
+        "misconception": "RoPE only benefits standard Transformer architectures and has no effect on linear variants like Performer.",
+        "summary": "Table 1 reports 27.5 BLEU for RoFormer versus 27.3 for Transformer-base on WMT14 English-to-German. Figure 3 shows faster pre-training convergence for both RoFormer and Performer equipped with RoPE. Extrapolation claims regarding sequence length flexibility are supported by Table 5, which reports higher accuracy on long legal text at length 1024 versus 512.",
+        "source_refs": [
+          "rope-paper:sec4",
+          "rope-paper:table1",
+          "rope-paper:fig3",
+          "rope-paper:table5"
+        ],
+        "medium": "animation",
+        "deep_links": []
+      },
+      {
+        "id": "limitations_and_confounds",
+        "role": "limitations",
+        "nav_label": "Limitations",
+        "title": "Mixed Results and Experimental Confounds",
+        "intent": "Provide a balanced conclusion by addressing mixed results on GLUE tasks and acknowledging experimental confounds in long-sequence evaluations.",
+        "question": "Is RoFormer uniformly better across all GLUE tasks and sequence lengths?",
+        "learning_goal": "Acknowledge that RoPE's benefits vary by task and that long-sequence improvements may be influenced by sequential training stages.",
+        "misconception": "RoPE guarantees state-of-the-art performance across all natural language understanding benchmarks.",
+        "summary": "Table 2 shows mixed results on GLUE tasks (higher on MRPC, STS-B, and QQP, but lower on SST-2, QNLI, and MNLI), leaving the exact task-specific benefits partially unexplained. Additionally, while long legal text accuracy improves at length 1024, sequential training stages and other confounds make it difficult to isolate sequence length flexibility from other factors.",
+        "source_refs": [
+          "rope-paper:table2",
+          "rope-paper:table5"
+        ],
+        "medium": "text",
+        "deep_links": []
+      }
+    ],
+    "appendix": {
+      "rope_proof_identities": {
+        "title": "Proof and Efficient Realization (Eqs. 20-34)",
+        "content": "Equations 20-34 support the derivation and implementation but repeat the same pairwise rotation operation. The official code mapping implements the 2D quarter-turn within every feature pair, avoiding full matrix multiplication. This exact algebra is kept separate to focus the main narrative on the mechanism it realizes."
+      }
+    }
+  },
+  "section_content": {
+    "sections": {
+      "motivation_absolute_position": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Motivation",
+            "question": "How do standard Transformers encode position information before projection?",
+            "context": "Self-attention inherently lacks a sense of token order. To provide this, the original Transformer adds learned or sinusoidal absolute position encodings to token embeddings before projection. This additive approach forms the baseline that subsequent relative position methods attempt to improve.",
+            "source_refs": [
+              "rope-paper:sec1",
+              "rope-paper:eq3-4"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "The Additive Absolute Position Baseline",
+            "paragraphs": [
+              "Because the dot-product attention mechanism is permutation-invariant, it cannot inherently distinguish between tokens based on their sequence order. Without explicit positional information, self-attention treats a sequence as an unordered bag of words.",
+              "To resolve this, standard Transformers inject position information directly into the input embeddings. Specifically, they add a position-dependent vector to the word embedding before projecting it into queries, keys, and values (Equations 3 and 4)."
+            ],
+            "source_refs": [
+              "rope-paper:sec1",
+              "rope-paper:eq3-4"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-lineage-micro",
+            "poster_id": "rope-lineage-micro-poster",
+            "captions_id": "rope-lineage-micro-captions",
+            "title": "Animate the transition from the additive absolute position encodings (Eqs. 3-4) to establish the baseline before introducing relative requirements.",
+            "intro": "Animate the transition from the additive absolute position encodings (Eqs. 3-4) to establish the baseline before introducing relative requirements.",
+            "observation": "Tokens are represented by semantic embeddings without explicit sequence order. → Absolute position vectors are added to the embeddings, creating the standard Transformer baseline.",
+            "consequence": "Absolute position vectors are added to the embeddings, creating the standard Transformer baseline.",
+            "beats": [
+              "Tokens are represented by semantic embeddings without explicit sequence order.",
+              "Absolute position vectors are added to the embeddings, creating the standard Transformer baseline."
+            ],
+            "source_refs": [
+              "rope-paper:sec1",
+              "rope-paper:eq3-4"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Limitations of the Additive Approach",
+            "paragraphs": [
+              "While this additive absolute position encoding successfully breaks the permutation invariance, it forces the model to learn relative distances indirectly. When the attention score is expanded, it forms a complex decomposition of four terms where the relative distance must be inferred from the interactions of absolute signals.",
+              "The authors' shared diagnosis is that prior work continuously modifies this additive decomposition. This realization motivates the search for a multiplicative construction where the query-key inner product depends explicitly on relative position."
+            ],
+            "source_refs": [
+              "rope-paper:sec2",
+              "rope-paper:eq11"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why does the original Transformer add position encodings to token embeddings before projection?",
+            "answer": "To break the permutation invariance of standard self-attention, ensuring the model can distinguish between tokens based on their sequence order."
+          }
+        ]
+      },
+      "equation_lineage_formulation": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Central Question",
+            "question": "Can absolute position be encoded in query and key representations while their inner product depends explicitly on relative position?",
+            "context": "The authors diagnose that prior relative position methods fundamentally modify an additive decomposition, motivating a search for a multiplicative construction.",
+            "source_refs": [
+              "rope-paper:sec2",
+              "rope-paper:eq11"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "The Limits of Additive Decompositions",
+            "paragraphs": [
+              "The original Transformer architecture relies on adding learned or sinusoidal absolute position encodings directly to token embeddings before projection. While this provides positional awareness, it does not explicitly model the relative distance between tokens during the attention mechanism's inner product.",
+              "Subsequent research introduced various relative position methods. Shaw et al. added a learned relative key term, and Transformer-XL decomposed content and relative-position interactions. Models like T5, TUPE, and DeBERTa further retained, removed, or disentangled these terms. However, the authors diagnose that all these approaches share a common trait: they remain additive modifications to the attention score."
+            ],
+            "source_refs": [
+              "rope-paper:sec2",
+              "rope-paper:eq3-4",
+              "rope-paper:eq5-10"
+            ]
+          },
+          {
+            "type": "equation_thread",
+            "title": "Evolution of Position Encodings",
+            "stages": [
+              {
+                "equation": "Eqs. 3–4",
+                "formula": "p_i = f(i)",
+                "intent": "Establish the additive construction used by learned and sinusoidal absolute position encodings.",
+                "change": "Baseline additive absolute position encoding."
+              },
+              {
+                "equation": "Eqs. 5–10",
+                "formula": "q_i \\cdot k_j + q_i \\cdot R_{i-j} + \\dots",
+                "intent": "Show how prior methods insert relative terms into the expanded attention score.",
+                "change": "Modifies the additive decomposition to insert, remove, or disentangle relative terms."
+              },
+              {
+                "equation": "Eq. 11",
+                "formula": "\\langle f_q(x_m, m), f_k(x_n, n) \\rangle = g(x_m, x_n, m - n)",
+                "intent": "State the functional requirement that the inner product depend on m−n.",
+                "change": "Shifts from additive terms to a functional requirement for a multiplicative construction."
+              }
+            ],
+            "folded": [
+              {
+                "equations": "Eqs. 12–13",
+                "reason": "Two-dimensional rotary solution (covered in mechanism)."
+              },
+              {
+                "equations": "Eqs. 14–16",
+                "reason": "d-dimensional RoPE and relative identity (covered in mechanism)."
+              },
+              {
+                "equations": "Eqs. 17–19",
+                "reason": "Linear self-attention compatibility (covered in analysis)."
+              },
+              {
+                "equations": "Eqs. 20–34",
+                "reason": "These equations support the derivation and implementation but repeat the same pairwise rotation operation; the website keeps the official code mapping and appendix link instead of thirteen near-duplicate animations."
+              },
+              {
+                "equations": "Eqs. 35–37",
+                "reason": "Long-term decay analysis (covered in analysis)."
+              }
+            ],
+            "source_refs": [
+              "rope-paper:eq3-4",
+              "rope-paper:eq5-10",
+              "rope-paper:eq11",
+              "rope-paper:eq12-13",
+              "rope-paper:eq14-16",
+              "rope-paper:eq17-19",
+              "rope-paper:eq20-34",
+              "rope-paper:eq35-37"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Formulating the Relative Requirement",
+            "paragraphs": [
+              "Recognizing that prior work merely modified an additive decomposition, the authors propose a new functional requirement. Equation 11 dictates that the inner product of the query and key representations must depend explicitly on the relative distance between their positions, m minus n.",
+              "This formulation sets the stage for Rotary Position Embedding (RoPE), shifting the paradigm from adding position vectors to finding a geometric operation that naturally yields a relative-position dependence in the attention score."
+            ],
+            "source_refs": [
+              "rope-paper:eq11"
+            ]
+          }
+        ]
+      },
+      "rotary_position_embedding": {
+        "blocks": [
+          {
+            "type": "prose",
+            "heading": "From the Complex Plane to Geometric Rotation",
+            "paragraphs": [
+              "To satisfy the functional requirement that the inner product depends explicitly on relative position, the authors first solve the formulation in the two-dimensional complex plane. By representing queries and keys as complex numbers, their inner product naturally incorporates relative position through a geometric rotation.",
+              "This two-dimensional solution is then generalized to a d-dimensional space. By pairing adjacent feature dimensions, the model applies a block-diagonal rotation matrix. This ensures that the inner product of the rotated queries and keys contains the rotation matrix at the relative position distance."
+            ],
+            "source_refs": [
+              "rope-paper:eq12-13",
+              "rope-paper:eq14-16"
+            ]
+          },
+          {
+            "type": "equation_thread",
+            "title": "Deriving the Rotary Solution",
+            "stages": [
+              {
+                "equation": "Eqs. 12-13",
+                "formula": "f_q(x_m, m) = (W_q x_m) e^{im\\theta}",
+                "intent": "Solve the functional requirement in the complex plane and make the rotation geometric.",
+                "change": "Introduces complex exponential rotation to encode absolute position."
+              },
+              {
+                "equation": "Eqs. 14-16",
+                "formula": "\\langle f_q(x_m, m), f_k(x_n, n) \\rangle = x_m^T W_q^T R_{n-m} W_k x_n",
+                "intent": "Pair feature dimensions and use orthogonality to obtain R at n-m in the attention score.",
+                "change": "Generalizes to d-dimensions using a block-diagonal rotation matrix."
+              }
+            ],
+            "folded": [
+              {
+                "equations": "Eqs. 20-34",
+                "reason": "These equations support the derivation and implementation but repeat the same pairwise rotation operation; the website keeps the official code mapping and appendix link instead of thirteen near-duplicate animations."
+              }
+            ],
+            "source_refs": [
+              "rope-paper:eq12-13",
+              "rope-paper:eq14-16",
+              "rope-paper:eq20-34"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-relative-micro",
+            "poster_id": "rope-relative-micro-poster",
+            "captions_id": "rope-relative-micro-captions",
+            "title": "Demonstrate how absolute rotations R_m and R_n enter separately, and orthogonality collapses their product to R_{n-m}.",
+            "intro": "Demonstrate how absolute rotations R_m and R_n enter separately, and orthogonality collapses their product to R_{n-m}.",
+            "observation": "Separate query and key vectors with absolute position rotations. → Inner product showing the relative position identity.",
+            "consequence": "Inner product showing the relative position identity.",
+            "beats": [
+              "Separate query and key vectors with absolute position rotations.",
+              "Inner product showing the relative position identity."
+            ],
+            "source_refs": [
+              "rope-paper:eq12-13",
+              "rope-paper:eq14-16",
+              "rope-paper:eq20-34"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Efficient Elementwise Implementation",
+            "paragraphs": [
+              "Applying a full rotation matrix would be computationally expensive. However, because the rotation matrix is block-diagonal, the operation can be implemented efficiently without full matrix multiplications.",
+              "The official pseudocode achieves this by constructing a perpendicular companion for the queries and keys. It applies a pointwise multiplication with cosine and sine phases, effectively implementing a two-dimensional quarter-turn within every feature pair before taking the standard attention dot product."
+            ],
+            "source_refs": [
+              "rope-paper:eq14-16",
+              "roformer-readme:rope-pseudocode"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-frequency-pairs-micro",
+            "poster_id": "rope-frequency-pairs-micro-poster",
+            "captions_id": "rope-frequency-pairs-micro-captions",
+            "title": "Visualize how each adjacent coordinate pair uses the same position m with its own frequency, avoiding full matrix multiplication.",
+            "intro": "Visualize how each adjacent coordinate pair uses the same position m with its own frequency, avoiding full matrix multiplication.",
+            "observation": "Standard feature vector. → Feature vector divided into adjacent pairs, each rotating at a distinct frequency.",
+            "consequence": "Feature vector divided into adjacent pairs, each rotating at a distinct frequency.",
+            "beats": [
+              "Standard feature vector.",
+              "Feature vector divided into adjacent pairs, each rotating at a distinct frequency."
+            ],
+            "source_refs": [
+              "rope-paper:eq14-16",
+              "roformer-readme:rope-pseudocode"
+            ]
+          },
+          {
+            "type": "code",
+            "code_source_id": "roformer-readme",
+            "path": "README.md",
+            "symbol": "RoPE attention pseudocode",
+            "lines": [
+              {
+                "number": 22,
+                "code": "cos_pos = ... # repeats position frequencies across adjacent feature pairs",
+                "maps_to": "constructs the paired rotation phases"
+              },
+              {
+                "number": 24,
+                "code": "qw2 = torch.stack([-qw[..., 1::2], qw[..., ::2]], -1) # perpendicular companion",
+                "maps_to": "implements the 2D quarter-turn within every feature pair"
+              },
+              {
+                "number": 31,
+                "code": "a = torch.einsum('b m d, b n d -> b m n', qw, kw)",
+                "maps_to": "takes the inner product after both query and key are rotated"
+              }
+            ],
+            "source_refs": [
+              "roformer-readme:rope-pseudocode"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why does RoPE pair adjacent feature dimensions rather than rotating all dimensions together?",
+            "answer": "Pairing adjacent dimensions allows the rotation matrix to be block-diagonal. This enables an efficient elementwise implementation using a perpendicular companion and sine/cosine phases, avoiding the computational cost of a full matrix multiplication."
+          }
+        ]
+      },
+      "algebraic_properties": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Analysis",
+            "question": "How does the rotary score behave as relative distance grows, and is it compatible with linear self-attention?",
+            "context": "Applying rotations to queries and keys might intuitively seem to prevent the use of kernelized linear attention. The authors separate the exact algebra from the core mechanism to prove compatibility and demonstrate a theoretically bounded long-term decay.",
+            "source_refs": [
+              "rope-paper:eq17-19",
+              "rope-paper:eq35-37",
+              "rope-paper:fig2"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Compatibility with Linear Self-Attention",
+            "paragraphs": [
+              "A common misconception is that applying rotations to queries and keys prevents the use of kernelized linear attention. However, the authors demonstrate that the rotation can be inserted without changing the kernelized attention form.",
+              "Because the rotary position embedding is applied as a linear transformation to the features, it maintains compatibility with linear self-attention architectures (Eqs. 17–19). The non-negative activation functions can still be applied, allowing the attention matrix to be decomposed efficiently."
+            ],
+            "source_refs": [
+              "rope-paper:eq17-19"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "How does the rotary score behave as relative distance grows?",
+            "setting": "frequency-paired decomposition in Eqs. 35–37",
+            "metric": "upper bound on the summed rotary contribution",
+            "evidence_kind": "algebraic_analysis",
+            "evidence": "The paper derives a distance-dependent bound and presents Figure 2 as evidence of long-term decay.",
+            "takeaway": "The paper derives a distance-dependent bound and presents Figure 2 as evidence of long-term decay.",
+            "source_refs": [
+              "rope-paper:eq35-37",
+              "rope-paper:fig2"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-decay-micro",
+            "poster_id": "rope-decay-micro-poster",
+            "captions_id": "rope-decay-micro-captions",
+            "title": "Show the schematic motion explaining the direction of the derived bound for long-term decay.",
+            "intro": "Show the schematic motion explaining the direction of the derived bound for long-term decay.",
+            "observation": "The algebraic derivation of the distance-dependent bound. → A visual confirmation that the rotary contribution decays as relative distance increases.",
+            "consequence": "A visual confirmation that the rotary contribution decays as relative distance increases.",
+            "beats": [
+              "The algebraic derivation of the distance-dependent bound.",
+              "A visual confirmation that the rotary contribution decays as relative distance increases."
+            ],
+            "source_refs": [
+              "rope-paper:eq35-37",
+              "rope-paper:fig2"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Interpreting the Decay Bound",
+            "paragraphs": [
+              "The schematic motion confirms the direction of the derived bound without needing to digitize the original figure. By decomposing the rotary score by frequency, the formulation guarantees that the rotary contribution decays as the relative distance grows.",
+              "This property naturally reduces the attention weight between distant tokens, which aligns with the intuition that language modeling relies heavily on local dependencies."
+            ],
+            "source_refs": [
+              "rope-paper:eq35-37",
+              "rope-paper:fig2"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "What algebraic property ensures that RoPE naturally reduces attention weights between distant tokens?",
+            "answer": "A frequency-paired decomposition provides a theoretical bound showing that the rotary contribution decays as relative distance grows."
+          }
+        ]
+      },
+      "empirical_evidence": {
+        "blocks": [
+          {
+            "type": "prose",
+            "heading": "Translation, Pre-training, and Sequence Length Flexibility",
+            "paragraphs": [
+              "To evaluate the empirical benefits of Rotary Position Embedding (RoPE), the authors test RoFormer across machine translation, language model pre-training, and long-text classification. A central question is whether replacing the standard position mechanism with RoPE improves convergence and sequence length flexibility without sacrificing baseline performance."
+            ],
+            "source_refs": [
+              "rope-paper:sec4"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Does the RoFormer architecture retain translation quality?",
+            "setting": "WMT14 English-to-German",
+            "metric": "BLEU",
+            "evidence_kind": "exact_table",
+            "evidence": "Table 1 reports 27.5 for RoFormer and 27.3 for Transformer-base.",
+            "takeaway": "RoPE retains and slightly improves translation quality compared to the baseline Transformer.",
+            "source_refs": [
+              "rope-paper:table1"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-translation-result-micro",
+            "poster_id": "rope-translation-result-micro-poster",
+            "captions_id": "rope-translation-result-micro-captions",
+            "title": "Visualize the BLEU score comparison between RoFormer and Transformer-base.",
+            "intro": "Visualize the BLEU score comparison between RoFormer and Transformer-base.",
+            "observation": "Textual report of translation quality. → Visual number line showing the 0.2 BLEU improvement.",
+            "consequence": "Visual number line showing the 0.2 BLEU improvement.",
+            "beats": [
+              "Textual report of translation quality.",
+              "Visual number line showing the 0.2 BLEU improvement."
+            ],
+            "source_refs": [
+              "rope-paper:table1"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Pre-training Optimization",
+            "paragraphs": [
+              "The slight improvement in BLEU confirms that the geometric rotation preserves the model's representational capacity. Beyond baseline translation, the authors investigate whether explicitly encoding relative position provides a more easily optimized signal during language model pre-training."
+            ],
+            "source_refs": [
+              "rope-paper:sec4.2"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-findings",
+            "poster_id": "rope-findings-poster",
+            "captions_id": "rope-findings-captions",
+            "title": "Connect the paper's stated properties to the pre-training convergence findings in Figure 3.",
+            "intro": "Connect the paper's stated properties to the pre-training convergence findings in Figure 3.",
+            "observation": "Description of pre-training loss curves. → Animated summary of convergence speedup for both RoFormer and Performer.",
+            "consequence": "Animated summary of convergence speedup for both RoFormer and Performer.",
+            "beats": [
+              "Description of pre-training loss curves.",
+              "Animated summary of convergence speedup for both RoFormer and Performer."
+            ],
+            "source_refs": [
+              "rope-paper:sec4.2"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Does RoPE change the shown pre-training optimization trajectory?",
+            "setting": "BookCorpus + Wikipedia MLM and Performer comparisons",
+            "metric": "training loss over steps",
+            "evidence_kind": "authors_reported_curve",
+            "evidence": "Figure 3 reports faster convergence for RoFormer and for Performer equipped with RoPE.",
+            "takeaway": "Replacing the position mechanism with RoPE yields faster convergence in pre-training.",
+            "source_refs": [
+              "rope-paper:fig3"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Sequence Length Flexibility",
+            "paragraphs": [
+              "This faster convergence demonstrates that Rotary Position Embedding benefits both standard and linear self-attention architectures. Furthermore, the authors evaluate sequence length flexibility to see if these benefits extrapolate to longer contexts, such as long legal text."
+            ],
+            "source_refs": [
+              "rope-paper:sec4"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Does a longer sequence setting help on long legal text?",
+            "setting": "CAIL2019-SCM with RoFormer-512 versus RoFormer-1024",
+            "metric": "test accuracy",
+            "evidence_kind": "exact_table",
+            "evidence": "Table 5 reports 68.29 at length 512 and 69.79 at length 1024.",
+            "takeaway": "Extrapolation claims regarding sequence length flexibility are supported, though sequential training stages and other confounds remain relevant.",
+            "source_refs": [
+              "rope-paper:table5"
+            ]
+          }
+        ]
+      },
+      "limitations_and_confounds": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Limitations",
+            "question": "Is RoFormer uniformly better across all GLUE tasks and sequence lengths?",
+            "context": "While RoPE provides theoretical elegance and improvements in pre-training convergence and translation, its impact on downstream natural language understanding tasks and long-sequence evaluations requires careful interpretation to avoid the misconception that it guarantees state-of-the-art performance everywhere.",
+            "source_refs": [
+              "rope-paper:table2",
+              "rope-paper:table5"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Is RoFormer uniformly better across GLUE tasks?",
+            "setting": "Six GLUE datasets under the paper's pre-training setup",
+            "metric": "task-specific validation scores",
+            "evidence_kind": "exact_table",
+            "evidence": "Table 2 is mixed: RoFormer is higher on MRPC, STS-B, and QQP, but lower on SST-2, QNLI, and MNLI in the reported setup.",
+            "takeaway": "Table 2 shows mixed results on GLUE tasks, leaving the exact task-specific benefits partially unexplained.",
+            "source_refs": [
+              "rope-paper:table2"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Does a longer sequence setting help on long legal text?",
+            "setting": "CAIL2019-SCM with RoFormer-512 versus RoFormer-1024",
+            "metric": "test accuracy",
+            "evidence_kind": "exact_table",
+            "evidence": "Table 5 reports 68.29 at length 512 and 69.79 at length 1024.",
+            "takeaway": "While long legal text accuracy improves at length 1024, sequential training stages and other confounds make it difficult to isolate sequence length flexibility from other factors.",
+            "source_refs": [
+              "rope-paper:table5"
+            ]
+          },
+          {
+            "type": "limitation",
+            "items": [
+              {
+                "label": "Mixed GLUE Performance",
+                "detail": "RoFormer does not guarantee state-of-the-art performance across all natural language understanding benchmarks, as evidenced by lower scores on SST-2, QNLI, and MNLI compared to the baseline."
+              },
+              {
+                "label": "Experimental Confounds",
+                "detail": "Sequential training stages and other variables in the CAIL2019-SCM evaluation make it difficult to isolate the exact contribution of sequence length flexibility from other training factors."
+              }
+            ],
+            "source_refs": [
+              "rope-paper:table2",
+              "rope-paper:table5"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Does RoPE guarantee state-of-the-art performance across all natural language understanding benchmarks?",
+            "answer": "No. While it improves pre-training convergence and translation, Table 2 shows mixed results on GLUE tasks, with lower performance on SST-2, QNLI, and MNLI."
+          }
+        ]
+      }
+    },
+    "animation_plan": [
+      {
+        "section_id": "motivation_absolute_position",
+        "media_id": "rope-lineage-micro",
+        "purpose": "Animate the transition from the additive absolute position encodings (Eqs. 3-4) to establish the baseline before introducing relative requirements.",
+        "before_state": "Tokens are represented by semantic embeddings without explicit sequence order.",
+        "after_state": "Absolute position vectors are added to the embeddings, creating the standard Transformer baseline.",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "rotary_position_embedding",
+        "media_id": "rope-relative-micro",
+        "purpose": "Demonstrate how absolute rotations R_m and R_n enter separately, and orthogonality collapses their product to R_{n-m}.",
+        "before_state": "Separate query and key vectors with absolute position rotations.",
+        "after_state": "Inner product showing the relative position identity.",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "rotary_position_embedding",
+        "media_id": "rope-frequency-pairs-micro",
+        "purpose": "Visualize how each adjacent coordinate pair uses the same position m with its own frequency, avoiding full matrix multiplication.",
+        "before_state": "Standard feature vector.",
+        "after_state": "Feature vector divided into adjacent pairs, each rotating at a distinct frequency.",
+        "adjacent_block_index": 4
+      },
+      {
+        "section_id": "algebraic_properties",
+        "media_id": "rope-decay-micro",
+        "purpose": "Show the schematic motion explaining the direction of the derived bound for long-term decay.",
+        "before_state": "The algebraic derivation of the distance-dependent bound.",
+        "after_state": "A visual confirmation that the rotary contribution decays as relative distance increases.",
+        "adjacent_block_index": 3
+      },
+      {
+        "section_id": "empirical_evidence",
+        "media_id": "rope-translation-result-micro",
+        "purpose": "Visualize the BLEU score comparison between RoFormer and Transformer-base.",
+        "before_state": "Textual report of translation quality.",
+        "after_state": "Visual number line showing the 0.2 BLEU improvement.",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "empirical_evidence",
+        "media_id": "rope-findings",
+        "purpose": "Connect the paper's stated properties to the pre-training convergence findings in Figure 3.",
+        "before_state": "Description of pre-training loss curves.",
+        "after_state": "Animated summary of convergence speedup for both RoFormer and Performer.",
+        "adjacent_block_index": 4
+      }
+    ],
+    "appendix_entries": [
+      {
+        "id": "rope_proof_identities",
+        "title": "RoPE Proof Identities and Derivations",
+        "body": "Equations 20 through 34 in the RoFormer paper provide the step-by-step derivation of the block-diagonal rotation matrix and its elementwise implementation. By proving that the inner product of two vectors rotated by block-diagonal matrices depends only on the relative angle differences, the authors establish the mathematical foundation for RoPE's efficient pseudocode.",
+        "source_refs": [
+          "rope-paper:eq20-34"
+        ]
+      }
+    ]
+  },
+  "formula_map": {
+    "schema_version": "formula-manim-map/0.1.0",
+    "registry_ref": "data/formula_explainer/primitive_registry.json",
+    "manim_compatibility": {
+      "validated_render_versions": [
+        "0.19.0",
+        "0.20.1"
+      ],
+      "minimum_supported_version": null,
+      "render_evidence_refs": [
+        "experiments/explainer_pipeline/micro_scene_manifest.json",
+        "experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"
+      ],
+      "statement": "The formula primitives have observed render evidence on Manim 0.19.0 and 0.20.1. No minimum-version compatibility claim is made."
+    },
+    "formulas": [
+      {
+        "formula_id": "formula:rope.relative",
+        "title": "RoPE relative-position attention identity",
+        "latex": "(R_mW^qx_m)^T(R_nW^kx_n)=x_m^T(W^q)^TR_{n-m}W^kx_n",
+        "plain_text": "(R_m W_q x_m)^T (R_n W_k x_n) = x_m^T W_q^T R_(n-m) W_k x_n",
+        "source_anchor": {
+          "source_id": "paper:roformer",
+          "source_url": "https://arxiv.org/pdf/2104.09864v5",
+          "revision": "arXiv:2104.09864v5",
+          "content_hash": "sha256:e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+          "locator": "Section 3.2.2, page 5, Equation (16)",
+          "verification": "primary_source_visual"
+        }
+      }
+    ],
+    "formula_nodes": [
+      {
+        "node_id": "node:formula:rope.relative:display",
+        "formula_id": "formula:rope.relative",
+        "level": "formula",
+        "label": "RoPE relative-position attention identity",
+        "expression": "(R_m W_q x_m)^T (R_n W_k x_n) = x_m^T W_q^T R_(n-m) W_k x_n",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.rotate_query",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "rotation",
+        "expression": "rotate query",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.rotate_key",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "rotation",
+        "expression": "rotate key",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.relative_offset",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "subtract",
+        "expression": "relative offset",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:op:rope.relative_dot",
+        "formula_id": "formula:rope.relative",
+        "level": "operation",
+        "label": "dot",
+        "expression": "relative dot",
+        "source_locator": "Section 3.2.2, page 5, Equation (16)"
+      },
+      {
+        "node_id": "node:coverage:rope:1",
+        "formula_id": "coverage:rope:1",
+        "level": "equation coverage",
+        "label": "Eqs. 3–4 — additive absolute position encoding",
+        "expression": "Establish the additive construction used by learned and sinusoidal absolute position encodings.",
+        "source_locator": "rope-paper:eq3-4"
+      },
+      {
+        "node_id": "node:coverage:rope:2",
+        "formula_id": "coverage:rope:2",
+        "level": "equation coverage",
+        "label": "Eqs. 5–10 — additive and decomposed relative position encoding",
+        "expression": "Show how prior methods insert relative terms into the expanded attention score.",
+        "source_locator": "rope-paper:eq5-10"
+      },
+      {
+        "node_id": "node:coverage:rope:3",
+        "formula_id": "coverage:rope:3",
+        "level": "equation coverage",
+        "label": "Eq. 11 — formulation of relative position encoding",
+        "expression": "State the functional requirement that the inner product depend on m−n.",
+        "source_locator": "rope-paper:eq11"
+      },
+      {
+        "node_id": "node:coverage:rope:4",
+        "formula_id": "coverage:rope:4",
+        "level": "equation coverage",
+        "label": "Eqs. 12–13 — two-dimensional rotary solution",
+        "expression": "Solve the functional requirement in the complex plane and make the rotation geometric.",
+        "source_locator": "rope-paper:eq12-13"
+      },
+      {
+        "node_id": "node:coverage:rope:5",
+        "formula_id": "coverage:rope:5",
+        "level": "equation coverage",
+        "label": "Eqs. 14–16 — d-dimensional RoPE and relative identity",
+        "expression": "Pair feature dimensions and use orthogonality to obtain R at n−m in the attention score.",
+        "source_locator": "rope-paper:eq14-16"
+      },
+      {
+        "node_id": "node:coverage:rope:6",
+        "formula_id": "coverage:rope:6",
+        "level": "equation coverage",
+        "label": "Eqs. 17–19 — linear self-attention compatibility",
+        "expression": "Show how rotation can be inserted without changing the kernelized attention form.",
+        "source_locator": "rope-paper:eq17-19"
+      },
+      {
+        "node_id": "node:coverage:rope:8",
+        "formula_id": "coverage:rope:8",
+        "level": "equation coverage",
+        "label": "Eqs. 35–37 — long-term decay",
+        "expression": "Decompose the rotary score by frequency and bound how it changes with relative distance.",
+        "source_locator": "rope-paper:eq35-37 · rope-paper:fig2"
+      }
+    ],
+    "manim_nodes": [
+      {
+        "primitive_id": "manim.axes_vector",
+        "label": "manim.Axes+Arrow+Rotate",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "rotation",
+          "sine",
+          "cosine",
+          "dot"
+        ],
+        "animation_contract": "Axes remain fixed while vector rotation is animated around the origin.",
+        "limitations": [
+          "High-dimensional block rotations require a 2D pair decomposition."
+        ]
+      },
+      {
+        "primitive_id": "manim.math_tex",
+        "label": "manim.MathTex",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "formula_display"
+        ],
+        "animation_contract": "Use MathTex for paper equations; isolate semantic substrings before applying Write, Indicate, or TransformMatchingTex.",
+        "limitations": [
+          "Requires a working LaTeX toolchain in the render environment."
+        ]
+      },
+      {
+        "primitive_id": "manim.transform",
+        "label": "manim.Transform",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "add",
+          "subtract",
+          "multiply",
+          "divide",
+          "matmul",
+          "scale",
+          "concatenate",
+          "linear_projection"
+        ],
+        "animation_contract": "Source and target objects occupy compatible scene regions.",
+        "limitations": [
+          "Semantic token matching needs TransformMatchingTex or authored grouping."
+        ]
+      },
+      {
+        "primitive_id": "manim.transform_matching_tex",
+        "label": "manim.TransformMatchingTex",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "formula_transition",
+          "add",
+          "subtract",
+          "multiply",
+          "divide"
+        ],
+        "animation_contract": "Keep shared mathematical tokens spatially continuous so the reader sees exactly what a method adds, removes, or replaces.",
+        "limitations": [
+          "Requires semantic TeX grouping when equivalent expressions use different tokenization."
+        ]
+      },
+      {
+        "primitive_id": "project.formula_operation_walk",
+        "label": "scenes.formula_explainer_scene.OperationWalk",
+        "origin": "project_reusable",
+        "origin_label": "Project reusable",
+        "status": "available",
+        "operations": [
+          "formula_operation_dag",
+          "stop_gradient"
+        ],
+        "animation_contract": "Every operation chip shows semantic operation text plus a non-color origin badge.",
+        "limitations": [
+          "The first renderer lays out a topological sequence rather than arbitrary branches."
+        ]
+      },
+      {
+        "primitive_id": "project.metric_bars",
+        "label": "scenes.explainer_primitives.MetricBars",
+        "origin": "project_reusable",
+        "origin_label": "Project reusable",
+        "status": "available",
+        "operations": [
+          "metric_animation",
+          "compare",
+          "ablation",
+          "setting_transition"
+        ],
+        "animation_contract": "Keep metric, scale, and row identity fixed while transforming only the controlled setting and sourced values.",
+        "limitations": [
+          "Exact numeric rows only; qualitative paper curves require an explicit schematic label."
+        ]
+      },
+      {
+        "primitive_id": "project.rope_relative_rotation",
+        "label": "scenes.explainer_primitives.RoPERelativeRotation",
+        "origin": "generated_one_off",
+        "origin_label": "Authored one-off",
+        "status": "available",
+        "operations": [
+          "rotation",
+          "dot",
+          "subtract"
+        ],
+        "animation_contract": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "limitations": [
+          "The geometry exposes the exact relative-rotation identity; a numeric equality fixture is still absent."
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "edge:node:formula:rope.relative:display:manim.math_tex",
+        "source": "node:formula:rope.relative:display",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_display",
+        "reason": "Typeset the paper equation as the stable visual anchor.",
+        "evidence_refs": [
+          "Section 3.2.2, page 5, Equation (16)"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:rope.relative:display:project.formula_operation_walk",
+        "source": "node:formula:rope.relative:display",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_display",
+        "reason": "Expose the equation's operation order before selecting specialized views.",
+        "evidence_refs": [
+          "Section 3.2.2, page 5, Equation (16)"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_query:manim.axes_vector",
+        "source": "node:op:rope.rotate_query",
+        "target": "manim.axes_vector",
+        "state": "implemented",
+        "operation_type": "rotation",
+        "reason": "Axes remain fixed while vector rotation is animated around the origin.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_query:project.rope_relative_rotation:alternative",
+        "source": "node:op:rope.rotate_query",
+        "target": "project.rope_relative_rotation",
+        "state": "candidate",
+        "operation_type": "rotation",
+        "reason": "Compatible registry operation; not selected by this formula IR. Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_key:manim.axes_vector",
+        "source": "node:op:rope.rotate_key",
+        "target": "manim.axes_vector",
+        "state": "implemented",
+        "operation_type": "rotation",
+        "reason": "Axes remain fixed while vector rotation is animated around the origin.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.rotate_key:project.rope_relative_rotation:alternative",
+        "source": "node:op:rope.rotate_key",
+        "target": "project.rope_relative_rotation",
+        "state": "candidate",
+        "operation_type": "rotation",
+        "reason": "Compatible registry operation; not selected by this formula IR. Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_offset:project.rope_relative_rotation",
+        "source": "node:op:rope.relative_offset",
+        "target": "project.rope_relative_rotation",
+        "state": "implemented",
+        "operation_type": "subtract",
+        "reason": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_offset:manim.transform:alternative",
+        "source": "node:op:rope.relative_offset",
+        "target": "manim.transform",
+        "state": "candidate",
+        "operation_type": "subtract",
+        "reason": "Compatible registry operation; not selected by this formula IR. Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_dot:project.rope_relative_rotation",
+        "source": "node:op:rope.relative_dot",
+        "target": "project.rope_relative_rotation",
+        "state": "implemented",
+        "operation_type": "dot",
+        "reason": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:rope.relative_dot:manim.axes_vector:alternative",
+        "source": "node:op:rope.relative_dot",
+        "target": "manim.axes_vector",
+        "state": "candidate",
+        "operation_type": "dot",
+        "reason": "Compatible registry operation; not selected by this formula IR. Axes remain fixed while vector rotation is animated around the origin.",
+        "evidence_refs": [
+          "paper:roformer#eq16",
+          "scene:RoPERelativeMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:1:manim.math_tex",
+        "source": "node:coverage:rope:1",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_transition",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq3-4"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:1:project.formula_operation_walk",
+        "source": "node:coverage:rope:1",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_transition",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq3-4"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:1:manim.transform_matching_tex",
+        "source": "node:coverage:rope:1",
+        "target": "manim.transform_matching_tex",
+        "state": "implemented",
+        "operation_type": "formula_transition",
+        "reason": "Keep shared mathematical tokens spatially continuous so the reader sees exactly what a method adds, removes, or replaces.",
+        "evidence_refs": [
+          "rope-paper:eq3-4"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:2:manim.math_tex",
+        "source": "node:coverage:rope:2",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_transition",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq5-10"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:2:project.formula_operation_walk",
+        "source": "node:coverage:rope:2",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_transition",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq5-10"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:2:manim.transform_matching_tex",
+        "source": "node:coverage:rope:2",
+        "target": "manim.transform_matching_tex",
+        "state": "implemented",
+        "operation_type": "formula_transition",
+        "reason": "Keep shared mathematical tokens spatially continuous so the reader sees exactly what a method adds, removes, or replaces.",
+        "evidence_refs": [
+          "rope-paper:eq5-10"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:3:manim.math_tex",
+        "source": "node:coverage:rope:3",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_transition",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq11"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:3:project.formula_operation_walk",
+        "source": "node:coverage:rope:3",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_transition",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq11"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:3:manim.transform_matching_tex",
+        "source": "node:coverage:rope:3",
+        "target": "manim.transform_matching_tex",
+        "state": "implemented",
+        "operation_type": "formula_transition",
+        "reason": "Keep shared mathematical tokens spatially continuous so the reader sees exactly what a method adds, removes, or replaces.",
+        "evidence_refs": [
+          "rope-paper:eq11"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:4:manim.math_tex",
+        "source": "node:coverage:rope:4",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "geometry",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq12-13"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:4:project.formula_operation_walk",
+        "source": "node:coverage:rope:4",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "geometry",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq12-13"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:4:project.rope_relative_rotation",
+        "source": "node:coverage:rope:4",
+        "target": "project.rope_relative_rotation",
+        "state": "implemented",
+        "operation_type": "geometry",
+        "reason": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "rope-paper:eq12-13"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:5:manim.math_tex",
+        "source": "node:coverage:rope:5",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "geometry",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:5:project.formula_operation_walk",
+        "source": "node:coverage:rope:5",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "geometry",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:5:project.rope_relative_rotation",
+        "source": "node:coverage:rope:5",
+        "target": "project.rope_relative_rotation",
+        "state": "implemented",
+        "operation_type": "geometry",
+        "reason": "Preserve vector identity while collapsing two rotations into one relative angle.",
+        "evidence_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:6:manim.math_tex",
+        "source": "node:coverage:rope:6",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "none",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq17-19"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:6:project.formula_operation_walk",
+        "source": "node:coverage:rope:6",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "none",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq17-19"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:8:manim.math_tex",
+        "source": "node:coverage:rope:8",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "metric_animation",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:8:project.formula_operation_walk",
+        "source": "node:coverage:rope:8",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "metric_animation",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:rope:8:project.metric_bars",
+        "source": "node:coverage:rope:8",
+        "target": "project.metric_bars",
+        "state": "implemented",
+        "operation_type": "metric_animation",
+        "reason": "Keep metric, scale, and row identity fixed while transforming only the controlled setting and sourced values.",
+        "evidence_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      }
+    ]
+  },
+  "code_map": {
+    "schema_version": "explainer-code-map/0.1.0",
+    "formula_nodes": [
+      {
+        "node_id": "formula:formula:rope.relative",
+        "formula_id": "formula:rope.relative",
+        "label": "Eq. 16 · relative-position identity",
+        "expression": "(R_m W_q x_m)^T (R_n W_k x_n) = x_m^T W_q^T R_(n-m) W_k x_n",
+        "source_url": "https://arxiv.org/pdf/2104.09864v5"
+      }
+    ],
+    "code_nodes": [
+      {
+        "node_id": "code:roformer-readme:cos_pos / sin_pos",
+        "code_id": "roformer-readme",
+        "symbol": "cos_pos / sin_pos",
+        "path": "README.md",
+        "line_start": 22,
+        "line_end": 23,
+        "role": "constructs the paired rotation phases",
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L22-L23"
+      },
+      {
+        "node_id": "code:roformer-readme:qw2 / kw2 sign-swap",
+        "code_id": "roformer-readme",
+        "symbol": "qw2 / kw2 sign-swap",
+        "path": "README.md",
+        "line_start": 24,
+        "line_end": 29,
+        "role": "implements the 2D quarter-turn within every feature pair",
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L24-L29"
+      },
+      {
+        "node_id": "code:roformer-readme:einsum attention",
+        "code_id": "roformer-readme",
+        "symbol": "einsum attention",
+        "path": "README.md",
+        "line_start": 31,
+        "line_end": 32,
+        "role": "takes the inner product after both query and key are rotated",
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L31-L32"
+      }
+    ],
+    "formula_code_edges": [
+      {
+        "edge_id": "formula:formula:rope.relative->code:roformer-readme:cos_pos / sin_pos",
+        "source": "formula:formula:rope.relative",
+        "target": "code:roformer-readme:cos_pos / sin_pos",
+        "state": "confirmed",
+        "role": "constructs the paired rotation phases",
+        "evidence_refs": [
+          "rope-paper:eq14-16",
+          "roformer-readme:rope-pseudocode"
+        ]
+      },
+      {
+        "edge_id": "formula:formula:rope.relative->code:roformer-readme:qw2 / kw2 sign-swap",
+        "source": "formula:formula:rope.relative",
+        "target": "code:roformer-readme:qw2 / kw2 sign-swap",
+        "state": "confirmed",
+        "role": "implements the 2D quarter-turn within every feature pair",
+        "evidence_refs": [
+          "rope-paper:eq20-34",
+          "roformer-readme:rope-pseudocode"
+        ]
+      },
+      {
+        "edge_id": "formula:formula:rope.relative->code:roformer-readme:einsum attention",
+        "source": "formula:formula:rope.relative",
+        "target": "code:roformer-readme:einsum attention",
+        "state": "confirmed",
+        "role": "takes the inner product after both query and key are rotated",
+        "evidence_refs": [
+          "rope-paper:eq16",
+          "roformer-readme:rope-pseudocode"
+        ]
+      }
+    ],
+    "example": {
+      "label": "One CAIL2019-SCM triple through the official fine-tuning script",
+      "input": "A legal case A is paired once with candidate B and once with candidate C.",
+      "output": "The two sigmoid scores are compared and contribute one correct/incorrect evaluation decision."
+    },
+    "dag_nodes": [
+      {
+        "id": "triple",
+        "label": "Load one A/B/C case",
+        "kind": "input",
+        "stage": "data",
+        "detail": "The label determines which candidate is the positive continuation for case A.",
+        "artifact": "(text A, positive, negative)",
+        "path": "finetune_scm.py",
+        "line_start": 24,
+        "line_end": 37,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L24-L37"
+      },
+      {
+        "id": "pairs",
+        "label": "Tokenize A+B and A+C",
+        "kind": "operation",
+        "stage": "data",
+        "detail": "The generator emits two paired sequences with labels 1 and 0, then pads the batch.",
+        "artifact": "batch_token_ids · batch_segment_ids · labels",
+        "path": "finetune_scm.py",
+        "line_start": 53,
+        "line_end": 76,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L53-L76"
+      },
+      {
+        "id": "roformer",
+        "label": "Run the RoFormer encoder",
+        "kind": "function",
+        "stage": "model",
+        "detail": "build_transformer_model loads model='roformer' before the task head.",
+        "artifact": "contextual token states",
+        "path": "finetune_scm.py",
+        "line_start": 79,
+        "line_end": 87,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L79-L87"
+      },
+      {
+        "id": "phase",
+        "label": "Construct cos/sin phases",
+        "kind": "operation",
+        "stage": "attention",
+        "detail": "The official README repeats the position frequencies across adjacent feature pairs.",
+        "artifact": "cos_pos · sin_pos",
+        "path": "README.md",
+        "line_start": 22,
+        "line_end": 23,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L22-L23"
+      },
+      {
+        "id": "rotate",
+        "label": "Rotate query and key pairs",
+        "kind": "operation",
+        "stage": "attention",
+        "detail": "Negate-and-swap companions implement q·cos + q⊥·sin and the same operation for k.",
+        "artifact": "rotated qw · kw",
+        "path": "README.md",
+        "line_start": 24,
+        "line_end": 29,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L24-L29"
+      },
+      {
+        "id": "attention",
+        "label": "Compute query-key scores",
+        "kind": "function",
+        "stage": "attention",
+        "detail": "The ordinary einsum now contains the relative-position identity from Eq. 16.",
+        "artifact": "attention score tensor a",
+        "path": "README.md",
+        "line_start": 31,
+        "line_end": 32,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L31-L32"
+      },
+      {
+        "id": "classifier",
+        "label": "Pool and score each pair",
+        "kind": "objective",
+        "stage": "task",
+        "detail": "Global average pooling and a sigmoid head produce one score for A+B and one for A+C.",
+        "artifact": "two sigmoid scores",
+        "path": "finetune_scm.py",
+        "line_start": 84,
+        "line_end": 94,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L84-L94"
+      },
+      {
+        "id": "decision",
+        "label": "Compare the pair scores",
+        "kind": "output",
+        "stage": "evaluate",
+        "detail": "Evaluation counts the example correct when the positive pair score exceeds the negative pair score.",
+        "artifact": "right / total accuracy",
+        "path": "finetune_scm.py",
+        "line_start": 102,
+        "line_end": 108,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L102-L108"
+      },
+      {
+        "id": "checkpoint",
+        "label": "Retain the best validation epoch",
+        "kind": "output",
+        "stage": "evaluate",
+        "detail": "The callback saves weights only when validation accuracy improves, then reports test accuracy.",
+        "artifact": "best_model_scm.weights",
+        "path": "finetune_scm.py",
+        "line_start": 111,
+        "line_end": 126,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L111-L126"
+      }
+    ],
+    "dag_edges": [
+      {
+        "source": "triple",
+        "target": "pairs",
+        "label": "make positive and negative pair"
+      },
+      {
+        "source": "pairs",
+        "target": "roformer",
+        "label": "padded token IDs"
+      },
+      {
+        "source": "roformer",
+        "target": "phase",
+        "label": "inside self-attention"
+      },
+      {
+        "source": "phase",
+        "target": "rotate",
+        "label": "pairwise coefficients"
+      },
+      {
+        "source": "rotate",
+        "target": "attention",
+        "label": "rotated q and k"
+      },
+      {
+        "source": "attention",
+        "target": "classifier",
+        "label": "contextual states"
+      },
+      {
+        "source": "classifier",
+        "target": "decision",
+        "label": "rank two scores"
+      },
+      {
+        "source": "decision",
+        "target": "checkpoint",
+        "label": "aggregate validation accuracy"
+      },
+      {
+        "source": "checkpoint",
+        "target": "pairs",
+        "label": "next epoch loop",
+        "edge_kind": "loop"
+      }
+    ],
+    "experiment_pipeline": [
+      {
+        "id": "architecture",
+        "label": "Replace position mechanism",
+        "detail": "Transformer/RoFormer and Performer/RoPE comparisons",
+        "source_refs": [
+          "rope-paper:sec4"
+        ]
+      },
+      {
+        "id": "pretrain",
+        "label": "Pre-train",
+        "detail": "BookCorpus + Wikipedia MLM where applicable",
+        "source_refs": [
+          "rope-paper:sec4.2"
+        ]
+      },
+      {
+        "id": "finetune",
+        "label": "Fine-tune by task",
+        "detail": "translation, GLUE, and long-text classification settings differ",
+        "source_refs": [
+          "rope-paper:sec4"
+        ]
+      },
+      {
+        "id": "evaluate",
+        "label": "Read metric in context",
+        "detail": "BLEU, task scores, accuracy, and loss curves are not interchangeable",
+        "source_refs": [
+          "rope-paper:table1",
+          "rope-paper:table2",
+          "rope-paper:table5",
+          "rope-paper:fig3"
+        ]
+      }
+    ],
+    "repository_sources": [
+      {
+        "code_id": "roformer-readme",
+        "repository": "https://github.com/ZhuiyiTechnology/roformer",
+        "revision": "dfc678ad506fc527ba17ead8db23cbe4d947a9b4",
+        "checkout_path": "external/RoFormer",
+        "mapping_state": "confirmed",
+        "excerpts": [
+          {
+            "path": "README.md",
+            "symbol": "RoPE attention pseudocode",
+            "line_start": 18,
+            "line_end": 32
+          },
+          {
+            "path": "finetune_scm.py",
+            "symbol": "CAIL2019-SCM data_generator / evaluate",
+            "line_start": 24,
+            "line_end": 141
+          }
+        ]
+      }
+    ]
+  },
+  "generation": {
+    "pipeline_version": "explainer-pipeline/0.1.0",
+    "source_packet_sha256": "e351de41e1997542eee1b2da8cc5c4de667cd798a87da1760cf64c2db0d735e0",
+    "stage_traces": [
+      {
+        "stage": "concept_graph",
+        "paper_id": "rope",
+        "provider": "google_vertex",
+        "model": "gemini-3.1-pro-preview",
+        "generation_mode": "live",
+        "prompt_sha256": "ff9e082d0f3fef3a4e614a6ba8ab16ed94a00b49c9ee9c9d9b217e49f9cd7493",
+        "final_prompt_sha256": "ff9e082d0f3fef3a4e614a6ba8ab16ed94a00b49c9ee9c9d9b217e49f9cd7493",
+        "response_sha256": "5694b861e48e47a411dae6702187635af7efc0e020dd6f30e404bd6d43826860",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 6435,
+          "output_tokens": 1655,
+          "reasoning_tokens": 2264,
+          "total_tokens": 10354
+        },
+        "duration_ms": 27769,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "ff9e082d0f3fef3a4e614a6ba8ab16ed94a00b49c9ee9c9d9b217e49f9cd7493",
+            "response_sha256": "5694b861e48e47a411dae6702187635af7efc0e020dd6f30e404bd6d43826860",
+            "usage": {
+              "input_tokens": 6435,
+              "output_tokens": 1655,
+              "reasoning_tokens": 2264,
+              "total_tokens": 10354
+            },
+            "duration_ms": 27769
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.03273,
+          "rate_card": {
+            "rate_card_id": "vertex-gemini-3.1-pro-standard-2026-07-22",
+            "provider": "google_vertex",
+            "input_per_million_usd": 2.0,
+            "output_per_million_usd": 12.0,
+            "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+            "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens."
+          }
+        }
+      },
+      {
+        "stage": "lesson_plan",
+        "paper_id": "rope",
+        "provider": "google_vertex",
+        "model": "gemini-3.1-pro-preview",
+        "generation_mode": "live",
+        "prompt_sha256": "14ac930dac8665c52f9ff336fca0530cb42e4a498376aeeb75a093701f17d937",
+        "final_prompt_sha256": "14ac930dac8665c52f9ff336fca0530cb42e4a498376aeeb75a093701f17d937",
+        "response_sha256": "78b95ed760d763455a477daf9609e41361f9e97455c594d81108bbc64233da9f",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 7710,
+          "output_tokens": 2003,
+          "reasoning_tokens": 4714,
+          "total_tokens": 14427
+        },
+        "duration_ms": 48375,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "14ac930dac8665c52f9ff336fca0530cb42e4a498376aeeb75a093701f17d937",
+            "response_sha256": "78b95ed760d763455a477daf9609e41361f9e97455c594d81108bbc64233da9f",
+            "usage": {
+              "input_tokens": 7710,
+              "output_tokens": 2003,
+              "reasoning_tokens": 4714,
+              "total_tokens": 14427
+            },
+            "duration_ms": 48375
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.039456,
+          "rate_card": {
+            "rate_card_id": "vertex-gemini-3.1-pro-standard-2026-07-22",
+            "provider": "google_vertex",
+            "input_per_million_usd": 2.0,
+            "output_per_million_usd": 12.0,
+            "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+            "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens."
+          }
+        }
+      },
+      {
+        "stage": "section_content",
+        "paper_id": "rope",
+        "provider": "google_vertex",
+        "model": "gemini-3.1-pro-preview",
+        "generation_mode": "live",
+        "prompt_sha256": "267625b13d14c0d748b4961d8bb14da7553bd0fc763fb2d5294615160de80d60",
+        "final_prompt_sha256": "3c74938f367399aef89fe292c8bf53274eb699cc018ff1ad94149cd47ff67655",
+        "response_sha256": "fcff943b80d693d497d3697af5f928c5e543c9a72a92280017393b8af04b45ce",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 63942,
+          "output_tokens": 7210,
+          "reasoning_tokens": 32554,
+          "total_tokens": 103706
+        },
+        "duration_ms": 286606,
+        "attempt_count": 7,
+        "section_call_count": 6,
+        "structural_normalizations": [
+          {
+            "section_id": "motivation_absolute_position",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-lineage-micro"
+          },
+          {
+            "section_id": "motivation_absolute_position",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-lineage-micro"
+          },
+          {
+            "section_id": "equation_lineage_formulation",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-lineage-micro"
+          },
+          {
+            "section_id": "equation_lineage_formulation",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-lineage-micro"
+          },
+          {
+            "section_id": "rotary_position_embedding",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-relative-micro"
+          },
+          {
+            "section_id": "rotary_position_embedding",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-frequency-pairs-micro"
+          },
+          {
+            "section_id": "rotary_position_embedding",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-relative-micro"
+          },
+          {
+            "section_id": "rotary_position_embedding",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-frequency-pairs-micro"
+          },
+          {
+            "section_id": "algebraic_properties",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-decay-micro"
+          },
+          {
+            "section_id": "algebraic_properties",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-decay-micro"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-translation-result-micro"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-findings"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-translation-result-micro"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-findings"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-translation-result-micro"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "rope-findings"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-translation-result-micro"
+          },
+          {
+            "section_id": "empirical_evidence",
+            "operation": "animation_index_from_media_id",
+            "media_id": "rope-findings"
+          },
+          {
+            "section_id": "equation_lineage_formulation",
+            "operation": "drop_repeated_animation_after_first_use",
+            "media_id": "rope-lineage-micro"
+          }
+        ],
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "4243f317941b3f9c6216c2557830940fe213cbbb1b5bf82527fdb657c066d092",
+            "response_sha256": "1314cca7dd0b000af00e040a8cc72adc4de7df2ce217e16e2149cecadd6f5335",
+            "usage": {
+              "input_tokens": 8907,
+              "output_tokens": 701,
+              "reasoning_tokens": 4411,
+              "total_tokens": 14019
+            },
+            "duration_ms": 39572,
+            "section_id": "motivation_absolute_position"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "c87d631873f5255b92394d9a9f8a6144e18dd08335ccbe8e826954cdb45b972a",
+            "response_sha256": "3637f83a4e9a14720171e8b0f915d49ae7cbbf1c3d17e4d3c1a315b525879837",
+            "usage": {
+              "input_tokens": 9018,
+              "output_tokens": 1305,
+              "reasoning_tokens": 6966,
+              "total_tokens": 17289
+            },
+            "duration_ms": 57584,
+            "section_id": "equation_lineage_formulation"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "40779f6a26bec22d7e410b708dfd984f3d9cf60311fa28e742d7d719f67e9061",
+            "response_sha256": "4e95017c55af32e0ca0b73e32ff4a904ae9ae6eea28aa7a1df978461279c3277",
+            "usage": {
+              "input_tokens": 8991,
+              "output_tokens": 1484,
+              "reasoning_tokens": 4281,
+              "total_tokens": 14756
+            },
+            "duration_ms": 41778,
+            "section_id": "rotary_position_embedding"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "b11821550e7821e935fe1afc479e48e18afd6539df88da058ba2f43937b7c5c4",
+            "response_sha256": "eba1e1947e0b87df712c40a645334e9131066cc61d39f2aa96371f398340bc90",
+            "usage": {
+              "input_tokens": 8961,
+              "output_tokens": 850,
+              "reasoning_tokens": 4848,
+              "total_tokens": 14659
+            },
+            "duration_ms": 42033,
+            "section_id": "algebraic_properties"
+          },
+          {
+            "attempt": 1,
+            "status": "invalid",
+            "prompt_sha256": "ef87b6c55a24d64b55236e7686216a31ae2b297d76c7ff7af2e77422f69f0d71",
+            "response_sha256": "85beafb29fe8568e30ce6aaeef8eac9f999049d8f66a1078181aae6ad2c05642",
+            "usage": {
+              "input_tokens": 8985,
+              "output_tokens": 1022,
+              "reasoning_tokens": 7777,
+              "total_tokens": 17784
+            },
+            "duration_ms": 62255,
+            "error": "section_content invalid:\n- section empirical_evidence block 3 missing ['heading']\n- section empirical_evidence block 6 missing ['heading']",
+            "payload_excerpt": "{\"sections\": {\"empirical_evidence\": {\"blocks\": [{\"type\": \"prose\", \"heading\": \"Translation, Pre-training, and Sequence Length Flexibility\", \"paragraphs\": [\"To evaluate the empirical benefits of Rotary Position Embedding (RoPE), the authors test RoFormer across machine translation, language model pre-training, and long-text classification. A central question is whether replacing the standard position mechanism with RoPE improves convergence and sequence length flexibility without sacrificing baseline performance.\"], \"source_refs\": [\"rope-paper:sec4\"]}, {\"type\": \"result_story\", \"question\": \"Does the RoFormer architecture retain translation quality?\", \"setting\": \"WMT14 English-to-German\", \"metric\": \"BLEU\", \"evidence_kind\": \"exact_table\", \"evidence\": \"Table 1 reports 27.5 for RoFormer and 27.3 for Transformer-base.\", \"takeaway\": \"RoPE retains and slightly improves translation quality compared to the baseline Transformer.\", \"source_refs\": [\"rope-paper:table1\"]}, {\"type\": \"micro_video\", \"media_id\": \"rope-translation-result-micro\", \"poster_id\": \"rope-translation-result-micro-poster\", \"captions_id\": \"rope-translation-result-micro-captions\", \"title\": \"Visualize the BLEU score comparison between RoFormer and Transformer-base.\", \"intro\": \"Visualize the BLEU score comparison between RoFormer and Transformer-base.\", \"observation\": \"Textual report of translation quality. → Visual number line showing the 0.2 BLEU improvement.\", \"consequence\": \"Visual number line showing the 0.2 BLEU improvement.\", \"beats\": [\"Textual report of translation quality.\", \"Visual number line showing the 0.2 BLEU improvement.\"], \"source_refs\": [\"rope-paper:table1\"]}, {\"type\": \"prose\", \"paragraphs\": [\"The slight improvement in BLEU confirms that the geometric rotation preserves the model's representational capacity. Beyond baseline translation, the authors investigate whether explicitly encoding relative position provides a more easily optimized signal during language model pre-training.\"], \"source_refs\": [",
+            "section_id": "empirical_evidence"
+          },
+          {
+            "attempt": 2,
+            "status": "valid",
+            "prompt_sha256": "76cb869b4ebbff51e0287117840b82fccdb85cf87337ab664534431def84fed3",
+            "response_sha256": "4c0bab968e68959c62479d2058550aadf56b4a1b4821ac72b0f71640f106eb35",
+            "usage": {
+              "input_tokens": 10105,
+              "output_tokens": 1043,
+              "reasoning_tokens": 1907,
+              "total_tokens": 13055
+            },
+            "duration_ms": 21090,
+            "section_id": "empirical_evidence"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "8bf61c3f9683a736927f738ab51203c2dc20420d7341437928ce695bc2960ec3",
+            "response_sha256": "36fe6dc1f8fb209c714fe78cb1f132c6505e9cdf088f5fa978edae1e7d47ef1d",
+            "usage": {
+              "input_tokens": 8975,
+              "output_tokens": 805,
+              "reasoning_tokens": 2364,
+              "total_tokens": 12144
+            },
+            "duration_ms": 22294,
+            "section_id": "limitations_and_confounds"
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.214404,
+          "rate_card": {
+            "rate_card_id": "vertex-gemini-3.1-pro-standard-2026-07-22",
+            "provider": "google_vertex",
+            "input_per_million_usd": 2.0,
+            "output_per_million_usd": 12.0,
+            "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+            "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens."
+          }
+        }
+      }
+    ],
+    "completion": "full"
+  }
+}

@@ -16,6 +16,19 @@
       "findings",
       "limits"
     ],
+    "section_policy": {
+      "mode": "model_proposed",
+      "min_sections": 5,
+      "max_sections": 8,
+      "required_roles": [
+        "motivation",
+        "lineage",
+        "mechanism",
+        "evidence",
+        "limitations"
+      ],
+      "sequence_rule": "Begin with the paper's motivating question, establish the prior objective and terminology before the mechanism, connect the mechanism to original code, then separate experimental evidence from limitations."
+    },
     "sources": [
       {
         "source_id": "feynrl-paper",
@@ -811,6 +824,7 @@
     "sections": [
       {
         "id": "motivation",
+        "role": "motivation",
         "nav_label": "Motivation",
         "title": "Trust-region concern and off-policy concern",
         "intent": "Separate two concerns that a fixed clipping factor treats as one: limiting each update and correcting mismatch between the behavior and current policies.",
@@ -829,6 +843,7 @@
       },
       {
         "id": "related_work",
+        "role": "lineage",
         "nav_label": "Related work",
         "title": "Fixed clipping and prior policy-optimization objectives",
         "intent": "Trace how the score-function estimator becomes an importance-weighted objective and then a fixed-clipped objective, so the precise change made by P3O is visible.",
@@ -847,6 +862,7 @@
       },
       {
         "id": "ess",
+        "role": "mechanism",
         "nav_label": "ESS",
         "title": "Effective sample size of policy ratios",
         "intent": "Introduce the batch statistic that P3O will use to replace a preset clipping factor and control off-policy regularization.",
@@ -864,6 +880,7 @@
       },
       {
         "id": "p3o",
+        "role": "mechanism",
         "nav_label": "P3O",
         "title": "Policy-on Policy-off Policy Optimization",
         "intent": "Show where the same batch-computed e_B enters the score-function weight and behavioral KL term of the adopted P3O objective.",
@@ -882,6 +899,7 @@
       },
       {
         "id": "findings",
+        "role": "evidence",
         "nav_label": "Findings",
         "title": "Experimental findings",
         "intent": "Test the claimed removal of clip-factor tuning and robustness to behavior-policy mismatch across temperature and precision changes.",
@@ -900,6 +918,7 @@
       },
       {
         "id": "limits",
+        "role": "limitations",
         "nav_label": "Limits",
         "title": "Potential issue and claim boundary",
         "intent": "Examine the paper's two-anchor extension and preserve the boundary between tested regimes and a general stability claim.",
@@ -1233,11 +1252,26 @@
             "source_refs": [
               "feynrl-paper:eq11"
             ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "If all four policy ratios doubled but stayed equal, would normalized ESS fall?",
+            "answer": "No. Equation 11 is scale-normalized. Equal ratios still distribute weight uniformly, so normalized ESS remains 1; concentration, not the common scale, lowers it."
           }
         ]
       },
       "p3o": {
         "blocks": [
+          {
+            "type": "paper_question",
+            "label": "What Eq. 12 must do",
+            "question": "Once e_B measures effective support, how should the objective respond to a batch that is less reliable for the current policy?",
+            "context": "P3O uses the same batch statistic in two places: it limits the detached score-function weight and increases behavioral KL regularization.",
+            "source_refs": [
+              "feynrl-paper:eq11",
+              "feynrl-paper:eq12"
+            ]
+          },
           {
             "type": "formula_steps",
             "formula": "L_P3O = −sg(min{ρ_t,e_B}) log π_θ A_t + (1−e_B) KL(π_θ || π_b)",
@@ -1329,16 +1363,9 @@
             ]
           },
           {
-            "type": "prose",
-            "heading": "Why P3O rather than another clip schedule",
-            "paragraphs": [
-              "In the paper's formulation, e_B is computed from the same batch used for the update. The score-function term and the off-policy regularizer therefore respond to measured mismatch rather than to a clipping factor chosen in advance. The implementation keeps the equation and code in the same conceptual scene."
-            ],
-            "source_refs": [
-              "feynrl-paper:sec3",
-              "feynrl-paper:eq12",
-              "feynrl-p3o:compute_policy_loss"
-            ]
+            "type": "learner_check",
+            "prompt": "Why is P3O not simply PPO with e_B substituted for an upper clipping bound?",
+            "answer": "Equation 12 also scales the behavioral KL term by 1−e_B, and the score term uses a detached min{ρ_t,e_B} weight. The batch statistic therefore couples two controls rather than replacing one constant."
           }
         ]
       },
@@ -1509,6 +1536,56 @@
         ]
       }
     },
+    "animation_plan": [
+      {
+        "section_id": "related_work",
+        "media_id": "feynrl-lineage-micro",
+        "purpose": "Show the objective lineage as a sequence of changed controls rather than another paragraph.",
+        "before_state": "fixed clipping and prior policy-optimization objectives are named in HTML",
+        "after_state": "the reader can locate the batch-adaptive control introduced by P3O",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "related_work",
+        "media_id": "feynrl-offpolicy-bridge-micro",
+        "purpose": "Make the sampling-distribution change and its two mathematical consequences visible.",
+        "before_state": "the on-policy estimator is established",
+        "after_state": "the behavior ratio and behavioral KL have distinct roles",
+        "adjacent_block_index": 3
+      },
+      {
+        "section_id": "ess",
+        "media_id": "feynrl-ess-micro",
+        "purpose": "Hold token count fixed while ratio concentration changes normalized ESS.",
+        "before_state": "the reader has compared two numeric fixtures",
+        "after_state": "ESS is understood as effective support, not batch size",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "p3o",
+        "media_id": "feynrl-p3o-micro",
+        "purpose": "Couple the two Eq. 12 controls through the same batch statistic.",
+        "before_state": "both objective terms are named",
+        "after_state": "the reader sees why P3O is not a clip-bound substitution",
+        "adjacent_block_index": 2
+      },
+      {
+        "section_id": "findings",
+        "media_id": "feynrl-clip-result-micro",
+        "purpose": "Collapse the clipping-factor sweep into one exact held-out comparison.",
+        "before_state": "the experimental question and metric are fixed",
+        "after_state": "the exact Table 7 comparison can be interpreted without axis ambiguity",
+        "adjacent_block_index": 1
+      },
+      {
+        "section_id": "findings",
+        "media_id": "feynrl-findings",
+        "purpose": "Show the reported training change under the precision-mismatch setting.",
+        "before_state": "the setting and evidence kind are explicit",
+        "after_state": "the trajectory is tied back to the paper's reported finding",
+        "adjacent_block_index": 4
+      }
+    ],
     "appendix_entries": [
       {
         "id": "feynrl-provenance",
@@ -2662,7 +2739,7 @@
   },
   "generation": {
     "pipeline_version": "explainer-pipeline/0.1.0",
-    "source_packet_sha256": "dee6a2d603c9417c1dba97fd2c8f731811e7ac50cd8de3715119af5fe6234b2e",
+    "source_packet_sha256": "7a2082b30ec2c66f3c8fd8db29d084082fc8ae487ae8cb65a58703b2a7d00a7a",
     "stage_traces": [
       {
         "stage": "concept_graph",
@@ -2670,11 +2747,23 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "be1a1789e7da4550dbd44b2287f2d1443e30e14528fc89f7d0d91cfe2e5818e4",
+        "prompt_sha256": "f4da072b29a07da2f34d3f79dae896bdca3fdcf9feca8e2735c677d4db1279a3",
+        "final_prompt_sha256": "f4da072b29a07da2f34d3f79dae896bdca3fdcf9feca8e2735c677d4db1279a3",
         "response_sha256": "aba9e2236eface439f5e30e995899508317c0893f8e40a91738231fcfb92a181",
         "source_record": "data/explainer_pipeline/replays/feynrl/concept_graph.json",
         "usage": null,
         "duration_ms": 0,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "f4da072b29a07da2f34d3f79dae896bdca3fdcf9feca8e2735c677d4db1279a3",
+            "response_sha256": "aba9e2236eface439f5e30e995899508317c0893f8e40a91738231fcfb92a181",
+            "usage": null,
+            "duration_ms": 0
+          }
+        ],
         "cost": {
           "status": "not_recorded",
           "estimated_usd": null,
@@ -2687,11 +2776,23 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "9b14f16997dadda2fb62fe88b08297b140419d06b4f3e52f0798dfc860a32990",
-        "response_sha256": "9f644e97110e68d85155bb456a48ae84677c69af4d8dd62dc02a4b58dc26fc8c",
+        "prompt_sha256": "05d8457f32b519277bf5d0911ce71a0b4115b29da81650c989995c809164cecf",
+        "final_prompt_sha256": "05d8457f32b519277bf5d0911ce71a0b4115b29da81650c989995c809164cecf",
+        "response_sha256": "e4d21d2927f04a74e5550e13bf7f049c24f9e118fd9ac1f5f7ac463fd92af8d8",
         "source_record": "data/explainer_pipeline/replays/feynrl/lesson_plan.json",
         "usage": null,
         "duration_ms": 0,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "05d8457f32b519277bf5d0911ce71a0b4115b29da81650c989995c809164cecf",
+            "response_sha256": "e4d21d2927f04a74e5550e13bf7f049c24f9e118fd9ac1f5f7ac463fd92af8d8",
+            "usage": null,
+            "duration_ms": 0
+          }
+        ],
         "cost": {
           "status": "not_recorded",
           "estimated_usd": null,
@@ -2704,11 +2805,23 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "061f64817987931170dcc68e8459d3edbcff0c544cd8de9ee399f5970659fda5",
-        "response_sha256": "999572d9a332b1cf03de110db39ecb2f518fa39309649969ccd997d2c7f596d5",
+        "prompt_sha256": "32e1c0efb9d20e3a52eb44b5b65d7c33a7b768e85934f81d0c32907edbc2f36f",
+        "final_prompt_sha256": "32e1c0efb9d20e3a52eb44b5b65d7c33a7b768e85934f81d0c32907edbc2f36f",
+        "response_sha256": "5fe001735224c187eaed75efc43ad6558931f2f85351bddf9945ede3228bf436",
         "source_record": "data/explainer_pipeline/replays/feynrl/section_content.json",
         "usage": null,
         "duration_ms": 0,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "32e1c0efb9d20e3a52eb44b5b65d7c33a7b768e85934f81d0c32907edbc2f36f",
+            "response_sha256": "5fe001735224c187eaed75efc43ad6558931f2f85351bddf9945ede3228bf436",
+            "usage": null,
+            "duration_ms": 0
+          }
+        ],
         "cost": {
           "status": "not_recorded",
           "estimated_usd": null,

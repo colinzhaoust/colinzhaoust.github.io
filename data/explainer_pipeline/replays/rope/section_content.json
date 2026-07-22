@@ -187,6 +187,16 @@
       "formulation": {
         "blocks": [
           {
+            "type": "paper_question",
+            "label": "State the requirement before choosing a construction",
+            "question": "Can f_q and f_k each receive absolute position while their inner product depends on m−n?",
+            "context": "Equation 11 is a functional requirement. The rotary construction is introduced only after the paper specifies what the attention score must expose.",
+            "source_refs": [
+              "rope-paper:eq11",
+              "rope-paper:sec3.1"
+            ]
+          },
+          {
             "type": "formula_steps",
             "formula": "⟨f_q(x_m,m), f_k(x_n,n)⟩ = g(x_m,x_n,m−n)",
             "steps": [
@@ -222,6 +232,11 @@
               "rope-paper:eq11"
             ],
             "claim_label": "RoFormer Eq. 11"
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Does Eq. 11 already require a rotation matrix?",
+            "answer": "No. It states the desired dependency of the inner product. Rotation is the paper's solution to that requirement, developed in the following equations."
           }
         ]
       },
@@ -336,6 +351,11 @@
               "rope-paper:sec3.4.2",
               "roformer-readme:rope-pseudocode"
             ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why can the implementation use elementwise cosine, sine, and negate-and-swap instead of building R_m?",
+            "answer": "R_m is block diagonal with independent 2D rotations. Each adjacent coordinate pair can therefore compute q cos(mθ)+q_perp sin(mθ) directly."
           }
         ]
       },
@@ -481,6 +501,14 @@
         ]
       }
     },
+    "animation_plan": [
+      {"section_id": "related_work", "media_id": "rope-lineage-micro", "purpose": "Turn the paper's position-encoding history into a visible equation thread.", "before_state": "HTML names what each predecessor changes", "after_state": "Eq. 11 appears as the unresolved design requirement", "adjacent_block_index": 2},
+      {"section_id": "rope", "media_id": "rope-relative-micro", "purpose": "Show separate absolute rotations collapsing to a relative score.", "before_state": "Eqs. 14-16 are parsed symbolically", "after_state": "the reader can explain why n-m appears", "adjacent_block_index": 1},
+      {"section_id": "rope", "media_id": "rope-frequency-pairs-micro", "purpose": "Generalize one 2D rotation into parallel frequency pairs.", "before_state": "the relative identity is understood in two dimensions", "after_state": "the efficient d-dimensional realization is visible", "adjacent_block_index": 2},
+      {"section_id": "findings", "media_id": "rope-decay-micro", "purpose": "Animate the direction of the derived distance-dependent analysis without digitizing Figure 2.", "before_state": "the algebraic claim is separated from empirical results", "after_state": "the reader knows what the schematic does and does not establish", "adjacent_block_index": 1},
+      {"section_id": "findings", "media_id": "rope-findings", "purpose": "Show mixed GLUE deltas and the longer-sequence comparison as separate evidence.", "before_state": "task and metric differences are named", "after_state": "the result is not misread as uniform dominance", "adjacent_block_index": 4},
+      {"section_id": "findings", "media_id": "rope-translation-result-micro", "purpose": "Place the exact WMT14 BLEU values on one shared scale.", "before_state": "the translation setting and metric are fixed", "after_state": "the 0.2 BLEU difference is read at the correct evidence level", "adjacent_block_index": 5}
+    ],
     "appendix_entries": [
       {
         "id": "rope-provenance",
