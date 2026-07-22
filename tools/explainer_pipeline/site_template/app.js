@@ -2,24 +2,45 @@
   "use strict";
 
   const FORMULA_SECTION_ID = "formula";
-  const state = { catalog: null, bundles: new Map(), activePaper: null, activeSection: null };
+  const state = { catalog: null, bundles: new Map(), activeRun: null, activePaper: null, activeSection: null };
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
   const refs = (items = []) => `<span class="source-ref">${items.map(esc).join(" · ")}</span>`;
   const accent = (name) => ({ green: "var(--green)", violet: "var(--violet)", orange: "var(--orange)", cyan: "var(--cyan)", coral: "var(--coral)" }[name] || "var(--gray)");
+  const bundleKey = (runId, paperId) => `${runId}:${paperId}`;
+  const currentRun = () => state.catalog.runs.find((run) => run.run_id === state.activeRun);
+  const currentBundle = (paperId = state.activePaper) => state.bundles.get(bundleKey(state.activeRun, paperId));
+  const routeHash = (view, section) => {
+    const suffix = section ? `/${section}` : "";
+    return `run/${state.activeRun}/${view}${suffix}`;
+  };
 
   async function load() {
     const catalogResponse = await fetch("data/catalog.json");
     if (!catalogResponse.ok) throw new Error(`catalog ${catalogResponse.status}`);
     state.catalog = await catalogResponse.json();
-    await Promise.all(state.catalog.papers.map(async (paper) => {
+    state.activeRun = state.catalog.default_run;
+    await Promise.all(state.catalog.runs.flatMap((run) => run.papers.map(async (paper) => {
       const response = await fetch(paper.bundle);
-      if (!response.ok) throw new Error(`${paper.paper_id} bundle ${response.status}`);
-      state.bundles.set(paper.paper_id, await response.json());
-    }));
+      if (!response.ok) throw new Error(`${run.run_id}/${paper.paper_id} bundle ${response.status}`);
+      state.bundles.set(bundleKey(run.run_id, paper.paper_id), await response.json());
+    })));
+    buildModelSelector();
     buildTabs();
-    $("#status-strip span:last-child").textContent = `${state.bundles.size} reviewed runs · 3 JSON API stages · deterministic Manim · no coding agent`;
+    $("#status-strip span:last-child").textContent = `${state.catalog.runs.length} rendered model run${state.catalog.runs.length === 1 ? "" : "s"} · ${state.catalog.papers.length} fixed papers · 3 JSON API stages · deterministic renderer`;
     route();
+  }
+
+  function buildModelSelector() {
+    const select = $("#model-run-select");
+    select.innerHTML = state.catalog.runs.map((run) => `<option value="${esc(run.run_id)}">${esc(run.label)} · ${esc(run.models.join(" + "))}</option>`).join("");
+    select.value = state.activeRun;
+    select.addEventListener("change", () => {
+      state.activeRun = select.value;
+      const view = state.activePaper && !$("#paper-view").hidden ? state.activePaper : !$("#appendix-view").hidden ? "appendix" : "overview";
+      const section = view === state.activePaper ? state.activeSection : undefined;
+      location.hash = routeHash(view, section);
+    });
   }
 
   function buildTabs() {
@@ -33,7 +54,7 @@
       const button = event.target.closest("button[data-view]");
       if (!button) return;
       const id = button.dataset.view;
-      location.hash = id === "overview" || id === "appendix" ? id : `${id}/${state.bundles.get(id).source_packet.required_section_ids[0]}`;
+      location.hash = id === "overview" || id === "appendix" ? routeHash(id) : routeHash(id, currentBundle(id).source_packet.required_section_ids[0]);
     });
     $("#top-tabs").addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -63,7 +84,16 @@
 
   function route() {
     if (!state.catalog) return;
-    const parts = location.hash.replace(/^#/, "").split("/").filter(Boolean);
+    let parts = location.hash.replace(/^#/, "").split("/").filter(Boolean);
+    if (parts[0] === "run") {
+      if (!state.catalog.runs.some((run) => run.run_id === parts[1])) {
+        location.hash = routeHash("overview");
+        return;
+      }
+      state.activeRun = parts[1];
+      $("#model-run-select").value = state.activeRun;
+      parts = parts.slice(2);
+    }
     if (!parts.length || parts[0] === "overview") {
       renderOverview();
       setView("overview");
@@ -74,12 +104,12 @@
       setView("appendix");
       return;
     }
-    if (!state.bundles.has(parts[0])) {
-      location.hash = "overview";
+    if (!currentBundle(parts[0])) {
+      location.hash = routeHash("overview");
       return;
     }
     state.activePaper = parts[0];
-    const bundle = state.bundles.get(state.activePaper);
+    const bundle = currentBundle();
     const validSections = [...bundle.source_packet.required_section_ids, FORMULA_SECTION_ID];
     state.activeSection = validSections.includes(parts[1]) ? parts[1] : validSections[0];
     renderPaper(bundle, state.activeSection);
@@ -88,12 +118,22 @@
   }
 
   function renderOverview() {
-    const runs = state.catalog.papers.map((paper) => `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`).join("");
+    const run = currentRun();
+    const outputs = state.catalog.papers.map((paper) => `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`).join("");
+    const protocol = state.catalog.comparison_protocol;
+    const candidates = (state.catalog.candidate_runs || []).map((candidate) => `<article><div><span class="candidate-status">${esc(candidate.status.replaceAll("_", " "))}</span><h3>${esc(candidate.label)}</h3></div><dl><div><dt>Provider</dt><dd>${esc(candidate.provider)}</dd></div><div><dt>Model ID</dt><dd>${esc(candidate.model_id)}</dd></div></dl><p>${esc(candidate.note)}</p><a href="${esc(candidate.documentation_url)}" target="_blank" rel="noreferrer">Endpoint documentation ↗</a></article>`).join("");
     $("#overview-view").innerHTML = `
       <div class="overview-hero">
         <div><span class="eyebrow">Paper + repository → sourced explainer</span><h1>From source material to scientific scenes.</h1></div>
         <p>The API returns grounded JSON: the paper's motivation, terms, related work, formula/code mappings, and findings. A fixed renderer builds the website; a reusable Manim library renders selected state changes without asking a coding agent to write Python.</p>
       </div>
+      <section class="responsibility-board" aria-labelledby="responsibility-title">
+        <div class="responsibility-head"><span class="eyebrow">Execution boundary</span><h2 id="responsibility-title">What the model decides—and what it never touches.</h2><p>A model comparison is meaningful only when the harness stays fixed. The API is a constrained reasoning component; it is not the website renderer or the animation coder.</p></div>
+        <div class="responsibility-columns">
+          <article class="model-duty"><span>MODEL API</span><h3>Produce grounded, typed decisions</h3><ul><li>Extract paper-native intent and concept relations from the frozen packet.</li><li>Propose the lesson path and transitions between related work, formulas, code, and findings.</li><li>Fill validated JSON blocks with source locators and explicit claim types.</li></ul><code>JSON only · no Python · no HTML · no shell</code></article>
+          <article class="harness-duty"><span>HARNESS</span><h3>Hold the experiment and rendering fixed</h3><ul><li>Freeze PDF, repository revision, source packet, prompts, and schemas.</li><li>Reject invalid claims, unknown media, missing equations, or dangling links.</li><li>Compile Formula IR, select registered Manim functions, render HTML/video, hash, and publish.</li></ul><code>deterministic renderer · fail closed · replayable</code></article>
+        </div>
+      </section>
       <div class="pipeline-flow" aria-label="Pipeline stages">
         ${[
           ["01", "Ingest", "Paper PDF + revision-pinned repository"],
@@ -109,10 +149,16 @@
         <span style="--legend-color:var(--orange)"><i></i>new native Manim scene</span>
         <span style="--legend-color:var(--gray)"><i></i>conditional claim / open issue</span>
       </div>
-      <div class="run-table"><span class="eyebrow">Generated outputs</span>${runs}</div>`;
+      <section class="run-provenance">
+        <div><span class="eyebrow">Selected frozen run</span><h2>${esc(run.label)}</h2><p>${esc(run.description)}</p></div>
+        <dl><div><dt>Provider</dt><dd>${esc(run.providers.join(" + "))}</dd></div><div><dt>Model</dt><dd>${esc(run.models.join(" + "))}</dd></div><div><dt>Mode</dt><dd>${esc(run.generation_modes.join(" + "))}</dd></div><div><dt>Status</dt><dd>${esc(run.status)}</dd></div></dl>
+      </section>
+      <section class="comparison-contract"><div><span class="eyebrow">Cross-model contract</span><h2>Same evidence and renderer; different planning JSON.</h2></div><div><b>FIXED</b><p>${protocol.fixed.map(esc).join(" · ")}</p></div><div><b>VARIED</b><p>${protocol.varied.map(esc).join(" · ")}</p></div><small>${esc(protocol.rule)}</small></section>
+      ${candidates ? `<section class="candidate-matrix"><div class="candidate-head"><span class="eyebrow">Requested comparison matrix</span><h2>Queued, not fabricated.</h2><p>These candidates are intentionally absent from the top-right selector until both paper bundles are generated, validated, frozen, and hashed.</p></div><div class="candidate-grid">${candidates}</div></section>` : ""}
+      <div class="run-table"><span class="eyebrow">Generated outputs in this run</span>${outputs}</div>`;
     $("#overview-view").querySelectorAll("[data-open-paper]").forEach((button) => button.addEventListener("click", () => {
       const id = button.dataset.openPaper;
-      location.hash = `${id}/${state.bundles.get(id).source_packet.required_section_ids[0]}`;
+      location.hash = routeHash(id, currentBundle(id).source_packet.required_section_ids[0]);
     }));
   }
 
@@ -123,7 +169,7 @@
       { id: FORMULA_SECTION_ID, nav_label: "Formula", title: "Formula → Manim map" },
     ];
     $("#section-nav").innerHTML = navItems.map((item) => `<button type="button" data-section="${esc(item.id)}" aria-current="${item.id === sectionId ? "step" : "false"}">${esc(item.nav_label)}</button>`).join("");
-    $("#section-nav").querySelectorAll("button").forEach((button) => button.addEventListener("click", () => location.hash = `${bundle.paper_id}/${button.dataset.section}`));
+    $("#section-nav").querySelectorAll("button").forEach((button) => button.addEventListener("click", () => location.hash = routeHash(bundle.paper_id, button.dataset.section)));
     const activeSectionButton = $("#section-nav").querySelector('[aria-current="step"]');
     requestAnimationFrame(() => activeSectionButton?.scrollIntoView({ block: "nearest", inline: "center" }));
     if (sectionId === FORMULA_SECTION_ID) {
@@ -264,6 +310,7 @@
   function media(bundle, id) { return bundle.source_packet.media.find((item) => item.media_id === id); }
 
   function renderSourcePanel(bundle, sectionPlan) {
+    const run = currentRun();
     const sourceLinks = bundle.source_packet.sources.map((source) => source.url ? `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.revision)} · ${source.page_count} pages ↗</a>` : `<div class="source-meta">${esc(source.revision)} · ${source.page_count} pages · local input</div>`).join("");
     const codeLinks = bundle.source_packet.code_sources.map((source) => `<a href="${esc(source.repository)}/tree/${esc(source.revision)}" target="_blank" rel="noreferrer">repository @ ${esc(source.revision.slice(0, 8))} ↗</a>`).join("");
     const deep = sectionPlan.deep_links.map((id) => {
@@ -271,8 +318,8 @@
       return `<button type="button" data-appendix="${esc(id)}">${esc(entry?.title || id)} →</button>`;
     }).join("");
     const trace = bundle.generation.stage_traces.map((item) => `${item.stage}: ${item.response_sha256.slice(0, 8)}`).join("<br>");
-    $("#source-panel").innerHTML = `<section><h2>Primary sources</h2>${sourceLinks}${codeLinks}<div class="source-meta">PDF SHA ${esc(bundle.source_packet.sources[0].sha256.slice(0, 16))}…<br>Manim: ${esc(bundle.source_packet.scene_renderer.engine)}<br>coding agent: not required</div></section><section><h2>Deep links</h2>${deep}</section><section><h2>API trace</h2><div class="source-meta">${trace}<br>mode: ${esc(bundle.generation.stage_traces[0].generation_mode)}</div></section>`;
-    $("#source-panel").querySelectorAll("[data-appendix]").forEach((button) => button.addEventListener("click", () => location.hash = `appendix/${bundle.paper_id}/${button.dataset.appendix}`));
+    $("#source-panel").innerHTML = `<section><h2>Selected model run</h2><div class="source-meta"><b>${esc(run.label)}</b><br>provider: ${esc(run.providers.join(" + "))}<br>model: ${esc(run.models.join(" + "))}<br>status: ${esc(run.status)}</div></section><section><h2>Primary sources</h2>${sourceLinks}${codeLinks}<div class="source-meta">source packet ${esc(bundle.generation.source_packet_sha256.slice(0, 16))}…<br>PDF SHA ${esc(bundle.source_packet.sources[0].sha256.slice(0, 16))}…<br>Manim: ${esc(bundle.source_packet.scene_renderer.engine)}<br>coding agent: not required</div></section><section><h2>Deep links</h2>${deep}</section><section><h2>API trace</h2><div class="source-meta">${trace}<br>mode: ${esc(bundle.generation.stage_traces[0].generation_mode)}</div></section>`;
+    $("#source-panel").querySelectorAll("[data-appendix]").forEach((button) => button.addEventListener("click", () => location.hash = routeHash("appendix", `${bundle.paper_id}/${button.dataset.appendix}`)));
   }
 
   function bindLessonInteractions() {
@@ -285,7 +332,7 @@
   }
 
   function renderAppendix(paperFilter, entryId) {
-    const bundles = paperFilter && state.bundles.has(paperFilter) ? [state.bundles.get(paperFilter)] : [...state.bundles.values()];
+    const bundles = paperFilter && currentBundle(paperFilter) ? [currentBundle(paperFilter)] : state.catalog.papers.map((paper) => currentBundle(paper.paper_id));
     $("#appendix-view").innerHTML = `<header class="appendix-header"><span class="eyebrow">Derivations, provenance, and claim boundaries</span><h1>Appendix</h1><p>Paper and repository provenance, equation notes, formula-to-code mappings, results-reading guidance, and explicit limitations.</p></header>${bundles.map((bundle) => `<section><h2>${esc(bundle.source_packet.short_title)}</h2><div class="appendix-grid">${bundle.section_content.appendix_entries.map((entry) => `<article class="appendix-entry ${entry.id === entryId ? "highlight" : ""}" id="${esc(entry.id)}"><span class="eyebrow">${esc(bundle.paper_id)} / deep link</span><h2>${esc(entry.title)}</h2><p>${esc(entry.body)}</p>${refs(entry.source_refs)}</article>`).join("")}</div></section>`).join("")}`;
     if (entryId) requestAnimationFrame(() => document.getElementById(entryId)?.scrollIntoView({ block: "center" }));
   }

@@ -15,7 +15,13 @@
       <span><strong>Paper + Code Explainer</strong><small>sourced scenes from paper + repository</small></span>
     </a>
     <nav class="top-tabs" aria-label="Atlas views" role="tablist" id="top-tabs"></nav>
-    <button class="source-toggle" id="source-toggle" type="button" aria-expanded="false" aria-controls="source-panel">Sources</button>
+    <div class="mast-actions">
+      <label class="model-switch" for="model-run-select">
+        <span>Model run</span>
+        <select id="model-run-select" aria-label="Switch frozen model run"></select>
+      </label>
+      <button class="source-toggle" id="source-toggle" type="button" aria-expanded="false" aria-controls="source-panel">Sources</button>
+    </div>
   </header>
 
   <div class="status-strip" id="status-strip" role="status" aria-live="polite">
@@ -36,7 +42,7 @@
   </main>
 
   <footer>
-    <span>One API contract. Two reviewed runs. Deterministic Manim. Every asset hash checked.</span>
+    <span>Model API writes grounded JSON. The harness validates, renders, hashes, and publishes it.</span>
     <a href="data/site_manifest.json">site manifest</a>
   </footer>
   <noscript>This explainer needs JavaScript to load its generated bundles.</noscript>

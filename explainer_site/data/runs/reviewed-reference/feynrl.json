@@ -223,7 +223,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Equation-transition scene from the on-policy estimator and fixed clipping to the behavior ratio, ESS, and P3O.",
-        "published_path": "assets/feynrl/feynrl-lineage-micro.mp4"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro.mp4"
       },
       {
         "media_id": "feynrl-lineage-micro-poster",
@@ -233,7 +233,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the FeynRL equation-lineage micro-video.",
-        "published_path": "assets/feynrl/feynrl-lineage-micro-poster.png"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro-poster.png"
       },
       {
         "media_id": "feynrl-lineage-micro-captions",
@@ -243,7 +243,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the FeynRL equation-lineage micro-video.",
-        "published_path": "assets/feynrl/feynrl-lineage-micro-captions.vtt"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-ess-micro",
@@ -253,7 +253,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Five-second Manim scene for the Eq. 11 state change: fixed token count and concentrated policy ratios.",
-        "published_path": "assets/feynrl/feynrl-ess-micro.mp4"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-ess-micro.mp4"
       },
       {
         "media_id": "feynrl-ess-micro-poster",
@@ -263,7 +263,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the normalized ESS micro-video.",
-        "published_path": "assets/feynrl/feynrl-ess-micro-poster.png"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-ess-micro-poster.png"
       },
       {
         "media_id": "feynrl-ess-micro-captions",
@@ -273,7 +273,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the normalized ESS micro-video.",
-        "published_path": "assets/feynrl/feynrl-ess-micro-captions.vtt"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-ess-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-p3o-micro",
@@ -283,7 +283,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Five-second Manim scene coupling the Eq. 12 score cap and behavioral KL weight through e_B.",
-        "published_path": "assets/feynrl/feynrl-p3o-micro.mp4"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-p3o-micro.mp4"
       },
       {
         "media_id": "feynrl-p3o-micro-poster",
@@ -293,7 +293,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the P3O control-coupling micro-video.",
-        "published_path": "assets/feynrl/feynrl-p3o-micro-poster.png"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-p3o-micro-poster.png"
       },
       {
         "media_id": "feynrl-p3o-micro-captions",
@@ -303,7 +303,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the P3O control-coupling micro-video.",
-        "published_path": "assets/feynrl/feynrl-p3o-micro-captions.vtt"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-p3o-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-findings",
@@ -313,7 +313,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "New Manim scene connecting Section 4's three experimental axes to exact Table 7 values.",
-        "published_path": "assets/feynrl/feynrl-findings.mp4"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-findings.mp4"
       },
       {
         "media_id": "feynrl-findings-poster",
@@ -323,7 +323,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the FeynRL findings scene.",
-        "published_path": "assets/feynrl/feynrl-findings-poster.png"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-findings-poster.png"
       },
       {
         "media_id": "feynrl-findings-captions",
@@ -333,7 +333,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the FeynRL findings scene.",
-        "published_path": "assets/feynrl/feynrl-findings-captions.vtt"
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-findings-captions.vtt"
       }
     ],
     "agent_input": {

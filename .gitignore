@@ -15,4 +15,6 @@ renders/
 dist/
 external/
 runs/
+!explainer_site/data/runs/
+!explainer_site/data/runs/**
 tmp/

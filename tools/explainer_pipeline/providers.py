@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional, Protocol
@@ -141,6 +143,119 @@ class BedrockProvider:
             paper_id=paper_id,
             payload=payload,
             provider="amazon_bedrock",
+            model=self.model_id,
+            generation_mode="live",
+            response_sha256=sha256_json(payload),
+        )
+
+
+class OpenAICompatibleProvider:
+    """JSON-only adapter for WInE and Bedrock Mantle style HTTP endpoints."""
+
+    def __init__(
+        self,
+        *,
+        model_id: str,
+        base_url: str,
+        api_key_env: str = "OPENAI_API_KEY",
+        env_file: Optional[Path] = None,
+        api_path: str = "chat/completions",
+        provider_name: str = "openai_compatible",
+        max_tokens: int = 7000,
+        timeout: int = 180,
+    ) -> None:
+        self.model_id = model_id
+        self.base_url = base_url.rstrip("/")
+        self.api_key_env = api_key_env
+        self.env_file = env_file
+        self.api_path = api_path.strip("/")
+        self.provider_name = provider_name
+        self.max_tokens = max_tokens
+        self.timeout = timeout
+
+    def _api_key(self) -> str:
+        values = os.environ.copy()
+        if self.env_file:
+            for raw_line in self.env_file.read_text(encoding="utf-8").splitlines():
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                values[key.strip()] = value.strip().strip("'\"")
+        key = values.get(self.api_key_env, "")
+        if not key:
+            raise ProviderError(
+                f"{self.provider_name} requires {self.api_key_env} in the environment or --env-file"
+            )
+        return key
+
+    def _request_payload(self, prompt: str) -> dict[str, Any]:
+        if self.api_path.endswith("responses"):
+            return {
+                "model": self.model_id,
+                "input": prompt,
+                "max_output_tokens": self.max_tokens,
+            }
+        return {
+            "model": self.model_id,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": self.max_tokens,
+        }
+
+    def _response_text(self, response: dict[str, Any]) -> str:
+        if self.api_path.endswith("responses"):
+            if isinstance(response.get("output_text"), str):
+                return response["output_text"]
+            parts = []
+            for item in response.get("output", []):
+                for content in item.get("content", []):
+                    if content.get("type") in {"output_text", "text"} and isinstance(content.get("text"), str):
+                        parts.append(content["text"])
+            if parts:
+                return "".join(parts)
+            raise ProviderError(f"{self.provider_name} response contains no output text")
+        try:
+            content = response["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as exc:
+            raise ProviderError(f"{self.provider_name} response contains no chat completion text") from exc
+        if not isinstance(content, str):
+            raise ProviderError(f"{self.provider_name} chat completion content must be text")
+        return content
+
+    def generate(self, stage: str, paper_id: str, prompt: str) -> StageResult:
+        request = urllib.request.Request(
+            f"{self.base_url}/{self.api_path}",
+            data=canonical_json(self._request_payload(prompt)).encode("utf-8"),
+            headers={
+                "Authorization": f"Bearer {self._api_key()}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout) as opened:
+                response = json.loads(opened.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")[:1000]
+            raise ProviderError(f"{self.provider_name} stage {stage} failed with HTTP {exc.code}: {detail}") from exc
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ProviderError(f"{self.provider_name} stage {stage} request failed: {exc}") from exc
+        if not isinstance(response, dict):
+            raise ProviderError(f"{self.provider_name} stage {stage} returned a non-object response")
+        raw = self._response_text(response).strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ProviderError(f"{self.provider_name} stage {stage} returned non-JSON output") from exc
+        if not isinstance(payload, dict):
+            raise ProviderError(f"{self.provider_name} stage {stage} must return a JSON object")
+        return StageResult(
+            stage=stage,
+            paper_id=paper_id,
+            payload=payload,
+            provider=self.provider_name,
             model=self.model_id,
             generation_mode="live",
             response_sha256=sha256_json(payload),

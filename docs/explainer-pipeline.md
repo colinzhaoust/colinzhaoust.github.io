@@ -12,6 +12,17 @@ The live interface needs:
 
 No coding agent participates. The API returns JSON only. It never returns Python, Manim source, HTML, or shell commands. Website code and Manim scene code come from fixed, reviewable renderers in this repository.
 
+The responsibility split is strict:
+
+| Model API | Harness |
+| --- | --- |
+| Read the frozen source packet and infer paper-native intent. | Freeze the PDF, repository revision, extracted packet, prompts, schemas, and provider configuration. |
+| Produce the concept graph, lesson plan, and typed section-content JSON. | Validate every stage, locator, equation-coverage decision, media reference, hyperlink, and claim type; fail closed on mismatch. |
+| Choose among allowed content/block and registered scene identifiers. | Compile Formula IR, resolve the Manim registry, render HTML and approved micro-videos, hash artifacts, and publish the static site. |
+| Never emit or execute Python, HTML, Manim source, or shell. | Never silently repair a model's scientific claim by changing its meaning. |
+
+In the reviewed demo, source packets and model-stage outputs are frozen fixtures. In a production package, `source_grounding` is also a model API stage; the same harness records and validates its result before the three planning stages begin.
+
 ```bash
 python3 -m tools.explainer_pipeline.cli package \
   --paper /path/to/paper.pdf \
@@ -32,6 +43,82 @@ python3 -m tools.explainer_pipeline.cli package \
 8. renders a static website.
 
 The run stores the extracted corpus, prompt/response hashes, source packet, stage outputs, bundle, and site. A package without an approved native animation recipe remains a searchable HTML explainer; it never falls back to runtime code generation.
+
+## Frozen model-run comparison
+
+The top-right selector switches complete runs, not a model-name label. Each selectable run has independent validated bundles, bundle hashes, source-packet hashes, provider/model IDs, generation mode, and per-stage prompt/response hashes. A candidate does not appear in the selector until every requested paper bundle exists and passes validation.
+
+The default comparison is a planner comparison:
+
+- fixed: source packets and locators, prompts and JSON contracts, validation rules, formula compiler, Manim registry, website renderer, and published media;
+- varied: `concept_graph`, `lesson_plan`, and `section_content` API responses;
+- excluded: incomplete calls, invalid JSON, changed source packets, mutable aliases without a recorded resolved model, and hand-copied content presented as another model's output.
+
+Render any number of complete runs with a manifest:
+
+```json
+{
+  "schema_version": "explainer-comparison/0.1.0",
+  "runs": [
+    {
+      "run_id": "reviewed-reference",
+      "label": "Reviewed reference",
+      "status": "reviewed",
+      "bundles": ["../runs/reference/feynrl/explainer_bundle.json", "../runs/reference/rope/explainer_bundle.json"]
+    },
+    {
+      "run_id": "qwen3-32b-bedrock",
+      "label": "Qwen3 32B · Bedrock",
+      "status": "generated",
+      "bundles": ["../runs/qwen3-32b/feynrl/explainer_bundle.json", "../runs/qwen3-32b/rope/explainer_bundle.json"]
+    }
+  ]
+}
+```
+
+```bash
+python3 -m tools.explainer_pipeline.cli build-comparison comparison.json --output explainer_site
+```
+
+Supported live adapters are:
+
+- Bedrock Runtime `Converse`, for models such as `qwen.qwen3-32b-v1:0`;
+- OpenAI-compatible HTTP, for WInE `chat/completions` and Bedrock Mantle `responses`.
+
+Examples (credentials are supplied only through the named environment variable or an untracked env file):
+
+```bash
+# Qwen3 32B through Bedrock Runtime
+python3 -m tools.explainer_pipeline.cli run feynrl \
+  --mode bedrock \
+  --model-id qwen.qwen3-32b-v1:0 \
+  --env-file /path/to/bedrock.env \
+  --run-root runs/qwen3-32b/feynrl
+
+# GPT-5.5 through Bedrock Mantle's OpenAI Responses path
+python3 -m tools.explainer_pipeline.cli run feynrl \
+  --mode openai-compatible \
+  --provider-name amazon_bedrock_mantle \
+  --base-url https://bedrock-mantle.us-east-2.api.aws/openai/v1 \
+  --api-path responses \
+  --api-key-env OPENAI_API_KEY \
+  --model-id openai.gpt-5.5 \
+  --env-file /path/to/bedrock-mantle.env \
+  --run-root runs/gpt-5-5/feynrl
+
+# WInE gateway; use the exact gateway model ID resolved for the experiment
+python3 -m tools.explainer_pipeline.cli run feynrl \
+  --mode openai-compatible \
+  --provider-name wine \
+  --base-url https://ai-gateway.andrew.cmu.edu/v1 \
+  --api-path chat/completions \
+  --api-key-env WINE_API_KEY \
+  --model-id '<immutable WInE model ID>' \
+  --env-file /path/to/wine.env \
+  --run-root runs/wine-gemini/feynrl
+```
+
+As of the implementation date, Bedrock documents GPT-5.5 as `openai.gpt-5.5` on the Mantle Responses endpoint and Qwen3 32B as `qwen.qwen3-32b-v1:0` on Bedrock Runtime. Google documents `gemini-3.1-pro-preview`; the older Gemini 3 Pro Preview is deprecated. Qwen 8B is not assumed to be a Bedrock Qwen endpoint—its actual provider/model ID must be supplied before it can enter the matrix.
 
 ## Paper-native sectioning
 

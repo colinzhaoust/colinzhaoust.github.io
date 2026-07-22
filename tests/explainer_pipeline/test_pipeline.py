@@ -8,7 +8,7 @@ from pathlib import Path
 
 from tools.explainer_pipeline.common import DATA_ROOT, ROOT, resolve_repo_path, sha256_json
 from tools.explainer_pipeline.pipeline import replay_provider, run_pipeline
-from tools.explainer_pipeline.renderer import render_site
+from tools.explainer_pipeline.renderer import RenderError, render_comparison_site, render_site
 from tools.explainer_pipeline.validation import ExplainerValidationError, validate_bundle
 
 
@@ -24,6 +24,10 @@ class ExplainerPipelineTests(unittest.TestCase):
             self.assertEqual(manifest["papers"], ["feynrl", "rope"])
             self.assertEqual(len(manifest["media"]), 24)
             self.assertTrue((root / "site" / "data" / "catalog.json").is_file())
+            catalog = json.loads((root / "site" / "data" / "catalog.json").read_text(encoding="utf-8"))
+            self.assertEqual("explainer-site-catalog/0.2.0", catalog["schema_version"])
+            self.assertEqual("reviewed-reference", catalog["default_run"])
+            self.assertEqual(1, len(catalog["runs"]))
             for bundle in bundles:
                 self.assertEqual(
                     bundle["source_packet"]["required_section_ids"],
@@ -37,6 +41,48 @@ class ExplainerPipelineTests(unittest.TestCase):
                 self.assertEqual(len(bundle["formula_map"]["formulas"]), len(bundle["source_packet"]["formula_refs"]))
                 self.assertTrue(bundle["formula_map"]["edges"])
                 self.assertTrue(all(edge["source"].startswith("node:") for edge in bundle["formula_map"]["edges"]))
+
+    def test_comparison_site_writes_independent_traceable_run_bundles(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            reference = [
+                run_pipeline(DATA_ROOT / "papers" / f"{paper_id}.json", root / "reference" / paper_id, replay_provider())
+                for paper_id in ("feynrl", "rope")
+            ]
+            candidate = copy.deepcopy(reference)
+            for bundle in candidate:
+                for trace in bundle["generation"]["stage_traces"]:
+                    trace["provider"] = "test_provider"
+                    trace["model"] = "test-model-snapshot"
+                    trace["generation_mode"] = "frozen_replay"
+            manifest = render_comparison_site(
+                [
+                    {"run_id": "reviewed-reference", "label": "Reviewed reference", "bundles": reference},
+                    {"run_id": "test-snapshot", "label": "Test snapshot", "bundles": candidate},
+                ],
+                root / "site",
+            )
+            self.assertEqual(["reviewed-reference", "test-snapshot"], manifest["runs"])
+            self.assertEqual(48, len(manifest["media"]))
+            catalog = json.loads((root / "site" / "data" / "catalog.json").read_text(encoding="utf-8"))
+            self.assertEqual(2, len(catalog["runs"]))
+            self.assertEqual(["test-model-snapshot"], catalog["runs"][1]["models"])
+            self.assertTrue((root / "site" / "data" / "runs" / "test-snapshot" / "feynrl.json").is_file())
+
+    def test_comparison_fails_if_a_model_run_changes_the_frozen_source_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle = run_pipeline(DATA_ROOT / "papers" / "feynrl.json", root / "reference", replay_provider())
+            changed = copy.deepcopy(bundle)
+            changed["generation"]["source_packet_sha256"] = "0" * 64
+            with self.assertRaises(RenderError):
+                render_comparison_site(
+                    [
+                        {"run_id": "reference-run", "bundles": [bundle]},
+                        {"run_id": "changed-input", "bundles": [changed]},
+                    ],
+                    root / "site",
+                )
 
     def test_formula_map_exposes_real_and_candidate_n_to_n_mappings(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
