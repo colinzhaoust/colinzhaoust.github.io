@@ -32,13 +32,20 @@
         "code_id": "roformer-readme",
         "repository": "https://github.com/ZhuiyiTechnology/roformer",
         "revision": "dfc678ad506fc527ba17ead8db23cbe4d947a9b4",
+        "checkout_path": "external/RoFormer",
         "mapping_state": "confirmed",
         "excerpts": [
           {
-            "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+            "path": "README.md",
             "symbol": "RoPE attention pseudocode",
-            "line_start": 1,
-            "line_end": 22
+            "line_start": 18,
+            "line_end": 32
+          },
+          {
+            "path": "finetune_scm.py",
+            "symbol": "CAIL2019-SCM data_generator / evaluate",
+            "line_start": 24,
+            "line_end": 141
           }
         ]
       }
@@ -50,9 +57,9 @@
           "formula_label": "Eq. 16 · relative-position identity",
           "code_id": "roformer-readme",
           "symbol": "cos_pos / sin_pos",
-          "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
-          "line_start": 9,
-          "line_end": 10,
+          "path": "README.md",
+          "line_start": 22,
+          "line_end": 23,
           "role": "constructs the paired rotation phases",
           "state": "confirmed",
           "evidence_refs": [
@@ -65,9 +72,9 @@
           "formula_label": "Eq. 16 · relative-position identity",
           "code_id": "roformer-readme",
           "symbol": "qw2 / kw2 sign-swap",
-          "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
-          "line_start": 11,
-          "line_end": 16,
+          "path": "README.md",
+          "line_start": 24,
+          "line_end": 29,
           "role": "implements the 2D quarter-turn within every feature pair",
           "state": "confirmed",
           "evidence_refs": [
@@ -80,9 +87,9 @@
           "formula_label": "Eq. 16 · relative-position identity",
           "code_id": "roformer-readme",
           "symbol": "einsum attention",
-          "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
-          "line_start": 18,
-          "line_end": 19,
+          "path": "README.md",
+          "line_start": 31,
+          "line_end": 32,
           "role": "takes the inner product after both query and key are rotated",
           "state": "confirmed",
           "evidence_refs": [
@@ -91,74 +98,158 @@
           ]
         }
       ],
+      "example": {
+        "label": "One CAIL2019-SCM triple through the official fine-tuning script",
+        "input": "A legal case A is paired once with candidate B and once with candidate C.",
+        "output": "The two sigmoid scores are compared and contribute one correct/incorrect evaluation decision."
+      },
       "nodes": [
         {
-          "id": "positions",
-          "label": "sinusoidal position phases",
+          "id": "triple",
+          "label": "Load one A/B/C case",
           "kind": "input",
-          "detail": "one angle per position and feature pair"
+          "stage": "data",
+          "detail": "The label determines which candidate is the positive continuation for case A.",
+          "artifact": "(text A, positive, negative)",
+          "path": "finetune_scm.py",
+          "line_start": 24,
+          "line_end": 37
         },
         {
-          "id": "cos-sin",
-          "label": "cos_pos / sin_pos",
+          "id": "pairs",
+          "label": "Tokenize A+B and A+C",
           "kind": "operation",
-          "detail": "repeat each pair frequency"
+          "stage": "data",
+          "detail": "The generator emits two paired sequences with labels 1 and 0, then pads the batch.",
+          "artifact": "batch_token_ids · batch_segment_ids · labels",
+          "path": "finetune_scm.py",
+          "line_start": 53,
+          "line_end": 76
         },
         {
-          "id": "qk",
-          "label": "query / key projections",
-          "kind": "input",
-          "detail": "content representations before position"
+          "id": "roformer",
+          "label": "Run the RoFormer encoder",
+          "kind": "function",
+          "stage": "model",
+          "detail": "build_transformer_model loads model='roformer' before the task head.",
+          "artifact": "contextual token states",
+          "path": "finetune_scm.py",
+          "line_start": 79,
+          "line_end": 87
         },
         {
-          "id": "swap",
-          "label": "paired sign-swap",
+          "id": "phase",
+          "label": "Construct cos/sin phases",
           "kind": "operation",
-          "detail": "[-x₂, x₁] for each 2D pair"
+          "stage": "attention",
+          "detail": "The official README repeats the position frequencies across adjacent feature pairs.",
+          "artifact": "cos_pos · sin_pos",
+          "path": "README.md",
+          "line_start": 22,
+          "line_end": 23
         },
         {
           "id": "rotate",
-          "label": "rotate q and k",
-          "kind": "function",
-          "detail": "x·cos + swap(x)·sin"
+          "label": "Rotate query and key pairs",
+          "kind": "operation",
+          "stage": "attention",
+          "detail": "Negate-and-swap companions implement q·cos + q⊥·sin and the same operation for k.",
+          "artifact": "rotated qw · kw",
+          "path": "README.md",
+          "line_start": 24,
+          "line_end": 29
         },
         {
           "id": "attention",
-          "label": "einsum(qw, kw)",
+          "label": "Compute query-key scores",
+          "kind": "function",
+          "stage": "attention",
+          "detail": "The ordinary einsum now contains the relative-position identity from Eq. 16.",
+          "artifact": "attention score tensor a",
+          "path": "README.md",
+          "line_start": 31,
+          "line_end": 32
+        },
+        {
+          "id": "classifier",
+          "label": "Pool and score each pair",
+          "kind": "objective",
+          "stage": "task",
+          "detail": "Global average pooling and a sigmoid head produce one score for A+B and one for A+C.",
+          "artifact": "two sigmoid scores",
+          "path": "finetune_scm.py",
+          "line_start": 84,
+          "line_end": 94
+        },
+        {
+          "id": "decision",
+          "label": "Compare the pair scores",
           "kind": "output",
-          "detail": "score depends on relative offset through R(n−m)"
+          "stage": "evaluate",
+          "detail": "Evaluation counts the example correct when the positive pair score exceeds the negative pair score.",
+          "artifact": "right / total accuracy",
+          "path": "finetune_scm.py",
+          "line_start": 102,
+          "line_end": 108
+        },
+        {
+          "id": "checkpoint",
+          "label": "Retain the best validation epoch",
+          "kind": "output",
+          "stage": "evaluate",
+          "detail": "The callback saves weights only when validation accuracy improves, then reports test accuracy.",
+          "artifact": "best_model_scm.weights",
+          "path": "finetune_scm.py",
+          "line_start": 111,
+          "line_end": 126
         }
       ],
       "edges": [
         {
-          "source": "positions",
-          "target": "cos-sin",
-          "label": "phase tables"
+          "source": "triple",
+          "target": "pairs",
+          "label": "make positive and negative pair"
         },
         {
-          "source": "qk",
-          "target": "swap",
-          "label": "pair features"
+          "source": "pairs",
+          "target": "roformer",
+          "label": "padded token IDs"
         },
         {
-          "source": "cos-sin",
+          "source": "roformer",
+          "target": "phase",
+          "label": "inside self-attention"
+        },
+        {
+          "source": "phase",
           "target": "rotate",
-          "label": "cos/sin coefficients"
-        },
-        {
-          "source": "qk",
-          "target": "rotate",
-          "label": "original vectors"
-        },
-        {
-          "source": "swap",
-          "target": "rotate",
-          "label": "quarter-turn vectors"
+          "label": "pairwise coefficients"
         },
         {
           "source": "rotate",
           "target": "attention",
           "label": "rotated q and k"
+        },
+        {
+          "source": "attention",
+          "target": "classifier",
+          "label": "contextual states"
+        },
+        {
+          "source": "classifier",
+          "target": "decision",
+          "label": "rank two scores"
+        },
+        {
+          "source": "decision",
+          "target": "checkpoint",
+          "label": "aggregate validation accuracy"
+        },
+        {
+          "source": "checkpoint",
+          "target": "pairs",
+          "label": "next epoch loop",
+          "edge_kind": "loop"
         }
       ],
       "experiment_pipeline": [
@@ -369,6 +460,39 @@
     "formula_refs": [
       "data/formula_explainer/formulas/rope/relative.json"
     ],
+    "formula_showcase": [
+      {
+        "media_id": "rope-relative-micro",
+        "poster_id": "rope-relative-micro-poster",
+        "captions_id": "rope-relative-micro-captions",
+        "title": "Eqs. 14–16 · absolute rotations, relative score",
+        "focus": "R_m and R_n enter separately, then orthogonality collapses their product to R_{n−m}.",
+        "source_refs": [
+          "rope-paper:eq14-16"
+        ]
+      },
+      {
+        "media_id": "rope-frequency-pairs-micro",
+        "poster_id": "rope-frequency-pairs-micro-poster",
+        "captions_id": "rope-frequency-pairs-micro-captions",
+        "title": "Eqs. 20–34 · parallel 2D rotations",
+        "focus": "Each adjacent coordinate pair uses the same position m with its own frequency θ_j.",
+        "source_refs": [
+          "rope-paper:eq20-34"
+        ]
+      },
+      {
+        "media_id": "rope-decay-micro",
+        "poster_id": "rope-decay-micro-poster",
+        "captions_id": "rope-decay-micro-captions",
+        "title": "Eqs. 35–37 · distance-dependent analysis",
+        "focus": "The schematic motion explains the direction of the derived bound without digitizing Figure 2.",
+        "source_refs": [
+          "rope-paper:eq35-37",
+          "rope-paper:fig2"
+        ]
+      }
+    ],
     "scene_renderer": {
       "engine": "Manim Community 0.19.0",
       "entrypoint": "scenes/explainer_pipeline_native.py",
@@ -376,11 +500,73 @@
       "scene_ids": [
         "RoPEEquationLineageMicro",
         "RoPERelativeMicro",
+        "RoPEFrequencyPairsMicro",
         "RoPEDecayMicro",
+        "RoPETranslationResultMicro",
         "RoPEResultsMicro"
       ]
     },
     "media": [
+      {
+        "media_id": "rope-frequency-pairs-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/frequency-pairs-micro.mp4",
+        "sha256": "ebcd132062479d12581369860306dd432b2eeab3d38add059be142d5875e0b74",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Three adjacent feature pairs rotate at distinct frequencies inside the block-diagonal RoPE construction.",
+        "published_path": "assets/reviewed-reference/rope/rope-frequency-pairs-micro.mp4"
+      },
+      {
+        "media_id": "rope-frequency-pairs-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/frequency-pairs-micro-poster.png",
+        "sha256": "aa4ee995b049d57a6e27560c7aaeed1f931cc408da6a628d06a90ff5210aaafe",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoPE paired-frequency micro-video.",
+        "published_path": "assets/reviewed-reference/rope/rope-frequency-pairs-micro-poster.png"
+      },
+      {
+        "media_id": "rope-frequency-pairs-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/frequency-pairs-micro.vtt",
+        "sha256": "722ba5cdb03405ca24ef6903ced50fd56923ce23d10e489ba5623366a865ca17",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoPE paired-frequency micro-video.",
+        "published_path": "assets/reviewed-reference/rope/rope-frequency-pairs-micro-captions.vtt"
+      },
+      {
+        "media_id": "rope-translation-result-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/rope/translation-result-micro.mp4",
+        "sha256": "1accf06720ea1e80cab592233b71ab2d360a80c83d316839a52cc7e43bc4b818",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Exact WMT14 English-to-German BLEU comparison on a non-zero number line.",
+        "published_path": "assets/reviewed-reference/rope/rope-translation-result-micro.mp4"
+      },
+      {
+        "media_id": "rope-translation-result-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/rope/translation-result-micro-poster.png",
+        "sha256": "fd0f57d0a36dbd486bb349cf229d155e895b4c0ee13047a6f2729acde54ec66e",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the RoFormer translation-result micro-video.",
+        "published_path": "assets/reviewed-reference/rope/rope-translation-result-micro-poster.png"
+      },
+      {
+        "media_id": "rope-translation-result-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/rope/translation-result-micro.vtt",
+        "sha256": "0e8346af88100e8fd2904cddc9a88b09f59b3e4f324f18618bd0574518e75472",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoFormer translation-result micro-video.",
+        "published_path": "assets/reviewed-reference/rope/rope-translation-result-micro-captions.vtt"
+      },
       {
         "media_id": "rope-lineage-micro",
         "role": "video",
@@ -1094,28 +1280,48 @@
             ]
           },
           {
+            "type": "micro_video",
+            "media_id": "rope-frequency-pairs-micro",
+            "poster_id": "rope-frequency-pairs-micro-poster",
+            "captions_id": "rope-frequency-pairs-micro-captions",
+            "title": "How one d-dimensional rotation becomes many 2D rotations",
+            "intro": "The block-diagonal form groups adjacent coordinates, then applies the same absolute position m with a different frequency θ_j to each pair.",
+            "observation": "The three arrows rotate by different angles even though they share the same position index.",
+            "consequence": "The high-dimensional RoPE construction can be implemented by parallel pairwise negate-and-swap operations rather than a dense matrix multiply.",
+            "beats": [
+              "pair coordinates",
+              "share position m",
+              "vary θ_j",
+              "compose block diagonal"
+            ],
+            "source_refs": [
+              "rope-paper:eq20-34",
+              "roformer-readme:rope-pseudocode"
+            ]
+          },
+          {
             "type": "code",
             "code_source_id": "roformer-readme",
-            "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+            "path": "README.md",
             "symbol": "Computationally efficient realization",
             "lines": [
               {
-                "number": 9,
+                "number": 24,
                 "code": "qw2 = stack([-qw[..., 1::2], qw[..., ::2]], 4)",
                 "maps_to": "q_perp = (−q_2,q_1,−q_4,q_3,...)"
               },
               {
-                "number": 11,
+                "number": 26,
                 "code": "qw = qw * cos_pos + qw2 * sin_pos",
                 "maps_to": "R_m q = q cos(mθ) + q_perp sin(mθ)"
               },
               {
-                "number": 14,
+                "number": 29,
                 "code": "kw = kw * cos_pos + kw2 * sin_pos",
                 "maps_to": "apply R_n to the key"
               },
               {
-                "number": 17,
+                "number": 32,
                 "code": "a = einsum(\"bjhd,bkhd->bhjk\", qw, kw)",
                 "maps_to": "ordinary query-key dot product after rotation"
               }
@@ -1214,6 +1420,25 @@
               "rope-paper:sec3.3",
               "rope-paper:table1",
               "rope-paper:fig3"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-translation-result-micro",
+            "poster_id": "rope-translation-result-micro-poster",
+            "captions_id": "rope-translation-result-micro-captions",
+            "title": "Put the exact WMT14 difference on its reported scale",
+            "intro": "A non-zero number line preserves the small absolute difference between Transformer-base and RoFormer on one translation setting.",
+            "observation": "Table 1 reports 27.3 BLEU for Transformer-base and 27.5 for RoFormer, a difference of +0.2.",
+            "consequence": "This supports retained translation quality in the reported experiment; it is not evidence of a large universal gain.",
+            "beats": [
+              "fix WMT14 En→De",
+              "place 27.3",
+              "place 27.5",
+              "read Δ=+0.2"
+            ],
+            "source_refs": [
+              "rope-paper:table1"
             ]
           },
           {
@@ -1969,28 +2194,31 @@
         "node_id": "code:roformer-readme:cos_pos / sin_pos",
         "code_id": "roformer-readme",
         "symbol": "cos_pos / sin_pos",
-        "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
-        "line_start": 9,
-        "line_end": 10,
-        "role": "constructs the paired rotation phases"
+        "path": "README.md",
+        "line_start": 22,
+        "line_end": 23,
+        "role": "constructs the paired rotation phases",
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L22-L23"
       },
       {
         "node_id": "code:roformer-readme:qw2 / kw2 sign-swap",
         "code_id": "roformer-readme",
         "symbol": "qw2 / kw2 sign-swap",
-        "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
-        "line_start": 11,
-        "line_end": 16,
-        "role": "implements the 2D quarter-turn within every feature pair"
+        "path": "README.md",
+        "line_start": 24,
+        "line_end": 29,
+        "role": "implements the 2D quarter-turn within every feature pair",
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L24-L29"
       },
       {
         "node_id": "code:roformer-readme:einsum attention",
         "code_id": "roformer-readme",
         "symbol": "einsum attention",
-        "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
-        "line_start": 18,
-        "line_end": 19,
-        "role": "takes the inner product after both query and key are rotated"
+        "path": "README.md",
+        "line_start": 31,
+        "line_end": 32,
+        "role": "takes the inner product after both query and key are rotated",
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L31-L32"
       }
     ],
     "formula_code_edges": [
@@ -2028,74 +2256,167 @@
         ]
       }
     ],
+    "example": {
+      "label": "One CAIL2019-SCM triple through the official fine-tuning script",
+      "input": "A legal case A is paired once with candidate B and once with candidate C.",
+      "output": "The two sigmoid scores are compared and contribute one correct/incorrect evaluation decision."
+    },
     "dag_nodes": [
       {
-        "id": "positions",
-        "label": "sinusoidal position phases",
+        "id": "triple",
+        "label": "Load one A/B/C case",
         "kind": "input",
-        "detail": "one angle per position and feature pair"
+        "stage": "data",
+        "detail": "The label determines which candidate is the positive continuation for case A.",
+        "artifact": "(text A, positive, negative)",
+        "path": "finetune_scm.py",
+        "line_start": 24,
+        "line_end": 37,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L24-L37"
       },
       {
-        "id": "cos-sin",
-        "label": "cos_pos / sin_pos",
+        "id": "pairs",
+        "label": "Tokenize A+B and A+C",
         "kind": "operation",
-        "detail": "repeat each pair frequency"
+        "stage": "data",
+        "detail": "The generator emits two paired sequences with labels 1 and 0, then pads the batch.",
+        "artifact": "batch_token_ids · batch_segment_ids · labels",
+        "path": "finetune_scm.py",
+        "line_start": 53,
+        "line_end": 76,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L53-L76"
       },
       {
-        "id": "qk",
-        "label": "query / key projections",
-        "kind": "input",
-        "detail": "content representations before position"
+        "id": "roformer",
+        "label": "Run the RoFormer encoder",
+        "kind": "function",
+        "stage": "model",
+        "detail": "build_transformer_model loads model='roformer' before the task head.",
+        "artifact": "contextual token states",
+        "path": "finetune_scm.py",
+        "line_start": 79,
+        "line_end": 87,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L79-L87"
       },
       {
-        "id": "swap",
-        "label": "paired sign-swap",
+        "id": "phase",
+        "label": "Construct cos/sin phases",
         "kind": "operation",
-        "detail": "[-x₂, x₁] for each 2D pair"
+        "stage": "attention",
+        "detail": "The official README repeats the position frequencies across adjacent feature pairs.",
+        "artifact": "cos_pos · sin_pos",
+        "path": "README.md",
+        "line_start": 22,
+        "line_end": 23,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L22-L23"
       },
       {
         "id": "rotate",
-        "label": "rotate q and k",
-        "kind": "function",
-        "detail": "x·cos + swap(x)·sin"
+        "label": "Rotate query and key pairs",
+        "kind": "operation",
+        "stage": "attention",
+        "detail": "Negate-and-swap companions implement q·cos + q⊥·sin and the same operation for k.",
+        "artifact": "rotated qw · kw",
+        "path": "README.md",
+        "line_start": 24,
+        "line_end": 29,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L24-L29"
       },
       {
         "id": "attention",
-        "label": "einsum(qw, kw)",
+        "label": "Compute query-key scores",
+        "kind": "function",
+        "stage": "attention",
+        "detail": "The ordinary einsum now contains the relative-position identity from Eq. 16.",
+        "artifact": "attention score tensor a",
+        "path": "README.md",
+        "line_start": 31,
+        "line_end": 32,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/README.md#L31-L32"
+      },
+      {
+        "id": "classifier",
+        "label": "Pool and score each pair",
+        "kind": "objective",
+        "stage": "task",
+        "detail": "Global average pooling and a sigmoid head produce one score for A+B and one for A+C.",
+        "artifact": "two sigmoid scores",
+        "path": "finetune_scm.py",
+        "line_start": 84,
+        "line_end": 94,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L84-L94"
+      },
+      {
+        "id": "decision",
+        "label": "Compare the pair scores",
         "kind": "output",
-        "detail": "score depends on relative offset through R(n−m)"
+        "stage": "evaluate",
+        "detail": "Evaluation counts the example correct when the positive pair score exceeds the negative pair score.",
+        "artifact": "right / total accuracy",
+        "path": "finetune_scm.py",
+        "line_start": 102,
+        "line_end": 108,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L102-L108"
+      },
+      {
+        "id": "checkpoint",
+        "label": "Retain the best validation epoch",
+        "kind": "output",
+        "stage": "evaluate",
+        "detail": "The callback saves weights only when validation accuracy improves, then reports test accuracy.",
+        "artifact": "best_model_scm.weights",
+        "path": "finetune_scm.py",
+        "line_start": 111,
+        "line_end": 126,
+        "source_url": "https://github.com/ZhuiyiTechnology/roformer/blob/dfc678ad506fc527ba17ead8db23cbe4d947a9b4/finetune_scm.py#L111-L126"
       }
     ],
     "dag_edges": [
       {
-        "source": "positions",
-        "target": "cos-sin",
-        "label": "phase tables"
+        "source": "triple",
+        "target": "pairs",
+        "label": "make positive and negative pair"
       },
       {
-        "source": "qk",
-        "target": "swap",
-        "label": "pair features"
+        "source": "pairs",
+        "target": "roformer",
+        "label": "padded token IDs"
       },
       {
-        "source": "cos-sin",
+        "source": "roformer",
+        "target": "phase",
+        "label": "inside self-attention"
+      },
+      {
+        "source": "phase",
         "target": "rotate",
-        "label": "cos/sin coefficients"
-      },
-      {
-        "source": "qk",
-        "target": "rotate",
-        "label": "original vectors"
-      },
-      {
-        "source": "swap",
-        "target": "rotate",
-        "label": "quarter-turn vectors"
+        "label": "pairwise coefficients"
       },
       {
         "source": "rotate",
         "target": "attention",
         "label": "rotated q and k"
+      },
+      {
+        "source": "attention",
+        "target": "classifier",
+        "label": "contextual states"
+      },
+      {
+        "source": "classifier",
+        "target": "decision",
+        "label": "rank two scores"
+      },
+      {
+        "source": "decision",
+        "target": "checkpoint",
+        "label": "aggregate validation accuracy"
+      },
+      {
+        "source": "checkpoint",
+        "target": "pairs",
+        "label": "next epoch loop",
+        "edge_kind": "loop"
       }
     ],
     "experiment_pipeline": [
@@ -2140,13 +2461,20 @@
         "code_id": "roformer-readme",
         "repository": "https://github.com/ZhuiyiTechnology/roformer",
         "revision": "dfc678ad506fc527ba17ead8db23cbe4d947a9b4",
+        "checkout_path": "external/RoFormer",
         "mapping_state": "confirmed",
         "excerpts": [
           {
-            "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+            "path": "README.md",
             "symbol": "RoPE attention pseudocode",
-            "line_start": 1,
-            "line_end": 22
+            "line_start": 18,
+            "line_end": 32
+          },
+          {
+            "path": "finetune_scm.py",
+            "symbol": "CAIL2019-SCM data_generator / evaluate",
+            "line_start": 24,
+            "line_end": 141
           }
         ]
       }
@@ -2154,7 +2482,7 @@
   },
   "generation": {
     "pipeline_version": "explainer-pipeline/0.1.0",
-    "source_packet_sha256": "b17ac1694525cea8baf3d5bd61a1898d130229107a66c3c25bbd1f0a4937c790",
+    "source_packet_sha256": "432b9b27e0ab9267089027f05d5c3e290b1a8a4d85dd4cc1ac1fc8dd411862fe",
     "stage_traces": [
       {
         "stage": "concept_graph",
@@ -2162,7 +2490,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "528fee9f01d57e31544559bf7c5468434655b5a79ea13a1964b7512a950ae636",
+        "prompt_sha256": "990d8995a4770305b14a588febd1f89955ceb69e0d2a8ae067cfaa7a85db96bb",
         "response_sha256": "36fbfaa302beefbf01e2fe6e85954c8837e2cb84f94f387a25e0821d40a6b314",
         "source_record": "data/explainer_pipeline/replays/rope/concept_graph.json",
         "usage": null,
@@ -2179,7 +2507,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "057cb73ed4717e4f213b396867f989722c6654de24c4fb105831f0d9bdb29815",
+        "prompt_sha256": "1fa1150a13fa4558b7e6a894f805b701114a78800787177690fc6d1cb61f0f5c",
         "response_sha256": "c31ac2781eb0c58875617aa672568b0d6c2c01b19aff73102bae28a183c06fc0",
         "source_record": "data/explainer_pipeline/replays/rope/lesson_plan.json",
         "usage": null,
@@ -2196,8 +2524,8 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "55d48c22bd4345081257b27491c2209247e6909c71b40800813043f6a69ac188",
-        "response_sha256": "63f874dd5dad4e79fc528b7661d3baa59615649ed5ece0503a13e2c0d784e8a4",
+        "prompt_sha256": "b731f76f1513a287d86d2ea9268f8efc57b723b4e8cc8f50197db056c869e804",
+        "response_sha256": "1b23bf4069d9341010924436655ea8b7708a5b7c261d14c1ccaee01e7402d935",
         "source_record": "data/explainer_pipeline/replays/rope/section_content.json",
         "usage": null,
         "duration_ms": 0,

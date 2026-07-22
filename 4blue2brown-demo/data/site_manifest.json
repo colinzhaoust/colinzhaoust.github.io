@@ -13,6 +13,54 @@
     {
       "run_id": "reviewed-reference",
       "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro",
+      "path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro.mp4",
+      "sha256": "e516ea8507aa70087d072fb0d737d53310f4176170efa2111af7e4199979af3d",
+      "size_bytes": 188542
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro-poster",
+      "path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro-poster.png",
+      "sha256": "eb84de6830c211718c23c301d9534d2b2f5d4e45e61e46db9dfc048113d6bccc",
+      "size_bytes": 101717
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro-captions",
+      "path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro-captions.vtt",
+      "sha256": "d621e6b637c582ed4c8ba0b4e7b4865ae07a88da062cd90e1802013f1fe965a1",
+      "size_bytes": 292
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro",
+      "path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro.mp4",
+      "sha256": "0eb371d4b71e8d1c030297fe76d167edf92c913058fef09df8f1170e00a2abdc",
+      "size_bytes": 142601
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro-poster",
+      "path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro-poster.png",
+      "sha256": "5c2297000e7a8838a8a4f62382406913f9f7b5d3d0c12d45334640de1861e5f9",
+      "size_bytes": 103100
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro-captions",
+      "path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro-captions.vtt",
+      "sha256": "32c5a1059dff2b10cdcdc078cf639c9c6abef466720357618fe126506833ada4",
+      "size_bytes": 194
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "feynrl",
       "media_id": "feynrl-lineage-micro",
       "path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro.mp4",
       "sha256": "68b3a985dd57d49d5fdeb66b1dc0456698ace607da055b05539c8e71c1405667",
@@ -105,6 +153,54 @@
       "path": "assets/reviewed-reference/feynrl/feynrl-findings-captions.vtt",
       "sha256": "a63bc22a196c56910bfd9645c9ad5828eec6f350f56d1a7219e673c3975f79dc",
       "size_bytes": 213
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro",
+      "path": "assets/reviewed-reference/rope/rope-frequency-pairs-micro.mp4",
+      "sha256": "ebcd132062479d12581369860306dd432b2eeab3d38add059be142d5875e0b74",
+      "size_bytes": 190226
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro-poster",
+      "path": "assets/reviewed-reference/rope/rope-frequency-pairs-micro-poster.png",
+      "sha256": "aa4ee995b049d57a6e27560c7aaeed1f931cc408da6a628d06a90ff5210aaafe",
+      "size_bytes": 113006
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro-captions",
+      "path": "assets/reviewed-reference/rope/rope-frequency-pairs-micro-captions.vtt",
+      "sha256": "722ba5cdb03405ca24ef6903ced50fd56923ce23d10e489ba5623366a865ca17",
+      "size_bytes": 193
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro",
+      "path": "assets/reviewed-reference/rope/rope-translation-result-micro.mp4",
+      "sha256": "1accf06720ea1e80cab592233b71ab2d360a80c83d316839a52cc7e43bc4b818",
+      "size_bytes": 109953
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro-poster",
+      "path": "assets/reviewed-reference/rope/rope-translation-result-micro-poster.png",
+      "sha256": "fd0f57d0a36dbd486bb349cf229d155e895b4c0ee13047a6f2729acde54ec66e",
+      "size_bytes": 108188
+    },
+    {
+      "run_id": "reviewed-reference",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro-captions",
+      "path": "assets/reviewed-reference/rope/rope-translation-result-micro-captions.vtt",
+      "sha256": "0e8346af88100e8fd2904cddc9a88b09f59b3e4f324f18618bd0574518e75472",
+      "size_bytes": 183
     },
     {
       "run_id": "reviewed-reference",

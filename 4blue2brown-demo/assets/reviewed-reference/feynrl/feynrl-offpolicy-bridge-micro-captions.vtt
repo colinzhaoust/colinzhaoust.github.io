@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:01.600
+The on-policy estimator samples from the current policy.
+
+00:01.600 --> 00:04.300
+When samples come from the behavior policy, the per-token ratio corrects the expectation.
+
+00:04.300 --> 00:05.433
+The behavioral KL term makes the off-policy relation explicit.

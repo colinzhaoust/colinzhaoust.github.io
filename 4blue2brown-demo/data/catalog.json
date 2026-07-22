@@ -48,8 +48,8 @@
         {
           "paper_id": "feynrl",
           "bundle": "data/runs/reviewed-reference/feynrl.json",
-          "bundle_sha256": "b4a36a360f3d9f0e0bfa47328bf3a141af5e6ef9425fbc02aa523c2ae820afd4",
-          "source_packet_sha256": "9447214fff06437c6422220a1a2fee7acecd60a708f6936189bb1a873cb5d263",
+          "bundle_sha256": "b47ea5b1d7180983e8ae2302dbe8d4f3b451095657b6f42fd5ebac9859fe1150",
+          "source_packet_sha256": "dee6a2d603c9417c1dba97fd2c8f731811e7ac50cd8de3715119af5fe6234b2e",
           "trace_summary": {
             "stage_count": 3,
             "input_tokens": null,
@@ -64,8 +64,8 @@
         {
           "paper_id": "rope",
           "bundle": "data/runs/reviewed-reference/rope.json",
-          "bundle_sha256": "824f371fc24bb1785e0958e1d67b82c4943cb3b71de312bece88e110ad14ff32",
-          "source_packet_sha256": "b17ac1694525cea8baf3d5bd61a1898d130229107a66c3c25bbd1f0a4937c790",
+          "bundle_sha256": "a5cc33b478a0af53226316997e2c869ae79c05f49dfae78b23a72b67021ab037",
+          "source_packet_sha256": "432b9b27e0ab9267089027f05d5c3e290b1a8a4d85dd4cc1ac1fc8dd411862fe",
           "trace_summary": {
             "stage_count": 3,
             "input_tokens": null,

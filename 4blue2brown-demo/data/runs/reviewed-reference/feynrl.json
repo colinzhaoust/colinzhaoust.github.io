@@ -30,15 +30,34 @@
     "code_sources": [
       {
         "code_id": "feynrl-p3o",
-        "repository": "https://github.com/FeynRL/FeynRL",
+        "repository": "https://github.com/FeynRL-project/FeynRL",
         "revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752",
+        "checkout_path": "external/FeynRL",
         "mapping_state": "confirmed",
         "excerpts": [
           {
-            "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-            "symbol": "calculate_ess / P3O policy loss",
-            "line_start": 1,
-            "line_end": 26
+            "path": "algs/P3O/p3o.py",
+            "symbol": "calculate_ess",
+            "line_start": 107,
+            "line_end": 135
+          },
+          {
+            "path": "algs/P3O/p3o.py",
+            "symbol": "compute_policy_loss",
+            "line_start": 157,
+            "line_end": 253
+          },
+          {
+            "path": "rollouts/replay_buffer.py",
+            "symbol": "ReplayBuffer.add_batch_seqs / collate_fn",
+            "line_start": 44,
+            "line_end": 216
+          },
+          {
+            "path": "core/rl_engines.py",
+            "symbol": "collect_rollouts / prepare_training_batches",
+            "line_start": 350,
+            "line_end": 482
           }
         ]
       }
@@ -50,10 +69,10 @@
           "formula_label": "Eq. 11 · normalized ESS",
           "code_id": "feynrl-p3o",
           "symbol": "calculate_ess",
-          "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-          "line_start": 9,
-          "line_end": 14,
-          "role": "computes e_B from valid per-token ratios",
+          "path": "algs/P3O/p3o.py",
+          "line_start": 107,
+          "line_end": 135,
+          "role": "computes e_B from valid per-token ratios across ranks",
           "state": "confirmed",
           "evidence_refs": [
             "feynrl-paper:eq11",
@@ -64,11 +83,11 @@
           "formula_id": "formula:feynrl.p3o_objective",
           "formula_label": "Eq. 12 · P3O objective",
           "code_id": "feynrl-p3o",
-          "symbol": "p3o_terms",
-          "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-          "line_start": 17,
-          "line_end": 24,
-          "role": "caps rho with e_B and weights behavioral KL by 1-e_B",
+          "symbol": "compute_policy_loss",
+          "path": "algs/P3O/p3o.py",
+          "line_start": 192,
+          "line_end": 250,
+          "role": "forms the ratio, calls calculate_ess, caps rho, adds (1-e_B) behavioral KL, and reports ess_factor",
           "state": "confirmed",
           "evidence_refs": [
             "feynrl-paper:eq12",
@@ -76,90 +95,158 @@
           ]
         }
       ],
+      "example": {
+        "label": "One math prompt in synchronous P3O training",
+        "input": "A prompt is sampled and produces several tokenized completions.",
+        "output": "The completion contributes to a P3O update, metrics, and the next rollout-policy version."
+      },
       "nodes": [
         {
-          "id": "valid-ratios",
-          "label": "valid token ratios",
+          "id": "prompt",
+          "label": "Prompt shard",
           "kind": "input",
-          "detail": "exp(log πθ − log πold) after masking"
+          "stage": "rollout",
+          "detail": "A concrete math prompt enters collect_rollouts.",
+          "artifact": "prompt_ids",
+          "path": "core/rl_engines.py",
+          "line_start": 350,
+          "line_end": 403
+        },
+        {
+          "id": "completion",
+          "label": "Generate and score completions",
+          "kind": "function",
+          "stage": "rollout",
+          "detail": "The rollout engine returns response tokens, rewards, z-scores, masks, and old log-probabilities.",
+          "artifact": "input_ids · pred_rewards · pred_zscores · pred_old_logprobs",
+          "path": "core/rl_engines.py",
+          "line_start": 350,
+          "line_end": 403
+        },
+        {
+          "id": "buffer",
+          "label": "Store one trajectory",
+          "kind": "buffer",
+          "stage": "buffer",
+          "detail": "ReplayBuffer rejects empty or over-length responses and stores aligned per-token tensors.",
+          "artifact": "ReplayBuffer item",
+          "path": "rollouts/replay_buffer.py",
+          "line_start": 44,
+          "line_end": 158
+        },
+        {
+          "id": "microbatch",
+          "label": "Collate a training micro-batch",
+          "kind": "operation",
+          "stage": "buffer",
+          "detail": "Sequences are padded and action-token masks preserve which positions contribute to training.",
+          "artifact": "[B,T] input_ids · mask · zscore · old_logprobs",
+          "path": "rollouts/replay_buffer.py",
+          "line_start": 160,
+          "line_end": 216
+        },
+        {
+          "id": "forward",
+          "label": "Current-policy forward pass",
+          "kind": "function",
+          "stage": "train",
+          "detail": "P3O recomputes current log-probabilities for the same completion tokens.",
+          "artifact": "pi_logprobs",
+          "path": "algs/P3O/p3o.py",
+          "line_start": 329,
+          "line_end": 378
         },
         {
           "id": "ess",
-          "label": "calculate_ess",
-          "kind": "function",
-          "detail": "batch concentration statistic e_B"
-        },
-        {
-          "id": "rho",
-          "label": "ratio.clamp(max=e_B)",
+          "label": "Compute ratio and normalized ESS",
           "kind": "operation",
-          "detail": "off-policy importance weight"
-        },
-        {
-          "id": "policy",
-          "label": "detached policy term",
-          "kind": "objective",
-          "detail": "ρ · log πθ · advantage"
-        },
-        {
-          "id": "behavioral-kl",
-          "label": "behavioral KL",
-          "kind": "input",
-          "detail": "distance from the behavior policy"
-        },
-        {
-          "id": "regularizer",
-          "label": "(1 − e_B) · KL",
-          "kind": "objective",
-          "detail": "adaptive off-policy regularization"
+          "stage": "train",
+          "detail": "Valid-token ratios are aggregated across ranks into e_B.",
+          "artifact": "ratio · ess_factor",
+          "path": "algs/P3O/p3o.py",
+          "line_start": 192,
+          "line_end": 202
         },
         {
           "id": "loss",
-          "label": "P3O policy loss",
+          "label": "Assemble P3O loss",
+          "kind": "objective",
+          "stage": "train",
+          "detail": "e_B caps detached rho and weights the behavioral KL term; metrics retain ess_factor.",
+          "artifact": "loss_total_sum · pi_metrics",
+          "path": "algs/P3O/p3o.py",
+          "line_start": 204,
+          "line_end": 253
+        },
+        {
+          "id": "update",
+          "label": "Backpropagate and update",
+          "kind": "function",
+          "stage": "update",
+          "detail": "DeepSpeed performs backward and the optimizer boundary advances the policy.",
+          "artifact": "updated policy weights",
+          "path": "algs/P3O/p3o.py",
+          "line_start": 389,
+          "line_end": 437
+        },
+        {
+          "id": "sync",
+          "label": "Sync weights to rollout engines",
           "kind": "output",
-          "detail": "policy term + behavioral regularizer"
+          "stage": "update",
+          "detail": "The next epoch generates data with the new policy version.",
+          "artifact": "policy_version + 1",
+          "path": "run_rl_sync.py",
+          "line_start": 412,
+          "line_end": 434
         }
       ],
       "edges": [
         {
-          "source": "valid-ratios",
+          "source": "prompt",
+          "target": "completion",
+          "label": "generate n samples"
+        },
+        {
+          "source": "completion",
+          "target": "buffer",
+          "label": "aligned trajectory"
+        },
+        {
+          "source": "buffer",
+          "target": "microbatch",
+          "label": "sample and pad"
+        },
+        {
+          "source": "microbatch",
+          "target": "forward",
+          "label": "dispatch to train_step"
+        },
+        {
+          "source": "forward",
           "target": "ess",
-          "label": "measure concentration"
-        },
-        {
-          "source": "valid-ratios",
-          "target": "rho",
-          "label": "importance ratios"
+          "label": "compare current and old log-probs"
         },
         {
           "source": "ess",
-          "target": "rho",
-          "label": "sets cap"
-        },
-        {
-          "source": "rho",
-          "target": "policy",
-          "label": "detached weight"
-        },
-        {
-          "source": "ess",
-          "target": "regularizer",
-          "label": "sets 1 − e_B"
-        },
-        {
-          "source": "behavioral-kl",
-          "target": "regularizer",
-          "label": "penalty value"
-        },
-        {
-          "source": "policy",
           "target": "loss",
-          "label": "add"
+          "label": "e_B controls both terms"
         },
         {
-          "source": "regularizer",
-          "target": "loss",
-          "label": "add"
+          "source": "loss",
+          "target": "update",
+          "label": "backward"
+        },
+        {
+          "source": "update",
+          "target": "sync",
+          "label": "publish weights"
+        },
+        {
+          "source": "sync",
+          "target": "prompt",
+          "label": "next epoch loop",
+          "edge_kind": "loop"
         }
       ],
       "experiment_pipeline": [
@@ -359,18 +446,113 @@
       "data/formula_explainer/formulas/feynrl/ess.json",
       "data/formula_explainer/formulas/feynrl/p3o_objective.json"
     ],
+    "formula_showcase": [
+      {
+        "media_id": "feynrl-offpolicy-bridge-micro",
+        "poster_id": "feynrl-offpolicy-bridge-micro-poster",
+        "captions_id": "feynrl-offpolicy-bridge-micro-captions",
+        "title": "Eqs. 2, 5–8 · move samples to π_b",
+        "focus": "The expectation changes sampling policy; the per-token ratio and behavioral KL appear for distinct reasons.",
+        "source_refs": [
+          "feynrl-paper:eq2",
+          "feynrl-paper:eq5-8"
+        ]
+      },
+      {
+        "media_id": "feynrl-ess-micro",
+        "poster_id": "feynrl-ess-micro-poster",
+        "captions_id": "feynrl-ess-micro-captions",
+        "title": "Eq. 11 · measure effective support",
+        "focus": "The token count stays fixed while ratio concentration lowers normalized ESS.",
+        "source_refs": [
+          "feynrl-paper:eq11"
+        ]
+      },
+      {
+        "media_id": "feynrl-p3o-micro",
+        "poster_id": "feynrl-p3o-micro-poster",
+        "captions_id": "feynrl-p3o-micro-captions",
+        "title": "Eq. 12 · couple two controls",
+        "focus": "One e_B lowers the score cap and raises the behavioral KL coefficient.",
+        "source_refs": [
+          "feynrl-paper:eq12"
+        ]
+      }
+    ],
     "scene_renderer": {
       "engine": "Manim Community 0.19.0",
       "entrypoint": "scenes/explainer_pipeline_native.py",
       "coding_agent_required": false,
       "scene_ids": [
         "FeynRLEquationLineageMicro",
+        "FeynRLOffPolicyBridgeMicro",
         "FeynRLEssMicro",
         "FeynRLP3OMicro",
+        "FeynRLClipResultMicro",
         "FeynRLResultsMicro"
       ]
     },
     "media": [
+      {
+        "media_id": "feynrl-offpolicy-bridge-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro.mp4",
+        "sha256": "e516ea8507aa70087d072fb0d737d53310f4176170efa2111af7e4199979af3d",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Formula transition from on-policy sampling to behavior-policy sampling with a per-token ratio and behavioral KL.",
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro.mp4"
+      },
+      {
+        "media_id": "feynrl-offpolicy-bridge-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro-poster.png",
+        "sha256": "eb84de6830c211718c23c301d9534d2b2f5d4e45e61e46db9dfc048113d6bccc",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the FeynRL behavior-policy bridge micro-video.",
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro-poster.png"
+      },
+      {
+        "media_id": "feynrl-offpolicy-bridge-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro.vtt",
+        "sha256": "d621e6b637c582ed4c8ba0b4e7b4865ae07a88da062cd90e1802013f1fe965a1",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the FeynRL behavior-policy bridge micro-video.",
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro-captions.vtt"
+      },
+      {
+        "media_id": "feynrl-clip-result-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/feynrl/clip-result-micro.mp4",
+        "sha256": "0eb371d4b71e8d1c030297fe76d167edf92c913058fef09df8f1170e00a2abdc",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Exact Table 7 comparison of the GRPO clipping-factor average and P3O on held-out AMC pass at one.",
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro.mp4"
+      },
+      {
+        "media_id": "feynrl-clip-result-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/feynrl/clip-result-micro-poster.png",
+        "sha256": "5c2297000e7a8838a8a4f62382406913f9f7b5d3d0c12d45334640de1861e5f9",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the FeynRL clipping-factor result micro-video.",
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro-poster.png"
+      },
+      {
+        "media_id": "feynrl-clip-result-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/feynrl/clip-result-micro.vtt",
+        "sha256": "32c5a1059dff2b10cdcdc078cf639c9c6abef466720357618fe126506833ada4",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the FeynRL clipping-factor result micro-video.",
+        "published_path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro-captions.vtt"
+      },
       {
         "media_id": "feynrl-lineage-micro",
         "role": "video",
@@ -922,6 +1104,26 @@
             ]
           },
           {
+            "type": "micro_video",
+            "media_id": "feynrl-offpolicy-bridge-micro",
+            "poster_id": "feynrl-offpolicy-bridge-micro-poster",
+            "captions_id": "feynrl-offpolicy-bridge-micro-captions",
+            "title": "What changes when the samples come from π_b?",
+            "intro": "The animation keeps the score-function estimator fixed, then changes only the sampling distribution from the current policy to the behavior policy.",
+            "observation": "Moving the expectation to y∼π_b introduces the per-token ratio ρ_t; the behavioral KL is shown as a separate relation to π_b.",
+            "consequence": "This is the bridge from the on-policy premise to the two quantities that Eq. 12 later controls with e_B.",
+            "beats": [
+              "sample from π_θ",
+              "move to π_b",
+              "insert ρ_t",
+              "expose behavioral KL"
+            ],
+            "source_refs": [
+              "feynrl-paper:eq2",
+              "feynrl-paper:eq5-8"
+            ]
+          },
+          {
             "type": "prose",
             "heading": "The paper's stated intent",
             "paragraphs": [
@@ -1096,27 +1298,27 @@
           {
             "type": "code",
             "code_source_id": "feynrl-p3o",
-            "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
+            "path": "algs/P3O/p3o.py",
             "symbol": "Equation 11 and Equation 12 in the repository",
             "lines": [
               {
-                "number": 11,
+                "number": 134,
                 "code": "ess = (sum_w**2) / (sum_w_2 + 1e-8) / total",
                 "maps_to": "e_B = ESS(B;θ), valid-token aggregation"
               },
               {
-                "number": 18,
+                "number": 207,
                 "code": "rho = torch.clamp(ratio, max=ess_factor)",
                 "maps_to": "min{ρ_t,e_B}"
               },
               {
-                "number": 20,
+                "number": 208,
                 "code": "policy_loss = -(rho.detach() * logprobs * advantages)",
                 "maps_to": "stop-gradient score-function term"
               },
               {
-                "number": 24,
-                "code": "trust_region = (1 - ess_factor) * kl_behavioral",
+                "number": 223,
+                "code": "loss_total_sum = pi_sum + ... + (1 - ess_factor) * kl_sum_behavioral",
                 "maps_to": "(1−e_B) KL(π_θ || π_b)"
               }
             ],
@@ -1150,6 +1352,26 @@
             "evidence_kind": "authors_reported_curve",
             "evidence": "Figure 1 compares training trajectories; Table 7 provides held-out values. No curve samples are invented.",
             "takeaway": "The paper reports sensitivity across fixed clipping settings, which is the hyperparameter dependence P3O is designed to remove.",
+            "source_refs": [
+              "feynrl-paper:fig1",
+              "feynrl-paper:table7"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "feynrl-clip-result-micro",
+            "poster_id": "feynrl-clip-result-micro-poster",
+            "captions_id": "feynrl-clip-result-micro-captions",
+            "title": "Collapse three clip choices into the held-out readout",
+            "intro": "The clip begins with ε∈{0.2,0.4,0.6}, then replaces those choices with the exact Table 7 aggregate on the same 4K-token AMC evaluation.",
+            "observation": "The reported GRPO clip average is 0.381±0.195; P3O is 0.493 and does not select a clip ratio.",
+            "consequence": "The animation connects the method-level hyperparameter question to a specific held-out metric without inventing Figure 1 curve samples.",
+            "beats": [
+              "three ε choices",
+              "same AMC metric",
+              "GRPO aggregate",
+              "P3O once"
+            ],
             "source_refs": [
               "feynrl-paper:fig1",
               "feynrl-paper:table7"
@@ -2162,19 +2384,21 @@
         "node_id": "code:feynrl-p3o:calculate_ess",
         "code_id": "feynrl-p3o",
         "symbol": "calculate_ess",
-        "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-        "line_start": 9,
-        "line_end": 14,
-        "role": "computes e_B from valid per-token ratios"
+        "path": "algs/P3O/p3o.py",
+        "line_start": 107,
+        "line_end": 135,
+        "role": "computes e_B from valid per-token ratios across ranks",
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/algs/P3O/p3o.py#L107-L135"
       },
       {
-        "node_id": "code:feynrl-p3o:p3o_terms",
+        "node_id": "code:feynrl-p3o:compute_policy_loss",
         "code_id": "feynrl-p3o",
-        "symbol": "p3o_terms",
-        "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-        "line_start": 17,
-        "line_end": 24,
-        "role": "caps rho with e_B and weights behavioral KL by 1-e_B"
+        "symbol": "compute_policy_loss",
+        "path": "algs/P3O/p3o.py",
+        "line_start": 192,
+        "line_end": 250,
+        "role": "forms the ratio, calls calculate_ess, caps rho, adds (1-e_B) behavioral KL, and reports ess_factor",
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/algs/P3O/p3o.py#L192-L250"
       }
     ],
     "formula_code_edges": [
@@ -2183,108 +2407,185 @@
         "source": "formula:formula:feynrl.ess",
         "target": "code:feynrl-p3o:calculate_ess",
         "state": "confirmed",
-        "role": "computes e_B from valid per-token ratios",
+        "role": "computes e_B from valid per-token ratios across ranks",
         "evidence_refs": [
           "feynrl-paper:eq11",
           "feynrl-p3o:calculate_ess"
         ]
       },
       {
-        "edge_id": "formula:formula:feynrl.p3o_objective->code:feynrl-p3o:p3o_terms",
+        "edge_id": "formula:formula:feynrl.p3o_objective->code:feynrl-p3o:compute_policy_loss",
         "source": "formula:formula:feynrl.p3o_objective",
-        "target": "code:feynrl-p3o:p3o_terms",
+        "target": "code:feynrl-p3o:compute_policy_loss",
         "state": "confirmed",
-        "role": "caps rho with e_B and weights behavioral KL by 1-e_B",
+        "role": "forms the ratio, calls calculate_ess, caps rho, adds (1-e_B) behavioral KL, and reports ess_factor",
         "evidence_refs": [
           "feynrl-paper:eq12",
           "feynrl-p3o:compute_policy_loss"
         ]
       }
     ],
+    "example": {
+      "label": "One math prompt in synchronous P3O training",
+      "input": "A prompt is sampled and produces several tokenized completions.",
+      "output": "The completion contributes to a P3O update, metrics, and the next rollout-policy version."
+    },
     "dag_nodes": [
       {
-        "id": "valid-ratios",
-        "label": "valid token ratios",
+        "id": "prompt",
+        "label": "Prompt shard",
         "kind": "input",
-        "detail": "exp(log πθ − log πold) after masking"
+        "stage": "rollout",
+        "detail": "A concrete math prompt enters collect_rollouts.",
+        "artifact": "prompt_ids",
+        "path": "core/rl_engines.py",
+        "line_start": 350,
+        "line_end": 403,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/core/rl_engines.py#L350-L403"
+      },
+      {
+        "id": "completion",
+        "label": "Generate and score completions",
+        "kind": "function",
+        "stage": "rollout",
+        "detail": "The rollout engine returns response tokens, rewards, z-scores, masks, and old log-probabilities.",
+        "artifact": "input_ids · pred_rewards · pred_zscores · pred_old_logprobs",
+        "path": "core/rl_engines.py",
+        "line_start": 350,
+        "line_end": 403,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/core/rl_engines.py#L350-L403"
+      },
+      {
+        "id": "buffer",
+        "label": "Store one trajectory",
+        "kind": "buffer",
+        "stage": "buffer",
+        "detail": "ReplayBuffer rejects empty or over-length responses and stores aligned per-token tensors.",
+        "artifact": "ReplayBuffer item",
+        "path": "rollouts/replay_buffer.py",
+        "line_start": 44,
+        "line_end": 158,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/rollouts/replay_buffer.py#L44-L158"
+      },
+      {
+        "id": "microbatch",
+        "label": "Collate a training micro-batch",
+        "kind": "operation",
+        "stage": "buffer",
+        "detail": "Sequences are padded and action-token masks preserve which positions contribute to training.",
+        "artifact": "[B,T] input_ids · mask · zscore · old_logprobs",
+        "path": "rollouts/replay_buffer.py",
+        "line_start": 160,
+        "line_end": 216,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/rollouts/replay_buffer.py#L160-L216"
+      },
+      {
+        "id": "forward",
+        "label": "Current-policy forward pass",
+        "kind": "function",
+        "stage": "train",
+        "detail": "P3O recomputes current log-probabilities for the same completion tokens.",
+        "artifact": "pi_logprobs",
+        "path": "algs/P3O/p3o.py",
+        "line_start": 329,
+        "line_end": 378,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/algs/P3O/p3o.py#L329-L378"
       },
       {
         "id": "ess",
-        "label": "calculate_ess",
-        "kind": "function",
-        "detail": "batch concentration statistic e_B"
-      },
-      {
-        "id": "rho",
-        "label": "ratio.clamp(max=e_B)",
+        "label": "Compute ratio and normalized ESS",
         "kind": "operation",
-        "detail": "off-policy importance weight"
-      },
-      {
-        "id": "policy",
-        "label": "detached policy term",
-        "kind": "objective",
-        "detail": "ρ · log πθ · advantage"
-      },
-      {
-        "id": "behavioral-kl",
-        "label": "behavioral KL",
-        "kind": "input",
-        "detail": "distance from the behavior policy"
-      },
-      {
-        "id": "regularizer",
-        "label": "(1 − e_B) · KL",
-        "kind": "objective",
-        "detail": "adaptive off-policy regularization"
+        "stage": "train",
+        "detail": "Valid-token ratios are aggregated across ranks into e_B.",
+        "artifact": "ratio · ess_factor",
+        "path": "algs/P3O/p3o.py",
+        "line_start": 192,
+        "line_end": 202,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/algs/P3O/p3o.py#L192-L202"
       },
       {
         "id": "loss",
-        "label": "P3O policy loss",
+        "label": "Assemble P3O loss",
+        "kind": "objective",
+        "stage": "train",
+        "detail": "e_B caps detached rho and weights the behavioral KL term; metrics retain ess_factor.",
+        "artifact": "loss_total_sum · pi_metrics",
+        "path": "algs/P3O/p3o.py",
+        "line_start": 204,
+        "line_end": 253,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/algs/P3O/p3o.py#L204-L253"
+      },
+      {
+        "id": "update",
+        "label": "Backpropagate and update",
+        "kind": "function",
+        "stage": "update",
+        "detail": "DeepSpeed performs backward and the optimizer boundary advances the policy.",
+        "artifact": "updated policy weights",
+        "path": "algs/P3O/p3o.py",
+        "line_start": 389,
+        "line_end": 437,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/algs/P3O/p3o.py#L389-L437"
+      },
+      {
+        "id": "sync",
+        "label": "Sync weights to rollout engines",
         "kind": "output",
-        "detail": "policy term + behavioral regularizer"
+        "stage": "update",
+        "detail": "The next epoch generates data with the new policy version.",
+        "artifact": "policy_version + 1",
+        "path": "run_rl_sync.py",
+        "line_start": 412,
+        "line_end": 434,
+        "source_url": "https://github.com/FeynRL-project/FeynRL/blob/dfe85351e28a3744ab0eb02d2299fc1e6d3d5752/run_rl_sync.py#L412-L434"
       }
     ],
     "dag_edges": [
       {
-        "source": "valid-ratios",
+        "source": "prompt",
+        "target": "completion",
+        "label": "generate n samples"
+      },
+      {
+        "source": "completion",
+        "target": "buffer",
+        "label": "aligned trajectory"
+      },
+      {
+        "source": "buffer",
+        "target": "microbatch",
+        "label": "sample and pad"
+      },
+      {
+        "source": "microbatch",
+        "target": "forward",
+        "label": "dispatch to train_step"
+      },
+      {
+        "source": "forward",
         "target": "ess",
-        "label": "measure concentration"
-      },
-      {
-        "source": "valid-ratios",
-        "target": "rho",
-        "label": "importance ratios"
+        "label": "compare current and old log-probs"
       },
       {
         "source": "ess",
-        "target": "rho",
-        "label": "sets cap"
-      },
-      {
-        "source": "rho",
-        "target": "policy",
-        "label": "detached weight"
-      },
-      {
-        "source": "ess",
-        "target": "regularizer",
-        "label": "sets 1 − e_B"
-      },
-      {
-        "source": "behavioral-kl",
-        "target": "regularizer",
-        "label": "penalty value"
-      },
-      {
-        "source": "policy",
         "target": "loss",
-        "label": "add"
+        "label": "e_B controls both terms"
       },
       {
-        "source": "regularizer",
-        "target": "loss",
-        "label": "add"
+        "source": "loss",
+        "target": "update",
+        "label": "backward"
+      },
+      {
+        "source": "update",
+        "target": "sync",
+        "label": "publish weights"
+      },
+      {
+        "source": "sync",
+        "target": "prompt",
+        "label": "next epoch loop",
+        "edge_kind": "loop"
       }
     ],
     "experiment_pipeline": [
@@ -2326,15 +2627,34 @@
     "repository_sources": [
       {
         "code_id": "feynrl-p3o",
-        "repository": "https://github.com/FeynRL/FeynRL",
+        "repository": "https://github.com/FeynRL-project/FeynRL",
         "revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752",
+        "checkout_path": "external/FeynRL",
         "mapping_state": "confirmed",
         "excerpts": [
           {
-            "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-            "symbol": "calculate_ess / P3O policy loss",
-            "line_start": 1,
-            "line_end": 26
+            "path": "algs/P3O/p3o.py",
+            "symbol": "calculate_ess",
+            "line_start": 107,
+            "line_end": 135
+          },
+          {
+            "path": "algs/P3O/p3o.py",
+            "symbol": "compute_policy_loss",
+            "line_start": 157,
+            "line_end": 253
+          },
+          {
+            "path": "rollouts/replay_buffer.py",
+            "symbol": "ReplayBuffer.add_batch_seqs / collate_fn",
+            "line_start": 44,
+            "line_end": 216
+          },
+          {
+            "path": "core/rl_engines.py",
+            "symbol": "collect_rollouts / prepare_training_batches",
+            "line_start": 350,
+            "line_end": 482
           }
         ]
       }
@@ -2342,7 +2662,7 @@
   },
   "generation": {
     "pipeline_version": "explainer-pipeline/0.1.0",
-    "source_packet_sha256": "9447214fff06437c6422220a1a2fee7acecd60a708f6936189bb1a873cb5d263",
+    "source_packet_sha256": "dee6a2d603c9417c1dba97fd2c8f731811e7ac50cd8de3715119af5fe6234b2e",
     "stage_traces": [
       {
         "stage": "concept_graph",
@@ -2350,7 +2670,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "44a2e913b0f9762e13ff53160a2c21628dfb80f3dce6f418cda5a9d4476d9a47",
+        "prompt_sha256": "be1a1789e7da4550dbd44b2287f2d1443e30e14528fc89f7d0d91cfe2e5818e4",
         "response_sha256": "aba9e2236eface439f5e30e995899508317c0893f8e40a91738231fcfb92a181",
         "source_record": "data/explainer_pipeline/replays/feynrl/concept_graph.json",
         "usage": null,
@@ -2367,7 +2687,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "9d5871b43434193e6f942caebeebee6caa4cee4b54e2afb06a3035a3a421a7a8",
+        "prompt_sha256": "9b14f16997dadda2fb62fe88b08297b140419d06b4f3e52f0798dfc860a32990",
         "response_sha256": "9f644e97110e68d85155bb456a48ae84677c69af4d8dd62dc02a4b58dc26fc8c",
         "source_record": "data/explainer_pipeline/replays/feynrl/lesson_plan.json",
         "usage": null,
@@ -2384,8 +2704,8 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "f0c93f99d356e724e0dd1417adc6c95ca2ed39ec51666a56ce80713bce1d4d59",
-        "response_sha256": "4631c60cb7351cd8aad7c375ccfaeb3bc27a6e07a26e49d77378725fe6f4dde5",
+        "prompt_sha256": "061f64817987931170dcc68e8459d3edbcff0c544cd8de9ee399f5970659fda5",
+        "response_sha256": "999572d9a332b1cf03de110db39ecb2f518fa39309649969ccd997d2c7f596d5",
         "source_record": "data/explainer_pipeline/replays/feynrl/section_content.json",
         "usage": null,
         "duration_ms": 0,
