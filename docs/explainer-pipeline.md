@@ -21,6 +21,8 @@ The responsibility split is strict:
 | Choose among allowed content/block and registered scene identifiers. | Compile Formula IR, resolve the Manim registry, render HTML and approved micro-videos, hash artifacts, and publish the static site. |
 | Never emit or execute Python, HTML, Manim source, or shell. | Never silently repair a model's scientific claim by changing its meaning. |
 
+The checked-in `reviewed-reference` is a human/Codex-reviewed target condition, not the output of a live candidate model. Its scientific narrative and teaching choices were iterated manually from paper/code evidence and user critique. Live GPT, Gemini, and Qwen endpoints have only passed connectivity smoke tests so far. The harness contributes repeatability, validation, deterministic Formula/Code maps, Manim rendering, and publication, but those mechanisms do not by themselves create the reference run's explanatory judgment.
+
 In the reviewed demo, source packets and model-stage outputs are frozen fixtures. In a production package, `source_grounding` is also a model API stage; the same harness records and validates its result before the three planning stages begin.
 
 ```bash
@@ -84,7 +86,7 @@ Supported live adapters are:
 
 - Bedrock Runtime `Converse`, for models such as `qwen.qwen3-32b-v1:0`;
 - Google Vertex `generateContent`, including `gemini-3.1-pro-preview` with a local service-account file;
-- OpenAI-compatible HTTP, for WInE `chat/completions` and Bedrock Mantle `responses`.
+- OpenAI-compatible HTTP, for WInE, Bedrock Mantle, and SSH-tunneled Babel vLLM endpoints.
 
 Every live stage records provider/model identity, input/output/reasoning/total tokens when the endpoint returns them, wall-clock API duration, and an estimated USD cost when a region- and tier-matched public rate card is pinned. Credential values, credential file paths, authorization headers, and request bodies are never written to the trace. Replay fixtures intentionally report token and cost as “not recorded,” rather than inventing zero-cost model usage.
 
@@ -130,7 +132,7 @@ python3 -m tools.explainer_pipeline.cli run feynrl \
   --run-root runs/wine-gemini/feynrl
 ```
 
-As of the implementation date, Bedrock documents GPT-5.5 as `openai.gpt-5.5` on the Mantle Responses endpoint and Qwen3 32B as `qwen.qwen3-32b-v1:0` on Bedrock Runtime. Google documents `gemini-3.1-pro-preview`. Bedrock has 8B-class models, but the tested baseline is Llama 3.1 8B rather than a Qwen 8B endpoint; Ministral 3 8B is another documented Bedrock option.
+The comparison matrix is intentionally limited to GPT-5.5, Gemini 3.1 Pro, Qwen3 32B, and Qwen3 8B. The 8B condition is the revision-pinned `Qwen/Qwen3-8B` checkpoint served in BF16 through vLLM on one Babel L40S. Its launcher and SSH-tunnel instructions are in `docs/ops/babel-qwen3-8b-vllm.sbatch`.
 
 ## Paper-native sectioning
 

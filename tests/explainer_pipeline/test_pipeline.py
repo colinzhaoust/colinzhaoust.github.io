@@ -120,6 +120,22 @@ class ExplainerPipelineTests(unittest.TestCase):
         self.assertEqual("rate_unavailable", unknown["status"])
         self.assertIsNone(unknown["estimated_usd"])
 
+    def test_comparison_matrix_is_limited_to_requested_model_families(self) -> None:
+        path = DATA_ROOT / "comparison_candidates.json"
+        matrix = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {
+                "gpt-5-5-bedrock",
+                "gemini-3-1-pro-wine",
+                "qwen3-32b-bedrock",
+                "qwen3-8b-babel-vllm",
+            },
+            {candidate["candidate_id"] for candidate in matrix["candidates"]},
+        )
+        serialized = json.dumps(matrix).lower()
+        self.assertNotIn("llama", serialized)
+        self.assertNotIn("mistral", serialized)
+
     def test_metric_bars_have_rendered_exact_value_evidence(self) -> None:
         manifest = json.loads((ROOT / "experiments/explainer_pipeline/micro_scene_manifest.json").read_text(encoding="utf-8"))
         scenes = {item["scene_id"]: item for item in manifest["scenes"]}

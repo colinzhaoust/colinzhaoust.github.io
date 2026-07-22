@@ -135,6 +135,11 @@
         <div><span class="eyebrow">Paper + repository → sourced explainer</span><h1>From source material to scientific scenes.</h1></div>
         <p>The API returns grounded JSON: the paper's motivation, terms, related work, formula/code mappings, and findings. A fixed renderer builds the website; a reusable Manim library renders selected state changes without asking a coding agent to write Python.</p>
       </div>
+      <section class="quality-audit" aria-labelledby="quality-audit-title">
+        <div><span class="eyebrow">Quality provenance</span><h2 id="quality-audit-title">The current teaching quality is a reviewed target, not a live-model result.</h2></div>
+        <dl><div><dt>Published narrative</dt><dd>Human/Codex-reviewed from paper, code, and iterative reader feedback</dd></div><div><dt>Live model API</dt><dd>0% of the published reference; candidate endpoints have only passed connectivity smoke tests</dd></div><div><dt>Harness</dt><dd>Validation, deterministic maps, registered Manim rendering, traces, and publication</dd></div></dl>
+        <p>A model earns credit only after it generates both complete paper bundles under the frozen contract. Until then, the selector exposes the reviewed reference alone.</p>
+      </section>
       <section class="responsibility-board" aria-labelledby="responsibility-title">
         <div class="responsibility-head"><span class="eyebrow">Execution boundary</span><h2 id="responsibility-title">What the model decides—and what it never touches.</h2><p>A model comparison is meaningful only when the harness stays fixed. The API is a constrained reasoning component; it is not the website renderer or the animation coder.</p></div>
         <div class="responsibility-columns">

@@ -283,6 +283,13 @@ main { min-height: calc(100vh - 140px); }
 .legend { margin-top: 64px; display: flex; flex-wrap: wrap; gap: 22px; }
 .legend span { display: flex; align-items: center; gap: 8px; font-size: .75rem; }
 .legend i { width: 12px; height: 12px; border-radius: 50%; background: var(--legend-color); }
+.quality-audit { margin-top: 64px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 28px clamp(32px, 7vw, 96px); padding: 30px 0; border-block: 1px solid var(--line-strong); }
+.quality-audit h2 { margin: 8px 0 0; max-width: 21ch; font: 600 clamp(1.7rem, 3vw, 2.7rem)/1.08 var(--serif); }
+.quality-audit dl { margin: 0; }
+.quality-audit dl div { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.quality-audit dt { color: var(--muted); font: 800 .58rem var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+.quality-audit dd { margin: 5px 0 0; font: 700 .72rem/1.5 var(--mono); }
+.quality-audit > p { grid-column: 2; margin: 0; color: var(--orange); font: .68rem/1.5 var(--mono); }
 .responsibility-board { margin-top: 80px; border-block: 1px solid var(--line-strong); }
 .responsibility-head { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px 48px; padding: 32px 0; }
 .responsibility-head .eyebrow { grid-column: 1 / -1; }
@@ -418,7 +425,8 @@ footer { min-height: 80px; padding: 22px clamp(18px, 4vw, 52px); display: flex; 
   .pipeline-step { min-height: 130px; border-right: 0; border-bottom: 1px solid var(--line-strong); }
   .pipeline-step:last-child { border-bottom: 0; }
   .pipeline-step h2 { margin-top: 18px; }
-  .responsibility-head, .responsibility-columns, .run-provenance, .comparison-contract, .candidate-head, .candidate-grid { grid-template-columns: 1fr; }
+  .quality-audit, .responsibility-head, .responsibility-columns, .run-provenance, .comparison-contract, .candidate-head, .candidate-grid { grid-template-columns: 1fr; }
+  .quality-audit > p { grid-column: 1; }
   .responsibility-head .eyebrow, .comparison-contract small, .candidate-head .eyebrow { grid-column: 1; }
   .responsibility-columns article { min-height: 0; }
   .run-provenance dl { grid-template-columns: 1fr; }

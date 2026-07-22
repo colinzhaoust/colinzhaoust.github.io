@@ -22,15 +22,6 @@ RATE_CARDS = (
         "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
         "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens.",
     },
-    {
-        "rate_card_id": "aws-bedrock-ministral-3-8b-us-2026-07-22",
-        "model_contains": "ministral-3-8b",
-        "provider": "amazon_bedrock",
-        "input_per_million_usd": 0.15,
-        "output_per_million_usd": 0.15,
-        "source_url": "https://aws.amazon.com/bedrock/pricing/",
-        "note": "AWS on-demand price for US East/Ohio/Oregon.",
-    },
 )
 
 
