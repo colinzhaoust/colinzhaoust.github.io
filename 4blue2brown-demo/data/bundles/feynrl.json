@@ -1,0 +1,819 @@
+{
+  "schema_version": "explainer-bundle/0.1.0",
+  "paper_id": "feynrl",
+  "source_packet": {
+    "schema_version": "explainer-source-packet/0.1.0",
+    "paper_id": "feynrl",
+    "title": "A New Policy Optimization Paradigm for LLM Reasoning",
+    "short_title": "FeynRL / P3O",
+    "audience": "Readers who know policy gradients but have not studied off-policy reasoning-model training.",
+    "central_question": "Can one training signal respond to both trust-region drift and off-policy sampling without tuning PPO-style clip bounds?",
+    "required_section_ids": [
+      "problem",
+      "lineage",
+      "mechanism",
+      "formula",
+      "code",
+      "results",
+      "limits"
+    ],
+    "sources": [
+      {
+        "source_id": "feynrl-paper",
+        "kind": "paper",
+        "url": "https://arxiv.org/abs/2605.12380",
+        "revision": "arXiv:2605.12380v1",
+        "sha256": "19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
+        "page_count": 18,
+        "retrieved_at": "2026-07-21"
+      }
+    ],
+    "code_sources": [
+      {
+        "code_id": "feynrl-p3o",
+        "repository": "https://github.com/FeynRL/FeynRL",
+        "revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752",
+        "mapping_state": "confirmed",
+        "excerpts": [
+          {
+            "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
+            "symbol": "calculate_ess / p3o_terms",
+            "line_start": 1,
+            "line_end": 26
+          }
+        ]
+      }
+    ],
+    "formula_refs": [
+      "data/formula_explainer/formulas/feynrl/ess.json",
+      "data/formula_explainer/formulas/feynrl/p3o_objective.json"
+    ],
+    "media": [
+      {
+        "media_id": "ess-cascade",
+        "role": "video",
+        "path": "progress_site/assets/self-refine/ess/round-5.mp4",
+        "sha256": "0ea8dba4aa75c93f8e07fa1cfc3518982782fc624e16ffb7e5c1228442da313d",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "A Manim cascade from importance weights to normalized effective sample size.",
+        "published_path": "assets/feynrl/ess-cascade.mp4"
+      },
+      {
+        "media_id": "ess-poster",
+        "role": "poster",
+        "path": "progress_site/assets/self-refine/ess/round-5.png",
+        "sha256": "d8c21d8c668ee1d710ec0a9d66cf5490748dafb351611adce197a04af4667d52",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster frame for the ESS cascade.",
+        "published_path": "assets/feynrl/ess-poster.png"
+      },
+      {
+        "media_id": "ess-captions",
+        "role": "captions",
+        "path": "progress_site/assets/self-refine/ess/round-5.vtt",
+        "sha256": "46d672a93e724475f71225416b63f4da26adab4009343e1a6c93d13dde0b611b",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the ESS cascade.",
+        "published_path": "assets/feynrl/ess-captions.vtt"
+      }
+    ],
+    "agent_input": {
+      "paper_excerpts": [
+        {
+          "locator": "§2–3, pp. 2–6",
+          "text": "The paper separates two problems often conflated by clipping: trust-region control limits policy drift, while off-policy correction accounts for samples produced by another behavior policy. It defines normalized ESS from importance weights and uses ESS in the P3O objective.",
+          "source_refs": [
+            "feynrl-paper:pp2-6"
+          ]
+        },
+        {
+          "locator": "§4, pp. 7–8",
+          "text": "The reported experiments compare clip sensitivity, rollout temperatures, and BF16 training with FP8 rollout inference. P3O is reported as stable across these shifts while GRPO is sensitive in several settings.",
+          "source_refs": [
+            "feynrl-paper:pp7-8"
+          ]
+        },
+        {
+          "locator": "Appendix E, p. 18",
+          "text": "Table 7 reports held-out pass@1. On AMC, P3O is 0.493 versus a 0.381±0.195 average for three GRPO clip settings; at FP8 iteration 30 it reports 0.529 for P3O and 0.029 for GRPO.",
+          "source_refs": [
+            "feynrl-paper:p18-table7"
+          ]
+        }
+      ],
+      "code_notes": [
+        {
+          "locator": "algs/P3O/p3o.py:107-135,192-223",
+          "text": "The implementation masks padded ratios, aggregates sum(w), sum(w²), and count, computes normalized ESS, clips rho at ESS, detaches rho in the policy term, and scales behavioral KL by 1-ESS.",
+          "source_refs": [
+            "feynrl-p3o:calculate_ess",
+            "feynrl-p3o:compute_policy_loss"
+          ]
+        }
+      ],
+      "claim_policy": "Use exact values only when tied to a table or equation locator. Label qualitative figure readings as reported trends. Keep authors' claims distinct from pipeline interpretations."
+    }
+  },
+  "concept_graph": {
+    "thesis": "ESS can act as one batch-level state variable that tightens importance weighting and strengthens a behavioral trust region as policy overlap falls.",
+    "nodes": [
+      {
+        "id": "policy-gradient",
+        "label": "Policy gradient",
+        "kind": "foundation",
+        "era": "foundation",
+        "summary": "Improves actions in proportion to advantage under the current policy.",
+        "source_refs": [
+          "feynrl-paper:p2"
+        ]
+      },
+      {
+        "id": "importance-sampling",
+        "label": "Importance sampling",
+        "kind": "foundation",
+        "era": "off-policy",
+        "summary": "Reweights behavior-policy samples by a current-to-old policy ratio.",
+        "source_refs": [
+          "feynrl-paper:p4"
+        ]
+      },
+      {
+        "id": "ppo-clip",
+        "label": "PPO / GRPO clipping",
+        "kind": "predecessor",
+        "era": "proximal",
+        "summary": "Uses fixed clip bounds as a practical control on large updates.",
+        "source_refs": [
+          "feynrl-paper:pp2-5"
+        ]
+      },
+      {
+        "id": "ess",
+        "label": "Normalized ESS",
+        "kind": "diagnostic",
+        "era": "batch-adaptive",
+        "summary": "Measures concentration of token-level importance weights on the valid batch.",
+        "source_refs": [
+          "feynrl-paper:p5-eq11"
+        ]
+      },
+      {
+        "id": "p3o",
+        "label": "P3O objective",
+        "kind": "method",
+        "era": "batch-adaptive",
+        "summary": "Caps detached policy weights at ESS and scales behavioral KL by one minus ESS.",
+        "source_refs": [
+          "feynrl-paper:p5-eq12"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "policy-gradient",
+        "target": "importance-sampling",
+        "relation": "extends-to-off-policy-data",
+        "teaching_point": "Sampling and optimization policies can differ."
+      },
+      {
+        "source": "importance-sampling",
+        "target": "ppo-clip",
+        "relation": "stabilized-by-fixed-bounds",
+        "teaching_point": "A fixed clip is a control knob, not a measurement of overlap."
+      },
+      {
+        "source": "importance-sampling",
+        "target": "ess",
+        "relation": "summarized-by",
+        "teaching_point": "Weight concentration becomes a batch diagnostic."
+      },
+      {
+        "source": "ppo-clip",
+        "target": "p3o",
+        "relation": "reframed-by",
+        "teaching_point": "Replace a fixed clip hyperparameter with a measured batch state."
+      },
+      {
+        "source": "ess",
+        "target": "p3o",
+        "relation": "controls",
+        "teaching_point": "One scalar drives two complementary responses."
+      }
+    ],
+    "unresolved": [
+      "Whether one batch-level ESS is sufficient for heterogeneous token or sequence regimes remains open in the paper's discussion."
+    ]
+  },
+  "lesson_plan": {
+    "title": "When a batch tells the optimizer how far it has drifted",
+    "promise": "Start from the mismatch between rollout and learner policies, derive ESS as an overlap signal, then trace that signal through formula, code, and reported results.",
+    "sections": [
+      {
+        "id": "problem",
+        "nav_label": "Problem",
+        "title": "Two failures, one overloaded clip",
+        "question": "What exactly goes wrong when rollouts become stale?",
+        "learning_goal": "Separate trust-region drift from off-policy correction.",
+        "misconception": "Clipping is itself a direct measurement of distribution overlap.",
+        "summary": "Fixed bounds control update size, while stale samples create a distinct weighting problem.",
+        "source_refs": [
+          "feynrl-paper:pp2-4"
+        ],
+        "medium": "comparison",
+        "deep_links": [
+          "feynrl-provenance"
+        ]
+      },
+      {
+        "id": "lineage",
+        "nav_label": "Lineage",
+        "title": "From score functions to batch adaptation",
+        "question": "Which prior idea does each P3O term inherit?",
+        "learning_goal": "Place P3O after policy gradients, importance sampling, and PPO/GRPO.",
+        "misconception": "P3O is an isolated formula with no recognizable ancestry.",
+        "summary": "P3O recombines familiar pieces around a measured batch state.",
+        "source_refs": [
+          "feynrl-paper:pp2-5"
+        ],
+        "medium": "lineage",
+        "deep_links": [
+          "feynrl-related-work"
+        ]
+      },
+      {
+        "id": "mechanism",
+        "nav_label": "Mechanism",
+        "title": "Read the shape of the weights",
+        "question": "What does ESS notice that a fixed clip does not?",
+        "learning_goal": "Relate concentrated importance weights to low effective sample size.",
+        "misconception": "ESS is merely the physical batch size.",
+        "summary": "ESS falls when a few ratios dominate, even when token count stays fixed.",
+        "source_refs": [
+          "feynrl-paper:p5-eq11"
+        ],
+        "medium": "numeric_fixture",
+        "deep_links": [
+          "feynrl-ess-derivation"
+        ]
+      },
+      {
+        "id": "formula",
+        "nav_label": "Formula",
+        "title": "One scalar, two control paths",
+        "question": "How does ESS alter the objective?",
+        "learning_goal": "Follow the bottom-up cascade from ratios to cap and KL weight.",
+        "misconception": "ESS only replaces the upper clip bound.",
+        "summary": "Low ESS simultaneously caps detached importance weights and increases behavioral KL.",
+        "source_refs": [
+          "feynrl-paper:p5-eq11-12"
+        ],
+        "medium": "video+formula_steps",
+        "deep_links": [
+          "feynrl-formula-ir"
+        ]
+      },
+      {
+        "id": "code",
+        "nav_label": "Code",
+        "title": "Equation to implementation",
+        "question": "Where do masking, detach, cap, and KL appear?",
+        "learning_goal": "Map formula operations to confirmed code lines.",
+        "misconception": "The executable loss is identical to a typeset equation without numerical safeguards.",
+        "summary": "The code handles padding, distributed aggregation, finite guards, and mixed precision around the core equation.",
+        "source_refs": [
+          "feynrl-p3o:compute_policy_loss"
+        ],
+        "medium": "code",
+        "deep_links": [
+          "feynrl-code-map"
+        ]
+      },
+      {
+        "id": "results",
+        "nav_label": "Results",
+        "title": "Stress the distribution shift",
+        "question": "Where does the adaptive signal matter empirically?",
+        "learning_goal": "Read exact benchmark values alongside the paper's qualitative stability claims.",
+        "misconception": "One benchmark number proves universal stability.",
+        "summary": "The strongest evidence comes from varied clip, temperature, and rollout precision settings.",
+        "source_refs": [
+          "feynrl-paper:pp7-8",
+          "feynrl-paper:p18-table7"
+        ],
+        "medium": "bar_chart+reported_trends",
+        "deep_links": [
+          "feynrl-results-detail"
+        ]
+      },
+      {
+        "id": "limits",
+        "nav_label": "Limits",
+        "title": "What the demo must not overclaim",
+        "question": "Which conclusions remain conditional?",
+        "learning_goal": "Distinguish reported evidence, design interpretation, and open questions.",
+        "misconception": "Clip-free means assumption-free or tuning-free.",
+        "summary": "Batch granularity, tested regimes, and the unstable two-anchor extension bound the claim.",
+        "source_refs": [
+          "feynrl-paper:p6",
+          "feynrl-paper:pp17-18"
+        ],
+        "medium": "limitation",
+        "deep_links": [
+          "feynrl-limitations"
+        ]
+      }
+    ],
+    "appendix": [
+      "feynrl-provenance",
+      "feynrl-related-work",
+      "feynrl-ess-derivation",
+      "feynrl-formula-ir",
+      "feynrl-code-map",
+      "feynrl-results-detail",
+      "feynrl-limitations"
+    ]
+  },
+  "section_content": {
+    "sections": {
+      "problem": {
+        "blocks": [
+          {
+            "type": "prose",
+            "eyebrow": "The split",
+            "heading": "A stale rollout creates two different questions",
+            "paragraphs": [
+              "How far did the current policy move from the policy that produced these tokens?",
+              "How much should each off-policy token count when estimating the new gradient?"
+            ],
+            "source_refs": [
+              "feynrl-paper:pp2-4"
+            ]
+          },
+          {
+            "type": "comparison",
+            "columns": [
+              {
+                "label": "Trust region",
+                "accent": "violet",
+                "question": "How large is the update?",
+                "answer": "Penalize drift from the behavior policy."
+              },
+              {
+                "label": "Off-policy correction",
+                "accent": "orange",
+                "question": "How representative are the samples?",
+                "answer": "Reweight samples by policy ratios."
+              }
+            ],
+            "source_refs": [
+              "feynrl-paper:pp2-4"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "If every importance ratio is 1, which problem disappears?",
+            "answer": "The batch perfectly overlaps the behavior policy, so importance weights are uniform and normalized ESS is 1."
+          }
+        ]
+      },
+      "lineage": {
+        "blocks": [
+          {
+            "type": "lineage",
+            "nodes": [
+              {
+                "id": "pg",
+                "label": "Policy gradient",
+                "note": "log π × advantage"
+              },
+              {
+                "id": "is",
+                "label": "Importance sampling",
+                "note": "π / πold"
+              },
+              {
+                "id": "clip",
+                "label": "PPO / GRPO",
+                "note": "fixed clip bounds"
+              },
+              {
+                "id": "ess",
+                "label": "ESS",
+                "note": "measured overlap"
+              },
+              {
+                "id": "p3o",
+                "label": "P3O",
+                "note": "adaptive cap + KL"
+              }
+            ],
+            "edges": [
+              [
+                "pg",
+                "is"
+              ],
+              [
+                "is",
+                "clip"
+              ],
+              [
+                "is",
+                "ess"
+              ],
+              [
+                "clip",
+                "p3o"
+              ],
+              [
+                "ess",
+                "p3o"
+              ]
+            ],
+            "source_refs": [
+              "feynrl-paper:pp2-5"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "The conceptual move",
+            "paragraphs": [
+              "P3O does not discard policy-gradient or importance-sampling machinery. It asks the batch to report overlap, then uses that report where a fixed clip hyperparameter previously carried too much responsibility."
+            ],
+            "source_refs": [
+              "feynrl-paper:p5-eq11-12"
+            ]
+          }
+        ]
+      },
+      "mechanism": {
+        "blocks": [
+          {
+            "type": "numeric_fixture",
+            "title": "Same token count, different effective support",
+            "formula": "ESS = mean(ρ)² / mean(ρ²)",
+            "fixtures": [
+              {
+                "label": "Uniform overlap",
+                "values": [
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "ess": 1.0,
+                "accent": "green"
+              },
+              {
+                "label": "Concentrated weights",
+                "values": [
+                  0.1,
+                  0.1,
+                  0.1,
+                  3.7
+                ],
+                "ess": 0.291,
+                "accent": "orange"
+              }
+            ],
+            "note": "The second batch still has four tokens, but one token dominates its weighted estimate.",
+            "source_refs": [
+              "feynrl-paper:p5-eq11"
+            ],
+            "claim_label": "derived fixture"
+          },
+          {
+            "type": "prose",
+            "heading": "ESS is a shape statistic",
+            "paragraphs": [
+              "Scaling every ratio by the same positive constant leaves normalized ESS unchanged. What matters is concentration, not the raw scale or batch count alone."
+            ],
+            "source_refs": [
+              "feynrl-paper:p5-eq11"
+            ]
+          }
+        ]
+      },
+      "formula": {
+        "blocks": [
+          {
+            "type": "video",
+            "media_id": "ess-cascade",
+            "poster_id": "ess-poster",
+            "captions_id": "ess-captions",
+            "title": "Bottom-up animation cascade",
+            "caption": "Ratios → weight concentration → ESS → two objective controls",
+            "beats": [
+              "Inspect token ratios",
+              "Aggregate first and second moments",
+              "Read normalized ESS",
+              "Cap detached ρ",
+              "Scale behavioral KL"
+            ],
+            "source_refs": [
+              "feynrl-paper:p5-eq11-12"
+            ]
+          },
+          {
+            "type": "formula_steps",
+            "formula": "L = −sg(min(ρt,eB)) log πθ At + (1−eB) KL(πθ∥πold)",
+            "steps": [
+              {
+                "label": "Measure",
+                "expression": "eB = mean(ρ)² / mean(ρ²)",
+                "meaning": "Batch overlap becomes a scalar state.",
+                "primitive": {
+                  "id": "manim.bar_chart",
+                  "origin": "manim_builtin"
+                }
+              },
+              {
+                "label": "Cap",
+                "expression": "min(ρt,eB)",
+                "meaning": "Low overlap limits the detached policy weight.",
+                "primitive": {
+                  "id": "project.ess_tradeoff_gauge",
+                  "origin": "project_new"
+                }
+              },
+              {
+                "label": "Restrain",
+                "expression": "(1−eB) KL",
+                "meaning": "Low overlap strengthens the behavioral trust region.",
+                "primitive": {
+                  "id": "project.formula_operation_walk",
+                  "origin": "project_inherited"
+                }
+              }
+            ],
+            "source_refs": [
+              "feynrl-paper:p5-eq11-12"
+            ],
+            "claim_label": "paper equation + pipeline decomposition"
+          }
+        ]
+      },
+      "code": {
+        "blocks": [
+          {
+            "type": "code",
+            "code_source_id": "feynrl-p3o",
+            "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
+            "symbol": "calculate_ess / p3o_terms",
+            "lines": [
+              {
+                "number": 11,
+                "code": "ess = (sum_w**2) / (sum_w_2 + 1e-8) / total",
+                "maps_to": "Eq. 11 normalized ESS"
+              },
+              {
+                "number": 20,
+                "code": "ess_factor = calculate_ess(ratio[mask])",
+                "maps_to": "valid-token batch state"
+              },
+              {
+                "number": 21,
+                "code": "rho = ratio.clamp(min=0, max=ess_factor)",
+                "maps_to": "min(ρ,eB)"
+              },
+              {
+                "number": 22,
+                "code": "policy = -(rho.detach() * logprobs * advantages * mask).sum()",
+                "maps_to": "stop-gradient score term"
+              },
+              {
+                "number": 23,
+                "code": "trust_region = (1 - ess_factor) * kl_behavioral",
+                "maps_to": "adaptive behavioral KL"
+              }
+            ],
+            "source_refs": [
+              "feynrl-p3o:dfe8535"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "What the equation omits",
+            "paragraphs": [
+              "The full implementation also masks padding before exponentiation, aggregates statistics across distributed ranks, guards non-finite values, and uses float32 or float64 at sensitive steps."
+            ],
+            "source_refs": [
+              "feynrl-p3o:calculate_ess",
+              "feynrl-p3o:compute_policy_loss"
+            ]
+          }
+        ]
+      },
+      "results": {
+        "blocks": [
+          {
+            "type": "bar_chart",
+            "title": "AMC pass@1 under clip variants",
+            "groups": [
+              {
+                "label": "GRPO clip average",
+                "value": 0.381,
+                "uncertainty": "±0.195",
+                "accent": "violet"
+              },
+              {
+                "label": "P3O",
+                "value": 0.493,
+                "accent": "orange"
+              }
+            ],
+            "axis_max": 0.6,
+            "unit": "pass@1",
+            "source_refs": [
+              "feynrl-paper:p18-table7"
+            ],
+            "claim_label": "reported exact values"
+          },
+          {
+            "type": "bar_chart",
+            "title": "AMC pass@1, BF16 train + FP8 rollout at iteration 30",
+            "groups": [
+              {
+                "label": "GRPO",
+                "value": 0.029,
+                "accent": "violet"
+              },
+              {
+                "label": "P3O",
+                "value": 0.529,
+                "accent": "orange"
+              }
+            ],
+            "axis_max": 0.6,
+            "unit": "pass@1",
+            "source_refs": [
+              "feynrl-paper:p18-table7"
+            ],
+            "claim_label": "reported exact values"
+          },
+          {
+            "type": "reported_trends",
+            "title": "Where the paper probes stability",
+            "items": [
+              {
+                "label": "Clip sensitivity",
+                "finding": "P3O matches or exceeds the best GRPO clip variant across the reported model families without a clip hyperparameter.",
+                "source_ref": "feynrl-paper:p7-fig1"
+              },
+              {
+                "label": "Temperature shift",
+                "finding": "The paper reports P3O as comparatively stable while GRPO degrades under several changed rollout temperatures.",
+                "source_ref": "feynrl-paper:p8-fig2"
+              },
+              {
+                "label": "Precision mismatch",
+                "finding": "With BF16 training and FP8 rollout inference, the paper reports late GRPO collapse and sustained P3O performance in the shown setting.",
+                "source_ref": "feynrl-paper:p8-fig3"
+              }
+            ],
+            "claim_label": "authors' reported trends",
+            "source_refs": [
+              "feynrl-paper:p7-fig1",
+              "feynrl-paper:p8-fig2-3"
+            ]
+          }
+        ]
+      },
+      "limits": {
+        "blocks": [
+          {
+            "type": "limitation",
+            "items": [
+              {
+                "label": "Granularity",
+                "detail": "One normalized ESS summarizes an entire batch; heterogeneous sequences may merit finer signals."
+              },
+              {
+                "label": "Evidence boundary",
+                "detail": "The experiments cover selected models, datasets, temperatures, rollout lengths, and precision regimes."
+              },
+              {
+                "label": "Extension instability",
+                "detail": "The two-anchor extension collapses at temperature 1.2 in the appendix experiment, despite remaining stable at the default temperature."
+              },
+              {
+                "label": "Interpretation",
+                "detail": "The pipeline's ‘one scalar, two paths’ framing is a teaching decomposition of the cited objective, not a new theorem."
+              }
+            ],
+            "source_refs": [
+              "feynrl-paper:p6",
+              "feynrl-paper:pp17-18"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Does low ESS prove that every token is bad data?",
+            "answer": "No. It says the importance-weight distribution is concentrated at the chosen aggregation level; diagnosis and response are batch-level in this formulation."
+          }
+        ]
+      }
+    },
+    "appendix_entries": [
+      {
+        "id": "feynrl-provenance",
+        "title": "Source provenance",
+        "body": "Paper arXiv:2605.12380v1, 18 pages, PDF SHA-256 19b66e…15e. Code revision dfe85351…5752. All packaged media are hash checked during validation.",
+        "source_refs": [
+          "feynrl-paper",
+          "feynrl-p3o"
+        ]
+      },
+      {
+        "id": "feynrl-related-work",
+        "title": "Related-work map",
+        "body": "The teaching order separates policy-gradient ancestry, importance weighting, proximal clipping, ESS diagnostics, and the adopted P3O objective instead of presenting a flat citation list.",
+        "source_refs": [
+          "feynrl-paper:pp2-5"
+        ]
+      },
+      {
+        "id": "feynrl-ess-derivation",
+        "title": "ESS derivation note",
+        "body": "Normalized ESS is mean(ρ)² / mean(ρ²), equivalent to (Σρ)² / (n Σρ²). It lies in (0,1] for positive weights and reaches 1 for uniform weights.",
+        "source_refs": [
+          "feynrl-paper:p5-eq11"
+        ]
+      },
+      {
+        "id": "feynrl-formula-ir",
+        "title": "Formula-to-animation mapping",
+        "body": "Built-in Manim primitives cover bars and transforms; project-inherited formula walking handles symbolic focus; the ESS tradeoff gauge is newly authored. Candidate and unresolved mappings stay visibly labeled.",
+        "source_refs": [
+          "data/formula_explainer/formulas/feynrl/ess.json",
+          "data/formula_explainer/formulas/feynrl/p3o_objective.json"
+        ]
+      },
+      {
+        "id": "feynrl-code-map",
+        "title": "Code mapping",
+        "body": "The committed snapshot records the exact upstream revision and original line ranges. The site renders selected lines only; the source packet retains repository and commit identity.",
+        "source_refs": [
+          "feynrl-p3o:dfe8535"
+        ]
+      },
+      {
+        "id": "feynrl-results-detail",
+        "title": "Results reading guide",
+        "body": "Bars use exact Table 7 values. Figure summaries are labeled as authors' reported trends because the pipeline does not digitize curves into invented datapoints.",
+        "source_refs": [
+          "feynrl-paper:pp7-8",
+          "feynrl-paper:p18-table7"
+        ]
+      },
+      {
+        "id": "feynrl-limitations",
+        "title": "Limitations and open questions",
+        "body": "The paper notes a possible limitation of one ESS signal and reports a temperature-sensitive failure of the two-anchor extension. Neither the site nor pipeline generalizes beyond the cited regimes.",
+        "source_refs": [
+          "feynrl-paper:p6",
+          "feynrl-paper:pp17-18"
+        ]
+      }
+    ]
+  },
+  "generation": {
+    "pipeline_version": "explainer-pipeline/0.1.0",
+    "source_packet_sha256": "d6f8869d9c538504004daa39b9727ae0591c8164a7acd00acd6e59843388287b",
+    "stage_traces": [
+      {
+        "stage": "concept_graph",
+        "paper_id": "feynrl",
+        "provider": "codex",
+        "model": "gpt-5.6",
+        "generation_mode": "frozen_replay",
+        "prompt_sha256": "018c5933427ac34195c10d18e29517480b19c43c086d7212ea8a90d93fcb7abb",
+        "response_sha256": "c9d86022b0e1e3f7d2317ee79f35592049ed7fea463f59b10fb78395f65c40f7",
+        "source_record": "data/explainer_pipeline/replays/feynrl/concept_graph.json"
+      },
+      {
+        "stage": "lesson_plan",
+        "paper_id": "feynrl",
+        "provider": "codex",
+        "model": "gpt-5.6",
+        "generation_mode": "frozen_replay",
+        "prompt_sha256": "fdf73b851f48bc0721b831cd7dd5a8356251382c0f88b8a4790be3751d0f3107",
+        "response_sha256": "126ac2daaf8923b2ea168fe0e21aaacf815d1cf9a652d86c2917e881628bff9b",
+        "source_record": "data/explainer_pipeline/replays/feynrl/lesson_plan.json"
+      },
+      {
+        "stage": "section_content",
+        "paper_id": "feynrl",
+        "provider": "codex",
+        "model": "gpt-5.6",
+        "generation_mode": "frozen_replay",
+        "prompt_sha256": "6ae6ea41c716344de599c732f59e39a7b937639ecde80b1cc9c674880b5cb820",
+        "response_sha256": "5cfcecb3b37cce9147b77c3ac51ab3edd9a3986bf28f2ea8d0db5979337342ca",
+        "source_record": "data/explainer_pipeline/replays/feynrl/section_content.json"
+      }
+    ],
+    "completion": "full"
+  }
+}

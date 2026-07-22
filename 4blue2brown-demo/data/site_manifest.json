@@ -1,0 +1,52 @@
+{
+  "schema_version": "explainer-site-manifest/0.1.0",
+  "paper_count": 2,
+  "papers": [
+    "feynrl",
+    "rope"
+  ],
+  "media": [
+    {
+      "paper_id": "feynrl",
+      "media_id": "ess-cascade",
+      "path": "assets/feynrl/ess-cascade.mp4",
+      "sha256": "0ea8dba4aa75c93f8e07fa1cfc3518982782fc624e16ffb7e5c1228442da313d",
+      "size_bytes": 643731
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "ess-poster",
+      "path": "assets/feynrl/ess-poster.png",
+      "sha256": "d8c21d8c668ee1d710ec0a9d66cf5490748dafb351611adce197a04af4667d52",
+      "size_bytes": 83167
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "ess-captions",
+      "path": "assets/feynrl/ess-captions.vtt",
+      "sha256": "46d672a93e724475f71225416b63f4da26adab4009343e1a6c93d13dde0b611b",
+      "size_bytes": 714
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-cascade",
+      "path": "assets/rope/rope-cascade.mp4",
+      "sha256": "817e003e428abf1a3c56266778bbb04c058a9dd1955e175cdafa0f7aae9db6e1",
+      "size_bytes": 631827
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-poster",
+      "path": "assets/rope/rope-poster.png",
+      "sha256": "57d3afab48c87209b0bf55f2c2a13e9781c001756d2a50aa15c2e6b44e105b01",
+      "size_bytes": 78058
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-captions",
+      "path": "assets/rope/rope-captions.vtt",
+      "sha256": "d75537b74648e37c657f3c1f7bfb59e99183b28ac05ef8634d4d64bb4fbf1ecc",
+      "size_bytes": 758
+    }
+  ]
+}

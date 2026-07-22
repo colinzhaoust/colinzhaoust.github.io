@@ -1,0 +1,752 @@
+{
+  "schema_version": "explainer-bundle/0.1.0",
+  "paper_id": "rope",
+  "source_packet": {
+    "schema_version": "explainer-source-packet/0.1.0",
+    "paper_id": "rope",
+    "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+    "short_title": "RoPE / RoFormer",
+    "audience": "Readers who understand dot-product attention and want a geometric account of positional encoding.",
+    "central_question": "How can absolute token positions enter query and key vectors while attention scores depend only on relative displacement?",
+    "required_section_ids": [
+      "problem",
+      "lineage",
+      "mechanism",
+      "formula",
+      "code",
+      "results",
+      "limits"
+    ],
+    "sources": [
+      {
+        "source_id": "rope-paper",
+        "kind": "paper",
+        "url": "https://arxiv.org/abs/2104.09864",
+        "revision": "arXiv:2104.09864v5",
+        "sha256": "e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+        "page_count": 14,
+        "retrieved_at": "2026-07-21"
+      }
+    ],
+    "code_sources": [
+      {
+        "code_id": "roformer-readme",
+        "repository": "https://github.com/ZhuiyiTechnology/roformer",
+        "revision": "dfc678ad506fc527ba17ead8db23cbe4d947a9b4",
+        "mapping_state": "confirmed",
+        "excerpts": [
+          {
+            "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+            "symbol": "RoPE attention pseudocode",
+            "line_start": 1,
+            "line_end": 22
+          }
+        ]
+      }
+    ],
+    "formula_refs": [
+      "data/formula_explainer/formulas/rope/relative.json"
+    ],
+    "media": [
+      {
+        "media_id": "rope-cascade",
+        "role": "video",
+        "path": "progress_site/assets/self-refine/rope/round-5.mp4",
+        "sha256": "817e003e428abf1a3c56266778bbb04c058a9dd1955e175cdafa0f7aae9db6e1",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "A Manim cascade from paired coordinates to relative phase in the attention dot product.",
+        "published_path": "assets/rope/rope-cascade.mp4"
+      },
+      {
+        "media_id": "rope-poster",
+        "role": "poster",
+        "path": "progress_site/assets/self-refine/rope/round-5.png",
+        "sha256": "57d3afab48c87209b0bf55f2c2a13e9781c001756d2a50aa15c2e6b44e105b01",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster frame for the RoPE cascade.",
+        "published_path": "assets/rope/rope-poster.png"
+      },
+      {
+        "media_id": "rope-captions",
+        "role": "captions",
+        "path": "progress_site/assets/self-refine/rope/round-5.vtt",
+        "sha256": "d75537b74648e37c657f3c1f7bfb59e99183b28ac05ef8634d4d64bb4fbf1ecc",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the RoPE cascade.",
+        "published_path": "assets/rope/rope-captions.vtt"
+      }
+    ],
+    "agent_input": {
+      "paper_excerpts": [
+        {
+          "locator": "§1–2.3, pp. 2–3",
+          "text": "The paper positions RoPE after learned and sinusoidal absolute encodings and prior relative-position methods. Its target is to preserve an absolute representation in each vector while making the inner product encode relative position.",
+          "source_refs": [
+            "rope-paper:pp2-3"
+          ]
+        },
+        {
+          "locator": "§3.2, p. 5",
+          "text": "RoPE applies block-diagonal two-dimensional rotations to query and key coordinates. Orthogonality turns their inner product into a rotation by the position difference m-n.",
+          "source_refs": [
+            "rope-paper:p5-eq14-16"
+          ]
+        },
+        {
+          "locator": "§4.1, p. 9",
+          "text": "On WMT 2014 English-to-German under the paper's setup, Table 1 reports BLEU 27.5 for RoFormer and 27.3 for the Transformer-base baseline.",
+          "source_refs": [
+            "rope-paper:p9-table1"
+          ]
+        }
+      ],
+      "code_notes": [
+        {
+          "locator": "README.md:18-32",
+          "text": "The official pseudocode expands cosine and sine values across paired dimensions, constructs a quarter-turn companion for q and k, applies q cos + q⊥ sin and k cos + k⊥ sin, then takes the standard attention dot product.",
+          "source_refs": [
+            "roformer-readme:rope-pseudocode"
+          ]
+        }
+      ],
+      "claim_policy": "Use the paper's equations and table values with locators. Treat geometric narration as an interpretation of the derivation, and do not generalize the reported BLEU result beyond its stated setup."
+    }
+  },
+  "concept_graph": {
+    "thesis": "Rotating paired query and key coordinates by their absolute positions makes their dot product depend on relative displacement.",
+    "nodes": [
+      {
+        "id": "absolute-learned",
+        "label": "Learned absolute positions",
+        "kind": "predecessor",
+        "era": "absolute",
+        "summary": "Adds a learned position vector to each token representation.",
+        "source_refs": [
+          "rope-paper:p3"
+        ]
+      },
+      {
+        "id": "sinusoidal",
+        "label": "Sinusoidal positions",
+        "kind": "predecessor",
+        "era": "absolute",
+        "summary": "Uses fixed frequencies to encode each absolute index.",
+        "source_refs": [
+          "rope-paper:p3"
+        ]
+      },
+      {
+        "id": "relative-attention",
+        "label": "Relative-position attention",
+        "kind": "predecessor",
+        "era": "relative",
+        "summary": "Places relative displacement directly into the attention calculation.",
+        "source_refs": [
+          "rope-paper:p3"
+        ]
+      },
+      {
+        "id": "paired-rotation",
+        "label": "Paired 2D rotations",
+        "kind": "mechanism",
+        "era": "rotary",
+        "summary": "Treats each adjacent feature pair as a plane and rotates it by a frequency-scaled position.",
+        "source_refs": [
+          "rope-paper:p5-eq14-15"
+        ]
+      },
+      {
+        "id": "relative-dot",
+        "label": "Relative-phase dot product",
+        "kind": "method",
+        "era": "rotary",
+        "summary": "Orthogonality reduces two absolute rotations to one rotation by n-m inside the score.",
+        "source_refs": [
+          "rope-paper:p5-eq16"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "absolute-learned",
+        "target": "sinusoidal",
+        "relation": "alternative",
+        "teaching_point": "Both attach a position identity before attention."
+      },
+      {
+        "source": "sinusoidal",
+        "target": "relative-attention",
+        "relation": "motivates",
+        "teaching_point": "Attention often needs distance and direction, not only absolute identity."
+      },
+      {
+        "source": "sinusoidal",
+        "target": "paired-rotation",
+        "relation": "frequencies-reused-as-angles",
+        "teaching_point": "Sinusoidal structure becomes an operation on q and k."
+      },
+      {
+        "source": "relative-attention",
+        "target": "relative-dot",
+        "relation": "same-goal-different-construction",
+        "teaching_point": "RoPE realizes relative position through vector geometry."
+      },
+      {
+        "source": "paired-rotation",
+        "target": "relative-dot",
+        "relation": "implies",
+        "teaching_point": "The score retains only the phase difference."
+      }
+    ],
+    "unresolved": [
+      "The paper motivates long-term decay through the frequency mixture, but downstream length extrapolation behavior depends on model and training conditions beyond this derivation."
+    ]
+  },
+  "lesson_plan": {
+    "title": "Turn position into relative phase",
+    "promise": "Start from what attention needs, build one two-dimensional rotation, lift it to all feature pairs, then inspect the exact code and reported result.",
+    "sections": [
+      {
+        "id": "problem",
+        "nav_label": "Problem",
+        "title": "A score needs distance and direction",
+        "question": "Why is adding an absolute position vector not the whole story?",
+        "learning_goal": "State the desired relative-position property of the attention score.",
+        "misconception": "Token order is already implicit in the dot product.",
+        "summary": "Without a positional operation, permuting tokens does not give attention a notion of displacement.",
+        "source_refs": [
+          "rope-paper:pp2-3"
+        ],
+        "medium": "comparison",
+        "deep_links": [
+          "rope-provenance"
+        ]
+      },
+      {
+        "id": "lineage",
+        "nav_label": "Lineage",
+        "title": "Absolute codes, relative biases, rotary geometry",
+        "question": "What does RoPE preserve and what does it change?",
+        "learning_goal": "Compare learned absolute, sinusoidal, and relative-position predecessors.",
+        "misconception": "RoPE is simply another vector added to token embeddings.",
+        "summary": "RoPE turns position from additive content into a rotation applied inside attention.",
+        "source_refs": [
+          "rope-paper:pp2-3"
+        ],
+        "medium": "lineage",
+        "deep_links": [
+          "rope-related-work"
+        ]
+      },
+      {
+        "id": "mechanism",
+        "nav_label": "Mechanism",
+        "title": "One feature pair is a plane",
+        "question": "What does a position-dependent rotation do geometrically?",
+        "learning_goal": "Manipulate q and k as paired 2D vectors with position-scaled angles.",
+        "misconception": "The whole hidden vector rotates with one shared frequency.",
+        "summary": "Each adjacent pair rotates in its own frequency band.",
+        "source_refs": [
+          "rope-paper:p5-eq14-15"
+        ],
+        "medium": "rotation",
+        "deep_links": [
+          "rope-rotation-detail"
+        ]
+      },
+      {
+        "id": "formula",
+        "nav_label": "Formula",
+        "title": "Two absolute angles collapse to one difference",
+        "question": "Why does the dot product retain n-m?",
+        "learning_goal": "Follow orthogonality from Rm and Rn to R(n-m).",
+        "misconception": "RoPE removes absolute position before attention.",
+        "summary": "Absolute rotations remain on q and k, but their inner product depends on relative phase.",
+        "source_refs": [
+          "rope-paper:p5-eq16"
+        ],
+        "medium": "video+formula_steps",
+        "deep_links": [
+          "rope-formula-ir"
+        ]
+      },
+      {
+        "id": "code",
+        "nav_label": "Code",
+        "title": "The quarter-turn trick",
+        "question": "How do slices implement a 2D rotation?",
+        "learning_goal": "Map paired-coordinate algebra to the official pseudocode.",
+        "misconception": "A dense rotation matrix must be materialized.",
+        "summary": "Negate-and-swap constructs the perpendicular vector, then cosine and sine combine it with the original.",
+        "source_refs": [
+          "roformer-readme:rope-pseudocode"
+        ],
+        "medium": "code",
+        "deep_links": [
+          "rope-code-map"
+        ]
+      },
+      {
+        "id": "results",
+        "nav_label": "Results",
+        "title": "Evidence in the paper's scope",
+        "question": "What does the reported WMT comparison establish?",
+        "learning_goal": "Read a small exact effect without inflating its scope.",
+        "misconception": "A 0.2 BLEU difference establishes all claimed properties.",
+        "summary": "The table is one controlled task result; other experiments and the derivation support different parts of the story.",
+        "source_refs": [
+          "rope-paper:p9-table1"
+        ],
+        "medium": "bar_chart",
+        "deep_links": [
+          "rope-results-detail"
+        ]
+      },
+      {
+        "id": "limits",
+        "nav_label": "Limits",
+        "title": "Geometry is not a universal guarantee",
+        "question": "What follows from the identity, and what still depends on training?",
+        "learning_goal": "Separate the exact algebraic property from empirical extrapolation claims.",
+        "misconception": "Relative phase alone guarantees arbitrary-context generalization.",
+        "summary": "The identity is exact; performance and length behavior remain conditional on architecture, frequencies, data, and training.",
+        "source_refs": [
+          "rope-paper:pp6-8"
+        ],
+        "medium": "limitation",
+        "deep_links": [
+          "rope-limitations"
+        ]
+      }
+    ],
+    "appendix": [
+      "rope-provenance",
+      "rope-related-work",
+      "rope-rotation-detail",
+      "rope-formula-ir",
+      "rope-code-map",
+      "rope-results-detail",
+      "rope-limitations"
+    ]
+  },
+  "section_content": {
+    "sections": {
+      "problem": {
+        "blocks": [
+          {
+            "type": "prose",
+            "eyebrow": "The design target",
+            "heading": "Give each vector an absolute phase, but let the score see a difference",
+            "paragraphs": [
+              "Attention compares query and key vectors. The desired positional construction should preserve token position in those vectors while making their inner product respond to displacement and direction."
+            ],
+            "source_refs": [
+              "rope-paper:pp2-3"
+            ]
+          },
+          {
+            "type": "comparison",
+            "columns": [
+              {
+                "label": "Absolute identity",
+                "accent": "violet",
+                "question": "Where is this token?",
+                "answer": "Encode m into q and n into k."
+              },
+              {
+                "label": "Relative relation",
+                "accent": "orange",
+                "question": "How far apart are they?",
+                "answer": "Make the score depend on n−m."
+              }
+            ],
+            "source_refs": [
+              "rope-paper:pp2-3"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "If q and k receive the same extra rotation, should their dot product change?",
+            "answer": "No. A shared orthogonal rotation preserves their angle and dot product."
+          }
+        ]
+      },
+      "lineage": {
+        "blocks": [
+          {
+            "type": "lineage",
+            "nodes": [
+              {
+                "id": "learned",
+                "label": "Learned absolute",
+                "note": "add a trained position vector"
+              },
+              {
+                "id": "sin",
+                "label": "Sinusoidal absolute",
+                "note": "add fixed frequency features"
+              },
+              {
+                "id": "relative",
+                "label": "Relative attention",
+                "note": "inject displacement into score"
+              },
+              {
+                "id": "rope",
+                "label": "RoPE",
+                "note": "rotate q and k by position"
+              }
+            ],
+            "edges": [
+              [
+                "learned",
+                "sin"
+              ],
+              [
+                "sin",
+                "relative"
+              ],
+              [
+                "sin",
+                "rope"
+              ],
+              [
+                "relative",
+                "rope"
+              ]
+            ],
+            "source_refs": [
+              "rope-paper:pp2-3"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "What changes",
+            "paragraphs": [
+              "RoPE borrows sinusoidal frequency structure but changes its role: position is no longer only an additive feature. It becomes an orthogonal transformation inside attention."
+            ],
+            "source_refs": [
+              "rope-paper:pp3-5"
+            ]
+          }
+        ]
+      },
+      "mechanism": {
+        "blocks": [
+          {
+            "type": "rotation",
+            "title": "One adjacent feature pair",
+            "vectors": [
+              {
+                "label": "q before",
+                "angle": 12,
+                "accent": "violet"
+              },
+              {
+                "label": "Rq at position m",
+                "angle": 62,
+                "accent": "orange"
+              }
+            ],
+            "angle_label": "mθi",
+            "formula": "R(mθi)[x2i, x2i+1]ᵀ",
+            "note": "Every pair i uses its own frequency θi; the visual isolates one plane.",
+            "source_refs": [
+              "rope-paper:p5-eq14-15"
+            ],
+            "claim_label": "geometric interpretation"
+          },
+          {
+            "type": "prose",
+            "heading": "Why pair coordinates",
+            "paragraphs": [
+              "A two-dimensional plane is the smallest space with a continuous rotation. RoPE tiles the hidden dimension with these planes, so different pairs carry different angular frequencies."
+            ],
+            "source_refs": [
+              "rope-paper:p5-eq15"
+            ]
+          }
+        ]
+      },
+      "formula": {
+        "blocks": [
+          {
+            "type": "video",
+            "media_id": "rope-cascade",
+            "poster_id": "rope-poster",
+            "captions_id": "rope-captions",
+            "title": "Bottom-up animation cascade",
+            "caption": "Coordinate pair → two rotations → relative phase → dot product",
+            "beats": [
+              "Pair adjacent coordinates",
+              "Rotate q by mθ",
+              "Rotate k by nθ",
+              "Move Rm across the transpose",
+              "Keep R(n−m) in the score"
+            ],
+            "source_refs": [
+              "rope-paper:p5-eq14-16"
+            ]
+          },
+          {
+            "type": "formula_steps",
+            "formula": "(RmWqxm)ᵀ(RnWkxn) = xmᵀWqᵀR(n−m)Wkxn",
+            "steps": [
+              {
+                "label": "Rotate q",
+                "expression": "qm = Rm Wq xm",
+                "meaning": "Absolute position m becomes query phase.",
+                "primitive": {
+                  "id": "manim.axes_vector",
+                  "origin": "manim_builtin"
+                }
+              },
+              {
+                "label": "Rotate k",
+                "expression": "kn = Rn Wk xn",
+                "meaning": "Absolute position n becomes key phase.",
+                "primitive": {
+                  "id": "manim.axes_vector",
+                  "origin": "manim_builtin"
+                }
+              },
+              {
+                "label": "Cancel shared phase",
+                "expression": "RmᵀRn = R(n−m)",
+                "meaning": "Orthogonality converts two absolute rotations into one relative rotation.",
+                "primitive": {
+                  "id": "project.rope_relative_rotation",
+                  "origin": "project_new"
+                }
+              }
+            ],
+            "source_refs": [
+              "rope-paper:p5-eq16"
+            ],
+            "claim_label": "paper identity + pipeline decomposition"
+          }
+        ]
+      },
+      "code": {
+        "blocks": [
+          {
+            "type": "code",
+            "code_source_id": "roformer-readme",
+            "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+            "symbol": "RoPE attention pseudocode",
+            "lines": [
+              {
+                "number": 9,
+                "code": "qw2 = stack([-qw[..., 1::2], qw[..., ::2]], 4)",
+                "maps_to": "quarter-turn q⊥ = (−qodd, qeven)"
+              },
+              {
+                "number": 11,
+                "code": "qw = qw * cos_pos + qw2 * sin_pos",
+                "maps_to": "Rq = q cos + q⊥ sin"
+              },
+              {
+                "number": 12,
+                "code": "kw2 = stack([-kw[..., 1::2], kw[..., ::2]], 4)",
+                "maps_to": "quarter-turn k⊥"
+              },
+              {
+                "number": 14,
+                "code": "kw = kw * cos_pos + kw2 * sin_pos",
+                "maps_to": "Rk = k cos + k⊥ sin"
+              },
+              {
+                "number": 17,
+                "code": "a = einsum(\"bjhd,bkhd->bhjk\", qw, kw)",
+                "maps_to": "standard dot-product attention after rotation"
+              }
+            ],
+            "source_refs": [
+              "roformer-readme:dfc678a"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "No dense matrix required",
+            "paragraphs": [
+              "The negate-and-swap slice creates a 90-degree companion vector. Elementwise cosine and sine then implement every 2D block rotation in parallel."
+            ],
+            "source_refs": [
+              "roformer-readme:rope-pseudocode"
+            ]
+          }
+        ]
+      },
+      "results": {
+        "blocks": [
+          {
+            "type": "bar_chart",
+            "title": "WMT 2014 English→German",
+            "groups": [
+              {
+                "label": "Transformer-base",
+                "value": 27.3,
+                "accent": "violet"
+              },
+              {
+                "label": "RoFormer",
+                "value": 27.5,
+                "accent": "orange"
+              }
+            ],
+            "axis_min": 26.8,
+            "axis_max": 27.7,
+            "unit": "BLEU",
+            "source_refs": [
+              "rope-paper:p9-table1"
+            ],
+            "claim_label": "reported exact values; truncated axis shown"
+          },
+          {
+            "type": "prose",
+            "heading": "Read the bar narrowly",
+            "paragraphs": [
+              "Under the paper's stated WMT setup, RoFormer reports a 0.2 BLEU increase. This supports competitiveness on that task; it does not by itself establish the geometric identity or universal length generalization."
+            ],
+            "source_refs": [
+              "rope-paper:p9-table1"
+            ]
+          }
+        ]
+      },
+      "limits": {
+        "blocks": [
+          {
+            "type": "limitation",
+            "items": [
+              {
+                "label": "Exact",
+                "detail": "The relative-phase identity follows algebraically from orthogonal rotations."
+              },
+              {
+                "label": "Conditional",
+                "detail": "Task performance depends on architecture, training data, optimization, and the chosen frequency schedule."
+              },
+              {
+                "label": "Length behavior",
+                "detail": "Long-term decay is motivated by the frequency mixture, but extrapolation is not guaranteed by the identity alone."
+              },
+              {
+                "label": "Implementation scope",
+                "detail": "The official README excerpt is pseudocode; production kernels may reorder or fuse the same operations."
+              }
+            ],
+            "source_refs": [
+              "rope-paper:pp5-9",
+              "roformer-readme:rope-pseudocode"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Does R(n−m) mean q and k lost their absolute positions?",
+            "answer": "No. q and k are individually rotated by m and n. Only their dot product reduces those phases to a difference."
+          }
+        ]
+      }
+    },
+    "appendix_entries": [
+      {
+        "id": "rope-provenance",
+        "title": "Source provenance",
+        "body": "Paper arXiv:2104.09864v5, 14 pages, PDF SHA-256 e9a481…af79. Official RoFormer repository revision dfc678ad…a9b4. Media are hash checked during validation.",
+        "source_refs": [
+          "rope-paper",
+          "roformer-readme"
+        ]
+      },
+      {
+        "id": "rope-related-work",
+        "title": "Related-work map",
+        "body": "The explainer distinguishes learned absolute encodings, sinusoidal absolute encodings, earlier relative-position attention, and RoPE's rotation-based construction. This is a conceptual lineage, not a priority claim.",
+        "source_refs": [
+          "rope-paper:pp2-3"
+        ]
+      },
+      {
+        "id": "rope-rotation-detail",
+        "title": "Block-diagonal rotation",
+        "body": "Equation 15 stacks 2×2 rotation blocks. Each coordinate pair has angle mθi, allowing the hidden vector to carry multiple positional frequencies.",
+        "source_refs": [
+          "rope-paper:p5-eq15"
+        ]
+      },
+      {
+        "id": "rope-formula-ir",
+        "title": "Formula-to-animation mapping",
+        "body": "Axes and vector transforms are built-in Manim primitives. The relative-rotation cancellation is a newly authored composite. The registry preserves candidate versus unresolved mappings rather than claiming exact automation coverage.",
+        "source_refs": [
+          "data/formula_explainer/formulas/rope/relative.json"
+        ]
+      },
+      {
+        "id": "rope-code-map",
+        "title": "Code mapping",
+        "body": "The committed documentation snapshot preserves the official README pseudocode and upstream commit identity. Negate-and-swap maps to a quarter turn; cosine and sine form the rotation.",
+        "source_refs": [
+          "roformer-readme:dfc678a"
+        ]
+      },
+      {
+        "id": "rope-results-detail",
+        "title": "Results reading guide",
+        "body": "The WMT bar uses exact Table 1 values and explicitly marks its truncated axis. The text limits the conclusion to the reported setup.",
+        "source_refs": [
+          "rope-paper:p9-table1"
+        ]
+      },
+      {
+        "id": "rope-limitations",
+        "title": "Limits of the geometric story",
+        "body": "The algebra establishes relative phase inside the score. It does not alone determine optimization quality, downstream performance, or arbitrary-context extrapolation.",
+        "source_refs": [
+          "rope-paper:pp5-9"
+        ]
+      }
+    ]
+  },
+  "generation": {
+    "pipeline_version": "explainer-pipeline/0.1.0",
+    "source_packet_sha256": "0d525a48755f0d623fc0a09aa89714d2c275f55fba9515591feac2b9df44af93",
+    "stage_traces": [
+      {
+        "stage": "concept_graph",
+        "paper_id": "rope",
+        "provider": "codex",
+        "model": "gpt-5.6",
+        "generation_mode": "frozen_replay",
+        "prompt_sha256": "84a00ad8b01ef158067e0ccf6726048b34f9e1cd08af17f4477bded384f4227f",
+        "response_sha256": "f6313e591a7e3bb4177de421dba2dfbf5c1c624f27fc9acd45490f45ac777c6e",
+        "source_record": "data/explainer_pipeline/replays/rope/concept_graph.json"
+      },
+      {
+        "stage": "lesson_plan",
+        "paper_id": "rope",
+        "provider": "codex",
+        "model": "gpt-5.6",
+        "generation_mode": "frozen_replay",
+        "prompt_sha256": "e92cd62e66344e1d480cad643ca3095a3a60a42742a66bc9d24c12e34d5c9955",
+        "response_sha256": "e5524f558df41d305a5243cd9981d3f283e01abab5cf1d243fd92d1726391139",
+        "source_record": "data/explainer_pipeline/replays/rope/lesson_plan.json"
+      },
+      {
+        "stage": "section_content",
+        "paper_id": "rope",
+        "provider": "codex",
+        "model": "gpt-5.6",
+        "generation_mode": "frozen_replay",
+        "prompt_sha256": "891670844b2e2547449188dbab964d8c506a21acd7becfd923f57b2971fd6be0",
+        "response_sha256": "3bcf7d695817a65ce1ea2e9f9842e1c6f857df5e9016bfc29daa0af58c23329d",
+        "source_record": "data/explainer_pipeline/replays/rope/section_content.json"
+      }
+    ],
+    "completion": "full"
+  }
+}

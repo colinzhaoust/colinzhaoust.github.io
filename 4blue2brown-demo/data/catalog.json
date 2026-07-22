@@ -1,0 +1,23 @@
+{
+  "schema_version": "explainer-site-catalog/0.1.0",
+  "title": "Living Technical Atlas",
+  "papers": [
+    {
+      "paper_id": "feynrl",
+      "short_title": "FeynRL / P3O",
+      "title": "A New Policy Optimization Paradigm for LLM Reasoning",
+      "central_question": "Can one training signal respond to both trust-region drift and off-policy sampling without tuning PPO-style clip bounds?",
+      "bundle": "data/bundles/feynrl.json",
+      "completion": "full"
+    },
+    {
+      "paper_id": "rope",
+      "short_title": "RoPE / RoFormer",
+      "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+      "central_question": "How can absolute token positions enter query and key vectors while attention scores depend only on relative displacement?",
+      "bundle": "data/bundles/rope.json",
+      "completion": "full"
+    }
+  ],
+  "default_paper": "feynrl"
+}
