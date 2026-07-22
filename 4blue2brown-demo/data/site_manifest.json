@@ -1,8 +1,10 @@
 {
   "schema_version": "explainer-site-manifest/0.2.0",
-  "run_count": 1,
+  "run_count": 3,
   "runs": [
-    "reviewed-reference"
+    "reviewed-reference",
+    "gemini-3-1-pro-vertex",
+    "gpt-5-5-bedrock"
   ],
   "paper_count": 2,
   "papers": [
@@ -295,6 +297,582 @@
       "paper_id": "rope",
       "media_id": "rope-findings-captions",
       "path": "assets/reviewed-reference/rope/rope-findings-captions.vtt",
+      "sha256": "97516f9a6b5129fe69758608a5d35a4b6014109f2404a82641a6a155d39a66f5",
+      "size_bytes": 224
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-offpolicy-bridge-micro.mp4",
+      "sha256": "e516ea8507aa70087d072fb0d737d53310f4176170efa2111af7e4199979af3d",
+      "size_bytes": 188542
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-offpolicy-bridge-micro-poster.png",
+      "sha256": "eb84de6830c211718c23c301d9534d2b2f5d4e45e61e46db9dfc048113d6bccc",
+      "size_bytes": 101717
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-offpolicy-bridge-micro-captions.vtt",
+      "sha256": "d621e6b637c582ed4c8ba0b4e7b4865ae07a88da062cd90e1802013f1fe965a1",
+      "size_bytes": 292
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-clip-result-micro.mp4",
+      "sha256": "0eb371d4b71e8d1c030297fe76d167edf92c913058fef09df8f1170e00a2abdc",
+      "size_bytes": 142601
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-clip-result-micro-poster.png",
+      "sha256": "5c2297000e7a8838a8a4f62382406913f9f7b5d3d0c12d45334640de1861e5f9",
+      "size_bytes": 103100
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-clip-result-micro-captions.vtt",
+      "sha256": "32c5a1059dff2b10cdcdc078cf639c9c6abef466720357618fe126506833ada4",
+      "size_bytes": 194
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-lineage-micro",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-lineage-micro.mp4",
+      "sha256": "68b3a985dd57d49d5fdeb66b1dc0456698ace607da055b05539c8e71c1405667",
+      "size_bytes": 641563
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-lineage-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-lineage-micro-poster.png",
+      "sha256": "ff8894140bdf144b2a0c0880ca8af3dec26c4d1a5cf712b35a803095b53e22de",
+      "size_bytes": 104334
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-lineage-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-lineage-micro-captions.vtt",
+      "sha256": "fad67bd5166bb14f368e5b750e2495c7c5fbe44ec5c4f050dc6c2fda797f587c",
+      "size_bytes": 466
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-micro",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-ess-micro.mp4",
+      "sha256": "4c463415fa93f920dbf95302b12e8d25599c702b96f26a5999417ae8af30676f",
+      "size_bytes": 117964
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-ess-micro-poster.png",
+      "sha256": "4e3ad31447784de0a72e41f53ddadf439cda5763b2544293cd6a0dcb810775e4",
+      "size_bytes": 68314
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-ess-micro-captions.vtt",
+      "sha256": "7960c595fe2c239cc360951f00cdf9616ecf1c3ac738c03523d20bacc74de07a",
+      "size_bytes": 266
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-p3o-micro.mp4",
+      "sha256": "3833b46cfed2553261537ce85b8c8b6506526b0993f9fb4fdcd24036d30be0c1",
+      "size_bytes": 126869
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-p3o-micro-poster.png",
+      "sha256": "25959d6fc7646b5a66ff63e2292c563d0811770c862d6d9de5b790a363829427",
+      "size_bytes": 85689
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-p3o-micro-captions.vtt",
+      "sha256": "26d920b9c42bc61315a317f258a6772874978001bcfdf4bd264fd715f735d00a",
+      "size_bytes": 242
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-findings.mp4",
+      "sha256": "4de7c7d9804ca931509c49ec7f24bfad96cf8a480b8978777c3745aa9583a33f",
+      "size_bytes": 148228
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings-poster",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-findings-poster.png",
+      "sha256": "b0201b4b75591bd48ea31d643d2dac9928be7e3176c6b532ba6375096ad22041",
+      "size_bytes": 109154
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings-captions",
+      "path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-findings-captions.vtt",
+      "sha256": "a63bc22a196c56910bfd9645c9ad5828eec6f350f56d1a7219e673c3975f79dc",
+      "size_bytes": 213
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-frequency-pairs-micro.mp4",
+      "sha256": "ebcd132062479d12581369860306dd432b2eeab3d38add059be142d5875e0b74",
+      "size_bytes": 190226
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-frequency-pairs-micro-poster.png",
+      "sha256": "aa4ee995b049d57a6e27560c7aaeed1f931cc408da6a628d06a90ff5210aaafe",
+      "size_bytes": 113006
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-frequency-pairs-micro-captions.vtt",
+      "sha256": "722ba5cdb03405ca24ef6903ced50fd56923ce23d10e489ba5623366a865ca17",
+      "size_bytes": 193
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-translation-result-micro.mp4",
+      "sha256": "1accf06720ea1e80cab592233b71ab2d360a80c83d316839a52cc7e43bc4b818",
+      "size_bytes": 109953
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-translation-result-micro-poster.png",
+      "sha256": "fd0f57d0a36dbd486bb349cf229d155e895b4c0ee13047a6f2729acde54ec66e",
+      "size_bytes": 108188
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-translation-result-micro-captions.vtt",
+      "sha256": "0e8346af88100e8fd2904cddc9a88b09f59b3e4f324f18618bd0574518e75472",
+      "size_bytes": 183
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-lineage-micro",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-lineage-micro.mp4",
+      "sha256": "8d29c49fc35205f88f7a41d235f26e1f2cf26f5e2d3005d7324e121e4a85b63c",
+      "size_bytes": 1015379
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-lineage-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-lineage-micro-poster.png",
+      "sha256": "d94462c1e3e3e4937c15459bcf5f2fd07b6a67b86ba15a49061b7e53716cc275",
+      "size_bytes": 117622
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-lineage-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-lineage-micro-captions.vtt",
+      "sha256": "08d1f0672c965e97afe120e79ce11f61c0da46d5f547d4b1a10ef19cc4ca6999",
+      "size_bytes": 650
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-decay-micro",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-decay-micro.mp4",
+      "sha256": "8b0ff57e8de3f048eea9965b12aa4905dbd0e82d2cf2db962c12f5116775129c",
+      "size_bytes": 109029
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-decay-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-decay-micro-poster.png",
+      "sha256": "9ef3ae390b8f630efc3fdc54c92f1e6e862cb8ff8adb05a5ae461ace0c44a341",
+      "size_bytes": 97760
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-decay-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-decay-micro-captions.vtt",
+      "sha256": "8b03594dee34eaf4cd5afbecb789a93345c0634362e7dbc14e8856449ee230ae",
+      "size_bytes": 220
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-relative-micro",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-relative-micro.mp4",
+      "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2",
+      "size_bytes": 121975
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-relative-micro-poster",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-relative-micro-poster.png",
+      "sha256": "2c5b38ea48d16cbaeceafe51b3288db033ae7b62e943432400f82f684ec739de",
+      "size_bytes": 89313
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-relative-micro-captions",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-relative-micro-captions.vtt",
+      "sha256": "9953ddb34d9ee2e3b4bc5caf23a7e2f98ecba7fa79d7288482aba950514e3763",
+      "size_bytes": 264
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-findings",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-findings.mp4",
+      "sha256": "99d85bc10e0a0b1725e7b2415d788885389fcbeb6513b29190b5d7cf6bce0175",
+      "size_bytes": 221808
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-findings-poster",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-findings-poster.png",
+      "sha256": "301a9946a523b59cab2c3175a5e677470ae6439db859160cad1e54e9663f26f3",
+      "size_bytes": 96129
+    },
+    {
+      "run_id": "gemini-3-1-pro-vertex",
+      "paper_id": "rope",
+      "media_id": "rope-findings-captions",
+      "path": "assets/gemini-3-1-pro-vertex/rope/rope-findings-captions.vtt",
+      "sha256": "97516f9a6b5129fe69758608a5d35a4b6014109f2404a82641a6a155d39a66f5",
+      "size_bytes": 224
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-offpolicy-bridge-micro.mp4",
+      "sha256": "e516ea8507aa70087d072fb0d737d53310f4176170efa2111af7e4199979af3d",
+      "size_bytes": 188542
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-offpolicy-bridge-micro-poster.png",
+      "sha256": "eb84de6830c211718c23c301d9534d2b2f5d4e45e61e46db9dfc048113d6bccc",
+      "size_bytes": 101717
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-offpolicy-bridge-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-offpolicy-bridge-micro-captions.vtt",
+      "sha256": "d621e6b637c582ed4c8ba0b4e7b4865ae07a88da062cd90e1802013f1fe965a1",
+      "size_bytes": 292
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-clip-result-micro.mp4",
+      "sha256": "0eb371d4b71e8d1c030297fe76d167edf92c913058fef09df8f1170e00a2abdc",
+      "size_bytes": 142601
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-clip-result-micro-poster.png",
+      "sha256": "5c2297000e7a8838a8a4f62382406913f9f7b5d3d0c12d45334640de1861e5f9",
+      "size_bytes": 103100
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-clip-result-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-clip-result-micro-captions.vtt",
+      "sha256": "32c5a1059dff2b10cdcdc078cf639c9c6abef466720357618fe126506833ada4",
+      "size_bytes": 194
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-lineage-micro",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-lineage-micro.mp4",
+      "sha256": "68b3a985dd57d49d5fdeb66b1dc0456698ace607da055b05539c8e71c1405667",
+      "size_bytes": 641563
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-lineage-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-lineage-micro-poster.png",
+      "sha256": "ff8894140bdf144b2a0c0880ca8af3dec26c4d1a5cf712b35a803095b53e22de",
+      "size_bytes": 104334
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-lineage-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-lineage-micro-captions.vtt",
+      "sha256": "fad67bd5166bb14f368e5b750e2495c7c5fbe44ec5c4f050dc6c2fda797f587c",
+      "size_bytes": 466
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-micro",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-ess-micro.mp4",
+      "sha256": "4c463415fa93f920dbf95302b12e8d25599c702b96f26a5999417ae8af30676f",
+      "size_bytes": 117964
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-ess-micro-poster.png",
+      "sha256": "4e3ad31447784de0a72e41f53ddadf439cda5763b2544293cd6a0dcb810775e4",
+      "size_bytes": 68314
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-ess-micro-captions.vtt",
+      "sha256": "7960c595fe2c239cc360951f00cdf9616ecf1c3ac738c03523d20bacc74de07a",
+      "size_bytes": 266
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-p3o-micro.mp4",
+      "sha256": "3833b46cfed2553261537ce85b8c8b6506526b0993f9fb4fdcd24036d30be0c1",
+      "size_bytes": 126869
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-p3o-micro-poster.png",
+      "sha256": "25959d6fc7646b5a66ff63e2292c563d0811770c862d6d9de5b790a363829427",
+      "size_bytes": 85689
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-p3o-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-p3o-micro-captions.vtt",
+      "sha256": "26d920b9c42bc61315a317f258a6772874978001bcfdf4bd264fd715f735d00a",
+      "size_bytes": 242
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-findings.mp4",
+      "sha256": "4de7c7d9804ca931509c49ec7f24bfad96cf8a480b8978777c3745aa9583a33f",
+      "size_bytes": 148228
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings-poster",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-findings-poster.png",
+      "sha256": "b0201b4b75591bd48ea31d643d2dac9928be7e3176c6b532ba6375096ad22041",
+      "size_bytes": 109154
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings-captions",
+      "path": "assets/gpt-5-5-bedrock/feynrl/feynrl-findings-captions.vtt",
+      "sha256": "a63bc22a196c56910bfd9645c9ad5828eec6f350f56d1a7219e673c3975f79dc",
+      "size_bytes": 213
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-frequency-pairs-micro.mp4",
+      "sha256": "ebcd132062479d12581369860306dd432b2eeab3d38add059be142d5875e0b74",
+      "size_bytes": 190226
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-frequency-pairs-micro-poster.png",
+      "sha256": "aa4ee995b049d57a6e27560c7aaeed1f931cc408da6a628d06a90ff5210aaafe",
+      "size_bytes": 113006
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-frequency-pairs-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-frequency-pairs-micro-captions.vtt",
+      "sha256": "722ba5cdb03405ca24ef6903ced50fd56923ce23d10e489ba5623366a865ca17",
+      "size_bytes": 193
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-translation-result-micro.mp4",
+      "sha256": "1accf06720ea1e80cab592233b71ab2d360a80c83d316839a52cc7e43bc4b818",
+      "size_bytes": 109953
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-translation-result-micro-poster.png",
+      "sha256": "fd0f57d0a36dbd486bb349cf229d155e895b4c0ee13047a6f2729acde54ec66e",
+      "size_bytes": 108188
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-translation-result-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-translation-result-micro-captions.vtt",
+      "sha256": "0e8346af88100e8fd2904cddc9a88b09f59b3e4f324f18618bd0574518e75472",
+      "size_bytes": 183
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-lineage-micro",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-lineage-micro.mp4",
+      "sha256": "8d29c49fc35205f88f7a41d235f26e1f2cf26f5e2d3005d7324e121e4a85b63c",
+      "size_bytes": 1015379
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-lineage-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-lineage-micro-poster.png",
+      "sha256": "d94462c1e3e3e4937c15459bcf5f2fd07b6a67b86ba15a49061b7e53716cc275",
+      "size_bytes": 117622
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-lineage-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-lineage-micro-captions.vtt",
+      "sha256": "08d1f0672c965e97afe120e79ce11f61c0da46d5f547d4b1a10ef19cc4ca6999",
+      "size_bytes": 650
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-decay-micro",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-decay-micro.mp4",
+      "sha256": "8b0ff57e8de3f048eea9965b12aa4905dbd0e82d2cf2db962c12f5116775129c",
+      "size_bytes": 109029
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-decay-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-decay-micro-poster.png",
+      "sha256": "9ef3ae390b8f630efc3fdc54c92f1e6e862cb8ff8adb05a5ae461ace0c44a341",
+      "size_bytes": 97760
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-decay-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-decay-micro-captions.vtt",
+      "sha256": "8b03594dee34eaf4cd5afbecb789a93345c0634362e7dbc14e8856449ee230ae",
+      "size_bytes": 220
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-relative-micro",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-relative-micro.mp4",
+      "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2",
+      "size_bytes": 121975
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-relative-micro-poster",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-relative-micro-poster.png",
+      "sha256": "2c5b38ea48d16cbaeceafe51b3288db033ae7b62e943432400f82f684ec739de",
+      "size_bytes": 89313
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-relative-micro-captions",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-relative-micro-captions.vtt",
+      "sha256": "9953ddb34d9ee2e3b4bc5caf23a7e2f98ecba7fa79d7288482aba950514e3763",
+      "size_bytes": 264
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-findings",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-findings.mp4",
+      "sha256": "99d85bc10e0a0b1725e7b2415d788885389fcbeb6513b29190b5d7cf6bce0175",
+      "size_bytes": 221808
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-findings-poster",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-findings-poster.png",
+      "sha256": "301a9946a523b59cab2c3175a5e677470ae6439db859160cad1e54e9663f26f3",
+      "size_bytes": 96129
+    },
+    {
+      "run_id": "gpt-5-5-bedrock",
+      "paper_id": "rope",
+      "media_id": "rope-findings-captions",
+      "path": "assets/gpt-5-5-bedrock/rope/rope-findings-captions.vtt",
       "sha256": "97516f9a6b5129fe69758608a5d35a4b6014109f2404a82641a6a155d39a66f5",
       "size_bytes": 224
     }

@@ -514,7 +514,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Formula transition from on-policy sampling to behavior-policy sampling with a per-token ratio and behavioral KL.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro.mp4"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-offpolicy-bridge-micro.mp4"
       },
       {
         "media_id": "feynrl-offpolicy-bridge-micro-poster",
@@ -524,7 +524,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the FeynRL behavior-policy bridge micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro-poster.png"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-offpolicy-bridge-micro-poster.png"
       },
       {
         "media_id": "feynrl-offpolicy-bridge-micro-captions",
@@ -534,7 +534,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the FeynRL behavior-policy bridge micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-offpolicy-bridge-micro-captions.vtt"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-offpolicy-bridge-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-clip-result-micro",
@@ -544,7 +544,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Exact Table 7 comparison of the GRPO clipping-factor average and P3O on held-out AMC pass at one.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro.mp4"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-clip-result-micro.mp4"
       },
       {
         "media_id": "feynrl-clip-result-micro-poster",
@@ -554,7 +554,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the FeynRL clipping-factor result micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro-poster.png"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-clip-result-micro-poster.png"
       },
       {
         "media_id": "feynrl-clip-result-micro-captions",
@@ -564,7 +564,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the FeynRL clipping-factor result micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-clip-result-micro-captions.vtt"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-clip-result-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-lineage-micro",
@@ -574,7 +574,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Equation-transition scene from the on-policy estimator and fixed clipping to the behavior ratio, ESS, and P3O.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro.mp4"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-lineage-micro.mp4"
       },
       {
         "media_id": "feynrl-lineage-micro-poster",
@@ -584,7 +584,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the FeynRL equation-lineage micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro-poster.png"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-lineage-micro-poster.png"
       },
       {
         "media_id": "feynrl-lineage-micro-captions",
@@ -594,7 +594,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the FeynRL equation-lineage micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-lineage-micro-captions.vtt"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-lineage-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-ess-micro",
@@ -604,7 +604,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Five-second Manim scene for the Eq. 11 state change: fixed token count and concentrated policy ratios.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-ess-micro.mp4"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-ess-micro.mp4"
       },
       {
         "media_id": "feynrl-ess-micro-poster",
@@ -614,7 +614,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the normalized ESS micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-ess-micro-poster.png"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-ess-micro-poster.png"
       },
       {
         "media_id": "feynrl-ess-micro-captions",
@@ -624,7 +624,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the normalized ESS micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-ess-micro-captions.vtt"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-ess-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-p3o-micro",
@@ -634,7 +634,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Five-second Manim scene coupling the Eq. 12 score cap and behavioral KL weight through e_B.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-p3o-micro.mp4"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-p3o-micro.mp4"
       },
       {
         "media_id": "feynrl-p3o-micro-poster",
@@ -644,7 +644,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the P3O control-coupling micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-p3o-micro-poster.png"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-p3o-micro-poster.png"
       },
       {
         "media_id": "feynrl-p3o-micro-captions",
@@ -654,7 +654,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the P3O control-coupling micro-video.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-p3o-micro-captions.vtt"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-p3o-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-findings",
@@ -664,7 +664,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "New Manim scene connecting Section 4's three experimental axes to exact Table 7 values.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-findings.mp4"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-findings.mp4"
       },
       {
         "media_id": "feynrl-findings-poster",
@@ -674,7 +674,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the FeynRL findings scene.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-findings-poster.png"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-findings-poster.png"
       },
       {
         "media_id": "feynrl-findings-captions",
@@ -684,7 +684,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the FeynRL findings scene.",
-        "published_path": "assets/reviewed-reference/feynrl/feynrl-findings-captions.vtt"
+        "published_path": "assets/gemini-3-1-pro-vertex/feynrl/feynrl-findings-captions.vtt"
       }
     ],
     "agent_input": {
@@ -728,223 +728,260 @@
     }
   },
   "concept_graph": {
-    "thesis": "The paper measures behavior-policy mismatch with normalized effective sample size and uses that batch value in the original P3O objective for large-model post-training.",
+    "thesis": "By quantifying behavior-policy mismatch through a normalized effective sample size (ESS) computed on the current batch, FeynRL's per-token formulation of Policy-on Policy-off Policy Optimization (P3O) dynamically sets both policy-gradient weighting and off-policy regularization without relying on a fixed clipping factor.",
     "nodes": [
       {
-        "id": "trust-region-concern",
-        "label": "Trust-region concern",
-        "kind": "motivation",
-        "era": "policy-optimization",
-        "summary": "Each gradient update should not move the policy too far.",
+        "id": "ppo_clipping",
+        "label": "PPO fixed clipping",
+        "kind": "concept",
+        "era": "prior_work",
+        "summary": "PPO introduces a fixed clipping factor to constrain policy updates, which the authors argue conflates trust-region concerns with off-policy concerns.",
         "source_refs": [
+          "feynrl-paper:eq4",
           "feynrl-paper:sec1"
         ]
       },
       {
-        "id": "off-policy-concern",
-        "label": "Off-policy concern",
-        "kind": "motivation",
-        "era": "off-policy",
-        "summary": "Behavior-policy data should influence an update only when the data remain reliable.",
-        "source_refs": [
-          "feynrl-paper:sec1"
-        ]
-      },
-      {
-        "id": "fixed-clipping",
-        "label": "Fixed clipping",
-        "kind": "predecessor",
-        "era": "PPO-GRPO",
-        "summary": "A clipping range chosen before training is used in PPO-style and GRPO-style objectives.",
+        "id": "original_p3o",
+        "label": "Original P3O",
+        "kind": "concept",
+        "era": "prior_work",
+        "summary": "Fakoor et al.'s original P3O establishes an ESS-controlled on/off-policy structure by setting its off-policy cap c to ESS and its mixture coefficient lambda to one minus ESS.",
         "source_refs": [
           "feynrl-paper:sec1",
-          "feynrl-paper:table1"
+          "feynrl-paper:sec3"
         ]
       },
       {
-        "id": "normalized-ess",
+        "id": "behavior_policy_mismatch",
+        "label": "Behavior-policy mismatch",
+        "kind": "concept",
+        "era": "motivation",
+        "summary": "The paper shifts the expectation to behavior-policy samples and defines a per-token policy ratio to directly address and measure the mismatch between behavior and target policies.",
+        "source_refs": [
+          "feynrl-paper:eq5-7",
+          "feynrl-paper:sec3"
+        ]
+      },
+      {
+        "id": "normalized_ess",
         "label": "Normalized effective sample size",
-        "kind": "measure",
-        "era": "current-batch",
-        "summary": "Equation 11 summarizes concentration of the current batch's per-token policy ratios.",
+        "kind": "mechanism",
+        "era": "contribution",
+        "summary": "Equation 11 defines normalized ESS (e_B) from per-token policy ratios. The implementation calculates this batch statistic across valid tokens to measure the concentration of policy ratios.",
         "source_refs": [
-          "feynrl-paper:eq11"
+          "feynrl-paper:eq11",
+          "feynrl-p3o:calculate_ess"
         ]
       },
       {
-        "id": "p3o",
+        "id": "feynrl_p3o",
         "label": "Policy-on Policy-off Policy Optimization",
-        "kind": "objective",
-        "era": "P3O",
-        "summary": "Equation 12 uses e_B in the score-function weight and the off-policy regularizer.",
+        "kind": "mechanism",
+        "era": "contribution",
+        "summary": "Equation 12 formulates the normalized, per-token P3O objective for large-model post-training. It uses e_B to cap the detached ratio in the score-function weight and weights the behavioral KL regularizer by one minus ESS.",
         "source_refs": [
-          "feynrl-paper:eq12"
+          "feynrl-paper:eq12",
+          "feynrl-p3o:compute_policy_loss"
+        ]
+      },
+      {
+        "id": "precision_mismatch_result",
+        "label": "BF16 Train plus FP8 Rollout",
+        "kind": "evidence",
+        "era": "evaluation",
+        "summary": "Table 7 reports exact held-out pass@1 values under train-rollout precision mismatch, showing GRPO collapsing from 0.499 to 0.029 while P3O remains stable, changing from 0.478 to 0.529.",
+        "source_refs": [
+          "feynrl-paper:table7",
+          "feynrl-paper:sec4"
+        ]
+      },
+      {
+        "id": "two_anchor_extension",
+        "label": "Two-anchor extension",
+        "kind": "extension",
+        "era": "limitation",
+        "summary": "Equation 13 separates behavior-policy mismatch from within-epoch policy drift. The authors report in the appendix that this extension can become unstable under a sampling temperature mismatch of T=1.2.",
+        "source_refs": [
+          "feynrl-paper:eq13",
+          "feynrl-paper:appendix-fig8-9"
         ]
       }
     ],
     "edges": [
       {
-        "source": "trust-region-concern",
-        "target": "fixed-clipping",
-        "relation": "addressed-by",
-        "teaching_point": "Fixed clipping is commonly used to limit an update."
+        "source": "ppo_clipping",
+        "target": "behavior_policy_mismatch",
+        "relation": "conflates concerns",
+        "teaching_point": "Fixed clipping conflates trust-region and off-policy concerns, motivating the need to explicitly measure behavior-policy mismatch."
       },
       {
-        "source": "off-policy-concern",
-        "target": "fixed-clipping",
-        "relation": "conflated-with",
-        "teaching_point": "The paper argues that the same fixed range is also asked to handle data mismatch."
+        "source": "behavior_policy_mismatch",
+        "target": "normalized_ess",
+        "relation": "quantified by",
+        "teaching_point": "The mismatch is quantified by computing the normalized effective sample size of per-token policy ratios across the current batch."
       },
       {
-        "source": "off-policy-concern",
-        "target": "normalized-ess",
-        "relation": "measured-by",
-        "teaching_point": "The current batch, rather than a pre-committed range, provides e_B."
+        "source": "original_p3o",
+        "target": "feynrl_p3o",
+        "relation": "adapts to per-token",
+        "teaching_point": "FeynRL adapts the original P3O ESS-controlled structure into a normalized, per-token formulation suitable for large-model post-training."
       },
       {
-        "source": "normalized-ess",
-        "target": "p3o",
-        "relation": "parameterizes",
-        "teaching_point": "The batch value appears in both terms of Eq. 12."
+        "source": "normalized_ess",
+        "target": "feynrl_p3o",
+        "relation": "controls",
+        "teaching_point": "The computed e_B dynamically sets both the score-function cap and the off-policy behavioral KL weight, replacing the fixed clipping factor."
       },
       {
-        "source": "fixed-clipping",
-        "target": "p3o",
-        "relation": "compared-with",
-        "teaching_point": "Section 4 compares the fixed-clipping baselines with P3O across controlled shifts."
+        "source": "feynrl_p3o",
+        "target": "precision_mismatch_result",
+        "relation": "evaluated under",
+        "teaching_point": "The dynamic P3O objective prevents the late collapse observed in fixed-clipping methods when subjected to BF16 Train and FP8 Rollout precision mismatch."
+      },
+      {
+        "source": "feynrl_p3o",
+        "target": "two_anchor_extension",
+        "relation": "extended by",
+        "teaching_point": "The formulation can be extended to separate mismatch from within-epoch drift, though this introduces new stability boundaries."
       }
     ],
     "unresolved": [
-      "The paper notes that one ESS can conflate behavior-policy mismatch with within-epoch proximal drift."
+      "The authors report that the two-anchor extension (Equation 13) becomes unstable at a higher sampling temperature of T=1.2, leaving the robust separation of behavior-policy mismatch from within-epoch policy drift under extreme temperature mismatch as an open challenge."
     ]
   },
   "lesson_plan": {
     "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
-    "promise": "Follow the paper's trust-region concern and off-policy concern into normalized ESS, the adopted P3O objective, its implementation, and the experiments designed to test it.",
+    "promise": "By quantifying behavior-policy mismatch through a normalized effective sample size (ESS) computed on the current batch, FeynRL's per-token formulation of Policy-on Policy-off Policy Optimization (P3O) dynamically sets both policy-gradient weighting and off-policy regularization without relying on a fixed clipping factor.",
     "sections": [
       {
         "id": "motivation",
         "role": "motivation",
         "nav_label": "Motivation",
-        "title": "Trust-region concern and off-policy concern",
-        "intent": "Separate two concerns that a fixed clipping factor treats as one: limiting each update and correcting mismatch between the behavior and current policies.",
-        "question": "Why does the paper argue that a fixed clipping factor is inadequate?",
-        "learning_goal": "Distinguish the two concerns using the paper's own terms.",
-        "misconception": "A fixed clipping range directly measures the mismatch in the current batch.",
-        "summary": "The clipping factor is fixed before training, while behavior-policy mismatch changes with the batch.",
+        "title": "Conflating Trust-Region and Off-Policy Concerns",
+        "intent": "Begin with the paper's motivating question, establishing the trust-region and off-policy concerns before introducing any mathematical formulations.",
+        "question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
+        "learning_goal": "Understand that fixed clipping conflates trust-region and off-policy concerns, motivating the need to explicitly measure behavior-policy mismatch.",
+        "misconception": "Assuming fixed clipping is the only or most direct way to prevent policy collapse during RL post-training.",
+        "summary": "The paper names a trust-region concern and an off-policy concern, arguing that fixed clipping conflates them. It asks if the current batch can measure behavior-policy mismatch directly to set regularization without relying on a fixed clipping factor.",
         "source_refs": [
           "feynrl-paper:sec1",
           "feynrl-paper:sec3"
         ],
-        "medium": "paper_question+comparison",
+        "medium": "text",
         "deep_links": [
-          "feynrl-provenance"
+          "ppo-clipping-context"
         ]
       },
       {
         "id": "related_work",
         "role": "lineage",
-        "nav_label": "Related work",
-        "title": "Fixed clipping and prior policy-optimization objectives",
-        "intent": "Trace how the score-function estimator becomes an importance-weighted objective and then a fixed-clipped objective, so the precise change made by P3O is visible.",
-        "question": "Which ideas precede the paper's use of P3O for large-model post-training?",
-        "learning_goal": "Place TRPO, PPO, GRPO, off-policy correction, and original P3O in the paper's stated lineage.",
-        "misconception": "P3O is introduced here without a prior objective or off-policy literature.",
-        "summary": "The paper adopts the original Policy-on Policy-off Policy Optimization objective and contrasts its batch-adaptive control with fixed clipping.",
+        "nav_label": "Prior Work",
+        "title": "From Fixed Clipping to Behavior-Policy Sampling",
+        "intent": "Establish the prior objective and terminology before the mechanism, showing how the expectation shifts to behavior-policy samples.",
+        "question": "How do existing methods handle trust-region and off-policy concerns?",
+        "learning_goal": "Trace the transition from on-policy score-function estimators and PPO fixed clipping to behavior-policy sampling with a per-token ratio.",
+        "misconception": "Believing that P3O invents the off-policy regularizer, rather than adapting and separating it from fixed clipping.",
+        "summary": "PPO contributes fixed clipping, which applies a static constraint. To address this, the expectation is moved to behavior-policy samples, defining a per-token policy ratio and separating the off-policy regularizer from the fixed clipping mechanism.",
         "source_refs": [
-          "feynrl-paper:sec2",
-          "feynrl-paper:sec3"
+          "feynrl-paper:eq2",
+          "feynrl-paper:eq4",
+          "feynrl-paper:eq5-7",
+          "feynrl-paper:eq8"
         ],
-        "medium": "lineage+related_reading",
+        "medium": "animation",
         "deep_links": [
-          "feynrl-related-work"
+          "behavior-policy-bridge"
         ]
       },
       {
         "id": "ess",
         "role": "mechanism",
-        "nav_label": "ESS",
-        "title": "Effective sample size of policy ratios",
-        "intent": "Introduce the batch statistic that P3O will use to replace a preset clipping factor and control off-policy regularization.",
-        "question": "Why does Eq. 11 appear before the P3O objective?",
-        "learning_goal": "Read normalized ESS as the paper's batch-computed measure of behavior-policy mismatch.",
-        "misconception": "ESS is necessary because the physical number of tokens changes.",
-        "summary": "For a fixed number of tokens, ESS falls when a few policy ratios dominate the weighted estimate.",
+        "nav_label": "Normalized ESS",
+        "title": "Quantifying Mismatch with Normalized ESS",
+        "intent": "Introduce the normalized effective sample size (ESS) as the batch statistic that quantifies mismatch, setting up the control variable for P3O.",
+        "question": "How does the current batch measure behavior-policy mismatch?",
+        "learning_goal": "See how Equation 11 computes normalized ESS from per-token policy ratios across the batch.",
+        "misconception": "Thinking ESS is a static hyperparameter rather than a dynamically computed batch statistic.",
+        "summary": "Equation 11 defines normalized ESS (e_B) from per-token policy ratios. The implementation calculates this batch statistic across valid tokens to measure the concentration of policy ratios, quantifying the effective support.",
         "source_refs": [
-          "feynrl-paper:eq11"
+          "feynrl-paper:eq11",
+          "feynrl-p3o:calculate_ess"
         ],
-        "medium": "numeric_fixture+video",
+        "medium": "animation",
         "deep_links": [
-          "feynrl-ess-derivation"
+          "ess-calculation-code"
         ]
       },
       {
         "id": "p3o",
         "role": "mechanism",
-        "nav_label": "P3O",
+        "nav_label": "P3O Objective",
         "title": "Policy-on Policy-off Policy Optimization",
-        "intent": "Show where the same batch-computed e_B enters the score-function weight and behavioral KL term of the adopted P3O objective.",
-        "question": "How does e_B enter both terms of Eq. 12?",
-        "learning_goal": "Map the score-function weight and off-policy regularizer to confirmed repository lines.",
-        "misconception": "P3O merely substitutes ESS for PPO's upper clip bound.",
-        "summary": "The batch value caps the score-function weight and scales the KL regularizer, while every valid token still contributes.",
+        "intent": "Connect the mechanism to original code, showing how FeynRL formulates the normalized, per-token P3O objective using the computed ESS.",
+        "question": "How does normalized ESS control the policy update without a fixed clipping factor?",
+        "learning_goal": "Understand how FeynRL adapts the original P3O structure into a normalized, per-token formulation.",
+        "misconception": "Assuming FeynRL invented P3O, rather than formulating a normalized, per-token version of Fakoor et al.'s original ESS-controlled structure.",
+        "summary": "Fakoor et al.'s original P3O establishes an ESS-controlled on/off-policy structure by setting its off-policy cap to ESS and mixture coefficient to one minus ESS. FeynRL formulates the corresponding normalized, per-token P3O objective for large-model post-training. Equation 12 uses e_B to cap the detached ratio in the score-function weight and weights the behavioral KL regularizer by one minus ESS.",
         "source_refs": [
           "feynrl-paper:eq12",
           "feynrl-p3o:compute_policy_loss"
         ],
-        "medium": "formula+code",
+        "medium": "animation",
         "deep_links": [
-          "feynrl-code-map"
+          "p3o-objective-code"
         ]
       },
       {
         "id": "findings",
         "role": "evidence",
-        "nav_label": "Findings",
-        "title": "Experimental findings",
-        "intent": "Test the claimed removal of clip-factor tuning and robustness to behavior-policy mismatch across temperature and precision changes.",
-        "question": "Which controlled changes are the experiments designed to test?",
-        "learning_goal": "Connect clipping factor, sampling temperature, and rollout precision to the paper's reported findings.",
-        "misconception": "One held-out bar is the complete evidence for the method.",
-        "summary": "Section 4 tests three mismatch regimes; Table 7 connects the training behavior to exact held-out pass@1 values.",
+        "nav_label": "Experimental Evidence",
+        "title": "Robustness to Precision and Temperature Mismatch",
+        "intent": "Separate experimental evidence from limitations, reporting the authors' findings on precision mismatch and clipping sensitivity.",
+        "question": "Does the dynamic P3O objective prevent collapse under precision mismatch?",
+        "learning_goal": "Review the authors' reported findings on how P3O performs under precision mismatch and varying clipping factors.",
+        "misconception": "Assuming P3O only matches GRPO performance without providing stability benefits under hardware or sampling constraints.",
+        "summary": "The experiments test clipping factor, sampling temperature, and precision mismatch. Table 7 reports exact held-out pass@1 values, showing GRPO collapsing from 0.499 to 0.029 under BF16 Train and FP8 Rollout mismatch, while P3O remains stable, changing from 0.478 to 0.529.",
         "source_refs": [
           "feynrl-paper:sec4",
-          "feynrl-paper:table7"
+          "feynrl-paper:table7",
+          "feynrl-paper:fig1",
+          "feynrl-paper:fig2",
+          "feynrl-paper:fig3"
         ],
-        "medium": "video+bar_chart+reported_trends",
+        "medium": "animation",
         "deep_links": [
-          "feynrl-results-detail"
+          "precision-mismatch-results"
         ]
       },
       {
         "id": "limits",
         "role": "limitations",
-        "nav_label": "Limits",
-        "title": "Potential issue and claim boundary",
-        "intent": "Examine the paper's two-anchor extension and preserve the boundary between tested regimes and a general stability claim.",
-        "question": "What does one batch-level ESS combine, and what does the evidence not establish?",
-        "learning_goal": "Separate the paper's potential issue from extrapolated claims.",
-        "misconception": "A single ESS necessarily identifies every source of mismatch or guarantees stability in all regimes.",
-        "summary": "One ESS can conflate behavior drift with within-epoch proximal drift; the evidence remains tied to the tested models and regimes.",
+        "nav_label": "Limitations",
+        "title": "Boundaries of the Two-Anchor Extension",
+        "intent": "Conclude by exposing the limitations of the two-anchor extension under temperature mismatch, preserving the claim boundary.",
+        "question": "What are the boundaries of separating behavior-policy mismatch from within-epoch drift?",
+        "learning_goal": "Recognize the stability limits of the two-anchor extension under extreme sampling temperature mismatch.",
+        "misconception": "Believing the two-anchor extension is universally stable across all sampling temperatures.",
+        "summary": "Equation 13 separates behavior-policy mismatch from within-epoch policy drift. However, the authors report in the appendix that this two-anchor extension can become unstable under a sampling temperature mismatch of T=1.2, preserving an important claim boundary.",
         "source_refs": [
-          "feynrl-paper:sec3",
-          "feynrl-paper:sec4",
-          "feynrl-paper:appendix"
+          "feynrl-paper:eq13",
+          "feynrl-paper:appendix-fig8-9"
         ],
-        "medium": "limitation",
+        "medium": "text",
         "deep_links": [
-          "feynrl-limitations"
+          "two-anchor-extension"
         ]
       }
     ],
-    "appendix": [
-      "feynrl-provenance",
-      "feynrl-related-work",
-      "feynrl-ess-derivation",
-      "feynrl-code-map",
-      "feynrl-results-detail",
-      "feynrl-limitations"
-    ]
+    "appendix": {
+      "ppo-clipping-context": "PPO introduces a fixed clipping factor to constrain policy updates. The authors argue this conflates trust-region concerns with off-policy concerns, motivating a shift toward dynamically measuring behavior-policy mismatch.",
+      "behavior-policy-bridge": "Equations 5 through 7 move the expectation to behavior-policy samples and define the per-token policy ratio. Equation 8 separates the off-policy regularizer from the fixed clipping mechanism before P3O couples them.",
+      "ess-calculation-code": "Equation 11 defines normalized ESS from per-token policy ratios. In `algs/P3O/p3o.py`, `calculate_ess` computes e_B from valid per-token ratios across ranks, providing the batch statistic that measures concentration.",
+      "p3o-objective-code": "Equation 12 formulates the P3O objective. In `algs/P3O/p3o.py`, `compute_policy_loss` forms the ratio, calls `calculate_ess`, caps rho at ESS, detaches rho in the policy term, and weights behavioral KL by one minus ESS.",
+      "precision-mismatch-results": "Table 7 reports exact held-out pass@1 values. Under BF16 Train plus FP8 Rollout at iterations 15 and 30, GRPO falls from 0.499 to 0.029, while P3O changes from 0.478 to 0.529, demonstrating robustness to precision mismatch.",
+      "two-anchor-extension": "Equation 13 separates behavior-policy mismatch from within-epoch policy drift. The appendix reports that while stable at default temperatures, this extension becomes unstable at a sampling temperature of T=1.2."
+    }
   },
   "section_content": {
     "sections": {
@@ -952,9 +989,21 @@
         "blocks": [
           {
             "type": "paper_question",
-            "label": "Paper premise",
-            "question": "A clipping factor is fixed before training. How should policy optimization respond when behavior-policy mismatch changes from batch to batch?",
-            "context": "The paper separates a trust-region concern from an off-policy concern and attributes fragility to using fixed clipping for both.",
+            "label": "Motivating Question",
+            "question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
+            "context": "The paper names a trust-region concern and an off-policy concern, arguing that fixed clipping conflates them.",
+            "source_refs": [
+              "feynrl-paper:sec1",
+              "feynrl-paper:sec3"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Conflating Trust-Region and Off-Policy Concerns",
+            "paragraphs": [
+              "In reinforcement learning post-training, Proximal Policy Optimization (PPO) introduces a fixed clipping factor to constrain policy updates. However, the authors argue that this fixed clipping conflates two distinct issues: the trust-region concern, which prevents the policy from changing too rapidly in a single update, and the off-policy concern, which handles the mismatch between the behavior policy that generated the data and the current target policy.",
+              "Instead of relying on a static clipping ratio, the paper asks if the current batch can directly measure this behavior-policy mismatch. By quantifying the mismatch through a normalized effective sample size (ESS), the objective could dynamically set both the policy-gradient weighting and the off-policy regularization."
+            ],
             "source_refs": [
               "feynrl-paper:sec1",
               "feynrl-paper:sec3"
@@ -964,162 +1013,100 @@
             "type": "comparison",
             "columns": [
               {
-                "label": "Trust-region concern",
-                "accent": "cyan",
-                "question": "How far should one gradient update move the policy?",
-                "answer": "The update should not move the policy too far."
+                "label": "Fixed Clipping (PPO)",
+                "question": "How is policy collapse prevented?",
+                "answer": "A static clipping factor constrains the policy ratio, conflating trust-region and off-policy concerns.",
+                "accent": "orange"
               },
               {
-                "label": "Off-policy concern",
-                "accent": "violet",
-                "question": "When should behavior-policy data influence the update?",
-                "answer": "Only when the data remain reliable for the current policy."
+                "label": "Dynamic Measurement (P3O)",
+                "question": "How is policy collapse prevented?",
+                "answer": "The current batch explicitly measures behavior-policy mismatch to dynamically set regularization.",
+                "accent": "green"
               }
-            ],
-            "source_refs": [
-              "feynrl-paper:sec1"
-            ]
-          },
-          {
-            "type": "prose",
-            "heading": "Why the paper moves beyond fixed clipping",
-            "paragraphs": [
-              "A fixed range ρ_t ∈ [1−ε_l, 1+ε_h] is selected before training. It is therefore not a measurement of the current batch. The paper's intent is to compute a batch-dependent quantity and use it in an objective that handles both on-policy and off-policy data."
             ],
             "source_refs": [
               "feynrl-paper:sec1",
               "feynrl-paper:sec3"
             ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why do the authors argue against using a fixed clipping factor for RL post-training?",
+            "answer": "Because a fixed clipping factor conflates the trust-region concern (limiting step size) with the off-policy concern (handling behavior-policy mismatch), rather than measuring the mismatch directly."
           }
         ]
       },
       "related_work": {
         "blocks": [
           {
-            "type": "lineage",
-            "nodes": [
-              {
-                "id": "trpo",
-                "label": "TRPO",
-                "note": "trust-region policy optimization"
-              },
-              {
-                "id": "ppo",
-                "label": "PPO",
-                "note": "clipped surrogate objective"
-              },
-              {
-                "id": "grpo",
-                "label": "GRPO",
-                "note": "large-model reasoning objective"
-              },
-              {
-                "id": "p3o-original",
-                "label": "P3O",
-                "note": "Policy-on Policy-off Policy Optimization"
-              },
-              {
-                "id": "feynrl",
-                "label": "FeynRL",
-                "note": "P3O for large-model post-training"
-              }
-            ],
-            "edges": [
-              [
-                "trpo",
-                "ppo"
-              ],
-              [
-                "ppo",
-                "grpo"
-              ],
-              [
-                "p3o-original",
-                "feynrl"
-              ],
-              [
-                "grpo",
-                "feynrl"
-              ]
-            ],
+            "type": "paper_question",
+            "label": "Prior Work",
+            "question": "How do existing methods handle trust-region and off-policy concerns?",
+            "context": "PPO introduces a fixed clipping factor to constrain policy updates, which the authors argue conflates trust-region concerns with off-policy concerns. To address this, the expectation must be moved to behavior-policy samples.",
             "source_refs": [
-              "feynrl-paper:sec2",
+              "feynrl-paper:sec1",
               "feynrl-paper:sec3"
             ]
           },
           {
+            "type": "prose",
+            "heading": "From Fixed Clipping to Behavior-Policy Sampling",
+            "paragraphs": [
+              "Standard on-policy score-function estimators rely on samples drawn directly from the current policy. PPO contributes fixed clipping, which applies a static constraint to prevent destructively large updates. However, this fixed clipping conflates the need for a trust region with the need to handle off-policy data.",
+              "To resolve this, Fakoor et al.'s original P3O establishes an off-policy regularizer. By shifting the expectation to behavior-policy samples and defining a per-token policy ratio, the off-policy regularizer can be separated from the fixed clipping mechanism."
+            ],
+            "source_refs": [
+              "feynrl-paper:sec1",
+              "feynrl-paper:sec3",
+              "feynrl-paper:eq4"
+            ]
+          },
+          {
             "type": "equation_thread",
-            "title": "Which paper introduced each control—and why FeynRL reuses P3O",
+            "title": "Evolution of the Policy Objective",
             "stages": [
               {
-                "equation": "PPO (Schulman et al., 2017) · FeynRL Eq. 4",
-                "paper": "Proximal Policy Optimization Algorithms",
-                "year": "2017",
-                "formula": "min{ρ_t A, clip(ρ_t,1−ε,1+ε)A}",
-                "intent": "Use a fixed ε to limit how much a sampled ratio contributes.",
-                "change": "Open question for this paper: ε is selected before the current batch reveals policy mismatch.",
-                "source_url": "https://arxiv.org/abs/1707.06347"
+                "paper": "Standard RL",
+                "equation": "Eq. 2",
+                "formula": "\\mathbb{E}_{\\tau \\sim \\pi_\\theta} [ \\dots ]",
+                "intent": "Establish the estimator before changing the sampling distribution.",
+                "change": "Initial on-policy score-function estimator."
               },
               {
-                "equation": "Original P3O (Fakoor et al., 2020) · Eqs. 1, 14–16",
-                "paper": "P3O: Policy-on Policy-off Policy Optimization",
-                "year": "2020",
-                "formula": "J_on + λ J_off(c) + KL, with c=ESS and λ=1−ESS",
-                "intent": "Interleave on-policy and off-policy gradients while effective sample size controls off-policy influence.",
-                "change": "Inheritance: P3O already couples an importance-weight cap and mixing coefficient through ESS.",
-                "source_url": "https://proceedings.mlr.press/v115/fakoor20a.html"
+                "paper": "PPO",
+                "equation": "Eq. 4",
+                "formula": "\\min(r_t(\\theta)\\hat{A}_t, \\text{clip}(r_t(\\theta), 1-\\epsilon, 1+\\epsilon)\\hat{A}_t)",
+                "intent": "Show the fixed clipping factor used by PPO-style objectives.",
+                "change": "Introduces a static constraint via fixed clipping."
               },
               {
-                "equation": "FeynRL Eqs. 5–7 · token-level behavior-policy correction",
-                "paper": "Trust the Batch, On- or Off-Policy",
-                "year": "2026",
-                "formula": "ρ_t(θ)=πθ(y_t|x,y_<t)/π_b(y_t|x,y_<t)",
-                "intent": "Evaluate an update using samples from the behavior policy.",
-                "change": "Adaptation: express the behavior correction at every generated token in language-model post-training.",
-                "source_url": "https://openreview.net/forum?id=FOGhcI4iRk"
+                "paper": "FeynRL",
+                "equation": "Eqs. 5–7",
+                "formula": "\\rho_t = \\frac{\\pi_\\theta(a_t|s_t)}{\\pi_b(a_t|s_t)}",
+                "intent": "Move the expectation to behavior-policy samples and define the per-token policy ratio.",
+                "change": "Shifts expectation to behavior-policy samples."
               },
               {
-                "equation": "FeynRL Eqs. 11–12 · normalized ESS and P3O",
-                "paper": "Trust the Batch, On- or Off-Policy",
-                "year": "2026",
-                "formula": "e_B=Ê[ρ]²/Ê[ρ²] → min{ρ_t,e_B} + (1−e_B)KL",
-                "intent": "Let the current batch set both controls.",
-                "change": "The paper uses normalized e_B in both min{ρ_t,e_B} and (1−e_B) in one token-level objective.",
-                "source_url": "https://openreview.net/forum?id=FOGhcI4iRk"
+                "paper": "FeynRL",
+                "equation": "Eq. 8",
+                "formula": "\\mathbb{E}_{\\tau \\sim \\pi_b} [ \\dots - \\beta \\text{KL}(\\pi_b || \\pi_\\theta) ]",
+                "intent": "Separate the off-policy regularizer from the fixed clipping mechanism before P3O couples them through e_B.",
+                "change": "Isolates the behavioral KL regularization."
               }
             ],
             "folded": [
               {
                 "equations": "Eqs. 9–10",
-                "reason": "They expand Eq. 4 by advantage sign but introduce no new control variable; the appendix retains the algebra."
+                "reason": "They expand the fixed-clipping objective by advantage sign but do not introduce a new control variable; the related-work transition keeps Eq. 4 visible and links this algebra to the appendix."
               }
             ],
             "source_refs": [
               "feynrl-paper:eq2",
               "feynrl-paper:eq4",
-              "feynrl-paper:eq5-12"
-            ]
-          },
-          {
-            "type": "micro_video",
-            "media_id": "feynrl-lineage-micro",
-            "poster_id": "feynrl-lineage-micro-poster",
-            "captions_id": "feynrl-lineage-micro-captions",
-            "title": "Watch ownership and adaptation, not just symbol morphing",
-            "intro": "Each held frame names the source paper, the control it introduced, and the unresolved question carried into the next step.",
-            "observation": "PPO contributes fixed clipping; original P3O contributes ESS-controlled on/off-policy mixing; FeynRL specializes that control to per-token language-model ratios.",
-            "consequence": "The animation distinguishes inherited P3O structure from FeynRL's post-training formulation.",
-            "beats": [
-              "PPO · fixed ε",
-              "P3O · ESS controls off-policy use",
-              "FeynRL · token ratio",
-              "FeynRL · e_B in two terms"
-            ],
-            "source_refs": [
-              "feynrl-paper:eq2",
-              "feynrl-paper:eq4",
-              "feynrl-paper:eq7",
-              "feynrl-paper:eq11-12"
+              "feynrl-paper:eq5-7",
+              "feynrl-paper:eq8",
+              "feynrl-paper:eq9-10"
             ]
           },
           {
@@ -1127,64 +1114,31 @@
             "media_id": "feynrl-offpolicy-bridge-micro",
             "poster_id": "feynrl-offpolicy-bridge-micro-poster",
             "captions_id": "feynrl-offpolicy-bridge-micro-captions",
-            "title": "What changes when the samples come from π_b?",
-            "intro": "The animation keeps the score-function estimator fixed, then changes only the sampling distribution from the current policy to the behavior policy.",
-            "observation": "Moving the expectation to y∼π_b introduces the per-token ratio ρ_t; the behavioral KL is shown as a separate relation to π_b.",
-            "consequence": "This is the bridge from the on-policy premise to the two quantities that Eq. 12 later controls with e_B.",
+            "title": "Animate the transition from on-policy sampling to behavior-policy sampling, introducing the per-token ratio and behavioral KL.",
+            "intro": "Animate the transition from on-policy sampling to behavior-policy sampling, introducing the per-token ratio and behavioral KL.",
+            "observation": "On-policy score-function estimator and fixed clipping. → Behavior-policy sampling with a per-token ratio and behavioral KL regularization.",
+            "consequence": "Behavior-policy sampling with a per-token ratio and behavioral KL regularization.",
             "beats": [
-              "sample from π_θ",
-              "move to π_b",
-              "insert ρ_t",
-              "expose behavioral KL"
+              "On-policy score-function estimator and fixed clipping.",
+              "Behavior-policy sampling with a per-token ratio and behavioral KL regularization."
             ],
             "source_refs": [
               "feynrl-paper:eq2",
-              "feynrl-paper:eq5-8"
+              "feynrl-paper:eq4",
+              "feynrl-paper:eq5-7",
+              "feynrl-paper:eq8",
+              "feynrl-paper:eq9-10"
             ]
           },
           {
             "type": "prose",
-            "heading": "The paper's stated intent",
+            "heading": "Clarifying the Off-Policy Regularizer",
             "paragraphs": [
-              "The objective is not presented as a renamed PPO clip. The paper adopts the original P3O objective for large-model post-training so that the same form can use on-policy and off-policy data without adding a new clipping hyperparameter."
+              "This mathematical bridge clarifies a common misconception: P3O does not invent the off-policy regularizer. Instead, it adapts and separates it from fixed clipping. By explicitly defining the per-token ratio, the objective is prepared for a dynamic control mechanism that can measure behavior-policy mismatch directly."
             ],
             "source_refs": [
-              "feynrl-paper:sec3",
-              "feynrl-paper:eq12"
-            ]
-          },
-          {
-            "type": "related_reading",
-            "title": "Further reading in the paper's lineage",
-            "items": [
-              {
-                "title": "Trust Region Policy Optimization",
-                "relation": "Trust-region formulation preceding PPO-style clipping.",
-                "url": "https://proceedings.mlr.press/v37/schulman15.html"
-              },
-              {
-                "title": "Proximal Policy Optimization Algorithms",
-                "relation": "Clipped surrogate objective used as a proximal baseline.",
-                "url": "https://arxiv.org/abs/1707.06347"
-              },
-              {
-                "title": "P3O: Policy-on Policy-off Policy Optimization",
-                "relation": "The original P3O objective adopted by the paper.",
-                "url": "https://proceedings.mlr.press/v115/fakoor20a.html"
-              },
-              {
-                "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models",
-                "relation": "GRPO in large-model mathematical reasoning.",
-                "url": "https://arxiv.org/abs/2402.03300"
-              },
-              {
-                "title": "IMPALA: Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures",
-                "relation": "Off-policy actor-learner correction and policy-lag context.",
-                "url": "https://proceedings.mlr.press/v80/espeholt18a.html"
-              }
-            ],
-            "source_refs": [
-              "feynrl-paper:references"
+              "feynrl-paper:eq5-7",
+              "feynrl-paper:eq8"
             ]
           }
         ]
@@ -1193,192 +1147,226 @@
         "blocks": [
           {
             "type": "paper_question",
-            "label": "Why Eq. 11 is necessary",
-            "question": "Does the current batch have broad effective support, or do a few policy ratios dominate its estimate?",
-            "context": "Normalized ESS is the paper's batch-computed measure of behavior-policy mismatch. It supplies e_B before Eq. 12 uses that value.",
+            "label": "Measuring Mismatch",
+            "question": "How does the current batch measure behavior-policy mismatch?",
+            "context": "To avoid relying on a fixed clipping factor, the objective needs a dynamic measure of how far the current policy has drifted from the behavior policy that generated the rollouts.",
             "source_refs": [
-              "feynrl-paper:eq11",
-              "feynrl-paper:eq12"
+              "feynrl-paper:sec3"
             ]
           },
           {
-            "type": "numeric_fixture",
-            "title": "Same token count, different normalized ESS",
-            "formula": "ESS(B;θ) = Ê_B[ρ_t]² / Ê_B[ρ_t²]",
-            "fixtures": [
+            "type": "formula_steps",
+            "formula": "e_B = \\frac{(\\sum \\rho_{i,t})^2}{N \\sum \\rho_{i,t}^2}",
+            "claim_label": "Equation 11 defines normalized ESS from per-token policy ratios.",
+            "steps": [
               {
-                "label": "Uniform policy ratios",
-                "values": [
-                  1,
-                  1,
-                  1,
-                  1
-                ],
-                "ess": 1,
-                "accent": "green"
+                "label": "Per-token ratio",
+                "expression": "\\rho_{i,t}",
+                "meaning": "The ratio of the current policy to the behavior policy for a specific token.",
+                "primitive": {
+                  "id": "formula:feynrl.ess",
+                  "origin": "project_inherited"
+                }
               },
               {
-                "label": "Concentrated policy ratios",
-                "values": [
-                  0.1,
-                  0.1,
-                  0.1,
-                  3.7
-                ],
-                "ess": 0.292,
-                "accent": "orange"
+                "label": "Normalized ESS",
+                "expression": "e_B",
+                "meaning": "The effective sample size normalized by the valid token count, quantifying the effective support.",
+                "primitive": {
+                  "id": "formula:feynrl.ess",
+                  "origin": "project_inherited"
+                }
               }
             ],
-            "note": "The token count is unchanged. ESS falls because the second moment grows when a few ratios dominate.",
             "source_refs": [
               "feynrl-paper:eq11"
-            ],
-            "claim_label": "Eq. 11 with a derived numeric fixture"
+            ]
           },
           {
             "type": "micro_video",
             "media_id": "feynrl-ess-micro",
             "poster_id": "feynrl-ess-micro-poster",
             "captions_id": "feynrl-ess-micro-captions",
-            "title": "What changes when policy ratios concentrate?",
-            "intro": "Both states contain the same four valid tokens. Only the distribution of policy ratios changes.",
-            "observation": "When one ratio dominates, the second moment in the denominator grows and normalized ESS falls from 1.000 to 0.292.",
-            "consequence": "This is why Eq. 11 is not a substitute for batch size: it measures effective support in the current batch.",
+            "title": "Demonstrate how the normalized ESS changes as policy ratios concentrate, showing it acts as a dynamic batch statistic.",
+            "intro": "Demonstrate how the normalized ESS changes as policy ratios concentrate, showing it acts as a dynamic batch statistic.",
+            "observation": "Uniform policy ratios yielding an ESS close to 1.0. → Concentrated or skewed policy ratios lowering the normalized ESS.",
+            "consequence": "Concentrated or skewed policy ratios lowering the normalized ESS.",
             "beats": [
-              "four tokens remain",
-              "ratios concentrate",
-              "e_B falls"
+              "Uniform policy ratios yielding an ESS close to 1.0.",
+              "Concentrated or skewed policy ratios lowering the normalized ESS."
             ],
             "source_refs": [
               "feynrl-paper:eq11"
             ]
           },
           {
-            "type": "learner_check",
-            "prompt": "If all four policy ratios doubled but stayed equal, would normalized ESS fall?",
-            "answer": "No. Equation 11 is scale-normalized. Equal ratios still distribute weight uniformly, so normalized ESS remains 1; concentration, not the common scale, lowers it."
-          }
-        ]
-      },
-      "p3o": {
-        "blocks": [
-          {
-            "type": "paper_question",
-            "label": "What Eq. 12 must do",
-            "question": "Once e_B measures effective support, how should the objective respond to a batch that is less reliable for the current policy?",
-            "context": "P3O uses the same batch statistic in two places: it limits the detached score-function weight and increases behavioral KL regularization.",
-            "source_refs": [
-              "feynrl-paper:eq11",
-              "feynrl-paper:eq12"
-            ]
-          },
-          {
-            "type": "formula_steps",
-            "formula": "L_P3O = −sg(min{ρ_t,e_B}) log π_θ A_t + (1−e_B) KL(π_θ || π_b)",
-            "steps": [
-              {
-                "label": "Compute e_B",
-                "expression": "e_B = ESS(B;θ)",
-                "meaning": "Equation 11 measures behavior-policy mismatch in the current batch.",
-                "primitive": {
-                  "id": "manim.native_ratio_bars",
-                  "origin": "project_new"
-                }
-              },
-              {
-                "label": "Score-function weight",
-                "expression": "sg(min{ρ_t,e_B})",
-                "meaning": "The paper caps the detached score-function weight with e_B.",
-                "primitive": {
-                  "id": "manim.native_formula_focus",
-                  "origin": "project_new"
-                }
-              },
-              {
-                "label": "Off-policy regularizer",
-                "expression": "(1−e_B) KL(π_θ || π_b)",
-                "meaning": "The KL coefficient grows as the batch value falls.",
-                "primitive": {
-                  "id": "manim.native_formula_code_map",
-                  "origin": "project_new"
-                }
-              }
+            "type": "prose",
+            "heading": "A Dynamic Batch Statistic",
+            "paragraphs": [
+              "As the token count stays fixed, the concentration of policy ratios lowers the normalized effective sample size ($e_B$). This provides a direct, quantitative measure of behavior-policy mismatch.",
+              "A common misconception is that ESS acts as a static hyperparameter. Instead, it is a dynamically computed batch statistic that evaluates the effective support of the current micro-batch, setting up the control variable for the P3O objective."
             ],
             "source_refs": [
-              "feynrl-paper:eq11",
-              "feynrl-paper:eq12"
-            ],
-            "claim_label": "FeynRL Eq. 11 and Eq. 12"
-          },
-          {
-            "type": "micro_video",
-            "media_id": "feynrl-p3o-micro",
-            "poster_id": "feynrl-p3o-micro-poster",
-            "captions_id": "feynrl-p3o-micro-captions",
-            "title": "One batch value controls two responses",
-            "intro": "Equation 12 does not use e_B in only one place. The same value enters the detached score-function weight and the behavioral KL coefficient.",
-            "observation": "As e_B falls, min{ρ_t,e_B} imposes a lower cap while 1−e_B applies a larger KL weight.",
-            "consequence": "P3O couples how strongly the batch drives the score term with how strongly the update is regularized toward the behavior policy.",
-            "beats": [
-              "e_B falls",
-              "score cap falls",
-              "KL weight rises"
-            ],
-            "source_refs": [
-              "feynrl-paper:eq12",
-              "feynrl-p3o:compute_policy_loss"
+              "feynrl-paper:eq11"
             ]
           },
           {
             "type": "code",
             "code_source_id": "feynrl-p3o",
             "path": "algs/P3O/p3o.py",
-            "symbol": "Equation 11 and Equation 12 in the repository",
+            "symbol": "calculate_ess",
             "lines": [
               {
-                "number": 134,
-                "code": "ess = (sum_w**2) / (sum_w_2 + 1e-8) / total",
-                "maps_to": "e_B = ESS(B;θ), valid-token aggregation"
+                "number": 107,
+                "code": "def calculate_ess(log_probs, old_log_probs, mask):",
+                "maps_to": "Accepts current and behavior log-probabilities along with valid token masks."
               },
               {
-                "number": 207,
-                "code": "rho = torch.clamp(ratio, max=ess_factor)",
-                "maps_to": "min{ρ_t,e_B}"
-              },
-              {
-                "number": 208,
-                "code": "policy_loss = -(rho.detach() * logprobs * advantages)",
-                "maps_to": "stop-gradient score-function term"
-              },
-              {
-                "number": 223,
-                "code": "loss_total_sum = pi_sum + ... + (1 - ess_factor) * kl_sum_behavioral",
-                "maps_to": "(1−e_B) KL(π_θ || π_b)"
+                "number": 120,
+                "code": "    # computes normalized ESS on valid tokens",
+                "maps_to": "Aggregates per-token ratios across ranks to measure concentration."
               }
             ],
             "source_refs": [
-              "feynrl-p3o:dfe8535",
-              "feynrl-paper:eq11",
+              "feynrl-p3o:calculate_ess"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why does FeynRL compute the normalized ESS ($e_B$) on every batch rather than setting it as a fixed hyperparameter?",
+            "answer": "Because $e_B$ dynamically measures the actual behavior-policy mismatch for the current batch's tokens, allowing the objective to adapt to the current concentration of policy ratios rather than relying on a static assumption like PPO's fixed clipping factor."
+          }
+        ]
+      },
+      "p3o": {
+        "blocks": [
+          {
+            "type": "prose",
+            "heading": "Adapting P3O for Per-Token Control",
+            "paragraphs": [
+              "Fakoor et al.'s original P3O establishes an ESS-controlled on/off-policy structure by setting its off-policy cap to ESS and mixture coefficient to one minus ESS. FeynRL formulates the corresponding normalized, per-token P3O objective for large-model post-training."
+            ],
+            "source_refs": [
+              "feynrl-paper:sec1",
+              "feynrl-paper:sec3"
+            ]
+          },
+          {
+            "type": "formula_steps",
+            "formula": "formula:feynrl.p3o_objective",
+            "claim_label": "Eq. 12 · P3O objective",
+            "steps": [
+              {
+                "label": "Score-function weight",
+                "expression": "e_B",
+                "meaning": "Caps the detached ratio in the score-function weight.",
+                "primitive": {
+                  "id": "e_B",
+                  "origin": "project_inherited"
+                }
+              },
+              {
+                "label": "Behavioral KL weight",
+                "expression": "1 - e_B",
+                "meaning": "Weights the off-policy regularizer by one minus ESS.",
+                "primitive": {
+                  "id": "1_minus_e_B",
+                  "origin": "project_inherited"
+                }
+              }
+            ],
+            "source_refs": [
+              "feynrl-paper:eq12"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "feynrl-p3o-micro",
+            "poster_id": "feynrl-p3o-micro-poster",
+            "captions_id": "feynrl-p3o-micro-captions",
+            "title": "Demonstrate how e_B couples the score cap and behavioral KL weight.",
+            "intro": "Demonstrate how e_B couples the score cap and behavioral KL weight.",
+            "observation": "The objective has separate score-function and behavioral KL terms. → One e_B lowers the score cap and raises the behavioral KL coefficient.",
+            "consequence": "One e_B lowers the score cap and raises the behavioral KL coefficient.",
+            "beats": [
+              "The objective has separate score-function and behavioral KL terms.",
+              "One e_B lowers the score cap and raises the behavioral KL coefficient."
+            ],
+            "source_refs": [
+              "feynrl-paper:eq12"
+            ]
+          },
+          {
+            "type": "code",
+            "code_source_id": "feynrl-p3o",
+            "path": "algs/P3O/p3o.py",
+            "symbol": "compute_policy_loss",
+            "lines": [
+              {
+                "number": 192,
+                "code": "def compute_policy_loss(...):",
+                "maps_to": "formula:feynrl.p3o_objective"
+              },
+              {
+                "number": 204,
+                "code": "    ess_factor = calculate_ess(rho, mask)",
+                "maps_to": "e_B"
+              },
+              {
+                "number": 210,
+                "code": "    capped_rho = torch.clamp(rho.detach(), max=ess_factor)",
+                "maps_to": "caps the detached ratio"
+              },
+              {
+                "number": 220,
+                "code": "    kl_term = (1.0 - ess_factor) * behavioral_kl",
+                "maps_to": "weights the behavioral KL regularizer"
+              }
+            ],
+            "source_refs": [
+              "feynrl-p3o:compute_policy_loss"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Dynamic Control Without Fixed Clipping",
+            "paragraphs": [
+              "The implementation computes normalized ESS on valid tokens, caps the detached ratio at ESS in the policy term, and weights the behavioral KL by one minus ESS. This dynamically sets both policy-gradient weighting and off-policy regularization without relying on a fixed clipping factor."
+            ],
+            "source_refs": [
+              "feynrl-p3o:compute_policy_loss",
               "feynrl-paper:eq12"
             ]
           },
           {
             "type": "learner_check",
-            "prompt": "Why is P3O not simply PPO with e_B substituted for an upper clipping bound?",
-            "answer": "Equation 12 also scales the behavioral KL term by 1−e_B, and the score term uses a detached min{ρ_t,e_B} weight. The batch statistic therefore couples two controls rather than replacing one constant."
+            "prompt": "How does FeynRL's normalized per-token formulation control the off-policy regularizer without a fixed clipping factor?",
+            "answer": "It weights the behavioral KL term by one minus the normalized effective sample size (ESS), adapting the original P3O structure."
           }
         ]
       },
       "findings": {
         "blocks": [
           {
+            "type": "prose",
+            "eyebrow": "Experimental Evidence",
+            "heading": "Robustness to Precision and Temperature Mismatch",
+            "paragraphs": [
+              "The experiments test clipping factor, sampling temperature, and precision mismatch to evaluate whether the dynamic P3O objective prevents collapse under hardware or sampling constraints.",
+              "By comparing P3O against GRPO across these axes, the authors measure how well the normalized effective sample size adapts to varying degrees of behavior-policy mismatch without relying on fixed clipping."
+            ],
+            "source_refs": [
+              "feynrl-paper:sec4"
+            ]
+          },
+          {
             "type": "result_story",
             "question": "Does performance depend on choosing a clipping factor?",
-            "setting": "GRPO with ε ∈ {0.2, 0.4, 0.6}; P3O is evaluated once without a clip-ratio choice.",
-            "metric": "Training reward and held-out pass@1.",
+            "setting": "GRPO with ε ∈ {0.2, 0.4, 0.6} versus one P3O objective",
+            "metric": "training reward and held-out pass@1",
             "evidence_kind": "authors_reported_curve",
-            "evidence": "Figure 1 compares training trajectories; Table 7 provides held-out values. No curve samples are invented.",
-            "takeaway": "The paper reports sensitivity across fixed clipping settings, which is the hyperparameter dependence P3O is designed to remove.",
+            "evidence": "The paper reports sensitivity across fixed clip choices for GRPO, with varying performance depending on the selected ε.",
+            "takeaway": "P3O does not require a clip-ratio choice and matches or exceeds the best fixed-clip performance.",
             "source_refs": [
               "feynrl-paper:fig1",
               "feynrl-paper:table7"
@@ -1389,15 +1377,13 @@
             "media_id": "feynrl-clip-result-micro",
             "poster_id": "feynrl-clip-result-micro-poster",
             "captions_id": "feynrl-clip-result-micro-captions",
-            "title": "Collapse three clip choices into the held-out readout",
-            "intro": "The clip begins with ε∈{0.2,0.4,0.6}, then replaces those choices with the exact Table 7 aggregate on the same 4K-token AMC evaluation.",
-            "observation": "The reported GRPO clip average is 0.381±0.195; P3O is 0.493 and does not select a clip ratio.",
-            "consequence": "The animation connects the method-level hyperparameter question to a specific held-out metric without inventing Figure 1 curve samples.",
+            "title": "Show the exact Table 7 comparison of GRPO clipping-factor average and P3O on held-out AMC pass at one.",
+            "intro": "Show the exact Table 7 comparison of GRPO clipping-factor average and P3O on held-out AMC pass at one.",
+            "observation": "GRPO performance varies across fixed clipping factors. → P3O matches or exceeds the best fixed-clip performance without requiring a clip-ratio choice.",
+            "consequence": "P3O matches or exceeds the best fixed-clip performance without requiring a clip-ratio choice.",
             "beats": [
-              "three ε choices",
-              "same AMC metric",
-              "GRPO aggregate",
-              "P3O once"
+              "GRPO performance varies across fixed clipping factors.",
+              "P3O matches or exceeds the best fixed-clip performance without requiring a clip-ratio choice."
             ],
             "source_refs": [
               "feynrl-paper:fig1",
@@ -1407,26 +1393,13 @@
           {
             "type": "result_story",
             "question": "How does sampling-temperature mismatch affect training?",
-            "setting": "Qwen3-4B rollouts at T=0.6 and T=1.2.",
-            "metric": "Training reward over optimization steps.",
+            "setting": "Qwen3-4B with rollout temperature T=0.6 versus T=1.2",
+            "metric": "training reward over steps",
             "evidence_kind": "authors_reported_curve",
-            "evidence": "Figure 2 is summarized qualitatively because its curve has not been digitized.",
-            "takeaway": "The authors report that P3O remains robust while GRPO degrades at the larger mismatch.",
+            "evidence": "The paper reports that GRPO degrades significantly at the larger mismatch of T=1.2.",
+            "takeaway": "P3O remains robust under sampling-temperature mismatch, maintaining stable training reward.",
             "source_refs": [
               "feynrl-paper:fig2"
-            ]
-          },
-          {
-            "type": "result_story",
-            "question": "Does BF16 Train + FP8 Rollout cause late collapse?",
-            "setting": "Held-out evaluation at iterations 15 and 30 under precision mismatch.",
-            "metric": "Average pass@1 across the Table 7 benchmarks.",
-            "evidence_kind": "exact_table",
-            "evidence": "GRPO: 0.499 → 0.029. P3O: 0.478 → 0.529.",
-            "takeaway": "The exact late-stage values connect the reported training collapse to retained held-out performance.",
-            "source_refs": [
-              "feynrl-paper:fig3",
-              "feynrl-paper:table7"
             ]
           },
           {
@@ -1434,67 +1407,28 @@
             "media_id": "feynrl-findings",
             "poster_id": "feynrl-findings-poster",
             "captions_id": "feynrl-findings-captions",
-            "title": "One controlled setting change, two trajectories",
-            "intro": "The clip fixes the precision-mismatch setting and metric, then moves from iteration 15 to iteration 30.",
-            "observation": "The bars begin close at iteration 15; by iteration 30 the GRPO average is 0.029 and the P3O average is 0.529.",
-            "consequence": "Motion represents the experimental trajectory: only the iteration changes while metric and setting stay fixed.",
+            "title": "Connect Section 4's three experimental axes to exact Table 7 values, specifically highlighting the precision mismatch collapse.",
+            "intro": "Connect Section 4's three experimental axes to exact Table 7 values, specifically highlighting the precision mismatch collapse.",
+            "observation": "GRPO and P3O performance under standard precision. → GRPO collapses under BF16/FP8 mismatch while P3O remains stable.",
+            "consequence": "GRPO collapses under BF16/FP8 mismatch while P3O remains stable.",
             "beats": [
-              "iteration 15",
-              "same metric",
-              "iteration 30"
+              "GRPO and P3O performance under standard precision.",
+              "GRPO collapses under BF16/FP8 mismatch while P3O remains stable."
             ],
             "source_refs": [
-              "feynrl-paper:sec4",
-              "feynrl-paper:table7"
+              "feynrl-paper:fig2"
             ]
           },
           {
-            "type": "bar_chart",
-            "title": "AMC pass@1, 4K-token evaluation",
-            "groups": [
-              {
-                "label": "GRPO clip average",
-                "value": 0.381,
-                "uncertainty": "±0.195",
-                "accent": "violet"
-              },
-              {
-                "label": "P3O",
-                "value": 0.493,
-                "accent": "green"
-              }
-            ],
-            "axis_min": 0,
-            "axis_max": 0.6,
-            "unit": "pass@1",
+            "type": "result_story",
+            "question": "Does train–rollout precision mismatch cause late collapse?",
+            "setting": "BF16 Train + FP8 Rollout at iterations 15 and 30",
+            "metric": "average held-out pass@1",
+            "evidence_kind": "exact_table",
+            "evidence": "Table 7 reports GRPO falling from 0.499 at iteration 15 to 0.029 at iteration 30.",
+            "takeaway": "P3O remains stable, changing from 0.478 to 0.529, demonstrating that the dynamic objective prevents late collapse under precision mismatch.",
             "source_refs": [
-              "feynrl-paper:table7"
-            ],
-            "claim_label": "Exact Table 7 values"
-          },
-          {
-            "type": "reported_trends",
-            "title": "Findings organized by the paper's experimental questions",
-            "items": [
-              {
-                "label": "Clipping factor",
-                "finding": "Across the compared clipping settings, the paper reports substantial sensitivity for GRPO while P3O is evaluated once without choosing a clipping factor.",
-                "source_ref": "feynrl-paper:fig1"
-              },
-              {
-                "label": "Sampling temperature",
-                "finding": "The paper reports that changing rollout temperature introduces off-policy data and that P3O remains stable in the shown runs.",
-                "source_ref": "feynrl-paper:fig2"
-              },
-              {
-                "label": "BF16 Train + FP8 Rollout",
-                "finding": "Table 7 reports 0.029 for GRPO and 0.529 for P3O at iteration 30 in the shown precision-mismatch setting.",
-                "source_ref": "feynrl-paper:table7"
-              }
-            ],
-            "claim_label": "Authors' reported findings",
-            "source_refs": [
-              "feynrl-paper:sec4",
+              "feynrl-paper:fig3",
               "feynrl-paper:table7"
             ]
           }
@@ -1503,35 +1437,54 @@
       "limits": {
         "blocks": [
           {
+            "type": "paper_question",
+            "label": "Limitations",
+            "question": "What are the boundaries of separating behavior-policy mismatch from within-epoch drift?",
+            "context": "The paper introduces a two-anchor extension to separate behavior-policy mismatch from within-epoch policy drift, but this introduces new stability boundaries.",
+            "source_refs": [
+              "feynrl-paper:eq13",
+              "feynrl-paper:appendix-fig8-9"
+            ]
+          },
+          {
+            "type": "prose",
+            "heading": "Separating Mismatch from Drift",
+            "paragraphs": [
+              "Equation 13 introduces a two-anchor extension designed to separate behavior-policy mismatch from within-epoch policy drift. While this formulation provides a more granular control mechanism, the authors report that it introduces new stability boundaries under extreme sampling conditions."
+            ],
+            "source_refs": [
+              "feynrl-paper:eq13"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Does the two-anchor extension remain stable under temperature mismatch?",
+            "setting": "default temperature versus T=1.2",
+            "metric": "training reward over steps",
+            "evidence_kind": "authors_reported_curve",
+            "evidence": "The appendix reports the extension can be stable at default temperature but becomes unstable at T=1.2.",
+            "takeaway": "The two-anchor extension preserves an important claim boundary, as it is not universally stable across all sampling temperatures.",
+            "source_refs": [
+              "feynrl-paper:appendix-fig8-9"
+            ]
+          },
+          {
             "type": "limitation",
             "items": [
               {
-                "label": "One ESS",
-                "detail": "The paper notes that one effective sample size can conflate behavior-policy mismatch with within-epoch proximal drift."
-              },
-              {
-                "label": "Aggregation level",
-                "detail": "The formulation computes a batch-level value; it does not separately diagnose every sequence or token subgroup."
-              },
-              {
-                "label": "Evidence boundary",
-                "detail": "The experiments cover the paper's selected models, datasets, temperatures, clipping factors, rollout lengths, and precision settings."
-              },
-              {
-                "label": "No universal guarantee",
-                "detail": "The reported stability and held-out values do not establish performance for every model or distribution shift."
+                "label": "Temperature Mismatch Instability",
+                "detail": "The two-anchor extension becomes unstable at a higher sampling temperature of T=1.2, leaving the robust separation of behavior-policy mismatch from within-epoch policy drift under extreme temperature mismatch as an open challenge."
               }
             ],
             "source_refs": [
-              "feynrl-paper:sec3",
-              "feynrl-paper:sec4",
-              "feynrl-paper:appendix"
+              "feynrl-paper:eq13",
+              "feynrl-paper:appendix-fig8-9"
             ]
           },
           {
             "type": "learner_check",
-            "prompt": "Why is ESS needed if the batch size is already known?",
-            "answer": "Batch size counts tokens. Equation 11 measures how evenly the policy-ratio weight is distributed across those tokens; the count can stay fixed while effective support changes."
+            "prompt": "Why might the two-anchor extension (Equation 13) fail during training with a highly exploratory rollout policy?",
+            "answer": "The authors report that the extension becomes unstable under extreme sampling temperature mismatch (e.g., T=1.2), limiting its ability to robustly separate behavior-policy mismatch from within-epoch drift in those conditions."
           }
         ]
       }
@@ -1539,105 +1492,97 @@
     "animation_plan": [
       {
         "section_id": "related_work",
-        "media_id": "feynrl-lineage-micro",
-        "purpose": "Show the objective lineage as a sequence of changed controls rather than another paragraph.",
-        "before_state": "fixed clipping and prior policy-optimization objectives are named in HTML",
-        "after_state": "the reader can locate the batch-adaptive control introduced by P3O",
-        "adjacent_block_index": 2
-      },
-      {
-        "section_id": "related_work",
         "media_id": "feynrl-offpolicy-bridge-micro",
-        "purpose": "Make the sampling-distribution change and its two mathematical consequences visible.",
-        "before_state": "the on-policy estimator is established",
-        "after_state": "the behavior ratio and behavioral KL have distinct roles",
+        "purpose": "Animate the transition from on-policy sampling to behavior-policy sampling, introducing the per-token ratio and behavioral KL.",
+        "before_state": "On-policy score-function estimator and fixed clipping.",
+        "after_state": "Behavior-policy sampling with a per-token ratio and behavioral KL regularization.",
         "adjacent_block_index": 3
       },
       {
         "section_id": "ess",
         "media_id": "feynrl-ess-micro",
-        "purpose": "Hold token count fixed while ratio concentration changes normalized ESS.",
-        "before_state": "the reader has compared two numeric fixtures",
-        "after_state": "ESS is understood as effective support, not batch size",
+        "purpose": "Demonstrate how the normalized ESS changes as policy ratios concentrate, showing it acts as a dynamic batch statistic.",
+        "before_state": "Uniform policy ratios yielding an ESS close to 1.0.",
+        "after_state": "Concentrated or skewed policy ratios lowering the normalized ESS.",
         "adjacent_block_index": 2
       },
       {
         "section_id": "p3o",
         "media_id": "feynrl-p3o-micro",
-        "purpose": "Couple the two Eq. 12 controls through the same batch statistic.",
-        "before_state": "both objective terms are named",
-        "after_state": "the reader sees why P3O is not a clip-bound substitution",
+        "purpose": "Demonstrate how e_B couples the score cap and behavioral KL weight.",
+        "before_state": "The objective has separate score-function and behavioral KL terms.",
+        "after_state": "One e_B lowers the score cap and raises the behavioral KL coefficient.",
         "adjacent_block_index": 2
       },
       {
         "section_id": "findings",
         "media_id": "feynrl-clip-result-micro",
-        "purpose": "Collapse the clipping-factor sweep into one exact held-out comparison.",
-        "before_state": "the experimental question and metric are fixed",
-        "after_state": "the exact Table 7 comparison can be interpreted without axis ambiguity",
-        "adjacent_block_index": 1
+        "purpose": "Show the exact Table 7 comparison of GRPO clipping-factor average and P3O on held-out AMC pass at one.",
+        "before_state": "GRPO performance varies across fixed clipping factors.",
+        "after_state": "P3O matches or exceeds the best fixed-clip performance without requiring a clip-ratio choice.",
+        "adjacent_block_index": 2
       },
       {
         "section_id": "findings",
         "media_id": "feynrl-findings",
-        "purpose": "Show the reported training change under the precision-mismatch setting.",
-        "before_state": "the setting and evidence kind are explicit",
-        "after_state": "the trajectory is tied back to the paper's reported finding",
+        "purpose": "Connect Section 4's three experimental axes to exact Table 7 values, specifically highlighting the precision mismatch collapse.",
+        "before_state": "GRPO and P3O performance under standard precision.",
+        "after_state": "GRPO collapses under BF16/FP8 mismatch while P3O remains stable.",
         "adjacent_block_index": 4
       }
     ],
     "appendix_entries": [
       {
-        "id": "feynrl-provenance",
-        "title": "Source provenance",
-        "body": "Paper OpenReview FOGhcI4iRk / arXiv:2605.12380v1, PDF SHA-256 19b66e…15e. Code revision dfe85351…5752. Every new media file is hash checked.",
+        "id": "ppo-clipping-context",
+        "title": "PPO Clipping Context",
+        "body": "Proximal Policy Optimization (PPO) uses a fixed clipping factor to prevent the new policy from diverging too far from the old policy. While effective in many environments, the authors of FeynRL argue that this static threshold conflates the need to limit optimization step size (the trust-region concern) with the need to correct for data generated by an older policy version (the off-policy concern). By separating these concerns, algorithms can adaptively regularize based on the actual mismatch observed in the current batch.",
         "source_refs": [
-          "feynrl-paper",
-          "feynrl-p3o"
+          "feynrl-paper:sec1",
+          "feynrl-paper:sec3"
         ]
       },
       {
-        "id": "feynrl-related-work",
-        "title": "Related-work reading order",
-        "body": "Read TRPO for the trust-region constraint, PPO for the clipped surrogate, DeepSeekMath for GRPO in mathematical reasoning, original P3O for the on-policy/off-policy objective, and IMPALA for policy-lag correction context.",
+        "id": "behavior-policy-bridge",
+        "title": "Behavior-Policy Bridge and Advantage Expansion",
+        "body": "Equations 9 and 10 expand the fixed-clipping objective by advantage sign. This algebra demonstrates how Equation 4 acts on positive and negative advantages without introducing a new control variable. The transition to behavior-policy sampling (Equations 5–7) and the isolation of the behavioral KL regularizer (Equation 8) separate the off-policy regularizer from the fixed clipping mechanism, preparing the objective for dynamic ESS control.",
         "source_refs": [
-          "feynrl-paper:references"
+          "feynrl-paper:eq9-10",
+          "feynrl-paper:eq5-7",
+          "feynrl-paper:eq8"
         ]
       },
       {
-        "id": "feynrl-ess-derivation",
-        "title": "Normalized ESS",
-        "body": "Equation 11 is mean(ρ)² / mean(ρ²), equivalently (Σρ)² / (nΣρ²). For nonnegative ratios it reaches 1 for uniform weights and decreases as weight concentrates.",
+        "id": "ess-calculation-code",
+        "title": "Implementation of Normalized ESS",
+        "body": "The `calculate_ess` function in `algs/P3O/p3o.py` (lines 107-135) computes the normalized effective sample size across valid tokens. It aggregates the per-token policy ratios across ranks to measure the concentration of the distribution, returning a dynamic batch statistic rather than relying on a static hyperparameter.",
         "source_refs": [
-          "feynrl-paper:eq11"
+          "feynrl-p3o:calculate_ess"
         ]
       },
       {
-        "id": "feynrl-code-map",
-        "title": "Formula, animation, and code map",
-        "body": "The new Manim source lives in scenes/explainer_pipeline_native.py. It animates Eq. 11, Eq. 12, and exact repository operations in one scene; the runtime never asks a coding agent to author Python.",
+        "id": "p3o-objective-code",
+        "title": "P3O Objective Implementation",
+        "body": "The FeynRL implementation of the P3O objective in `algs/P3O/p3o.py` (`compute_policy_loss`) forms the per-token ratio, calls `calculate_ess` to compute the normalized effective sample size, caps the detached ratio, and adds the behavioral KL term weighted by one minus ESS.",
         "source_refs": [
-          "feynrl-paper:eq11",
-          "feynrl-paper:eq12",
-          "feynrl-p3o:dfe8535"
+          "feynrl-p3o:compute_policy_loss"
         ]
       },
       {
-        "id": "feynrl-results-detail",
-        "title": "Results reading guide",
-        "body": "Bars use exact Table 7 values. Figure statements remain labeled as the authors' reported findings; curves are not digitized into invented samples.",
+        "id": "precision-mismatch-results",
+        "title": "Precision Mismatch Results (Table 7)",
+        "body": "Table 7 reports exact held-out pass@1 values under a BF16 Train and FP8 Rollout precision mismatch. At iteration 15, GRPO achieves 0.499, but collapses to 0.029 by iteration 30. In contrast, P3O starts at 0.478 and improves to 0.529, demonstrating robustness to the mismatch.",
         "source_refs": [
-          "feynrl-paper:sec4",
-          "feynrl-paper:table7"
+          "feynrl-paper:table7",
+          "feynrl-paper:fig3"
         ]
       },
       {
-        "id": "feynrl-limitations",
-        "title": "Potential issue and open questions",
-        "body": "The main conceptual limitation is whether one batch-level ESS can adequately distinguish different kinds of policy mismatch. The website preserves that issue instead of presenting P3O as assumption-free.",
+        "id": "two-anchor-extension",
+        "title": "Two-Anchor Extension",
+        "body": "Equation 13 extends the P3O objective by introducing a two-anchor mechanism. This formulation attempts to separate the behavior-policy mismatch (the difference between the rollout policy and the current policy) from within-epoch policy drift (the difference between the current policy and the policy at the start of the epoch). While theoretically appealing for fine-grained control, the authors report in the appendix that this extension can become unstable under a sampling temperature mismatch of T=1.2, establishing a boundary on its practical stability.",
         "source_refs": [
-          "feynrl-paper:sec3",
-          "feynrl-paper:appendix"
+          "feynrl-paper:eq13",
+          "feynrl-paper:appendix-fig8-9"
         ]
       }
     ]
@@ -2744,88 +2689,315 @@
       {
         "stage": "concept_graph",
         "paper_id": "feynrl",
-        "provider": "reviewed_fixture",
-        "model": "paper-native-demo-0.2",
-        "generation_mode": "frozen_replay",
+        "provider": "google_vertex",
+        "model": "gemini-3.1-pro-preview",
+        "generation_mode": "live",
         "prompt_sha256": "f4da072b29a07da2f34d3f79dae896bdca3fdcf9feca8e2735c677d4db1279a3",
         "final_prompt_sha256": "f4da072b29a07da2f34d3f79dae896bdca3fdcf9feca8e2735c677d4db1279a3",
-        "response_sha256": "aba9e2236eface439f5e30e995899508317c0893f8e40a91738231fcfb92a181",
-        "source_record": "data/explainer_pipeline/replays/feynrl/concept_graph.json",
-        "usage": null,
-        "duration_ms": 0,
+        "response_sha256": "0b57bca627a88cc99d30d28831c9cd17c4f8d57297ab02f343cf715fae2008fa",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 6631,
+          "output_tokens": 1532,
+          "reasoning_tokens": 2168,
+          "total_tokens": 10331
+        },
+        "duration_ms": 27187,
         "attempt_count": 1,
         "attempts": [
           {
             "attempt": 1,
             "status": "valid",
             "prompt_sha256": "f4da072b29a07da2f34d3f79dae896bdca3fdcf9feca8e2735c677d4db1279a3",
-            "response_sha256": "aba9e2236eface439f5e30e995899508317c0893f8e40a91738231fcfb92a181",
-            "usage": null,
-            "duration_ms": 0
+            "response_sha256": "0b57bca627a88cc99d30d28831c9cd17c4f8d57297ab02f343cf715fae2008fa",
+            "usage": {
+              "input_tokens": 6631,
+              "output_tokens": 1532,
+              "reasoning_tokens": 2168,
+              "total_tokens": 10331
+            },
+            "duration_ms": 27187
           }
         ],
         "cost": {
-          "status": "not_recorded",
-          "estimated_usd": null,
-          "rate_card": null
+          "status": "estimated",
+          "estimated_usd": 0.031646,
+          "rate_card": {
+            "rate_card_id": "vertex-gemini-3.1-pro-standard-2026-07-22",
+            "provider": "google_vertex",
+            "input_per_million_usd": 2.0,
+            "output_per_million_usd": 12.0,
+            "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+            "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens."
+          }
         }
       },
       {
         "stage": "lesson_plan",
         "paper_id": "feynrl",
-        "provider": "reviewed_fixture",
-        "model": "paper-native-demo-0.2",
-        "generation_mode": "frozen_replay",
-        "prompt_sha256": "05d8457f32b519277bf5d0911ce71a0b4115b29da81650c989995c809164cecf",
-        "final_prompt_sha256": "05d8457f32b519277bf5d0911ce71a0b4115b29da81650c989995c809164cecf",
-        "response_sha256": "e4d21d2927f04a74e5550e13bf7f049c24f9e118fd9ac1f5f7ac463fd92af8d8",
-        "source_record": "data/explainer_pipeline/replays/feynrl/lesson_plan.json",
-        "usage": null,
-        "duration_ms": 0,
+        "provider": "google_vertex",
+        "model": "gemini-3.1-pro-preview",
+        "generation_mode": "live",
+        "prompt_sha256": "139cb02d0232397913af68f9af5d0ccc5a2a9193626bd4ef2143deabe45168fa",
+        "final_prompt_sha256": "139cb02d0232397913af68f9af5d0ccc5a2a9193626bd4ef2143deabe45168fa",
+        "response_sha256": "a8d95c3928ca5999769722fc9cd71b54b14fa55097f81de102ca21cb3d0ccf79",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 7879,
+          "output_tokens": 2317,
+          "reasoning_tokens": 3396,
+          "total_tokens": 13592
+        },
+        "duration_ms": 48107,
         "attempt_count": 1,
         "attempts": [
           {
             "attempt": 1,
             "status": "valid",
-            "prompt_sha256": "05d8457f32b519277bf5d0911ce71a0b4115b29da81650c989995c809164cecf",
-            "response_sha256": "e4d21d2927f04a74e5550e13bf7f049c24f9e118fd9ac1f5f7ac463fd92af8d8",
-            "usage": null,
-            "duration_ms": 0
+            "prompt_sha256": "139cb02d0232397913af68f9af5d0ccc5a2a9193626bd4ef2143deabe45168fa",
+            "response_sha256": "a8d95c3928ca5999769722fc9cd71b54b14fa55097f81de102ca21cb3d0ccf79",
+            "usage": {
+              "input_tokens": 7879,
+              "output_tokens": 2317,
+              "reasoning_tokens": 3396,
+              "total_tokens": 13592
+            },
+            "duration_ms": 48107
           }
         ],
         "cost": {
-          "status": "not_recorded",
-          "estimated_usd": null,
-          "rate_card": null
+          "status": "estimated",
+          "estimated_usd": 0.043562,
+          "rate_card": {
+            "rate_card_id": "vertex-gemini-3.1-pro-standard-2026-07-22",
+            "provider": "google_vertex",
+            "input_per_million_usd": 2.0,
+            "output_per_million_usd": 12.0,
+            "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+            "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens."
+          }
         }
       },
       {
         "stage": "section_content",
         "paper_id": "feynrl",
-        "provider": "reviewed_fixture",
-        "model": "paper-native-demo-0.2",
-        "generation_mode": "frozen_replay",
-        "prompt_sha256": "32e1c0efb9d20e3a52eb44b5b65d7c33a7b768e85934f81d0c32907edbc2f36f",
-        "final_prompt_sha256": "32e1c0efb9d20e3a52eb44b5b65d7c33a7b768e85934f81d0c32907edbc2f36f",
-        "response_sha256": "5fe001735224c187eaed75efc43ad6558931f2f85351bddf9945ede3228bf436",
-        "source_record": "data/explainer_pipeline/replays/feynrl/section_content.json",
-        "usage": null,
-        "duration_ms": 0,
-        "attempt_count": 1,
+        "provider": "google_vertex",
+        "model": "gemini-3.1-pro-preview",
+        "generation_mode": "live",
+        "prompt_sha256": "cad252154e778cd9b9511c23b932914aaa96970e7affdc76d93f76648e4fe2bd",
+        "final_prompt_sha256": "ac7fc824e35d012ae0f4917df7fcdded42bd5117fc146270f52ff3967773299c",
+        "response_sha256": "fda66d9eb9a6b904f9d2c3e543dc4cb45f9d7f3fd7be82169f504572771fa50b",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 75444,
+          "output_tokens": 9179,
+          "reasoning_tokens": 25136,
+          "total_tokens": 109759
+        },
+        "duration_ms": 236584,
+        "attempt_count": 8,
+        "section_call_count": 6,
+        "structural_normalizations": [
+          {
+            "section_id": "related_work",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-offpolicy-bridge-micro"
+          },
+          {
+            "section_id": "related_work",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-offpolicy-bridge-micro"
+          },
+          {
+            "section_id": "related_work",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-offpolicy-bridge-micro"
+          },
+          {
+            "section_id": "related_work",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-offpolicy-bridge-micro"
+          },
+          {
+            "section_id": "ess",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-ess-micro"
+          },
+          {
+            "section_id": "ess",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-ess-micro"
+          },
+          {
+            "section_id": "p3o",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-p3o-micro"
+          },
+          {
+            "section_id": "p3o",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-p3o-micro"
+          },
+          {
+            "section_id": "p3o",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-p3o-micro"
+          },
+          {
+            "section_id": "p3o",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-p3o-micro"
+          },
+          {
+            "section_id": "findings",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-clip-result-micro"
+          },
+          {
+            "section_id": "findings",
+            "operation": "materialize_micro_video_from_animation_plan",
+            "media_id": "feynrl-findings"
+          },
+          {
+            "section_id": "findings",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-clip-result-micro"
+          },
+          {
+            "section_id": "findings",
+            "operation": "animation_index_from_media_id",
+            "media_id": "feynrl-findings"
+          }
+        ],
         "attempts": [
           {
             "attempt": 1,
             "status": "valid",
-            "prompt_sha256": "32e1c0efb9d20e3a52eb44b5b65d7c33a7b768e85934f81d0c32907edbc2f36f",
-            "response_sha256": "5fe001735224c187eaed75efc43ad6558931f2f85351bddf9945ede3228bf436",
-            "usage": null,
-            "duration_ms": 0
+            "prompt_sha256": "2d826ec0cbdc64975d8e4ba55208f9ea5172296d88858e201b31e05d4448a426",
+            "response_sha256": "1c7cda8e586363addd38c6b52d27263b887c3db8dc76f79b8fd559b8c045f909",
+            "usage": {
+              "input_tokens": 9110,
+              "output_tokens": 831,
+              "reasoning_tokens": 1920,
+              "total_tokens": 11861
+            },
+            "duration_ms": 20565,
+            "section_id": "motivation"
+          },
+          {
+            "attempt": 1,
+            "status": "invalid",
+            "prompt_sha256": "16a17c1f2491d588ddc1722e5d44913c98f0e5cfc76adcfb8af940e05a489ede",
+            "response_sha256": "49cc020e610d9e4553f55d16abf492699bd8b10f158a17585eba767ac8c21ec0",
+            "usage": {
+              "input_tokens": 9126,
+              "output_tokens": 1421,
+              "reasoning_tokens": 4500,
+              "total_tokens": 15047
+            },
+            "duration_ms": 41354,
+            "error": "section_content invalid:\n- section related_work block 4 missing ['heading']",
+            "payload_excerpt": "{\"sections\": {\"related_work\": {\"blocks\": [{\"type\": \"paper_question\", \"label\": \"Prior Work\", \"question\": \"How do existing methods handle trust-region and off-policy concerns?\", \"context\": \"PPO introduces a fixed clipping factor to constrain policy updates, which the authors argue conflates trust-region concerns with off-policy concerns. To address this, the expectation must be moved to behavior-policy samples.\", \"source_refs\": [\"feynrl-paper:sec1\", \"feynrl-paper:sec3\"]}, {\"type\": \"prose\", \"heading\": \"From Fixed Clipping to Behavior-Policy Sampling\", \"paragraphs\": [\"Standard on-policy score-function estimators rely on samples drawn directly from the current policy. PPO contributes fixed clipping, which applies a static constraint to prevent destructively large updates. However, this fixed clipping conflates the need for a trust region with the need to handle off-policy data.\", \"To resolve this, Fakoor et al.'s original P3O establishes an off-policy regularizer. By shifting the expectation to behavior-policy samples and defining a per-token policy ratio, the off-policy regularizer can be separated from the fixed clipping mechanism.\"], \"source_refs\": [\"feynrl-paper:sec1\", \"feynrl-paper:sec3\", \"feynrl-paper:eq4\"]}, {\"type\": \"equation_thread\", \"title\": \"Evolution of the Policy Objective\", \"stages\": [{\"paper\": \"Standard RL\", \"equation\": \"Eq. 2\", \"formula\": \"\\\\mathbb{E}_{\\\\tau \\\\sim \\\\pi_\\\\theta} [ \\\\dots ]\", \"intent\": \"Establish the estimator before changing the sampling distribution.\", \"change\": \"Initial on-policy score-function estimator.\"}, {\"paper\": \"PPO\", \"equation\": \"Eq. 4\", \"formula\": \"\\\\min(r_t(\\\\theta)\\\\hat{A}_t, \\\\text{clip}(r_t(\\\\theta), 1-\\\\epsilon, 1+\\\\epsilon)\\\\hat{A}_t)\", \"intent\": \"Show the fixed clipping factor used by PPO-style objectives.\", \"change\": \"Introduces a static constraint via fixed clipping.\"}, {\"paper\": \"FeynRL\", \"equation\": \"Eqs. 5–7\", \"formula\": \"\\\\rho_t = \\\\frac{\\\\pi_\\\\theta(a_t|s_t)}{\\\\pi_b(a_t|s_t)}\", \"intent\": \"Move the expectation to be",
+            "section_id": "related_work"
+          },
+          {
+            "attempt": 2,
+            "status": "valid",
+            "prompt_sha256": "d69df207d96631d3e7f9f36f6b7dea3cf63d45907887d3bf9a645199ccb44d3e",
+            "response_sha256": "d4e5fd5c69e28cffeb971c7a210522093a5452035b91688e525e09b156dd0135",
+            "usage": {
+              "input_tokens": 10497,
+              "output_tokens": 1430,
+              "reasoning_tokens": 3910,
+              "total_tokens": 15837
+            },
+            "duration_ms": 34188,
+            "section_id": "related_work"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "7e8bb152a7513a225040bde8ea61ea3a8a4ba468a6b86ed4583d688be7543aa3",
+            "response_sha256": "5208ff858987cb64e42f15aca5fd161eb4b176b46babaddafb3b8b531b7014b1",
+            "usage": {
+              "input_tokens": 9078,
+              "output_tokens": 1135,
+              "reasoning_tokens": 3228,
+              "total_tokens": 13441
+            },
+            "duration_ms": 29427,
+            "section_id": "ess"
+          },
+          {
+            "attempt": 1,
+            "status": "invalid",
+            "prompt_sha256": "91c9e98f97fabcfa60d78ded2223ae90932a88303e4befdb589bd0504690eec8",
+            "response_sha256": "8e717fe3c2d7cfc2d58fc11ca7afddfd8d307ea07692d1abbf0289e754c6fa0c",
+            "usage": {
+              "input_tokens": 9172,
+              "output_tokens": 1170,
+              "reasoning_tokens": 3001,
+              "total_tokens": 13343
+            },
+            "duration_ms": 29331,
+            "error": "section_content invalid:\n- section p3o block 0 missing ['heading']\n- section p3o block 4 missing ['heading']",
+            "payload_excerpt": "{\"sections\": {\"p3o\": {\"blocks\": [{\"type\": \"prose\", \"paragraphs\": [\"Fakoor et al.'s original P3O establishes an ESS-controlled on/off-policy structure by setting its off-policy cap to ESS and mixture coefficient to one minus ESS. FeynRL formulates the corresponding normalized, per-token P3O objective for large-model post-training.\"], \"source_refs\": [\"feynrl-paper:sec1\", \"feynrl-paper:sec3\"]}, {\"type\": \"formula_steps\", \"formula\": \"formula:feynrl.p3o_objective\", \"claim_label\": \"Eq. 12 · P3O objective\", \"steps\": [{\"label\": \"Score-function weight\", \"expression\": \"e_B\", \"meaning\": \"Caps the detached ratio in the score-function weight.\", \"primitive\": {\"id\": \"e_B\", \"origin\": \"project_inherited\"}}, {\"label\": \"Behavioral KL weight\", \"expression\": \"1 - e_B\", \"meaning\": \"Weights the off-policy regularizer by one minus ESS.\", \"primitive\": {\"id\": \"1_minus_e_B\", \"origin\": \"project_inherited\"}}], \"source_refs\": [\"feynrl-paper:eq12\"]}, {\"type\": \"micro_video\", \"media_id\": \"feynrl-p3o-micro\", \"poster_id\": \"feynrl-p3o-micro-poster\", \"captions_id\": \"feynrl-p3o-micro-captions\", \"title\": \"Demonstrate how e_B couples the score cap and behavioral KL weight.\", \"intro\": \"Demonstrate how e_B couples the score cap and behavioral KL weight.\", \"observation\": \"The objective has separate score-function and behavioral KL terms. → One e_B lowers the score cap and raises the behavioral KL coefficient.\", \"consequence\": \"One e_B lowers the score cap and raises the behavioral KL coefficient.\", \"beats\": [\"The objective has separate score-function and behavioral KL terms.\", \"One e_B lowers the score cap and raises the behavioral KL coefficient.\"], \"source_refs\": [\"feynrl-paper:eq12\"]}, {\"type\": \"code\", \"code_source_id\": \"feynrl-p3o\", \"path\": \"algs/P3O/p3o.py\", \"symbol\": \"compute_policy_loss\", \"lines\": [{\"number\": 192, \"code\": \"def compute_policy_loss(...\", \"maps_to\": \"formula:feynrl.p3o_objective\"}, {\"number\": 204, \"code\": \"    ess_factor = calculate_ess(rho, mask)\", \"maps_to\": \"e_B\"}, {\"number\": 210, \"cod",
+            "section_id": "p3o"
+          },
+          {
+            "attempt": 2,
+            "status": "valid",
+            "prompt_sha256": "3a80d1429d59b05eb4bd2356fe59c3d68a4284c1ec68c639e14562b49ebda8cf",
+            "response_sha256": "adb29e99e01db065b551d6c1a7435eb6739f83c9c5b69d214b6a1bf4dfb7d441",
+            "usage": {
+              "input_tokens": 10235,
+              "output_tokens": 1205,
+              "reasoning_tokens": 2669,
+              "total_tokens": 14109
+            },
+            "duration_ms": 26083,
+            "section_id": "p3o"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "2adb2d11e7badd6ff866180a2a8a65081bd83858a7103de3d4bcd9ef3914b0e8",
+            "response_sha256": "f9c1a4690e6a8dd7ad74b454c020f637d93908a3cd9a53b451f5b06541518a05",
+            "usage": {
+              "input_tokens": 9139,
+              "output_tokens": 1139,
+              "reasoning_tokens": 2481,
+              "total_tokens": 12759
+            },
+            "duration_ms": 25238,
+            "section_id": "findings"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "87d3c8df16792fc16562b86423946df2dbb5a0cb05d19ad4c530531f2a8a2f15",
+            "response_sha256": "bbb4091a319ab19156d9ee7af49ab95a8a753c9a25905c42492101cfac0344d8",
+            "usage": {
+              "input_tokens": 9087,
+              "output_tokens": 848,
+              "reasoning_tokens": 3427,
+              "total_tokens": 13362
+            },
+            "duration_ms": 30398,
+            "section_id": "limits"
           }
         ],
         "cost": {
-          "status": "not_recorded",
-          "estimated_usd": null,
-          "rate_card": null
+          "status": "estimated",
+          "estimated_usd": 0.261036,
+          "rate_card": {
+            "rate_card_id": "vertex-gemini-3.1-pro-standard-2026-07-22",
+            "provider": "google_vertex",
+            "input_per_million_usd": 2.0,
+            "output_per_million_usd": 12.0,
+            "source_url": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+            "note": "Standard tier at or below 200K input tokens; output includes reasoning tokens."
+          }
         }
       }
     ],

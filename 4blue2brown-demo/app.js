@@ -58,7 +58,7 @@
       const button = event.target.closest("button[data-view]");
       if (!button) return;
       const id = button.dataset.view;
-      location.hash = id === "overview" || id === "appendix" ? routeHash(id) : routeHash(id, currentBundle(id).source_packet.required_section_ids[0]);
+      location.hash = id === "overview" || id === "appendix" ? routeHash(id) : routeHash(id, currentBundle(id).lesson_plan.sections[0].id);
     });
     $("#top-tabs").addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -114,7 +114,7 @@
     }
     state.activePaper = parts[0];
     const bundle = currentBundle();
-    const validSections = [...bundle.source_packet.required_section_ids, FORMULA_SECTION_ID, CODE_SECTION_ID];
+    const validSections = [...bundle.lesson_plan.sections.map((section) => section.id), FORMULA_SECTION_ID, CODE_SECTION_ID];
     state.activeSection = validSections.includes(parts[1]) ? parts[1] : validSections[0];
     renderPaper(bundle, state.activeSection);
     setView("paper");
@@ -123,22 +123,25 @@
 
   function renderOverview() {
     const run = currentRun();
+    const liveRuns = state.catalog.runs.filter((item) => item.generation_modes.includes("live"));
+    const isLive = run.generation_modes.includes("live");
     const outputs = state.catalog.papers.map((paper) => {
       const runPaper = run.papers.find((item) => item.paper_id === paper.paper_id);
       const metrics = runPaper?.trace_summary || {};
-      return `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><div class="paper-run-metrics"><b>${fmtTokens(metrics.total_tokens)} tokens</b><b>${fmtCost(metrics.estimated_cost_usd)}</b><b>${fmtDuration(metrics.duration_ms)}</b></div><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`;
+      return `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><div class="paper-run-metrics"><b>${esc(runPaper?.section_count || 0)} sections</b><b>${esc(runPaper?.block_count || 0)} blocks</b><b>${esc(runPaper?.animation_count || 0)} animations</b><b>${fmtTokens(metrics.total_tokens)} tokens</b><b>${fmtCost(metrics.estimated_cost_usd)}</b><b>${fmtDuration(metrics.duration_ms)}</b></div><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`;
     }).join("");
     const protocol = state.catalog.comparison_protocol;
-    const candidates = (state.catalog.candidate_runs || []).map((candidate) => `<article><div><span class="candidate-status">${esc(candidate.status.replaceAll("_", " "))}</span><h3>${esc(candidate.label)}</h3></div><p class="model-summary">${esc(candidate.model_summary)}</p><dl><div><dt>Provider</dt><dd>${esc(candidate.provider)}</dd></div><div><dt>Model ID</dt><dd>${esc(candidate.model_id)}</dd></div><div><dt>Endpoint</dt><dd>${esc(candidate.endpoint)}</dd></div></dl><p>${esc(candidate.note)}</p><a href="${esc(candidate.documentation_url)}" target="_blank" rel="noreferrer">Endpoint documentation ↗</a></article>`).join("");
+    const failedCandidates = (state.catalog.candidate_runs || []).filter((candidate) => candidate.status === "generation_failed");
+    const candidates = (state.catalog.candidate_runs || []).map((candidate) => `<article><div><span class="candidate-status">${esc(candidate.status.replaceAll("_", " "))}</span><h3>${esc(candidate.label)}</h3></div><p class="model-summary">${esc(candidate.model_summary)}</p><dl><div><dt>Provider</dt><dd>${esc(candidate.provider)}</dd></div><div><dt>Model ID</dt><dd>${esc(candidate.model_id)}</dd></div><div><dt>Endpoint</dt><dd>${esc(candidate.endpoint)}</dd></div></dl><p>${esc(candidate.note)}</p>${candidate.documentation_url && candidate.documentation_url !== "#" ? `<a href="${esc(candidate.documentation_url)}" target="_blank" rel="noreferrer">Endpoint documentation ↗</a>` : ""}</article>`).join("");
     $("#overview-view").innerHTML = `
       <div class="overview-hero">
         <div><span class="eyebrow">Paper + repository → sourced explainer</span><h1>From source material to scientific scenes.</h1></div>
         <p>The API returns grounded JSON: the paper's motivation, terms, related work, formula/code mappings, and findings. A fixed renderer builds the website; a reusable Manim library renders selected state changes without asking a coding agent to write Python.</p>
       </div>
       <section class="quality-audit" aria-labelledby="quality-audit-title">
-        <div><span class="eyebrow">Quality provenance</span><h2 id="quality-audit-title">The current teaching quality is a reviewed target, not a live-model result.</h2></div>
-        <dl><div><dt>Published narrative</dt><dd>Human/Codex-reviewed from paper, code, and iterative reader feedback</dd></div><div><dt>Live model API</dt><dd>0% of the published reference; candidate endpoints have only passed connectivity smoke tests</dd></div><div><dt>Harness</dt><dd>Validation, deterministic maps, registered Manim rendering, traces, and publication</dd></div></dl>
-        <p>A model earns credit only after it generates both complete paper bundles under the frozen contract. Until then, the selector exposes the reviewed reference alone.</p>
+        <div><span class="eyebrow">Quality provenance</span><h2 id="quality-audit-title">${isLive ? "This is an untouched live-model lesson inside a fixed harness." : "The reviewed run is the teaching target; live runs remain visibly separate."}</h2></div>
+        <dl><div><dt>Selected narrative</dt><dd>${isLive ? "Generated by the selected model API; no manual editing after generation" : "Human/Codex-reviewed from paper, code, and iterative reader feedback"}</dd></div><div><dt>Live model API</dt><dd>${liveRuns.length ? `${liveRuns.length} complete runs, each covering both papers under the same contract` : "No complete live run is published yet"}</dd></div><div><dt>Harness</dt><dd>Validation, deterministic maps, registered Manim rendering, traces, and publication</dd></div></dl>
+        <p>${isLive ? "Judge its section split, narrative continuity, evidence use, and animation decisions against the reviewed reference—not just whether its JSON passed." : "Use the model switcher to compare section boundaries, block balance, and Manim choices without blending authorship."}</p>
       </section>
       <section class="responsibility-board" aria-labelledby="responsibility-title">
         <div class="responsibility-head"><span class="eyebrow">Execution boundary</span><h2 id="responsibility-title">What the model decides—and what it never touches.</h2><p>A model comparison is meaningful only when the harness stays fixed. The API is a constrained reasoning component; it is not the website renderer or the animation coder.</p></div>
@@ -164,14 +167,14 @@
       </div>
       <section class="run-provenance">
         <div><span class="eyebrow">Selected frozen run</span><h2>${esc(run.label)}</h2><p>${esc(run.description)}</p></div>
-        <dl><div><dt>Provider</dt><dd>${esc(run.providers.join(" + "))}</dd></div><div><dt>Model</dt><dd>${esc(run.models.join(" + "))}</dd></div><div><dt>What it is</dt><dd>${esc(run.model_summary)}</dd></div><div><dt>Endpoint</dt><dd>${esc(run.endpoint)}</dd></div><div><dt>Tokens</dt><dd>${fmtTokens(run.trace_summary?.total_tokens)}</dd></div><div><dt>API time</dt><dd>${fmtDuration(run.trace_summary?.duration_ms)}</dd></div><div><dt>Estimated cost</dt><dd>${fmtCost(run.trace_summary?.estimated_cost_usd)}</dd></div><div><dt>Status</dt><dd>${esc(run.status)}</dd></div></dl>
+        <dl><div><dt>Provider</dt><dd>${esc(run.providers.join(" + "))}</dd></div><div><dt>Model</dt><dd>${esc(run.models.join(" + "))}</dd></div><div><dt>What it is</dt><dd>${esc(run.model_summary)}</dd></div><div><dt>Endpoint</dt><dd>${esc(run.endpoint)}</dd></div><div><dt>Tokens</dt><dd>${fmtTokens(run.trace_summary?.total_tokens)}</dd></div><div><dt>API time</dt><dd>${fmtDuration(run.trace_summary?.duration_ms)}</dd></div><div><dt>Estimated cost</dt><dd>${fmtCost(run.trace_summary?.estimated_cost_usd)}</dd></div><div><dt>API calls</dt><dd>${esc(run.trace_summary?.api_call_count ?? "not recorded")}</dd></div><div><dt>Semantic repairs</dt><dd>${esc(run.trace_summary?.repair_count ?? "not recorded")}</dd></div><div><dt>Harness compile ops</dt><dd>${esc(run.trace_summary?.structural_compilation_count ?? 0)}</dd></div><div><dt>Corrective normalizations</dt><dd>${esc(run.trace_summary?.corrective_normalization_count ?? 0)}</dd></div><div><dt>Status</dt><dd>${esc(run.status)}</dd></div></dl>
       </section>
       <section class="comparison-contract"><div><span class="eyebrow">Cross-model contract</span><h2>Same evidence and renderer; different planning JSON.</h2></div><div><b>FIXED</b><p>${protocol.fixed.map(esc).join(" · ")}</p></div><div><b>VARIED</b><p>${protocol.varied.map(esc).join(" · ")}</p></div><small>${esc(protocol.rule)}</small></section>
-      ${candidates ? `<section class="candidate-matrix"><div class="candidate-head"><span class="eyebrow">Requested comparison matrix</span><h2>Queued, not fabricated.</h2><p>These candidates are intentionally absent from the top-right selector until both paper bundles are generated, validated, frozen, and hashed.</p></div><div class="candidate-grid">${candidates}</div></section>` : ""}
+      ${candidates ? `<section class="candidate-matrix"><div class="candidate-head"><span class="eyebrow">Requested comparison matrix</span><h2>${failedCandidates.length ? "Failed runs remain visible, but cannot enter the selector." : "Queued, not fabricated."}</h2><p>A model appears in the top-right selector only after both paper bundles are generated, validated, frozen, and hashed. ${failedCandidates.length ? "The failure note below is the harness boundary it did not cross." : ""}</p></div><div class="candidate-grid">${candidates}</div></section>` : ""}
       <div class="run-table"><span class="eyebrow">Generated outputs in this run</span>${outputs}</div>`;
     $("#overview-view").querySelectorAll("[data-open-paper]").forEach((button) => button.addEventListener("click", () => {
       const id = button.dataset.openPaper;
-      location.hash = routeHash(id, currentBundle(id).source_packet.required_section_ids[0]);
+      location.hash = routeHash(id, currentBundle(id).lesson_plan.sections[0].id);
     }));
   }
 
@@ -196,16 +199,29 @@
     }
     const sectionPlan = plan.sections.find((item) => item.id === sectionId);
     const content = bundle.section_content.sections[sectionId];
+    const sectionIndex = plan.sections.findIndex((item) => item.id === sectionId);
+    const nextSection = plan.sections[sectionIndex + 1];
+    const modeDefinitions = [
+      { label: "Read", types: ["paper_question", "prose", "comparison", "lineage", "equation_thread", "formula_steps", "numeric_fixture", "rotation"] },
+      { label: "Watch", types: ["video", "micro_video"] },
+      { label: "Verify", types: ["code", "result_story", "line_chart", "bar_chart", "reported_trends", "related_reading"] },
+      { label: "Check", types: ["learner_check", "limitation"] },
+    ];
+    const blockTypes = new Set(content.blocks.map((block) => block.type));
+    const learningModes = modeDefinitions.filter((mode) => mode.types.some((type) => blockTypes.has(type)));
     $("#lesson").innerHTML = `
-      <header class="lesson-header">
-        <span class="eyebrow">${esc(bundle.source_packet.short_title)} · ${esc(sectionPlan.nav_label)} · generated scene</span>
+      <header class="lesson-header" data-section-role="${esc(sectionPlan.role)}">
+        <span class="eyebrow">${esc(bundle.source_packet.short_title)} · ${String(sectionIndex + 1).padStart(2, "0")} ${esc(sectionPlan.nav_label)} · ${esc(sectionPlan.role)}</span>
         <h1>${esc(sectionPlan.title)}</h1>
         <p class="promise">${esc(sectionPlan.summary)}</p>
-        <div class="intent-line"><b>INTENT</b><span>${esc(sectionPlan.intent)}</span></div>
+        <div class="intent-line"><b>WHY NOW</b><span>${esc(sectionPlan.intent)}</span></div>
         <div class="question-line"><b>QUESTION</b><span>${esc(sectionPlan.question)}</span></div>
+        <div class="learning-contract"><div><b>LEAVE ABLE TO</b><span>${esc(sectionPlan.learning_goal)}</span></div><div><b>WATCH FOR</b><span>${esc(sectionPlan.misconception)}</span></div><div class="learning-modes" aria-label="Learning media sequence">${learningModes.map((mode, index) => `<span><i>${index + 1}</i>${esc(mode.label)}</span>`).join("")}</div></div>
       </header>
-      <div class="blocks">${content.blocks.map((block) => renderBlock(block, bundle)).join("")}</div>`;
+      <div class="blocks">${content.blocks.map((block) => renderBlock(block, bundle)).join("")}</div>
+      <footer class="section-outcome"><div><span class="eyebrow">Section takeaway</span><strong>${esc(sectionPlan.learning_goal)}</strong></div>${nextSection ? `<button type="button" data-next-section="${esc(nextSection.id)}"><small>Next · ${esc(nextSection.nav_label)}</small><span>${esc(nextSection.intent)}</span></button>` : `<button type="button" data-next-section="${FORMULA_SECTION_ID}"><small>Next · Formula</small><span>Audit the complete equation thread and inspect its registered animation mappings.</span></button>`}</footer>`;
     bindLessonInteractions();
+    $("#lesson [data-next-section]")?.addEventListener("click", (event) => location.hash = routeHash(bundle.paper_id, event.currentTarget.dataset.nextSection));
     renderSourcePanel(bundle, sectionPlan);
   }
 
@@ -221,7 +237,7 @@
     }).join("");
     $("#lesson").innerHTML = `
       <header class="lesson-header formula-header">
-        <span class="eyebrow">${esc(bundle.source_packet.short_title)} · 07 Formula · deterministic capability view</span>
+        <span class="eyebrow">${esc(bundle.source_packet.short_title)} · ${String(bundle.lesson_plan.sections.length + 1).padStart(2, "0")} Formula · deterministic capability view</span>
         <h1>Formula → Manim map</h1>
         <p class="promise">Formula IR is on the left; callable Manim functions are on the right. An edge means the registry can express that operation—not that every compatible animation is equally explanatory.</p>
         <div class="question-line"><b>QUESTION</b><span>Which mappings are implemented, merely compatible, or still unresolved?</span></div>
@@ -338,10 +354,20 @@
     related_reading: (b) => `<section class="block related-reading"><span class="eyebrow">Primary-source links</span><h2>${esc(b.title)}</h2><div class="reading-grid">${b.items.map((item) => `<a href="${esc(item.url)}" target="_blank" rel="noreferrer"><strong>${esc(item.title)}</strong><span>${esc(item.relation)}</span><i aria-hidden="true">↗</i></a>`).join("")}</div>${refs(b.source_refs)}</section>`,
     numeric_fixture: (b) => `<section class="block"><span class="eyebrow">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="formula-display">${esc(b.formula)}</div><div class="fixture-grid">${b.fixtures.map((fixture) => { const max = Math.max(...fixture.values); return `<article class="fixture"><h3>${esc(fixture.label)}</h3><div class="weight-bars">${fixture.values.map((value) => `<i style="height:${Math.max(2, value / max * 100)}%;--bar-color:${accent(fixture.accent)}" title="${esc(value)}"></i>`).join("")}</div><div class="ess-readout"><span>ρ = [${fixture.values.map(esc).join(", ")}]</span><b>ESS ${esc(fixture.ess)}</b></div></article>`; }).join("")}</div><p>${esc(b.note)}</p>${refs(b.source_refs)}</section>`,
     video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); return `<section class="block"><span class="eyebrow">Manim where motion carries meaning</span><h2>${esc(b.title)}</h2><div class="video-frame"><video controls preload="metadata" poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="video-caption"><span>${esc(b.caption)}</span><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></div>${refs(b.source_refs)}</section>`; },
-    micro_video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); return `<section class="block micro-video"><div class="micro-copy"><span class="eyebrow">Micro-video · one state change</span><h2>${esc(b.title)}</h2><p class="micro-intro">${esc(b.intro)}</p><dl><div><dt>Observe</dt><dd>${esc(b.observation)}</dd></div><div><dt>Therefore</dt><dd>${esc(b.consequence)}</dd></div></dl>${refs(b.source_refs)}</div><div class="micro-media"><video controls preload="metadata" playsinline poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></section>`; },
+    micro_video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); const heading = b.title === b.intro ? "Watch the state change" : b.title; return `<section class="block micro-video"><div class="micro-copy"><span class="eyebrow">Micro-video · one state change</span><h2>${esc(heading)}</h2><p class="micro-intro">${esc(b.intro)}</p><dl><div><dt>Observe</dt><dd>${esc(b.observation)}</dd></div><div><dt>Therefore</dt><dd>${esc(b.consequence)}</dd></div></dl>${refs(b.source_refs)}</div><div class="micro-media"><video controls preload="metadata" playsinline poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></section>`; },
     formula_steps: (b) => `<section class="block"><span class="claim-label">${esc(b.claim_label)}</span><div class="formula-display">${esc(b.formula)}</div><div class="formula-steps">${b.steps.map((step, index) => `<article class="formula-step"><span class="step-number">0${index + 1} / ${esc(step.label)}</span><div class="step-expression">${esc(step.expression)}</div><p>${esc(step.meaning)}</p><span class="primitive-tag origin-${esc(step.primitive.origin)}">${esc(step.primitive.id)}</span></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
     code: (b, bundle) => { const source = bundle.source_packet.code_sources.find((item) => item.code_id === b.code_source_id); const url = source ? `${source.repository}/blob/${source.revision}/${b.path}` : ""; return `<section class="block"><span class="eyebrow">Confirmed upstream code mapping</span><h2>${esc(b.symbol)}</h2><div class="code-block"><div class="code-head">${url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(b.path)} ↗</a>` : `<span>${esc(b.path)}</span>`}<span>${esc(b.code_source_id)}</span></div>${b.lines.map((line) => `<div class="code-line"><span class="line-no">${esc(line.number)}</span><code>${esc(line.code)}</code><span class="code-map">↳ ${esc(line.maps_to)}</span></div>`).join("")}</div>${refs(b.source_refs)}</section>`; },
-    bar_chart: (b) => { const min = b.axis_min || 0; const range = b.axis_max - min; return `<section class="block chart"><span class="claim-label">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="chart-bars">${b.groups.map((group) => `<div class="chart-row"><span>${esc(group.label)}</span><div class="chart-track" title="axis ${min} to ${b.axis_max}"><div class="chart-fill" style="--width:${Math.max(0, (group.value - min) / range * 100)}%;--bar-color:${accent(group.accent)}"></div></div><span class="chart-value">${esc(group.value)}${group.uncertainty ? ` ${esc(group.uncertainty)}` : ""}</span></div>`).join("")}</div><div class="chart-note">axis ${esc(min)}–${esc(b.axis_max)} ${esc(b.unit)} · ${esc(b.claim_label)}</div>${refs(b.source_refs)}</section>`; },
+    line_chart: (b) => {
+      const points = b.series.flatMap((series) => series.points);
+      const xs = points.map((point) => Number(point.x));
+      const ys = points.map((point) => Number(point.y));
+      const xMin = Math.min(...xs); const xMax = Math.max(...xs);
+      const yMin = Math.min(...ys); const yMax = Math.max(...ys);
+      const scale = (value, min, max, start, end) => max === min ? (start + end) / 2 : start + (value - min) / (max - min) * (end - start);
+      const polyline = (series) => series.points.map((point) => `${scale(Number(point.x), xMin, xMax, 70, 610)},${scale(Number(point.y), yMin, yMax, 300, 30)}`).join(" ");
+      return `<section class="block chart"><span class="claim-label">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="line-chart-wrap"><svg class="line-chart-svg" viewBox="0 0 680 360" role="img" aria-label="${esc(b.title)}"><line x1="70" y1="300" x2="630" y2="300"/><line x1="70" y1="20" x2="70" y2="300"/>${b.series.map((series) => `<polyline points="${polyline(series)}" style="--series-color:${accent(series.accent)}"/>${series.points.map((point) => `<circle cx="${scale(Number(point.x), xMin, xMax, 70, 610)}" cy="${scale(Number(point.y), yMin, yMax, 300, 30)}" r="5" style="--series-color:${accent(series.accent)}"><title>${esc(series.label)}: ${esc(point.x)}, ${esc(point.y)}</title></circle>`).join("")}`).join("")}<text x="350" y="346" text-anchor="middle">${esc(b.x_label)}</text><text x="18" y="165" text-anchor="middle" transform="rotate(-90 18 165)">${esc(b.y_label)}</text><text x="70" y="322" text-anchor="middle">${esc(xMin)}</text><text x="610" y="322" text-anchor="middle">${esc(xMax)}</text><text x="58" y="304" text-anchor="end">${esc(yMin)}</text><text x="58" y="34" text-anchor="end">${esc(yMax)}</text></svg><div class="chart-legend">${b.series.map((series) => `<span style="--legend-color:${accent(series.accent)}"><i></i>${esc(series.label)}</span>`).join("")}</div></div>${refs(b.source_refs)}</section>`;
+    },
+    bar_chart: (b) => { const min = b.axis_min || 0; const range = Math.max(1e-9, b.axis_max - min); return `<section class="block chart"><span class="claim-label">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="chart-bars">${b.groups.map((group) => `<div class="chart-row"><span>${esc(group.label)}</span><div class="chart-track" title="axis ${min} to ${b.axis_max}"><div class="chart-fill" style="--width:${Math.max(0, (group.value - min) / range * 100)}%;--bar-color:${accent(group.accent)}"></div></div><span class="chart-value">${esc(group.value)}${group.uncertainty ? ` ${esc(group.uncertainty)}` : ""}</span></div>`).join("")}</div><div class="chart-note">axis ${esc(min)}–${esc(b.axis_max)} ${esc(b.unit)} · ${esc(b.claim_label)}</div>${refs(b.source_refs)}</section>`; },
     reported_trends: (b) => `<section class="block"><span class="claim-label">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="trend-list">${b.items.map((item) => `<article class="trend-item"><strong>${esc(item.label)}</strong><p>${esc(item.finding)} <span class="source-ref">${esc(item.source_ref)}</span></p></article>`).join("")}</div></section>`,
     limitation: (b) => `<section class="block"><span class="eyebrow">Claim boundary</span><h2>What remains conditional</h2><div class="limitation-list">${b.items.map((item) => `<article class="limitation-item"><strong>${esc(item.label)}</strong><p>${esc(item.detail)}</p></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
     rotation: (b) => `<section class="block"><span class="claim-label">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="rotation-stage"><svg viewBox="0 0 420 420" role="img" aria-label="Two vectors separated by a rotation angle"><line x1="40" y1="210" x2="380" y2="210" stroke="var(--line-strong)"/><line x1="210" y1="40" x2="210" y2="380" stroke="var(--line-strong)"/><circle cx="210" cy="210" r="150" fill="none" stroke="var(--line)"/><line x1="210" y1="210" x2="350" y2="180" stroke="var(--violet)" stroke-width="7"/><line x1="210" y1="210" x2="280" y2="80" stroke="var(--orange)" stroke-width="7"/><path d="M 280 195 A 74 74 0 0 0 250 145" fill="none" stroke="var(--orange)" stroke-width="3"/><circle cx="210" cy="210" r="6" fill="var(--ink)"/></svg><div class="rotation-copy"><span class="big-angle">${esc(b.angle_label)}</span><div class="formula-display">${esc(b.formula)}</div><p>${esc(b.note)}</p></div></div>${refs(b.source_refs)}</section>`,

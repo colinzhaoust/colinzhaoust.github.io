@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:01.450
+Equation 12 uses the same batch value in two controls.
+
+00:01.450 --> 00:04.150
+As normalized ESS falls, the score-function cap falls.
+
+00:04.150 --> 00:05.100
+At the same time, the behavioral KL weight rises.

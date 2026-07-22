@@ -1,0 +1,7 @@
+WEBVTT
+
+00:00.000 --> 00:01.650
+The high-dimensional rotary matrix is block diagonal.
+
+00:01.650 --> 00:04.767
+Each adjacent coordinate pair rotates by the same position and its own frequency.
