@@ -127,6 +127,8 @@
     const run = currentRun();
     const liveRuns = state.catalog.runs.filter((item) => item.generation_modes.includes("live"));
     const isLive = run.generation_modes.includes("live");
+    const comparisonLabel = (item) => item.run_id === "reviewed-reference" ? "Demo" : item.label.includes("Gemini") ? "Gemini 3.1" : item.label.includes("GPT-5.5") ? "GPT-5.5" : item.label.split("·")[0].trim();
+    const runLedger = state.catalog.runs.map((item) => `<button type="button" data-overview-run="${esc(item.run_id)}" aria-current="${item.run_id === state.activeRun ? "true" : "false"}"><strong>${esc(comparisonLabel(item))}</strong><span><b>${fmtTokens(item.trace_summary?.total_tokens)}</b><small>tokens</small></span><span><b>${fmtCost(item.trace_summary?.estimated_cost_usd)}</b><small>est. cost</small></span></button>`).join("");
     const outputs = state.catalog.papers.map((paper) => {
       const runPaper = run.papers.find((item) => item.paper_id === paper.paper_id);
       const metrics = runPaper?.trace_summary || {};
@@ -138,7 +140,7 @@
     $("#overview-view").innerHTML = `
       <div class="overview-hero">
         <div><span class="eyebrow">Paper + repository → sourced explainer</span><h1>From source material to scientific scenes.</h1></div>
-        <p>The API returns grounded JSON: the paper's motivation, terms, related work, formula/code mappings, and findings. A fixed renderer builds the website; a reusable Manim library renders selected state changes without asking a coding agent to write Python.</p>
+        <div class="overview-intro"><p>The API returns grounded JSON: the paper's motivation, terms, related work, formula/code mappings, and findings. A fixed renderer builds the website; a reusable Manim library renders selected state changes without asking a coding agent to write Python.</p><div class="overview-run-ledger" aria-label="Run token and cost comparison"><div class="overview-run-head"><span>Run</span><span>Tokens</span><span>Cost</span></div>${runLedger}<p>Totals cover FeynRL + RoPE. Live costs use the frozen provider rate card; Demo is a reviewed replay with no recorded API usage.</p></div></div>
       </div>
       <section class="quality-audit" aria-labelledby="quality-audit-title">
         <div><span class="eyebrow">Quality provenance</span><h2 id="quality-audit-title">${isLive ? "This is an untouched live-model lesson inside a fixed harness." : "The reviewed run is the teaching target; live runs remain visibly separate."}</h2></div>
@@ -177,6 +179,11 @@
     $("#overview-view").querySelectorAll("[data-open-paper]").forEach((button) => button.addEventListener("click", () => {
       const id = button.dataset.openPaper;
       location.hash = routeHash(id, currentBundle(id).lesson_plan.sections[0].id);
+    }));
+    $("#overview-view").querySelectorAll("[data-overview-run]").forEach((button) => button.addEventListener("click", () => {
+      if (button.dataset.overviewRun === state.activeRun) return;
+      state.activeRun = button.dataset.overviewRun;
+      location.hash = routeHash("overview");
     }));
   }
 
