@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4blue2brown.local/schemas/explainer-pipeline/explainer-bundle-0.1.0.schema.json",
+  "title": "Interactive explainer bundle 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "paper_id", "source_packet", "concept_graph", "lesson_plan", "section_content", "generation"],
+  "properties": {
+    "schema_version": {"const": "explainer-bundle/0.1.0"},
+    "paper_id": {"type": "string", "minLength": 1},
+    "source_packet": {"type": "object"},
+    "concept_graph": {"type": "object", "required": ["thesis", "nodes", "edges", "unresolved"]},
+    "lesson_plan": {"type": "object", "required": ["title", "promise", "sections", "appendix"]},
+    "section_content": {"type": "object", "required": ["sections", "appendix_entries"]},
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pipeline_version", "source_packet_sha256", "stage_traces", "completion"],
+      "properties": {
+        "pipeline_version": {"const": "explainer-pipeline/0.1.0"},
+        "source_packet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "stage_traces": {"type": "array", "minItems": 3, "items": {"type": "object"}},
+        "completion": {"enum": ["full", "partial", "failed"]}
+      }
+    }
+  }
+}

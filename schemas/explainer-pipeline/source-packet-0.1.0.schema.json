@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4blue2brown.local/schemas/explainer-pipeline/source-packet-0.1.0.schema.json",
+  "title": "Explainer source packet 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "paper_id", "title", "short_title", "audience", "central_question", "required_section_ids", "sources", "code_sources", "formula_refs", "scene_renderer", "media", "agent_input"],
+  "properties": {
+    "schema_version": {"const": "explainer-source-packet/0.1.0"},
+    "paper_id": {"$ref": "#/$defs/id"},
+    "title": {"type": "string", "minLength": 1},
+    "short_title": {"type": "string", "minLength": 1},
+    "audience": {"type": "string", "minLength": 1},
+    "central_question": {"type": "string", "minLength": 1},
+    "required_section_ids": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "kind", "url", "revision", "sha256", "page_count", "retrieved_at"],
+        "properties": {
+          "source_id": {"$ref": "#/$defs/id"},
+          "kind": {"enum": ["paper", "supplement", "documentation"]},
+          "url": {"anyOf": [{"type": "string", "pattern": "^https://"}, {"type": "null"}]},
+          "revision": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/hash"},
+          "page_count": {"type": "integer", "minimum": 1},
+          "retrieved_at": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "code_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code_id", "repository", "revision", "mapping_state", "excerpts"],
+        "properties": {
+          "code_id": {"$ref": "#/$defs/id"},
+          "repository": {"type": "string", "pattern": "^https://"},
+          "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "mapping_state": {"enum": ["candidate", "confirmed", "unresolved"]},
+          "excerpts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "symbol", "line_start", "line_end"],
+              "properties": {
+                "path": {"$ref": "#/$defs/path"},
+                "symbol": {"type": "string", "minLength": 1},
+                "line_start": {"type": "integer", "minimum": 1},
+                "line_end": {"type": "integer", "minimum": 1}
+              }
+            }
+          }
+        }
+      }
+    },
+    "formula_refs": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+    "scene_renderer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "entrypoint", "coding_agent_required", "scene_ids"],
+      "properties": {
+        "engine": {"type": "string", "minLength": 1},
+        "entrypoint": {"$ref": "#/$defs/path"},
+        "coding_agent_required": {"const": false},
+        "scene_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["media_id", "role", "path", "sha256", "media_type", "origin", "caption"],
+        "properties": {
+          "media_id": {"$ref": "#/$defs/id"},
+          "role": {"enum": ["video", "poster", "captions", "source_figure"]},
+          "path": {"$ref": "#/$defs/path"},
+          "sha256": {"$ref": "#/$defs/hash"},
+          "media_type": {"type": "string", "minLength": 1},
+          "origin": {"enum": ["paper", "manim_builtin", "project_inherited", "project_new"]},
+          "caption": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "agent_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paper_excerpts", "code_notes", "claim_policy"],
+      "properties": {
+        "paper_excerpts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/excerpt"}},
+        "code_notes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/excerpt"}},
+        "claim_policy": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "path": {"type": "string", "minLength": 1, "not": {"pattern": "(^/|(^|/)\\.\\.(/|$)|^~|^file:)"}},
+    "excerpt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "text", "source_refs"],
+      "properties": {
+        "locator": {"type": "string", "minLength": 1},
+        "text": {"type": "string", "minLength": 1},
+        "source_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

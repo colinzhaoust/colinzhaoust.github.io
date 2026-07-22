@@ -1,0 +1,25 @@
+{
+  "schema_version": "explainer-stage-replay/0.1.0",
+  "paper_id": "rope",
+  "stage": "concept_graph",
+  "provider": "reviewed_fixture",
+  "model": "paper-native-demo-0.2",
+  "generated_at": "2026-07-21T18:22:00-07:00",
+  "payload": {
+    "thesis": "RoPE encodes absolute position through rotations of query and key representations so that their inner product explicitly contains relative position.",
+    "nodes": [
+      {"id": "absolute-position", "label": "Absolute position encoding", "kind": "predecessor", "era": "additive", "summary": "Learned or sinusoidal position representations are added to token representations.", "source_refs": ["rope-paper:sec2.1"]},
+      {"id": "relative-position", "label": "Relative position encoding", "kind": "predecessor", "era": "additive", "summary": "Prior work introduces relative displacement into self-attention.", "source_refs": ["rope-paper:sec2.2", "rope-paper:sec2.3"]},
+      {"id": "formulation", "label": "Formulation of relative position encoding", "kind": "requirement", "era": "Eq.11", "summary": "The query-key inner product should be a function of embeddings and m−n.", "source_refs": ["rope-paper:eq11"]},
+      {"id": "rotary-position-embedding", "label": "Rotary position embedding", "kind": "method", "era": "Eqs.14-16", "summary": "Block-diagonal rotations encode position multiplicatively in queries and keys.", "source_refs": ["rope-paper:eq14-16"]},
+      {"id": "linear-self-attention", "label": "Linear self-attention", "kind": "property", "era": "Sec.3.3", "summary": "The paper emphasizes compatibility with linear self-attention because rotation acts on query and key representations.", "source_refs": ["rope-paper:sec3.3"]}
+    ],
+    "edges": [
+      {"source": "absolute-position", "target": "formulation", "relation": "provides-input-position", "teaching_point": "The functions receive absolute positions m and n."},
+      {"source": "relative-position", "target": "formulation", "relation": "states-desired-score", "teaching_point": "The inner product should depend on m−n."},
+      {"source": "formulation", "target": "rotary-position-embedding", "relation": "solved-by", "teaching_point": "The paper derives a two-dimensional rotary solution and generalizes it."},
+      {"source": "rotary-position-embedding", "target": "linear-self-attention", "relation": "compatible-with", "teaching_point": "The positional operation remains on query and key vectors."}
+    ],
+    "unresolved": ["Equation 16 establishes relative position in the inner product, not a universal guarantee of length extrapolation or downstream performance."]
+  }
+}

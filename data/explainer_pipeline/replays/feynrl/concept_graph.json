@@ -1,0 +1,26 @@
+{
+  "schema_version": "explainer-stage-replay/0.1.0",
+  "paper_id": "feynrl",
+  "stage": "concept_graph",
+  "provider": "reviewed_fixture",
+  "model": "paper-native-demo-0.2",
+  "generated_at": "2026-07-21T18:19:00-07:00",
+  "payload": {
+    "thesis": "The paper measures behavior-policy mismatch with normalized effective sample size and uses that batch value in the original P3O objective for large-model post-training.",
+    "nodes": [
+      {"id": "trust-region-concern", "label": "Trust-region concern", "kind": "motivation", "era": "policy-optimization", "summary": "Each gradient update should not move the policy too far.", "source_refs": ["feynrl-paper:sec1"]},
+      {"id": "off-policy-concern", "label": "Off-policy concern", "kind": "motivation", "era": "off-policy", "summary": "Behavior-policy data should influence an update only when the data remain reliable.", "source_refs": ["feynrl-paper:sec1"]},
+      {"id": "fixed-clipping", "label": "Fixed clipping", "kind": "predecessor", "era": "PPO-GRPO", "summary": "A clipping range chosen before training is used in PPO-style and GRPO-style objectives.", "source_refs": ["feynrl-paper:sec1", "feynrl-paper:table1"]},
+      {"id": "normalized-ess", "label": "Normalized effective sample size", "kind": "measure", "era": "current-batch", "summary": "Equation 11 summarizes concentration of the current batch's per-token policy ratios.", "source_refs": ["feynrl-paper:eq11"]},
+      {"id": "p3o", "label": "Policy-on Policy-off Policy Optimization", "kind": "objective", "era": "P3O", "summary": "Equation 12 uses e_B in the score-function weight and the off-policy regularizer.", "source_refs": ["feynrl-paper:eq12"]}
+    ],
+    "edges": [
+      {"source": "trust-region-concern", "target": "fixed-clipping", "relation": "addressed-by", "teaching_point": "Fixed clipping is commonly used to limit an update."},
+      {"source": "off-policy-concern", "target": "fixed-clipping", "relation": "conflated-with", "teaching_point": "The paper argues that the same fixed range is also asked to handle data mismatch."},
+      {"source": "off-policy-concern", "target": "normalized-ess", "relation": "measured-by", "teaching_point": "The current batch, rather than a pre-committed range, provides e_B."},
+      {"source": "normalized-ess", "target": "p3o", "relation": "parameterizes", "teaching_point": "The batch value appears in both terms of Eq. 12."},
+      {"source": "fixed-clipping", "target": "p3o", "relation": "compared-with", "teaching_point": "Section 4 compares the fixed-clipping baselines with P3O across controlled shifts."}
+    ],
+    "unresolved": ["The paper notes that one ESS can conflate behavior-policy mismatch with within-epoch proximal drift."]
+  }
+}

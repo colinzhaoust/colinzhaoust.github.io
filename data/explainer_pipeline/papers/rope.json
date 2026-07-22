@@ -1,0 +1,126 @@
+{
+  "schema_version": "explainer-source-packet/0.1.0",
+  "paper_id": "rope",
+  "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+  "short_title": "RoPE / RoFormer",
+  "audience": "Readers who understand dot-product attention and want the paper's formulation, implementation, and empirical findings.",
+  "central_question": "Can absolute position be encoded in query and key representations while their inner product depends explicitly on relative position?",
+  "required_section_ids": ["motivation", "related_work", "formulation", "rope", "findings", "limits"],
+  "sources": [
+    {
+      "source_id": "rope-paper",
+      "kind": "paper",
+      "url": "https://arxiv.org/abs/2104.09864",
+      "revision": "arXiv:2104.09864v5",
+      "sha256": "e9a481fbe1c8a20b7b1fa566b13102a1896c7829fa9a8b4c80528452a5ddaf79",
+      "page_count": 14,
+      "retrieved_at": "2026-07-21"
+    }
+  ],
+  "code_sources": [
+    {
+      "code_id": "roformer-readme",
+      "repository": "https://github.com/ZhuiyiTechnology/roformer",
+      "revision": "dfc678ad506fc527ba17ead8db23cbe4d947a9b4",
+      "mapping_state": "confirmed",
+      "excerpts": [
+        {
+          "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+          "symbol": "RoPE attention pseudocode",
+          "line_start": 1,
+          "line_end": 22
+        }
+      ]
+    }
+  ],
+  "formula_refs": ["data/formula_explainer/formulas/rope/relative.json"],
+  "scene_renderer": {
+    "engine": "Manim Community 0.19.0",
+    "entrypoint": "scenes/explainer_pipeline_native.py",
+    "coding_agent_required": false,
+    "scene_ids": ["RoPEFormulationAndCode", "RoPEFindings"]
+  },
+  "media": [
+    {
+      "media_id": "rope-formulation-code",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/rope/formulation-code.mp4",
+      "sha256": "488c414790ce4be8e669512429c52cf0544d0d214ef183e3926deb4088bb26f1",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "New paper-native Manim scene for Eq. 11, Eqs. 14-16, and the official implementation pattern."
+    },
+    {
+      "media_id": "rope-formulation-code-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/rope/formulation-code-poster.png",
+      "sha256": "b7a02e032833a512987e376e2fd1c4ff97418c4a07d2c28f9d18afb44abe40f6",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the new RoPE formulation and implementation scene."
+    },
+    {
+      "media_id": "rope-formulation-code-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/rope/formulation-code.vtt",
+      "sha256": "a5d74bfa53a03fef59f666f80fd0a6f08525931bc80cb248610d2fc795f2b752",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the RoPE formulation and implementation scene."
+    },
+    {
+      "media_id": "rope-findings",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/rope/findings.mp4",
+      "sha256": "d1bf4b3c0807652da9bf0ddce18ea303d7dad2c6bbe288a0c73850dd1e8899aa",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "New Manim scene connecting the paper's stated properties to Table 1 and Figure 3 findings."
+    },
+    {
+      "media_id": "rope-findings-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/rope/findings-poster.png",
+      "sha256": "9e11f38ac2c1336b917aa5fa147f8ef1afcf9dc3e947987fe0487eeeb04be424",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the RoPE findings scene."
+    },
+    {
+      "media_id": "rope-findings-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/rope/findings.vtt",
+      "sha256": "ea7b2c8fa837b9c19b4fb5143b9682791be913f1336e9a9d6a2107741e4a9200",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the RoPE findings scene."
+    }
+  ],
+  "agent_input": {
+    "paper_excerpts": [
+      {
+        "locator": "Sec. 1-2.3",
+        "text": "The paper reviews additive absolute and relative position encodings and motivates a multiplicative construction with sequence length flexibility, long-term decay, and compatibility with linear self-attention.",
+        "source_refs": ["rope-paper:sec1", "rope-paper:sec2"]
+      },
+      {
+        "locator": "Eq. 11 and Eqs. 14-16",
+        "text": "Equation 11 formulates the relative-position requirement. Equations 14-16 give the rotary solution and show that the query-key inner product contains R at relative position n minus m.",
+        "source_refs": ["rope-paper:eq11", "rope-paper:eq14-16"]
+      },
+      {
+        "locator": "Sec. 4, Table 1 and Fig. 3",
+        "text": "Table 1 reports 27.5 BLEU for RoFormer and 27.3 for Transformer-base on WMT 2014 English-to-German. Figure 3 reports faster convergence in the shown language-model pre-training and Performer experiments.",
+        "source_refs": ["rope-paper:table1", "rope-paper:fig3"]
+      }
+    ],
+    "code_notes": [
+      {
+        "locator": "Official README.md:18-32",
+        "text": "The official pseudocode constructs the perpendicular companion, applies q cos plus q-perpendicular sin and the analogous key operation, then takes the standard attention dot product.",
+        "source_refs": ["roformer-readme:rope-pseudocode"]
+      }
+    ],
+    "claim_policy": "Use the paper's terms: formulation of relative position encoding, rotary position embedding, sequence length flexibility, long-term decay, and linear self-attention. Keep exact algebra separate from empirical findings and extrapolation claims."
+  }
+}

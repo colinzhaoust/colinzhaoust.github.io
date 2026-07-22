@@ -1,0 +1,94 @@
+{
+  "schema_version": "explainer-site-manifest/0.1.0",
+  "paper_count": 2,
+  "papers": [
+    "feynrl",
+    "rope"
+  ],
+  "media": [
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-p3o",
+      "path": "assets/feynrl/feynrl-ess-p3o.mp4",
+      "sha256": "8c8653812fb508ac04a109724a2928d14a7834858e6cb9aedef99b88895b60ca",
+      "size_bytes": 817264
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-p3o-poster",
+      "path": "assets/feynrl/feynrl-ess-p3o-poster.png",
+      "sha256": "2b4a42950ffd4a516860e4f5ae0500ef906742cdf2aca6d63dd7c8f9bd9c7461",
+      "size_bytes": 249487
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-ess-p3o-captions",
+      "path": "assets/feynrl/feynrl-ess-p3o-captions.vtt",
+      "sha256": "ed77ae7c9ad540fbeccf1bce11887620ef5af707c8b6075681201935aa3f6ee2",
+      "size_bytes": 486
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings",
+      "path": "assets/feynrl/feynrl-findings.mp4",
+      "sha256": "1c6295a576373d0c820c47c2deffe973981d0310f87a966dbabfb53e70b90d0b",
+      "size_bytes": 489067
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings-poster",
+      "path": "assets/feynrl/feynrl-findings-poster.png",
+      "sha256": "cb2285d0b5e61ac734c4a5fa9ec133f99811aa80396dba4c64a9c4a82c3116a6",
+      "size_bytes": 194158
+    },
+    {
+      "paper_id": "feynrl",
+      "media_id": "feynrl-findings-captions",
+      "path": "assets/feynrl/feynrl-findings-captions.vtt",
+      "sha256": "bfd30844ca4c3b374ce6382aa0b849110d0514471582a795ba50db5b4e5c8f2f",
+      "size_bytes": 386
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-formulation-code",
+      "path": "assets/rope/rope-formulation-code.mp4",
+      "sha256": "488c414790ce4be8e669512429c52cf0544d0d214ef183e3926deb4088bb26f1",
+      "size_bytes": 645113
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-formulation-code-poster",
+      "path": "assets/rope/rope-formulation-code-poster.png",
+      "sha256": "b7a02e032833a512987e376e2fd1c4ff97418c4a07d2c28f9d18afb44abe40f6",
+      "size_bytes": 220663
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-formulation-code-captions",
+      "path": "assets/rope/rope-formulation-code-captions.vtt",
+      "sha256": "a5d74bfa53a03fef59f666f80fd0a6f08525931bc80cb248610d2fc795f2b752",
+      "size_bytes": 493
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-findings",
+      "path": "assets/rope/rope-findings.mp4",
+      "sha256": "d1bf4b3c0807652da9bf0ddce18ea303d7dad2c6bbe288a0c73850dd1e8899aa",
+      "size_bytes": 313698
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-findings-poster",
+      "path": "assets/rope/rope-findings-poster.png",
+      "sha256": "9e11f38ac2c1336b917aa5fa147f8ef1afcf9dc3e947987fe0487eeeb04be424",
+      "size_bytes": 175700
+    },
+    {
+      "paper_id": "rope",
+      "media_id": "rope-findings-captions",
+      "path": "assets/rope/rope-findings-captions.vtt",
+      "sha256": "ea7b2c8fa837b9c19b4fb5143b9682791be913f1336e9a9d6a2107741e4a9200",
+      "size_bytes": 314
+    }
+  ]
+}

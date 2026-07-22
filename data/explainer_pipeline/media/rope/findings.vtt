@@ -1,0 +1,7 @@
+WEBVTT
+
+00:00.000 --> 00:04.000
+Section 3.3 studies sequence length flexibility, long-term decay, and compatibility with linear self-attention.
+
+00:04.000 --> 00:09.300
+Table 1 reports 27.3 BLEU for Transformer-base and 27.5 for RoFormer. Figure 3 reports faster convergence in the shown pre-training experiments.

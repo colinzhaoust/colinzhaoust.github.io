@@ -1,0 +1,129 @@
+{
+  "schema_version": "explainer-source-packet/0.1.0",
+  "paper_id": "feynrl",
+  "title": "A New Policy Optimization Paradigm for LLM Reasoning",
+  "short_title": "FeynRL / P3O",
+  "audience": "Readers who know policy gradients and want to understand the paper's on-policy and off-policy formulation.",
+  "central_question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
+  "required_section_ids": ["motivation", "related_work", "ess", "p3o", "findings", "limits"],
+  "sources": [
+    {
+      "source_id": "feynrl-paper",
+      "kind": "paper",
+      "url": "https://openreview.net/forum?id=FOGhcI4iRk",
+      "revision": "OpenReview FOGhcI4iRk / arXiv:2605.12380v1",
+      "sha256": "19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
+      "page_count": 18,
+      "retrieved_at": "2026-07-21"
+    }
+  ],
+  "code_sources": [
+    {
+      "code_id": "feynrl-p3o",
+      "repository": "https://github.com/FeynRL/FeynRL",
+      "revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752",
+      "mapping_state": "confirmed",
+      "excerpts": [
+        {
+          "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
+          "symbol": "calculate_ess / P3O policy loss",
+          "line_start": 1,
+          "line_end": 26
+        }
+      ]
+    }
+  ],
+  "formula_refs": [
+    "data/formula_explainer/formulas/feynrl/ess.json",
+    "data/formula_explainer/formulas/feynrl/p3o_objective.json"
+  ],
+  "scene_renderer": {
+    "engine": "Manim Community 0.19.0",
+    "entrypoint": "scenes/explainer_pipeline_native.py",
+    "coding_agent_required": false,
+    "scene_ids": ["FeynRLEssP3O", "FeynRLFindings"]
+  },
+  "media": [
+    {
+      "media_id": "feynrl-ess-p3o",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/feynrl/ess-p3o.mp4",
+      "sha256": "8c8653812fb508ac04a109724a2928d14a7834858e6cb9aedef99b88895b60ca",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "New paper-native Manim scene for the trust-region concern, off-policy concern, Eq. 11, Eq. 12, and confirmed implementation lines."
+    },
+    {
+      "media_id": "feynrl-ess-p3o-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/feynrl/ess-p3o-poster.png",
+      "sha256": "2b4a42950ffd4a516860e4f5ae0500ef906742cdf2aca6d63dd7c8f9bd9c7461",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the new FeynRL mechanism scene."
+    },
+    {
+      "media_id": "feynrl-ess-p3o-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/feynrl/ess-p3o.vtt",
+      "sha256": "ed77ae7c9ad540fbeccf1bce11887620ef5af707c8b6075681201935aa3f6ee2",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the FeynRL mechanism scene."
+    },
+    {
+      "media_id": "feynrl-findings",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/feynrl/findings.mp4",
+      "sha256": "1c6295a576373d0c820c47c2deffe973981d0310f87a966dbabfb53e70b90d0b",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "New Manim scene connecting Section 4's three experimental axes to exact Table 7 values."
+    },
+    {
+      "media_id": "feynrl-findings-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/feynrl/findings-poster.png",
+      "sha256": "cb2285d0b5e61ac734c4a5fa9ec133f99811aa80396dba4c64a9c4a82c3116a6",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the FeynRL findings scene."
+    },
+    {
+      "media_id": "feynrl-findings-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/feynrl/findings.vtt",
+      "sha256": "bfd30844ca4c3b374ce6382aa0b849110d0514471582a795ba50db5b4e5c8f2f",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the FeynRL findings scene."
+    }
+  ],
+  "agent_input": {
+    "paper_excerpts": [
+      {
+        "locator": "Sec. 1 and Sec. 3",
+        "text": "The paper names a trust-region concern and an off-policy concern, argues that fixed clipping conflates them, and asks the current batch to measure behavior-policy mismatch through normalized effective sample size.",
+        "source_refs": ["feynrl-paper:sec1", "feynrl-paper:sec3"]
+      },
+      {
+        "locator": "Eq. 11 and Eq. 12",
+        "text": "Equation 11 defines normalized ESS from per-token policy ratios. Equation 12 uses e_B in the score-function weight and the off-policy regularizer of Policy-on Policy-off Policy Optimization.",
+        "source_refs": ["feynrl-paper:eq11", "feynrl-paper:eq12"]
+      },
+      {
+        "locator": "Sec. 4 and Table 7",
+        "text": "The experiments test clipping factor, sampling temperature, and BF16 Train plus FP8 Rollout. Table 7 reports exact held-out pass@1 values, including the late precision-mismatch result.",
+        "source_refs": ["feynrl-paper:sec4", "feynrl-paper:table7"]
+      }
+    ],
+    "code_notes": [
+      {
+        "locator": "algs/P3O/p3o.py:107-135,192-223",
+        "text": "The implementation computes normalized ESS on valid tokens, caps rho at ESS, detaches rho in the policy term, and weights behavioral KL by one minus ESS.",
+        "source_refs": ["feynrl-p3o:calculate_ess", "feynrl-p3o:compute_policy_loss"]
+      }
+    ],
+    "claim_policy": "Use the paper's exact terms. Use exact numbers only with equation or table locators. Label figure readings as authors' reported findings. Do not rename P3O components or invent motivational slogans."
+  }
+}

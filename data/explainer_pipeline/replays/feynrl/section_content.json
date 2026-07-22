@@ -1,0 +1,61 @@
+{
+  "schema_version": "explainer-stage-replay/0.1.0",
+  "paper_id": "feynrl",
+  "stage": "section_content",
+  "provider": "reviewed_fixture",
+  "model": "paper-native-demo-0.2",
+  "generated_at": "2026-07-21T18:21:00-07:00",
+  "payload": {
+    "sections": {
+      "motivation": {
+        "blocks": [
+          {"type": "paper_question", "label": "Paper premise", "question": "A clipping factor is fixed before training. How should policy optimization respond when behavior-policy mismatch changes from batch to batch?", "context": "The paper separates a trust-region concern from an off-policy concern and attributes fragility to using fixed clipping for both.", "source_refs": ["feynrl-paper:sec1", "feynrl-paper:sec3"]},
+          {"type": "comparison", "columns": [{"label": "Trust-region concern", "accent": "cyan", "question": "How far should one gradient update move the policy?", "answer": "The update should not move the policy too far."}, {"label": "Off-policy concern", "accent": "violet", "question": "When should behavior-policy data influence the update?", "answer": "Only when the data remain reliable for the current policy."}], "source_refs": ["feynrl-paper:sec1"]},
+          {"type": "prose", "heading": "Why the paper moves beyond fixed clipping", "paragraphs": ["A fixed range ρ_t ∈ [1−ε_l, 1+ε_h] is selected before training. It is therefore not a measurement of the current batch. The paper's intent is to compute a batch-dependent quantity and use it in an objective that handles both on-policy and off-policy data."], "source_refs": ["feynrl-paper:sec1", "feynrl-paper:sec3"]}
+        ]
+      },
+      "related_work": {
+        "blocks": [
+          {"type": "lineage", "nodes": [{"id": "trpo", "label": "TRPO", "note": "trust-region policy optimization"}, {"id": "ppo", "label": "PPO", "note": "clipped surrogate objective"}, {"id": "grpo", "label": "GRPO", "note": "large-model reasoning objective"}, {"id": "p3o-original", "label": "P3O", "note": "Policy-on Policy-off Policy Optimization"}, {"id": "feynrl", "label": "FeynRL", "note": "P3O for large-model post-training"}], "edges": [["trpo", "ppo"], ["ppo", "grpo"], ["p3o-original", "feynrl"], ["grpo", "feynrl"]], "source_refs": ["feynrl-paper:sec2", "feynrl-paper:sec3"]},
+          {"type": "prose", "heading": "The paper's stated intent", "paragraphs": ["The objective is not presented as a renamed PPO clip. The paper adopts the original P3O objective for large-model post-training so that the same form can use on-policy and off-policy data without adding a new clipping hyperparameter."], "source_refs": ["feynrl-paper:sec3", "feynrl-paper:eq12"]},
+          {"type": "related_reading", "title": "Further reading in the paper's lineage", "items": [{"title": "Trust Region Policy Optimization", "relation": "Trust-region formulation preceding PPO-style clipping.", "url": "https://proceedings.mlr.press/v37/schulman15.html"}, {"title": "Proximal Policy Optimization Algorithms", "relation": "Clipped surrogate objective used as a proximal baseline.", "url": "https://arxiv.org/abs/1707.06347"}, {"title": "P3O: Policy-on Policy-off Policy Optimization", "relation": "The original P3O objective adopted by the paper.", "url": "https://proceedings.mlr.press/v115/fakoor20a.html"}, {"title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models", "relation": "GRPO in large-model mathematical reasoning.", "url": "https://arxiv.org/abs/2402.03300"}, {"title": "IMPALA: Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures", "relation": "Off-policy actor-learner correction and policy-lag context.", "url": "https://proceedings.mlr.press/v80/espeholt18a.html"}], "source_refs": ["feynrl-paper:references"]}
+        ]
+      },
+      "ess": {
+        "blocks": [
+          {"type": "paper_question", "label": "Why Eq. 11 is necessary", "question": "Does the current batch have broad effective support, or do a few policy ratios dominate its estimate?", "context": "Normalized ESS is the paper's batch-computed measure of behavior-policy mismatch. It supplies e_B before Eq. 12 uses that value.", "source_refs": ["feynrl-paper:eq11", "feynrl-paper:eq12"]},
+          {"type": "numeric_fixture", "title": "Same token count, different normalized ESS", "formula": "ESS(B;θ) = Ê_B[ρ_t]² / Ê_B[ρ_t²]", "fixtures": [{"label": "Uniform policy ratios", "values": [1, 1, 1, 1], "ess": 1.0, "accent": "green"}, {"label": "Concentrated policy ratios", "values": [0.1, 0.1, 0.1, 3.7], "ess": 0.292, "accent": "orange"}], "note": "The token count is unchanged. ESS falls because the second moment grows when a few ratios dominate.", "source_refs": ["feynrl-paper:eq11"], "claim_label": "Eq. 11 with a derived numeric fixture"},
+          {"type": "video", "media_id": "feynrl-ess-p3o", "poster_id": "feynrl-ess-p3o-poster", "captions_id": "feynrl-ess-p3o-captions", "title": "From the two concerns to Eq. 11 and Eq. 12", "caption": "A newly authored Manim scene; no earlier bottom-up asset is reused.", "beats": ["Trust-region concern", "Off-policy concern", "Normalized ESS", "P3O objective", "Confirmed code"], "source_refs": ["feynrl-paper:sec1", "feynrl-paper:eq11", "feynrl-paper:eq12", "feynrl-p3o:compute_policy_loss"]}
+        ]
+      },
+      "p3o": {
+        "blocks": [
+          {"type": "formula_steps", "formula": "L_P3O = −sg(min{ρ_t,e_B}) log π_θ A_t + (1−e_B) KL(π_θ || π_b)", "steps": [{"label": "Compute e_B", "expression": "e_B = ESS(B;θ)", "meaning": "Equation 11 measures behavior-policy mismatch in the current batch.", "primitive": {"id": "manim.native_ratio_bars", "origin": "project_new"}}, {"label": "Score-function weight", "expression": "sg(min{ρ_t,e_B})", "meaning": "The paper caps the detached score-function weight with e_B.", "primitive": {"id": "manim.native_formula_focus", "origin": "project_new"}}, {"label": "Off-policy regularizer", "expression": "(1−e_B) KL(π_θ || π_b)", "meaning": "The KL coefficient grows as the batch value falls.", "primitive": {"id": "manim.native_formula_code_map", "origin": "project_new"}}], "source_refs": ["feynrl-paper:eq11", "feynrl-paper:eq12"], "claim_label": "FeynRL Eq. 11 and Eq. 12"},
+          {"type": "code", "code_source_id": "feynrl-p3o", "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py", "symbol": "Equation 11 and Equation 12 in the repository", "lines": [{"number": 11, "code": "ess = (sum_w**2) / (sum_w_2 + 1e-8) / total", "maps_to": "e_B = ESS(B;θ), valid-token aggregation"}, {"number": 18, "code": "rho = torch.clamp(ratio, max=ess_factor)", "maps_to": "min{ρ_t,e_B}"}, {"number": 20, "code": "policy_loss = -(rho.detach() * logprobs * advantages)", "maps_to": "stop-gradient score-function term"}, {"number": 24, "code": "trust_region = (1 - ess_factor) * kl_behavioral", "maps_to": "(1−e_B) KL(π_θ || π_b)"}], "source_refs": ["feynrl-p3o:dfe8535", "feynrl-paper:eq11", "feynrl-paper:eq12"]},
+          {"type": "prose", "heading": "Why P3O rather than another clip schedule", "paragraphs": ["In the paper's formulation, e_B is computed from the same batch used for the update. The score-function term and the off-policy regularizer therefore respond to measured mismatch rather than to a clipping factor chosen in advance. The implementation keeps the equation and code in the same conceptual scene."], "source_refs": ["feynrl-paper:sec3", "feynrl-paper:eq12", "feynrl-p3o:compute_policy_loss"]}
+        ]
+      },
+      "findings": {
+        "blocks": [
+          {"type": "video", "media_id": "feynrl-findings", "poster_id": "feynrl-findings-poster", "captions_id": "feynrl-findings-captions", "title": "What Section 4 tests and what Table 7 reports", "caption": "The animation begins with the three experimental axes and ends on exact held-out values.", "beats": ["Clipping factor", "Sampling temperature", "BF16 Train + FP8 Rollout", "AMC pass@1", "Iteration 30"], "source_refs": ["feynrl-paper:sec4", "feynrl-paper:table7"]},
+          {"type": "bar_chart", "title": "AMC pass@1, 4K-token evaluation", "groups": [{"label": "GRPO clip average", "value": 0.381, "uncertainty": "±0.195", "accent": "violet"}, {"label": "P3O", "value": 0.493, "accent": "green"}], "axis_min": 0, "axis_max": 0.6, "unit": "pass@1", "source_refs": ["feynrl-paper:table7"], "claim_label": "Exact Table 7 values"},
+          {"type": "reported_trends", "title": "Findings organized by the paper's experimental questions", "items": [{"label": "Clipping factor", "finding": "Across the compared clipping settings, the paper reports substantial sensitivity for GRPO while P3O is evaluated once without choosing a clipping factor.", "source_ref": "feynrl-paper:fig1"}, {"label": "Sampling temperature", "finding": "The paper reports that changing rollout temperature introduces off-policy data and that P3O remains stable in the shown runs.", "source_ref": "feynrl-paper:fig2"}, {"label": "BF16 Train + FP8 Rollout", "finding": "Table 7 reports 0.029 for GRPO and 0.529 for P3O at iteration 30 in the shown precision-mismatch setting.", "source_ref": "feynrl-paper:table7"}], "claim_label": "Authors' reported findings", "source_refs": ["feynrl-paper:sec4", "feynrl-paper:table7"]}
+        ]
+      },
+      "limits": {
+        "blocks": [
+          {"type": "limitation", "items": [{"label": "One ESS", "detail": "The paper notes that one effective sample size can conflate behavior-policy mismatch with within-epoch proximal drift."}, {"label": "Aggregation level", "detail": "The formulation computes a batch-level value; it does not separately diagnose every sequence or token subgroup."}, {"label": "Evidence boundary", "detail": "The experiments cover the paper's selected models, datasets, temperatures, clipping factors, rollout lengths, and precision settings."}, {"label": "No universal guarantee", "detail": "The reported stability and held-out values do not establish performance for every model or distribution shift."}], "source_refs": ["feynrl-paper:sec3", "feynrl-paper:sec4", "feynrl-paper:appendix"]},
+          {"type": "learner_check", "prompt": "Why is ESS needed if the batch size is already known?", "answer": "Batch size counts tokens. Equation 11 measures how evenly the policy-ratio weight is distributed across those tokens; the count can stay fixed while effective support changes."}
+        ]
+      }
+    },
+    "appendix_entries": [
+      {"id": "feynrl-provenance", "title": "Source provenance", "body": "Paper OpenReview FOGhcI4iRk / arXiv:2605.12380v1, PDF SHA-256 19b66e…15e. Code revision dfe85351…5752. Every new media file is hash checked.", "source_refs": ["feynrl-paper", "feynrl-p3o"]},
+      {"id": "feynrl-related-work", "title": "Related-work reading order", "body": "Read TRPO for the trust-region constraint, PPO for the clipped surrogate, DeepSeekMath for GRPO in mathematical reasoning, original P3O for the on-policy/off-policy objective, and IMPALA for policy-lag correction context.", "source_refs": ["feynrl-paper:references"]},
+      {"id": "feynrl-ess-derivation", "title": "Normalized ESS", "body": "Equation 11 is mean(ρ)² / mean(ρ²), equivalently (Σρ)² / (nΣρ²). For nonnegative ratios it reaches 1 for uniform weights and decreases as weight concentrates.", "source_refs": ["feynrl-paper:eq11"]},
+      {"id": "feynrl-code-map", "title": "Formula, animation, and code map", "body": "The new Manim source lives in scenes/explainer_pipeline_native.py. It animates Eq. 11, Eq. 12, and exact repository operations in one scene; the runtime never asks a coding agent to author Python.", "source_refs": ["feynrl-paper:eq11", "feynrl-paper:eq12", "feynrl-p3o:dfe8535"]},
+      {"id": "feynrl-results-detail", "title": "Results reading guide", "body": "Bars use exact Table 7 values. Figure statements remain labeled as the authors' reported findings; curves are not digitized into invented samples.", "source_refs": ["feynrl-paper:sec4", "feynrl-paper:table7"]},
+      {"id": "feynrl-limitations", "title": "Potential issue and open questions", "body": "The main conceptual limitation is whether one batch-level ESS can adequately distinguish different kinds of policy mismatch. The website preserves that issue instead of presenting P3O as assumption-free.", "source_refs": ["feynrl-paper:sec3", "feynrl-paper:appendix"]}
+    ]
+  }
+}
