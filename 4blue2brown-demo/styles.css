@@ -81,8 +81,10 @@ main { min-height: calc(100vh - 140px); }
 .lesson-header h1, .overview-hero h1 { margin: 10px 0 14px; font-family: var(--serif); font-weight: 600; line-height: .98; letter-spacing: -.035em; }
 .lesson-header h1 { font-size: clamp(2.5rem, 6vw, 5.7rem); max-width: 12ch; }
 .lesson-header .promise { max-width: 68ch; color: var(--muted); font-size: clamp(1rem, 1.8vw, 1.22rem); }
-.question-line { margin-top: 20px; display: flex; align-items: baseline; gap: 10px; font-family: var(--serif); font-size: 1.05rem; }
-.question-line b { color: var(--orange); font-family: var(--mono); font-size: .7rem; }
+.question-line, .intent-line { margin-top: 16px; display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: baseline; gap: 10px; font-family: var(--serif); font-size: 1.05rem; }
+.question-line b, .intent-line b { color: var(--orange); font-family: var(--mono); font-size: .7rem; }
+.intent-line { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.intent-line b { color: var(--green); }
 .blocks { display: grid; gap: clamp(36px, 6vw, 76px); padding-top: 44px; }
 .block { min-width: 0; }
 .block h2, .block h3 { font-family: var(--serif); line-height: 1.12; }
@@ -114,6 +116,24 @@ main { min-height: calc(100vh - 140px); }
 .lineage-node::before { content: ""; position: absolute; width: 9px; height: 9px; top: -27px; left: 18px; border-radius: 50%; background: var(--node-color, var(--violet)); }
 .lineage-node strong { display: block; font-family: var(--serif); }
 .lineage-node span { display: block; margin-top: 7px; color: var(--muted); font-size: .78rem; }
+.equation-thread-list { border-top: 1px solid var(--line-strong); }
+.equation-thread-list article { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 18px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.thread-index { color: var(--orange); font: 800 .68rem var(--mono); }
+.equation-thread-list strong { display: block; font: 600 1.2rem var(--serif); }
+.equation-thread-list code { display: block; margin: 12px 0; padding: 12px 14px; overflow-x: auto; color: var(--paper); background: var(--ink); font: .78rem/1.5 var(--mono); }
+.equation-thread-list p { max-width: 68ch; margin: 0; font-family: var(--serif); }
+.equation-thread-list small { display: block; margin-top: 8px; color: var(--green); font: .66rem/1.45 var(--mono); }
+.folded-equations { margin-top: 18px; padding: 18px 20px; border: 1px dashed var(--line-strong); background: var(--paper-2); }
+.folded-equations summary { cursor: pointer; font: 800 .7rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.folded-equations p { color: var(--muted); font-size: .82rem; }
+.folded-equations strong { color: var(--ink); }
+.result-story { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr); gap: clamp(26px, 5vw, 64px); padding-block: 28px; border-block: 1px solid var(--line-strong); }
+.result-story h2 { max-width: 22ch; }
+.result-story dl { margin: 0; display: grid; }
+.result-story dl div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--line); }
+.result-story dt { color: var(--muted); font: 800 .62rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.result-story dd { margin: 0; font-size: .88rem; }
+.result-story .claim-label { margin: 0 9px 0 0; }
 .reading-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line-strong); background: var(--line-strong); gap: 1px; }
 .reading-grid a { position: relative; min-height: 132px; padding: 22px 48px 22px 22px; display: flex; flex-direction: column; gap: 9px; background: var(--paper); text-decoration: none; }
 .reading-grid a:hover { background: var(--green-soft); }
@@ -181,6 +201,16 @@ main { min-height: calc(100vh - 140px); }
 .formula-header h1 { max-width: 9ch; }
 .formula-blocks { gap: clamp(52px, 8vw, 96px); }
 .formula-inventory-grid { margin-top: 24px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--line-strong); background: var(--line-strong); }
+.equation-audit-list { margin-top: 24px; border-top: 1px solid var(--line-strong); }
+.equation-audit-list article { display: grid; grid-template-columns: minmax(180px, .65fr) minmax(0, 1.35fr); gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.equation-audit-list article > div { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; }
+.equation-audit-list strong { font-family: var(--serif); }
+.equation-audit-list small { grid-column: 2; color: var(--muted); font: .6rem var(--mono); }
+.equation-audit-list p { margin: 0; color: var(--muted); }
+.coverage-state { padding: 3px 7px; border: 1px solid currentColor; color: var(--green); font: 800 .55rem var(--mono); text-transform: uppercase; }
+.coverage-fold .coverage-state { color: var(--gray); }
+.coverage-explain .coverage-state { color: var(--violet); }
+.equation-audit-list .fold-reason { grid-column: 2; color: var(--gray); font: .64rem/1.45 var(--mono); }
 .formula-inventory-grid article { min-width: 0; padding: clamp(22px, 3vw, 34px); background: var(--paper); }
 .formula-inventory-grid h2 { min-height: 2.2em; margin-top: 22px; font-size: clamp(1.35rem, 2.2vw, 2rem); }
 .formula-inventory-grid .formula-display { min-height: 112px; font-size: clamp(.72rem, 1.2vw, .94rem); overflow-wrap: anywhere; white-space: normal; }
@@ -284,7 +314,9 @@ footer { min-height: 80px; padding: 22px clamp(18px, 4vw, 52px); display: flex; 
   .section-rail button { flex: 0 0 auto; width: auto; min-height: 44px; grid-template-columns: 22px auto; padding-inline: 10px; }
   .lesson { padding: 38px 18px 80px; border: 0; }
   .lesson-header h1 { font-size: clamp(2.7rem, 15vw, 4.3rem); }
-  .comparison, .fixture-grid, .formula-steps, .rotation-stage, .appendix-grid, .reading-grid, .formula-inventory-grid, .micro-video { grid-template-columns: 1fr; }
+  .comparison, .fixture-grid, .formula-steps, .rotation-stage, .appendix-grid, .reading-grid, .formula-inventory-grid, .micro-video, .result-story { grid-template-columns: 1fr; }
+  .equation-audit-list article, .result-story dl div { grid-template-columns: 1fr; gap: 8px; }
+  .equation-audit-list .fold-reason { grid-column: 1; }
   .lineage-track { grid-template-columns: 1fr; padding-left: 22px; padding-top: 0; }
   .lineage-track::before { top: 0; bottom: 0; left: 5px; right: auto; width: 1px; height: auto; }
   .lineage-node::before { top: 18px; left: -22px; }

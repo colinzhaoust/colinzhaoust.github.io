@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00.000 --> 00:01.200
+Equation 2 starts from the on-policy score-function estimator.
+
+00:01.200 --> 00:02.900
+Equation 4 adds a fixed clipping factor chosen before the batch.
+
+00:02.900 --> 00:04.600
+Equation 7 defines the behavior-to-current policy ratio.
+
+00:04.600 --> 00:06.800
+Equations 11 and 12 replace preset epsilon with batch-computed e B.

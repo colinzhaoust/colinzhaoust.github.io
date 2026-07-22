@@ -5,7 +5,7 @@
     {
       "paper_id": "feynrl",
       "short_title": "FeynRL / P3O",
-      "title": "A New Policy Optimization Paradigm for LLM Reasoning",
+      "title": "Trust the Batch, On- or Off-Policy: Adaptive Policy Optimization for RL Post-Training",
       "central_question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
       "bundle": "data/bundles/feynrl.json",
       "completion": "full"
