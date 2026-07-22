@@ -20,12 +20,12 @@
   const fmtCost = (value) => value == null ? "not available" : `$${value < .01 ? value.toFixed(4) : value.toFixed(2)}`;
 
   async function load() {
-    const catalogResponse = await fetch("data/catalog.json");
+    const catalogResponse = await fetch("data/catalog.json", { cache: "no-store" });
     if (!catalogResponse.ok) throw new Error(`catalog ${catalogResponse.status}`);
     state.catalog = await catalogResponse.json();
     state.activeRun = state.catalog.default_run;
     await Promise.all(state.catalog.runs.flatMap((run) => run.papers.map(async (paper) => {
-      const response = await fetch(paper.bundle);
+      const response = await fetch(paper.bundle, { cache: "no-store" });
       if (!response.ok) throw new Error(`${run.run_id}/${paper.paper_id} bundle ${response.status}`);
       state.bundles.set(bundleKey(run.run_id, paper.paper_id), await response.json());
     })));
@@ -36,11 +36,13 @@
   }
 
   function buildModelSelector() {
-    const select = $("#model-run-select");
-    select.innerHTML = state.catalog.runs.map((run) => `<option value="${esc(run.run_id)}">${esc(run.label)} · ${esc(run.models.join(" + "))}</option>`).join("");
-    select.value = state.activeRun;
-    select.addEventListener("change", () => {
-      state.activeRun = select.value;
+    const options = $("#model-run-options");
+    const shortLabel = (run) => run.run_id === "reviewed-reference" ? "Demo" : run.label.includes("Gemini") ? "Gemini 3.1" : run.label.includes("GPT-5.5") ? "GPT-5.5" : run.label.split("·")[0].trim();
+    options.innerHTML = state.catalog.runs.map((run) => `<button type="button" class="model-run-option" data-run-id="${esc(run.run_id)}" aria-pressed="${run.run_id === state.activeRun ? "true" : "false"}" title="${esc(run.label)} · ${esc(run.models.join(" + "))}">${esc(shortLabel(run))}</button>`).join("");
+    options.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-run-id]");
+      if (!button || button.dataset.runId === state.activeRun) return;
+      state.activeRun = button.dataset.runId;
       const view = state.activePaper && !$("#paper-view").hidden ? state.activePaper : !$("#appendix-view").hidden ? "appendix" : "overview";
       const section = view === state.activePaper ? state.activeSection : undefined;
       location.hash = routeHash(view, section);
@@ -95,9 +97,9 @@
         return;
       }
       state.activeRun = parts[1];
-      $("#model-run-select").value = state.activeRun;
       parts = parts.slice(2);
     }
+    $("#model-run-options").querySelectorAll("button[data-run-id]").forEach((button) => button.setAttribute("aria-pressed", button.dataset.runId === state.activeRun ? "true" : "false"));
     if (!parts.length || parts[0] === "overview") {
       renderOverview();
       setView("overview");
