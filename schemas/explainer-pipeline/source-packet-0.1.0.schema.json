@@ -135,7 +135,8 @@
           "sha256": {"$ref": "#/$defs/hash"},
           "media_type": {"type": "string", "minLength": 1},
           "origin": {"enum": ["paper", "manim_builtin", "project_inherited", "project_new"]},
-          "caption": {"type": "string", "minLength": 1}
+          "caption": {"type": "string", "minLength": 1},
+          "published_path": {"$ref": "#/$defs/path"}
         }
       }
     },

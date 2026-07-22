@@ -47,6 +47,13 @@ class ExplainerPipelineTests(unittest.TestCase):
                 self.assertTrue(bundle["code_map"]["experiment_pipeline"])
                 self.assertTrue(all(trace["usage"] is None for trace in bundle["generation"]["stage_traces"]))
                 self.assertTrue(all(trace["cost"]["status"] == "not_recorded" for trace in bundle["generation"]["stage_traces"]))
+            for paper_id in ("feynrl", "rope"):
+                published_bundle = json.loads(
+                    (root / "site" / "data" / "runs" / "reviewed-reference" / f"{paper_id}.json").read_text(
+                        encoding="utf-8"
+                    )
+                )
+                validate_bundle(published_bundle)
 
     def test_comparison_site_writes_independent_traceable_run_bundles(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
