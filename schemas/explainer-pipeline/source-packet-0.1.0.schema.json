@@ -43,6 +43,7 @@
           "repository": {"type": "string", "pattern": "^https://"},
           "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
           "mapping_state": {"enum": ["candidate", "confirmed", "unresolved"]},
+          "checkout_path": {"$ref": "#/$defs/path"},
           "excerpts": {
             "type": "array",
             "minItems": 1,
@@ -66,6 +67,7 @@
       "additionalProperties": false,
       "required": ["formula_code_links", "nodes", "edges", "experiment_pipeline"],
       "properties": {
+        "example": {"type": "object"},
         "formula_code_links": {"type": "array", "items": {"type": "object"}},
         "nodes": {"type": "array", "items": {"type": "object"}},
         "edges": {"type": "array", "items": {"type": "object"}},
@@ -73,6 +75,7 @@
       }
     },
     "formula_refs": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+    "formula_showcase": {"type": "array", "items": {"type": "object"}},
     "equation_coverage": {
       "type": "array",
       "minItems": 1,

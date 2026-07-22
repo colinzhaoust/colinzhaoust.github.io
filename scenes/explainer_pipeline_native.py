@@ -76,6 +76,49 @@ class FeynRLP3OMicro(PaperNativeScene):
         self.wait(0.85)
 
 
+class FeynRLOffPolicyBridgeMicro(PaperNativeScene):
+    """Eqs. (2), (5–8): move the estimator to behavior-policy samples."""
+
+    def construct(self) -> None:
+        tag = Text("FEYNRL · BEHAVIOR-POLICY BRIDGE", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.45)
+        estimator = MathTex(
+            r"\mathbb E_{y\sim\pi_\theta}[A_t\nabla_\theta\log\pi_\theta(y_t)]",
+            font_size=43,
+            color=INK,
+        ).move_to(UP * 0.55)
+        sampling = VGroup(
+            Text("samples", font="Menlo", font_size=16, color=MUTED),
+            MathTex(r"y\sim\pi_\theta", font_size=34, color=CURRENT),
+        ).arrange(DOWN, buff=0.1).move_to(LEFT * 3.7 + DOWN * 1.05)
+        update = VGroup(
+            Text("update", font="Menlo", font_size=16, color=MUTED),
+            MathTex(r"\pi_\theta", font_size=34, color=CURRENT),
+        ).arrange(DOWN, buff=0.1).move_to(RIGHT * 3.7 + DOWN * 1.05)
+        connector = Arrow(sampling.get_right(), update.get_left(), color=RULE, buff=0.32)
+        source = self.source("FeynRL Eqs. (2), (5–8) · behavior-policy sampling")
+        self.play(FadeIn(tag), Write(estimator), FadeIn(sampling), GrowArrow(connector), FadeIn(update), FadeIn(source), run_time=1.15)
+        self.wait(0.45)
+
+        corrected = MathTex(
+            r"\mathbb E_{y\sim\pi_b}[",
+            r"\rho_t(\theta)",
+            r"A_t\nabla_\theta\log\pi_\theta(y_t)]",
+            font_size=42,
+            color=INK,
+        ).move_to(estimator)
+        corrected[1].set_color(BEHAVIOR)
+        behavior_sampling = VGroup(
+            Text("samples", font="Menlo", font_size=16, color=MUTED),
+            MathTex(r"y\sim\pi_b", font_size=34, color=BEHAVIOR),
+        ).arrange(DOWN, buff=0.1).move_to(sampling)
+        ratio = MathTex(r"\rho_t=\frac{\pi_\theta(y_t\mid x,y_{<t})}{\pi_b(y_t\mid x,y_{<t})}", font_size=31, color=BEHAVIOR).next_to(connector, DOWN, buff=0.34)
+        self.play(TransformMatchingTex(estimator, corrected), Transform(sampling, behavior_sampling), FadeIn(ratio, shift=UP * 0.08), run_time=1.8)
+        self.wait(0.45)
+        regularizer = MathTex(r"+\ \operatorname{KL}(\pi_\theta\Vert\pi_b)", font_size=34, color=WARNING).next_to(corrected, DOWN, buff=0.46)
+        self.play(FadeIn(regularizer), Indicate(ratio, color=BEHAVIOR), run_time=0.75)
+        self.wait(0.85)
+
+
 class RoPERelativeMicro(PaperNativeScene):
     """Eq. (16) as a single geometric collapse from two rotations to n-m."""
 
@@ -95,6 +138,41 @@ class RoPERelativeMicro(PaperNativeScene):
             run_time=1.5,
         )
         self.play(visual.labels.animate.set_opacity(1), run_time=0.65)
+        self.wait(0.9)
+
+
+class RoPEFrequencyPairsMicro(PaperNativeScene):
+    """Eqs. (20–34): a d-dimensional RoPE is parallel 2D rotations."""
+
+    def construct(self) -> None:
+        tag = Text("ROFORMER · PAIRED FREQUENCIES", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.43)
+        formula = MathTex(
+            r"R^d_{\Theta,m}=\operatorname{diag}(R_{m\theta_1},R_{m\theta_2},\ldots,R_{m\theta_{d/2}})",
+            font_size=40,
+            color=INK,
+        ).next_to(tag, DOWN, buff=0.32)
+        pairs = VGroup()
+        arrows = []
+        for index, (theta, color) in enumerate(((0.35, CURRENT), (0.75, BEHAVIOR), (1.15, ADAPTIVE)), start=1):
+            frame = VGroup(
+                Circle(radius=0.78, color=RULE),
+                Line(LEFT * 0.9, RIGHT * 0.9, color=RULE),
+                Line(DOWN * 0.9, UP * 0.9, color=RULE),
+            )
+            arrow = Arrow(ORIGIN, RIGHT * 0.67, buff=0, stroke_width=6, color=color)
+            label = MathTex(rf"(x_{{{2 * index - 1}}},x_{{{2 * index}}})", font_size=24, color=color).next_to(frame, DOWN, buff=0.18)
+            frequency = MathTex(rf"m\theta_{{{index}}}", font_size=22, color=MUTED).next_to(frame, UP, buff=0.12)
+            group = VGroup(frame, arrow, label, frequency)
+            group.theta = theta
+            pairs.add(group)
+            arrows.append(arrow)
+        pairs.arrange(RIGHT, buff=1.15).move_to(DOWN * 0.65)
+        source = self.source("RoFormer Eqs. (20–34) · adjacent coordinate pairs")
+        self.play(FadeIn(tag), Write(formula), LaggedStart(*[FadeIn(pair) for pair in pairs], lag_ratio=0.12), FadeIn(source), run_time=1.15)
+        self.wait(0.35)
+        self.play(*[Rotate(arrow, angle=pair.theta, about_point=pair[0].get_center()) for pair, arrow in zip(pairs, arrows)], run_time=1.8)
+        composition = Text("same position m · different pair frequencies · one block-diagonal rotation", font_size=22, color=INK, weight=BOLD).to_edge(DOWN, buff=0.67)
+        self.play(FadeOut(source), FadeIn(composition, shift=UP * 0.08), run_time=0.55)
         self.wait(0.9)
 
 
@@ -194,6 +272,27 @@ class FeynRLResultsMicro(PaperNativeScene):
         self.wait(0.9)
 
 
+class FeynRLClipResultMicro(PaperNativeScene):
+    """Exact Table 7 4K-token held-out comparison for clip selection."""
+
+    def construct(self) -> None:
+        tag = Text("FEYNRL · CLIP SENSITIVITY READOUT", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.42)
+        question = Text("What remains after choosing among fixed clipping factors?", font_size=27, color=INK, weight=BOLD).next_to(tag, DOWN, buff=0.3)
+        choices = VGroup(*[
+            VGroup(Rectangle(width=1.75, height=0.5, color=BEHAVIOR, fill_color=SOFT, fill_opacity=1), Text(f"ε = {value}", font="Menlo", font_size=18, color=BEHAVIOR))
+            for value in ("0.2", "0.4", "0.6")
+        ]).arrange(RIGHT, buff=0.35).move_to(UP * 0.35)
+        for item in choices:
+            item[1].move_to(item[0])
+        bars = MetricBars([("GRPO clip average", 0.381, BEHAVIOR), ("P3O", 0.493, ADAPTIVE)], maximum=0.6).scale(1.02).move_to(DOWN * 0.72)
+        source = self.source("Exact held-out AMC pass@1 · FeynRL Table 7 · 4K-token evaluation")
+        self.play(FadeIn(tag), FadeIn(question), LaggedStart(*[FadeIn(item) for item in choices], lag_ratio=0.15), FadeIn(source), run_time=1.0)
+        self.play(FadeOut(choices, shift=DOWN * 0.12), FadeIn(bars, shift=DOWN * 0.08), run_time=1.25)
+        note = Text("GRPO clip average 0.381 ± 0.195     P3O 0.493", font="Menlo", font_size=18, color=INK).to_edge(DOWN, buff=0.72)
+        self.play(FadeOut(source), FadeIn(note), run_time=0.55)
+        self.wait(0.9)
+
+
 class RoPEDecayMicro(PaperNativeScene):
     """Eqs. 35–37: paired frequencies lose alignment with distance."""
 
@@ -234,6 +333,26 @@ class RoPEResultsMicro(PaperNativeScene):
         cail = MetricBars([("RoFormer-512", 68.29, BEHAVIOR), ("RoFormer-1024", 69.79, ADAPTIVE)], maximum=72, decimals=2).scale(1.05).move_to(rows)
         next_note = Text("test accuracy · exact Table 5", font="Menlo", font_size=15, color=MUTED).move_to(note)
         self.play(Transform(question, next_question), FadeOut(rows), FadeIn(cail), Transform(note, next_note), run_time=1.3)
+        self.wait(0.9)
+
+
+class RoPETranslationResultMicro(PaperNativeScene):
+    """Exact WMT14 En-De BLEU values on a non-zero number line."""
+
+    def construct(self) -> None:
+        tag = Text("ROFORMER · TRANSLATION READOUT", font="Menlo", font_size=17, color=WARNING, weight=BOLD).to_edge(UP, buff=0.42)
+        question = Text("Does the rotary architecture retain translation quality?", font_size=27, color=INK, weight=BOLD).next_to(tag, DOWN, buff=0.3)
+        setting = Text("WMT14 English→German · BLEU", font="Menlo", font_size=16, color=MUTED).next_to(question, DOWN, buff=0.15)
+        line = NumberLine(x_range=[27.0, 27.7, 0.1], length=8.0, color=RULE, include_numbers=True, font_size=18).move_to(DOWN * 0.45)
+        base_dot = Dot(line.n2p(27.3), radius=0.12, color=BEHAVIOR)
+        base_label = Text("Transformer-base · 27.3", font_size=19, color=BEHAVIOR).next_to(base_dot, UP, buff=0.22)
+        rope_dot = Dot(line.n2p(27.5), radius=0.12, color=ADAPTIVE)
+        rope_label = Text("RoFormer · 27.5", font_size=19, color=ADAPTIVE, weight=BOLD).next_to(rope_dot, DOWN, buff=0.22)
+        source = self.source("Exact values · RoFormer Table 1")
+        self.play(FadeIn(tag), FadeIn(question), FadeIn(setting), Create(line), FadeIn(base_dot), FadeIn(base_label), FadeIn(source), run_time=1.1)
+        self.play(FadeIn(rope_dot, scale=1.5), FadeIn(rope_label), run_time=0.8)
+        delta = MathTex(r"\Delta=+0.2\ \mathrm{BLEU}", font_size=30, color=INK).to_edge(DOWN, buff=0.66)
+        self.play(FadeOut(source), FadeIn(delta), run_time=0.5)
         self.wait(0.9)
 
 

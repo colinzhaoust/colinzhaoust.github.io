@@ -23,7 +23,7 @@ class ExplainerPipelineTests(unittest.TestCase):
             ]
             manifest = render_site(bundles, root / "site")
             self.assertEqual(manifest["papers"], ["feynrl", "rope"])
-            self.assertEqual(len(manifest["media"]), 24)
+            self.assertEqual(len(manifest["media"]), 36)
             self.assertTrue((root / "site" / "data" / "catalog.json").is_file())
             catalog = json.loads((root / "site" / "data" / "catalog.json").read_text(encoding="utf-8"))
             self.assertEqual("explainer-site-catalog/0.2.0", catalog["schema_version"])
@@ -45,6 +45,17 @@ class ExplainerPipelineTests(unittest.TestCase):
                 self.assertTrue(bundle["code_map"]["formula_code_edges"])
                 self.assertTrue(bundle["code_map"]["dag_edges"])
                 self.assertTrue(bundle["code_map"]["experiment_pipeline"])
+                self.assertTrue(bundle["code_map"]["example"])
+                repositories = {source["repository"] for source in bundle["code_map"]["repository_sources"]}
+                for node in bundle["code_map"]["code_nodes"] + bundle["code_map"]["dag_nodes"]:
+                    self.assertNotIn("data/explainer_pipeline", node["path"])
+                    self.assertTrue(any(node["source_url"].startswith(repo) for repo in repositories))
+                self.assertTrue(all(node.get("artifact") and node.get("stage") for node in bundle["code_map"]["dag_nodes"]))
+                self.assertIn("loop", {edge.get("edge_kind") for edge in bundle["code_map"]["dag_edges"]})
+                showcase_ids = {item["media_id"] for item in bundle["source_packet"].get("formula_showcase", [])}
+                media_ids = {item["media_id"] for item in bundle["source_packet"]["media"]}
+                self.assertTrue(showcase_ids)
+                self.assertLessEqual(showcase_ids, media_ids)
                 self.assertTrue(all(trace["usage"] is None for trace in bundle["generation"]["stage_traces"]))
                 self.assertTrue(all(trace["cost"]["status"] == "not_recorded" for trace in bundle["generation"]["stage_traces"]))
             for paper_id in ("feynrl", "rope"):
@@ -76,7 +87,7 @@ class ExplainerPipelineTests(unittest.TestCase):
                 root / "site",
             )
             self.assertEqual(["reviewed-reference", "test-snapshot"], manifest["runs"])
-            self.assertEqual(48, len(manifest["media"]))
+            self.assertEqual(72, len(manifest["media"]))
             catalog = json.loads((root / "site" / "data" / "catalog.json").read_text(encoding="utf-8"))
             self.assertEqual(2, len(catalog["runs"]))
             self.assertEqual(["test-model-snapshot"], catalog["runs"][1]["models"])

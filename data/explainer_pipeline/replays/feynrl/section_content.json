@@ -133,6 +133,18 @@
             "source_refs": ["feynrl-paper:eq2", "feynrl-paper:eq4", "feynrl-paper:eq7", "feynrl-paper:eq11-12"]
           },
           {
+            "type": "micro_video",
+            "media_id": "feynrl-offpolicy-bridge-micro",
+            "poster_id": "feynrl-offpolicy-bridge-micro-poster",
+            "captions_id": "feynrl-offpolicy-bridge-micro-captions",
+            "title": "What changes when the samples come from π_b?",
+            "intro": "The animation keeps the score-function estimator fixed, then changes only the sampling distribution from the current policy to the behavior policy.",
+            "observation": "Moving the expectation to y∼π_b introduces the per-token ratio ρ_t; the behavioral KL is shown as a separate relation to π_b.",
+            "consequence": "This is the bridge from the on-policy premise to the two quantities that Eq. 12 later controls with e_B.",
+            "beats": ["sample from π_θ", "move to π_b", "insert ρ_t", "expose behavioral KL"],
+            "source_refs": ["feynrl-paper:eq2", "feynrl-paper:eq5-8"]
+          },
+          {
             "type": "prose",
             "heading": "The paper's stated intent",
             "paragraphs": [
@@ -307,27 +319,27 @@
           {
             "type": "code",
             "code_source_id": "feynrl-p3o",
-            "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
+            "path": "algs/P3O/p3o.py",
             "symbol": "Equation 11 and Equation 12 in the repository",
             "lines": [
               {
-                "number": 11,
+                "number": 134,
                 "code": "ess = (sum_w**2) / (sum_w_2 + 1e-8) / total",
                 "maps_to": "e_B = ESS(B;θ), valid-token aggregation"
               },
               {
-                "number": 18,
+                "number": 207,
                 "code": "rho = torch.clamp(ratio, max=ess_factor)",
                 "maps_to": "min{ρ_t,e_B}"
               },
               {
-                "number": 20,
+                "number": 208,
                 "code": "policy_loss = -(rho.detach() * logprobs * advantages)",
                 "maps_to": "stop-gradient score-function term"
               },
               {
-                "number": 24,
-                "code": "trust_region = (1 - ess_factor) * kl_behavioral",
+                "number": 223,
+                "code": "loss_total_sum = pi_sum + ... + (1 - ess_factor) * kl_sum_behavioral",
                 "maps_to": "(1−e_B) KL(π_θ || π_b)"
               }
             ],
@@ -354,6 +366,7 @@
       "findings": {
         "blocks": [
           {"type": "result_story", "question": "Does performance depend on choosing a clipping factor?", "setting": "GRPO with ε ∈ {0.2, 0.4, 0.6}; P3O is evaluated once without a clip-ratio choice.", "metric": "Training reward and held-out pass@1.", "evidence_kind": "authors_reported_curve", "evidence": "Figure 1 compares training trajectories; Table 7 provides held-out values. No curve samples are invented.", "takeaway": "The paper reports sensitivity across fixed clipping settings, which is the hyperparameter dependence P3O is designed to remove.", "source_refs": ["feynrl-paper:fig1", "feynrl-paper:table7"]},
+          {"type": "micro_video", "media_id": "feynrl-clip-result-micro", "poster_id": "feynrl-clip-result-micro-poster", "captions_id": "feynrl-clip-result-micro-captions", "title": "Collapse three clip choices into the held-out readout", "intro": "The clip begins with ε∈{0.2,0.4,0.6}, then replaces those choices with the exact Table 7 aggregate on the same 4K-token AMC evaluation.", "observation": "The reported GRPO clip average is 0.381±0.195; P3O is 0.493 and does not select a clip ratio.", "consequence": "The animation connects the method-level hyperparameter question to a specific held-out metric without inventing Figure 1 curve samples.", "beats": ["three ε choices", "same AMC metric", "GRPO aggregate", "P3O once"], "source_refs": ["feynrl-paper:fig1", "feynrl-paper:table7"]},
           {"type": "result_story", "question": "How does sampling-temperature mismatch affect training?", "setting": "Qwen3-4B rollouts at T=0.6 and T=1.2.", "metric": "Training reward over optimization steps.", "evidence_kind": "authors_reported_curve", "evidence": "Figure 2 is summarized qualitatively because its curve has not been digitized.", "takeaway": "The authors report that P3O remains robust while GRPO degrades at the larger mismatch.", "source_refs": ["feynrl-paper:fig2"]},
           {"type": "result_story", "question": "Does BF16 Train + FP8 Rollout cause late collapse?", "setting": "Held-out evaluation at iterations 15 and 30 under precision mismatch.", "metric": "Average pass@1 across the Table 7 benchmarks.", "evidence_kind": "exact_table", "evidence": "GRPO: 0.499 → 0.029. P3O: 0.478 → 0.529.", "takeaway": "The exact late-stage values connect the reported training collapse to retained held-out performance.", "source_refs": ["feynrl-paper:fig3", "feynrl-paper:table7"]},
           {

@@ -1,6 +1,6 @@
 {
   "schema_version": "explainer-micro-render/0.1.0",
-  "rendered_at": "2026-07-22T01:08:42-07:00",
+  "rendered_at": "2026-07-22T10:25:34-07:00",
   "render_environment": {
     "manim_version": "0.19.0",
     "quality": "720p30",
@@ -8,7 +8,7 @@
   },
   "source": {
     "scene_ref": "scenes/explainer_pipeline_native.py",
-    "scene_sha256": "586c4c2392b227315a23c28cff363411dda9145dfb2a2102480ab66e21b70d8c",
+    "scene_sha256": "6dbd133ba9a2c1063e4078c99bc43bdc723fa1a078333fd349ee279af8fe1680",
     "primitive_ref": "scenes/explainer_primitives.py",
     "primitive_sha256": "28dd3176dec6f2e71bf9b21b0b2495ca8566281f32b9760fd3dd8b059448023f"
   },
@@ -17,6 +17,11 @@
       "scene_id": "FeynRLEquationLineageMicro",
       "artifact_ref": "data/explainer_pipeline/media/feynrl/lineage-micro.mp4",
       "sha256": "68b3a985dd57d49d5fdeb66b1dc0456698ace607da055b05539c8e71c1405667"
+    },
+    {
+      "scene_id": "FeynRLOffPolicyBridgeMicro",
+      "artifact_ref": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro.mp4",
+      "sha256": "e516ea8507aa70087d072fb0d737d53310f4176170efa2111af7e4199979af3d"
     },
     {
       "scene_id": "FeynRLEssMicro",
@@ -34,6 +39,11 @@
       "sha256": "4de7c7d9804ca931509c49ec7f24bfad96cf8a480b8978777c3745aa9583a33f"
     },
     {
+      "scene_id": "FeynRLClipResultMicro",
+      "artifact_ref": "data/explainer_pipeline/media/feynrl/clip-result-micro.mp4",
+      "sha256": "0eb371d4b71e8d1c030297fe76d167edf92c913058fef09df8f1170e00a2abdc"
+    },
+    {
       "scene_id": "RoPEEquationLineageMicro",
       "artifact_ref": "data/explainer_pipeline/media/rope/lineage-micro.mp4",
       "sha256": "8d29c49fc35205f88f7a41d235f26e1f2cf26f5e2d3005d7324e121e4a85b63c"
@@ -44,6 +54,11 @@
       "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2"
     },
     {
+      "scene_id": "RoPEFrequencyPairsMicro",
+      "artifact_ref": "data/explainer_pipeline/media/rope/frequency-pairs-micro.mp4",
+      "sha256": "ebcd132062479d12581369860306dd432b2eeab3d38add059be142d5875e0b74"
+    },
+    {
       "scene_id": "RoPEDecayMicro",
       "artifact_ref": "data/explainer_pipeline/media/rope/decay-micro.mp4",
       "sha256": "8b0ff57e8de3f048eea9965b12aa4905dbd0e82d2cf2db962c12f5116775129c"
@@ -52,6 +67,11 @@
       "scene_id": "RoPEResultsMicro",
       "artifact_ref": "data/explainer_pipeline/media/rope/findings.mp4",
       "sha256": "99d85bc10e0a0b1725e7b2415d788885389fcbeb6513b29190b5d7cf6bce0175"
+    },
+    {
+      "scene_id": "RoPETranslationResultMicro",
+      "artifact_ref": "data/explainer_pipeline/media/rope/translation-result-micro.mp4",
+      "sha256": "1accf06720ea1e80cab592233b71ab2d360a80c83d316839a52cc7e43bc4b818"
     }
   ]
 }

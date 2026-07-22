@@ -185,6 +185,7 @@ main { min-height: calc(100vh - 140px); }
 
 .code-block { overflow: hidden; border: 1px solid var(--line-strong); background: oklch(22% .025 260); color: oklch(92% .015 95); }
 .code-head { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid oklch(50% .025 260); color: oklch(75% .025 250); font: .7rem var(--mono); }
+.code-head a { color: inherit; }
 .code-line { display: grid; grid-template-columns: 42px minmax(0, 1fr); }
 .code-line code { padding: 9px 14px; white-space: pre-wrap; overflow-wrap: anywhere; font: .78rem/1.5 var(--mono); }
 .line-no { padding: 9px; color: oklch(58% .02 250); text-align: right; font: .7rem/1.5 var(--mono); user-select: none; }
@@ -224,6 +225,12 @@ main { min-height: calc(100vh - 140px); }
 .formula-inventory-grid .formula-display { min-height: 112px; font-size: clamp(.72rem, 1.2vw, .94rem); overflow-wrap: anywhere; white-space: normal; }
 .formula-inventory-grid a { color: var(--muted); font: .66rem/1.5 var(--mono); }
 .formula-index { color: var(--orange); font: 800 .7rem var(--mono); }
+.formula-showcase > div { margin-top: 28px; border-block: 1px solid var(--line-strong); }
+.formula-showcase article { display: grid; grid-template-columns: minmax(220px, .72fr) minmax(360px, 1.28fr); gap: clamp(24px, 5vw, 72px); align-items: center; padding: clamp(24px, 4vw, 42px) 0; border-bottom: 1px solid var(--line); }
+.formula-showcase article:last-child { border-bottom: 0; }
+.formula-showcase h3 { margin: 8px 0 10px; font: 600 clamp(1.45rem, 2.6vw, 2.25rem)/1.08 var(--serif); }
+.formula-showcase p { margin: 0; color: var(--muted); font-family: var(--serif); }
+.formula-showcase video { display: block; width: 100%; background: var(--ink); box-shadow: var(--shadow); }
 .mapping-lab { min-width: 0; }
 .mapping-intro { display: flex; align-items: end; justify-content: space-between; gap: 28px; }
 .mapping-intro h2 { margin-bottom: 0; }
@@ -356,14 +363,19 @@ main { min-height: calc(100vh - 140px); }
 .code-edge-column i { position: absolute; right: 8px; top: 13px; color: var(--violet); font-style: normal; }
 .code-edge-column p { margin: 7px 0; font-size: .7rem; }
 .code-edge-column small { display: block; color: var(--muted); font: .52rem/1.35 var(--mono); }
-.dag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
-.dag-node { min-height: 156px; padding: 18px; border-top: 4px solid var(--violet); background: var(--paper-2); }
-.dag-node.kind-input { border-color: var(--green); }
-.dag-node.kind-output, .dag-node.kind-objective { border-color: var(--orange); }
-.dag-node > span { color: var(--muted); font: 800 .56rem var(--mono); text-transform: uppercase; }
-.dag-node strong { display: block; margin-top: 16px; font-family: var(--serif); }
-.dag-node p { color: var(--muted); font-size: .75rem; }
-.dag-node small { display: block; margin-top: 5px; color: var(--violet); font: .56rem/1.35 var(--mono); }
+.execution-lifecycle > h2 { max-width: 20ch; }
+.lifecycle-flow { margin-top: 26px; }
+.lifecycle-node { position: relative; display: grid; grid-template-columns: 92px minmax(0, 1fr) 170px; gap: 22px; align-items: center; min-height: 132px; padding: 20px; border: 1px solid var(--line-strong); background: var(--paper); }
+.lifecycle-node + .lifecycle-node { margin-top: -1px; }
+.lifecycle-index { color: var(--orange); font: 800 .64rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.lifecycle-index span { display: block; margin-top: 5px; color: var(--muted); font-size: .55rem; }
+.lifecycle-node strong { display: block; font: 600 1.2rem/1.15 var(--serif); }
+.lifecycle-node p { margin: 7px 0 0; color: var(--muted); font-size: .76rem; }
+.lifecycle-node code { display: inline-block; margin-top: 9px; color: var(--violet); font: .59rem/1.4 var(--mono); overflow-wrap: anywhere; }
+.lifecycle-node > small { color: var(--muted); font: .58rem/1.45 var(--mono); text-align: right; }
+.lifecycle-node > small b { display: block; margin-bottom: 5px; color: var(--green); font: inherit; text-transform: uppercase; letter-spacing: .07em; }
+.lifecycle-node a { display: block; margin-top: 7px; color: inherit; font: .62rem/1.45 var(--mono); overflow-wrap: anywhere; }
+.lifecycle-loop { margin-top: -1px; padding: 14px 20px; border: 1px solid var(--orange); color: var(--orange); font: 700 .62rem/1.45 var(--mono); }
 .experiment-pipeline > div { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 24px; border: 1px solid var(--line-strong); background: var(--line-strong); gap: 1px; }
 .experiment-pipeline article { min-height: 190px; padding: 20px; background: var(--paper); }
 .experiment-pipeline b { color: var(--orange); font: 800 .65rem var(--mono); }
@@ -407,7 +419,7 @@ footer { min-height: 80px; padding: 22px clamp(18px, 4vw, 52px); display: flex; 
   .section-rail button { flex: 0 0 auto; width: auto; min-height: 44px; grid-template-columns: 22px auto; padding-inline: 10px; }
   .lesson { padding: 38px 18px 80px; border: 0; }
   .lesson-header h1 { font-size: clamp(2.7rem, 15vw, 4.3rem); }
-  .comparison, .fixture-grid, .formula-steps, .rotation-stage, .appendix-grid, .reading-grid, .formula-inventory-grid, .micro-video, .result-story { grid-template-columns: 1fr; }
+  .comparison, .fixture-grid, .formula-steps, .rotation-stage, .appendix-grid, .reading-grid, .formula-inventory-grid, .formula-showcase article, .micro-video, .result-story { grid-template-columns: 1fr; }
   .equation-audit-list article, .result-story dl div { grid-template-columns: 1fr; gap: 8px; }
   .equation-audit-list .fold-reason { grid-column: 1; }
   .lineage-track { grid-template-columns: 1fr; padding-left: 22px; padding-top: 0; }
@@ -433,7 +445,9 @@ footer { min-height: 80px; padding: 22px clamp(18px, 4vw, 52px); display: flex; 
   .run-row { grid-template-columns: 1fr auto; padding-block: 14px; }
   .run-row span { grid-column: 1 / -1; grid-row: 2; }
   .paper-run-metrics { grid-column: 1 / -1; }
-  .code-bipartite, .dag-grid, .experiment-pipeline > div { grid-template-columns: 1fr; }
+  .code-bipartite, .experiment-pipeline > div { grid-template-columns: 1fr; }
+  .lifecycle-node { grid-template-columns: 56px minmax(0, 1fr); gap: 16px; }
+  .lifecycle-node > small { grid-column: 2; text-align: left; }
   .code-edge-column { padding-top: 0; }
   footer { align-items: flex-start; flex-direction: column; }
   .mapping-intro { display: block; }

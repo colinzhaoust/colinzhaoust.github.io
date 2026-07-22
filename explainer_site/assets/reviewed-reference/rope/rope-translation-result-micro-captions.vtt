@@ -1,0 +1,7 @@
+WEBVTT
+
+00:00.000 --> 00:01.600
+Transformer-base scores 27.3 BLEU on WMT14 English to German.
+
+00:01.600 --> 00:03.300
+RoFormer scores 27.5, a difference of plus 0.2 BLEU in Table 1.

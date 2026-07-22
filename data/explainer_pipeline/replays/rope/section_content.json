@@ -283,28 +283,40 @@
             ]
           },
           {
+            "type": "micro_video",
+            "media_id": "rope-frequency-pairs-micro",
+            "poster_id": "rope-frequency-pairs-micro-poster",
+            "captions_id": "rope-frequency-pairs-micro-captions",
+            "title": "How one d-dimensional rotation becomes many 2D rotations",
+            "intro": "The block-diagonal form groups adjacent coordinates, then applies the same absolute position m with a different frequency θ_j to each pair.",
+            "observation": "The three arrows rotate by different angles even though they share the same position index.",
+            "consequence": "The high-dimensional RoPE construction can be implemented by parallel pairwise negate-and-swap operations rather than a dense matrix multiply.",
+            "beats": ["pair coordinates", "share position m", "vary θ_j", "compose block diagonal"],
+            "source_refs": ["rope-paper:eq20-34", "roformer-readme:rope-pseudocode"]
+          },
+          {
             "type": "code",
             "code_source_id": "roformer-readme",
-            "path": "data/explainer_pipeline/code_snapshots/rope_readme_excerpt.py",
+            "path": "README.md",
             "symbol": "Computationally efficient realization",
             "lines": [
               {
-                "number": 9,
+                "number": 24,
                 "code": "qw2 = stack([-qw[..., 1::2], qw[..., ::2]], 4)",
                 "maps_to": "q_perp = (−q_2,q_1,−q_4,q_3,...)"
               },
               {
-                "number": 11,
+                "number": 26,
                 "code": "qw = qw * cos_pos + qw2 * sin_pos",
                 "maps_to": "R_m q = q cos(mθ) + q_perp sin(mθ)"
               },
               {
-                "number": 14,
+                "number": 29,
                 "code": "kw = kw * cos_pos + kw2 * sin_pos",
                 "maps_to": "apply R_n to the key"
               },
               {
-                "number": 17,
+                "number": 32,
                 "code": "a = einsum(\"bjhd,bkhd->bhjk\", qw, kw)",
                 "maps_to": "ordinary query-key dot product after rotation"
               }
@@ -363,6 +375,18 @@
               "rope-paper:table1",
               "rope-paper:fig3"
             ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "rope-translation-result-micro",
+            "poster_id": "rope-translation-result-micro-poster",
+            "captions_id": "rope-translation-result-micro-captions",
+            "title": "Put the exact WMT14 difference on its reported scale",
+            "intro": "A non-zero number line preserves the small absolute difference between Transformer-base and RoFormer on one translation setting.",
+            "observation": "Table 1 reports 27.3 BLEU for Transformer-base and 27.5 for RoFormer, a difference of +0.2.",
+            "consequence": "This supports retained translation quality in the reported experiment; it is not evidence of a large universal gain.",
+            "beats": ["fix WMT14 En→De", "place 27.3", "place 27.5", "read Δ=+0.2"],
+            "source_refs": ["rope-paper:table1"]
           },
           {
             "type": "bar_chart",

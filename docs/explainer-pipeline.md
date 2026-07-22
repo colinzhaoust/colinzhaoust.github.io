@@ -152,11 +152,11 @@ The formula view is a bipartite capability graph. Formula and operation nodes co
 
 The code-understanding view is a second evidence graph:
 
-- formula ↔ revision-pinned code symbol/line-range mappings;
-- a function/data DAG showing where the method changes computation;
+- formula ↔ revision-pinned symbols and line ranges in the authors' original repository;
+- a concrete example lifecycle showing each artifact handoff, branch, and training loop through that repository;
 - an experiment pipeline showing which factor changes, what is trained, and which metric is read.
 
-These graphs are compiled from `code_understanding` in the source packet. A model may propose candidate links during grounding, but published confirmed edges must resolve to known formula IDs, repository IDs, DAG nodes, and local excerpt paths.
+These graphs are compiled from `code_understanding` in the source packet. A model may propose candidate links during grounding, but published confirmed edges must resolve to known formula IDs, repository IDs, lifecycle nodes, and revision-pinned upstream paths. An optional local checkout is used for validation and is never presented as the source of truth.
 
 ## Native Manim contract
 
@@ -173,13 +173,17 @@ This prevents the renderer from selecting only convenient equations or isolated 
 - a schematic, explicitly non-digitized long-term-decay animation for RoFormer Eqs. 35–37.
 
 - `FeynRLEquationLineageMicro`: PPO fixed clipping → original P3O ESS coupling → FeynRL token-level ratios and normalized e_B;
+- `FeynRLOffPolicyBridgeMicro`: Eqs. 2 and 5–8, changing the sampling distribution while making the ratio and behavioral KL explicit;
 - `FeynRLEssMicro`: Eq. 11 with fixed token count and changing ratio concentration;
 - `FeynRLP3OMicro`: the two Eq. 12 controls coupled through the same e_B;
 - `FeynRLResultsMicro`: exact Table 7 iteration-15 → iteration-30 values under precision mismatch;
+- `FeynRLClipResultMicro`: exact Table 7 clipping-factor average versus P3O under one held-out metric;
 - `RoPEEquationLineageMicro`: paper-by-paper positional history, with each equation held long enough to expose its role and remaining limitation;
 - `RoPERelativeMicro`: the Eq. 16 collapse from separate rotations to n−m;
+- `RoPEFrequencyPairsMicro`: Eqs. 20–34 as parallel 2D frequency-pair rotations inside the block-diagonal map;
 - `RoPEDecayMicro`: schematic, explicitly non-digitized Eqs. 35–37 bound behavior;
-- `RoPEResultsMicro`: signed GLUE deltas and the exact RoFormer-512 → RoFormer-1024 comparison.
+- `RoPEResultsMicro`: signed GLUE deltas and the exact RoFormer-512 → RoFormer-1024 comparison;
+- `RoPETranslationResultMicro`: the exact WMT14 En–De BLEU comparison on one shared number line.
 
 The stock layer is Manim Community: `MathTex`, `TransformMatchingTex`, `Text`, `VGroup`, `Rectangle`, `Arrow`, `Axes`, and standard animations. The project layer lives in `scenes/explainer_primitives.py`: `RatioBars`, `EssTradeoffGauge`, `FormulaCodeBridge`, `MetricBars`, `RoPERelativeRotation`, and the shared paper-native scene shell. The website carries motivation, interpretation, and consequences; each micro-video is limited to one state change. The scenes do not reuse the earlier `progress_site/assets/self-refine` media. Captions, posters, video hashes, engine version, entrypoint, and scene IDs are part of each source packet.
 

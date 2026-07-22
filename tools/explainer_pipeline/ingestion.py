@@ -125,8 +125,9 @@ def _grounding_prompt(
         "paper_excerpts": [{"locator": "section/equation/table", "text": "source-faithful summary", "source_refs": [f"{paper_id}-paper:locator"]}],
         "code_notes": [{"locator": "path:symbol or lines", "text": "confirmed implementation observation", "source_refs": [f"{paper_id}-repo:path"]}],
         "code_understanding": {
+            "example": {"label": "one concrete input through the repository", "input": "named input artifact", "output": "named final artifact or metric"},
             "formula_code_links": [{"formula_label": "paper equation label", "equation_ids": ["Eq. n"], "expression": "paper expression", "code_id": f"{paper_id}-repo", "symbol": "repository symbol", "path": "original/repository/path.py", "line_start": 1, "line_end": 2, "role": "how this code realizes the equation", "state": "candidate|confirmed", "evidence_refs": [f"{paper_id}-paper:eqN", f"{paper_id}-repo:path:symbol"]}],
-            "nodes": [{"id": "stable-id", "label": "function or data", "kind": "input|operation|function|objective|output", "detail": "source-faithful computational role"}],
+            "nodes": [{"id": "stable-id", "label": "function or data", "kind": "input|buffer|operation|function|objective|output", "stage": "repository lifecycle stage", "detail": "what happens to the concrete example here", "artifact": "named input or output at this step", "path": "original/repository/path.py", "line_start": 1, "line_end": 2}],
             "edges": [{"source": "node-id", "target": "node-id", "label": "data/control relation"}],
             "experiment_pipeline": [{"id": "stable-id", "label": "experiment step", "detail": "factor, setting, or metric", "source_refs": [f"{paper_id}-paper:locator"]}],
         },
@@ -135,7 +136,7 @@ def _grounding_prompt(
         [
             "You are the source-grounding JSON API stage of a paper-and-repository explainer. No coding agent participates.",
             "Return only one JSON object matching the contract. Preserve the paper's terminology and stated motivation; do not coin substitute names. Put code beside the mechanism or equation it realizes. The section IDs should reflect the paper, not a universal slide template.",
-            "Audit the full numbered-equation thread and the paper's full experiment axes. Every equation family must be marked animate, explain, or fold; folded equations need an explicit reason. Every finding must be question → setting → metric → evidence kind → takeaway. Build code_understanding as equation-to-symbol mappings, a function/data DAG, and an experiment pipeline. Every paper excerpt needs a visible locator. Every code note and code-understanding edge needs a repository path or symbol. Do not generate HTML, Python, Manim code, or shell commands.",
+            "Audit the full numbered-equation thread and the paper's full experiment axes. Every equation family must be marked animate, explain, or fold; folded equations need an explicit reason. Every finding must be question → setting → metric → evidence kind → takeaway. Build code_understanding as equation-to-symbol mappings, plus the execution lifecycle of one concrete example from repository input to output or metric. Every lifecycle node needs an original-repository path and line range; edges must express the actual hand-off, branch, or loop. Every paper excerpt needs a visible locator. Do not generate HTML, Python, Manim code, or shell commands.",
             f"CONTRACT={canonical_json(contract)}",
             f"PAPER_TITLE={title}",
             f"PAPER_TEXT={paper_text[:MAX_PAPER_CHARS]}",

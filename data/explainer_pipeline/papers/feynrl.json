@@ -20,42 +20,45 @@
   "code_sources": [
     {
       "code_id": "feynrl-p3o",
-      "repository": "https://github.com/FeynRL/FeynRL",
+      "repository": "https://github.com/FeynRL-project/FeynRL",
       "revision": "dfe85351e28a3744ab0eb02d2299fc1e6d3d5752",
+      "checkout_path": "external/FeynRL",
       "mapping_state": "confirmed",
       "excerpts": [
-        {
-          "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py",
-          "symbol": "calculate_ess / P3O policy loss",
-          "line_start": 1,
-          "line_end": 26
-        }
+        {"path": "algs/P3O/p3o.py", "symbol": "calculate_ess", "line_start": 107, "line_end": 135},
+        {"path": "algs/P3O/p3o.py", "symbol": "compute_policy_loss", "line_start": 157, "line_end": 253},
+        {"path": "rollouts/replay_buffer.py", "symbol": "ReplayBuffer.add_batch_seqs / collate_fn", "line_start": 44, "line_end": 216},
+        {"path": "core/rl_engines.py", "symbol": "collect_rollouts / prepare_training_batches", "line_start": 350, "line_end": 482}
       ]
     }
   ],
   "code_understanding": {
     "formula_code_links": [
-      {"formula_id": "formula:feynrl.ess", "formula_label": "Eq. 11 · normalized ESS", "code_id": "feynrl-p3o", "symbol": "calculate_ess", "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py", "line_start": 9, "line_end": 14, "role": "computes e_B from valid per-token ratios", "state": "confirmed", "evidence_refs": ["feynrl-paper:eq11", "feynrl-p3o:calculate_ess"]},
-      {"formula_id": "formula:feynrl.p3o_objective", "formula_label": "Eq. 12 · P3O objective", "code_id": "feynrl-p3o", "symbol": "p3o_terms", "path": "data/explainer_pipeline/code_snapshots/feynrl_p3o_excerpt.py", "line_start": 17, "line_end": 24, "role": "caps rho with e_B and weights behavioral KL by 1-e_B", "state": "confirmed", "evidence_refs": ["feynrl-paper:eq12", "feynrl-p3o:compute_policy_loss"]}
+      {"formula_id": "formula:feynrl.ess", "formula_label": "Eq. 11 · normalized ESS", "code_id": "feynrl-p3o", "symbol": "calculate_ess", "path": "algs/P3O/p3o.py", "line_start": 107, "line_end": 135, "role": "computes e_B from valid per-token ratios across ranks", "state": "confirmed", "evidence_refs": ["feynrl-paper:eq11", "feynrl-p3o:calculate_ess"]},
+      {"formula_id": "formula:feynrl.p3o_objective", "formula_label": "Eq. 12 · P3O objective", "code_id": "feynrl-p3o", "symbol": "compute_policy_loss", "path": "algs/P3O/p3o.py", "line_start": 192, "line_end": 250, "role": "forms the ratio, calls calculate_ess, caps rho, adds (1-e_B) behavioral KL, and reports ess_factor", "state": "confirmed", "evidence_refs": ["feynrl-paper:eq12", "feynrl-p3o:compute_policy_loss"]}
     ],
+    "example": {"label": "One math prompt in synchronous P3O training", "input": "A prompt is sampled and produces several tokenized completions.", "output": "The completion contributes to a P3O update, metrics, and the next rollout-policy version."},
     "nodes": [
-      {"id": "valid-ratios", "label": "valid token ratios", "kind": "input", "detail": "exp(log πθ − log πold) after masking"},
-      {"id": "ess", "label": "calculate_ess", "kind": "function", "detail": "batch concentration statistic e_B"},
-      {"id": "rho", "label": "ratio.clamp(max=e_B)", "kind": "operation", "detail": "off-policy importance weight"},
-      {"id": "policy", "label": "detached policy term", "kind": "objective", "detail": "ρ · log πθ · advantage"},
-      {"id": "behavioral-kl", "label": "behavioral KL", "kind": "input", "detail": "distance from the behavior policy"},
-      {"id": "regularizer", "label": "(1 − e_B) · KL", "kind": "objective", "detail": "adaptive off-policy regularization"},
-      {"id": "loss", "label": "P3O policy loss", "kind": "output", "detail": "policy term + behavioral regularizer"}
+      {"id": "prompt", "label": "Prompt shard", "kind": "input", "stage": "rollout", "detail": "A concrete math prompt enters collect_rollouts.", "artifact": "prompt_ids", "path": "core/rl_engines.py", "line_start": 350, "line_end": 403},
+      {"id": "completion", "label": "Generate and score completions", "kind": "function", "stage": "rollout", "detail": "The rollout engine returns response tokens, rewards, z-scores, masks, and old log-probabilities.", "artifact": "input_ids · pred_rewards · pred_zscores · pred_old_logprobs", "path": "core/rl_engines.py", "line_start": 350, "line_end": 403},
+      {"id": "buffer", "label": "Store one trajectory", "kind": "buffer", "stage": "buffer", "detail": "ReplayBuffer rejects empty or over-length responses and stores aligned per-token tensors.", "artifact": "ReplayBuffer item", "path": "rollouts/replay_buffer.py", "line_start": 44, "line_end": 158},
+      {"id": "microbatch", "label": "Collate a training micro-batch", "kind": "operation", "stage": "buffer", "detail": "Sequences are padded and action-token masks preserve which positions contribute to training.", "artifact": "[B,T] input_ids · mask · zscore · old_logprobs", "path": "rollouts/replay_buffer.py", "line_start": 160, "line_end": 216},
+      {"id": "forward", "label": "Current-policy forward pass", "kind": "function", "stage": "train", "detail": "P3O recomputes current log-probabilities for the same completion tokens.", "artifact": "pi_logprobs", "path": "algs/P3O/p3o.py", "line_start": 329, "line_end": 378},
+      {"id": "ess", "label": "Compute ratio and normalized ESS", "kind": "operation", "stage": "train", "detail": "Valid-token ratios are aggregated across ranks into e_B.", "artifact": "ratio · ess_factor", "path": "algs/P3O/p3o.py", "line_start": 192, "line_end": 202},
+      {"id": "loss", "label": "Assemble P3O loss", "kind": "objective", "stage": "train", "detail": "e_B caps detached rho and weights the behavioral KL term; metrics retain ess_factor.", "artifact": "loss_total_sum · pi_metrics", "path": "algs/P3O/p3o.py", "line_start": 204, "line_end": 253},
+      {"id": "update", "label": "Backpropagate and update", "kind": "function", "stage": "update", "detail": "DeepSpeed performs backward and the optimizer boundary advances the policy.", "artifact": "updated policy weights", "path": "algs/P3O/p3o.py", "line_start": 389, "line_end": 437},
+      {"id": "sync", "label": "Sync weights to rollout engines", "kind": "output", "stage": "update", "detail": "The next epoch generates data with the new policy version.", "artifact": "policy_version + 1", "path": "run_rl_sync.py", "line_start": 412, "line_end": 434}
     ],
     "edges": [
-      {"source": "valid-ratios", "target": "ess", "label": "measure concentration"},
-      {"source": "valid-ratios", "target": "rho", "label": "importance ratios"},
-      {"source": "ess", "target": "rho", "label": "sets cap"},
-      {"source": "rho", "target": "policy", "label": "detached weight"},
-      {"source": "ess", "target": "regularizer", "label": "sets 1 − e_B"},
-      {"source": "behavioral-kl", "target": "regularizer", "label": "penalty value"},
-      {"source": "policy", "target": "loss", "label": "add"},
-      {"source": "regularizer", "target": "loss", "label": "add"}
+      {"source": "prompt", "target": "completion", "label": "generate n samples"},
+      {"source": "completion", "target": "buffer", "label": "aligned trajectory"},
+      {"source": "buffer", "target": "microbatch", "label": "sample and pad"},
+      {"source": "microbatch", "target": "forward", "label": "dispatch to train_step"},
+      {"source": "forward", "target": "ess", "label": "compare current and old log-probs"},
+      {"source": "ess", "target": "loss", "label": "e_B controls both terms"},
+      {"source": "loss", "target": "update", "label": "backward"},
+      {"source": "update", "target": "sync", "label": "publish weights"},
+      {"source": "sync", "target": "prompt", "label": "next epoch loop", "edge_kind": "loop"}
     ],
     "experiment_pipeline": [
       {"id": "rollout", "label": "Generate rollouts", "detail": "vary clipping factor, sampling temperature, or rollout precision", "source_refs": ["feynrl-paper:sec4"]},
@@ -84,13 +87,72 @@
     "data/formula_explainer/formulas/feynrl/ess.json",
     "data/formula_explainer/formulas/feynrl/p3o_objective.json"
   ],
+  "formula_showcase": [
+    {"media_id": "feynrl-offpolicy-bridge-micro", "poster_id": "feynrl-offpolicy-bridge-micro-poster", "captions_id": "feynrl-offpolicy-bridge-micro-captions", "title": "Eqs. 2, 5–8 · move samples to π_b", "focus": "The expectation changes sampling policy; the per-token ratio and behavioral KL appear for distinct reasons.", "source_refs": ["feynrl-paper:eq2", "feynrl-paper:eq5-8"]},
+    {"media_id": "feynrl-ess-micro", "poster_id": "feynrl-ess-micro-poster", "captions_id": "feynrl-ess-micro-captions", "title": "Eq. 11 · measure effective support", "focus": "The token count stays fixed while ratio concentration lowers normalized ESS.", "source_refs": ["feynrl-paper:eq11"]},
+    {"media_id": "feynrl-p3o-micro", "poster_id": "feynrl-p3o-micro-poster", "captions_id": "feynrl-p3o-micro-captions", "title": "Eq. 12 · couple two controls", "focus": "One e_B lowers the score cap and raises the behavioral KL coefficient.", "source_refs": ["feynrl-paper:eq12"]}
+  ],
   "scene_renderer": {
     "engine": "Manim Community 0.19.0",
     "entrypoint": "scenes/explainer_pipeline_native.py",
     "coding_agent_required": false,
-    "scene_ids": ["FeynRLEquationLineageMicro", "FeynRLEssMicro", "FeynRLP3OMicro", "FeynRLResultsMicro"]
+    "scene_ids": ["FeynRLEquationLineageMicro", "FeynRLOffPolicyBridgeMicro", "FeynRLEssMicro", "FeynRLP3OMicro", "FeynRLClipResultMicro", "FeynRLResultsMicro"]
   },
   "media": [
+    {
+      "media_id": "feynrl-offpolicy-bridge-micro",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro.mp4",
+      "sha256": "e516ea8507aa70087d072fb0d737d53310f4176170efa2111af7e4199979af3d",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "Formula transition from on-policy sampling to behavior-policy sampling with a per-token ratio and behavioral KL."
+    },
+    {
+      "media_id": "feynrl-offpolicy-bridge-micro-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro-poster.png",
+      "sha256": "eb84de6830c211718c23c301d9534d2b2f5d4e45e61e46db9dfc048113d6bccc",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the FeynRL behavior-policy bridge micro-video."
+    },
+    {
+      "media_id": "feynrl-offpolicy-bridge-micro-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/feynrl/offpolicy-bridge-micro.vtt",
+      "sha256": "d621e6b637c582ed4c8ba0b4e7b4865ae07a88da062cd90e1802013f1fe965a1",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the FeynRL behavior-policy bridge micro-video."
+    },
+    {
+      "media_id": "feynrl-clip-result-micro",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/feynrl/clip-result-micro.mp4",
+      "sha256": "0eb371d4b71e8d1c030297fe76d167edf92c913058fef09df8f1170e00a2abdc",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "Exact Table 7 comparison of the GRPO clipping-factor average and P3O on held-out AMC pass at one."
+    },
+    {
+      "media_id": "feynrl-clip-result-micro-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/feynrl/clip-result-micro-poster.png",
+      "sha256": "5c2297000e7a8838a8a4f62382406913f9f7b5d3d0c12d45334640de1861e5f9",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the FeynRL clipping-factor result micro-video."
+    },
+    {
+      "media_id": "feynrl-clip-result-micro-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/feynrl/clip-result-micro.vtt",
+      "sha256": "32c5a1059dff2b10cdcdc078cf639c9c6abef466720357618fe126506833ada4",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the FeynRL clipping-factor result micro-video."
+    },
     {
       "media_id": "feynrl-lineage-micro",
       "role": "video",

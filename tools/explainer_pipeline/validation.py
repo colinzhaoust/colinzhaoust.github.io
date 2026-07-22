@@ -37,16 +37,51 @@ def validate_source_packet(packet: dict[str, Any], check_local_assets: bool = Tr
     for item in packet.get("equation_coverage", []):
         if item.get("coverage") == "fold" and not item.get("fold_reason"):
             errors.append(f"folded equations need a reason: {item.get('equation_ids')}")
-    for code_source in packet.get("code_sources", []):
+    code_sources = packet.get("code_sources", [])
+    source_by_code_id = {item.get("code_id"): item for item in code_sources}
+    for code_source in code_sources:
+        checkout_path = code_source.get("checkout_path")
+        checkout_root = resolve_repo_path(checkout_path) if checkout_path else None
         for excerpt in code_source.get("excerpts", []):
             try:
-                path = resolve_repo_path(excerpt["path"])
+                # Always reject paths that escape the repository. A published packet remains
+                # portable when the optional upstream checkout is not present locally.
+                resolve_repo_path(excerpt["path"])
+                path = checkout_root / excerpt["path"] if checkout_root else None
             except (KeyError, ValueError) as exc:
                 errors.append(str(exc))
                 continue
-            if check_local_assets and not path.is_file():
+            if check_local_assets and checkout_root and checkout_root.exists() and not path.is_file():
                 errors.append(f"missing code excerpt path: {excerpt['path']}")
     code_ids = {item.get("code_id") for item in packet.get("code_sources", [])}
+
+    def validate_upstream_location(item: dict[str, Any], label: str) -> None:
+        code_id = item.get("code_id") or next(iter(code_ids), None)
+        source = source_by_code_id.get(code_id)
+        path_value = item.get("path")
+        if not source or not path_value:
+            errors.append(f"{label} needs a known code_id and repository-relative path")
+            return
+        try:
+            resolve_repo_path(path_value)
+            checkout = resolve_repo_path(source["checkout_path"]) if source.get("checkout_path") else None
+            upstream_path = checkout / path_value if checkout else None
+        except (KeyError, ValueError) as exc:
+            errors.append(str(exc))
+            return
+        if check_local_assets and checkout and checkout.exists():
+            if not upstream_path.is_file():
+                errors.append(f"missing {label} upstream path: {path_value}")
+                return
+            line_start = item.get("line_start")
+            line_end = item.get("line_end")
+            if not isinstance(line_start, int) or not isinstance(line_end, int) or line_start < 1 or line_end < line_start:
+                errors.append(f"invalid {label} line range: {path_value}:{line_start}-{line_end}")
+                return
+            line_count = sum(1 for _ in upstream_path.open(encoding="utf-8", errors="replace"))
+            if line_end > line_count:
+                errors.append(f"{label} line range exceeds {path_value}: {line_end} > {line_count}")
+
     formula_ids = set()
     for formula_ref in packet.get("formula_refs", []):
         try:
@@ -61,6 +96,10 @@ def validate_source_packet(packet: dict[str, Any], check_local_assets: bool = Tr
             errors.append("code link needs formula_id or equation_ids")
         if link.get("code_id") not in code_ids:
             errors.append(f"unknown code source in code link: {link.get('code_id')}")
+        else:
+            validate_upstream_location(link, "formula-code mapping")
+    for node in understanding.get("nodes", []):
+        validate_upstream_location(node, "lifecycle node")
     dag_ids = {item.get("id") for item in understanding.get("nodes", [])}
     for edge in understanding.get("edges", []):
         if edge.get("source") not in dag_ids or edge.get("target") not in dag_ids:
