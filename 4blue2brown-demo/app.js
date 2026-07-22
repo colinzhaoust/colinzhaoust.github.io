@@ -2,6 +2,7 @@
   "use strict";
 
   const FORMULA_SECTION_ID = "formula";
+  const CODE_SECTION_ID = "code-understanding";
   const state = { catalog: null, bundles: new Map(), activeRun: null, activePaper: null, activeSection: null };
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
@@ -14,6 +15,9 @@
     const suffix = section ? `/${section}` : "";
     return `run/${state.activeRun}/${view}${suffix}`;
   };
+  const fmtTokens = (value) => value == null ? "not recorded" : value >= 1000000 ? `${(value / 1000000).toFixed(2)}M` : value >= 1000 ? `${(value / 1000).toFixed(1)}K` : String(value);
+  const fmtDuration = (value) => !value ? "replay / 0 s" : value >= 60000 ? `${(value / 60000).toFixed(1)} min` : `${(value / 1000).toFixed(1)} s`;
+  const fmtCost = (value) => value == null ? "not available" : `$${value < .01 ? value.toFixed(4) : value.toFixed(2)}`;
 
   async function load() {
     const catalogResponse = await fetch("data/catalog.json");
@@ -110,7 +114,7 @@
     }
     state.activePaper = parts[0];
     const bundle = currentBundle();
-    const validSections = [...bundle.source_packet.required_section_ids, FORMULA_SECTION_ID];
+    const validSections = [...bundle.source_packet.required_section_ids, FORMULA_SECTION_ID, CODE_SECTION_ID];
     state.activeSection = validSections.includes(parts[1]) ? parts[1] : validSections[0];
     renderPaper(bundle, state.activeSection);
     setView("paper");
@@ -119,9 +123,13 @@
 
   function renderOverview() {
     const run = currentRun();
-    const outputs = state.catalog.papers.map((paper) => `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`).join("");
+    const outputs = state.catalog.papers.map((paper) => {
+      const runPaper = run.papers.find((item) => item.paper_id === paper.paper_id);
+      const metrics = runPaper?.trace_summary || {};
+      return `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><div class="paper-run-metrics"><b>${fmtTokens(metrics.total_tokens)} tokens</b><b>${fmtCost(metrics.estimated_cost_usd)}</b><b>${fmtDuration(metrics.duration_ms)}</b></div><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`;
+    }).join("");
     const protocol = state.catalog.comparison_protocol;
-    const candidates = (state.catalog.candidate_runs || []).map((candidate) => `<article><div><span class="candidate-status">${esc(candidate.status.replaceAll("_", " "))}</span><h3>${esc(candidate.label)}</h3></div><dl><div><dt>Provider</dt><dd>${esc(candidate.provider)}</dd></div><div><dt>Model ID</dt><dd>${esc(candidate.model_id)}</dd></div></dl><p>${esc(candidate.note)}</p><a href="${esc(candidate.documentation_url)}" target="_blank" rel="noreferrer">Endpoint documentation ↗</a></article>`).join("");
+    const candidates = (state.catalog.candidate_runs || []).map((candidate) => `<article><div><span class="candidate-status">${esc(candidate.status.replaceAll("_", " "))}</span><h3>${esc(candidate.label)}</h3></div><p class="model-summary">${esc(candidate.model_summary)}</p><dl><div><dt>Provider</dt><dd>${esc(candidate.provider)}</dd></div><div><dt>Model ID</dt><dd>${esc(candidate.model_id)}</dd></div><div><dt>Endpoint</dt><dd>${esc(candidate.endpoint)}</dd></div></dl><p>${esc(candidate.note)}</p><a href="${esc(candidate.documentation_url)}" target="_blank" rel="noreferrer">Endpoint documentation ↗</a></article>`).join("");
     $("#overview-view").innerHTML = `
       <div class="overview-hero">
         <div><span class="eyebrow">Paper + repository → sourced explainer</span><h1>From source material to scientific scenes.</h1></div>
@@ -151,7 +159,7 @@
       </div>
       <section class="run-provenance">
         <div><span class="eyebrow">Selected frozen run</span><h2>${esc(run.label)}</h2><p>${esc(run.description)}</p></div>
-        <dl><div><dt>Provider</dt><dd>${esc(run.providers.join(" + "))}</dd></div><div><dt>Model</dt><dd>${esc(run.models.join(" + "))}</dd></div><div><dt>Mode</dt><dd>${esc(run.generation_modes.join(" + "))}</dd></div><div><dt>Status</dt><dd>${esc(run.status)}</dd></div></dl>
+        <dl><div><dt>Provider</dt><dd>${esc(run.providers.join(" + "))}</dd></div><div><dt>Model</dt><dd>${esc(run.models.join(" + "))}</dd></div><div><dt>What it is</dt><dd>${esc(run.model_summary)}</dd></div><div><dt>Endpoint</dt><dd>${esc(run.endpoint)}</dd></div><div><dt>Tokens</dt><dd>${fmtTokens(run.trace_summary?.total_tokens)}</dd></div><div><dt>API time</dt><dd>${fmtDuration(run.trace_summary?.duration_ms)}</dd></div><div><dt>Estimated cost</dt><dd>${fmtCost(run.trace_summary?.estimated_cost_usd)}</dd></div><div><dt>Status</dt><dd>${esc(run.status)}</dd></div></dl>
       </section>
       <section class="comparison-contract"><div><span class="eyebrow">Cross-model contract</span><h2>Same evidence and renderer; different planning JSON.</h2></div><div><b>FIXED</b><p>${protocol.fixed.map(esc).join(" · ")}</p></div><div><b>VARIED</b><p>${protocol.varied.map(esc).join(" · ")}</p></div><small>${esc(protocol.rule)}</small></section>
       ${candidates ? `<section class="candidate-matrix"><div class="candidate-head"><span class="eyebrow">Requested comparison matrix</span><h2>Queued, not fabricated.</h2><p>These candidates are intentionally absent from the top-right selector until both paper bundles are generated, validated, frozen, and hashed.</p></div><div class="candidate-grid">${candidates}</div></section>` : ""}
@@ -167,6 +175,7 @@
     const navItems = [
       ...plan.sections,
       { id: FORMULA_SECTION_ID, nav_label: "Formula", title: "Formula → Manim map" },
+      { id: CODE_SECTION_ID, nav_label: "Code", title: "Code understanding" },
     ];
     $("#section-nav").innerHTML = navItems.map((item) => `<button type="button" data-section="${esc(item.id)}" aria-current="${item.id === sectionId ? "step" : "false"}">${esc(item.nav_label)}</button>`).join("");
     $("#section-nav").querySelectorAll("button").forEach((button) => button.addEventListener("click", () => location.hash = routeHash(bundle.paper_id, button.dataset.section)));
@@ -174,6 +183,10 @@
     requestAnimationFrame(() => activeSectionButton?.scrollIntoView({ block: "nearest", inline: "center" }));
     if (sectionId === FORMULA_SECTION_ID) {
       renderFormulaMap(bundle);
+      return;
+    }
+    if (sectionId === CODE_SECTION_ID) {
+      renderCodeMap(bundle);
       return;
     }
     const sectionPlan = plan.sections.find((item) => item.id === sectionId);
@@ -281,6 +294,19 @@
     observer.observe(graph);
   }
 
+  function renderCodeMap(bundle) {
+    const map = bundle.code_map;
+    const codeById = new Map(map.code_nodes.map((node) => [node.node_id, node]));
+    const edgesByFormula = new Map(map.formula_nodes.map((node) => [node.node_id, map.formula_code_edges.filter((edge) => edge.source === node.node_id)]));
+    $("#lesson").innerHTML = `<header class="lesson-header code-header"><span class="eyebrow">${esc(bundle.source_packet.short_title)} · deterministic section 08</span><h1>Where the method acts in code.</h1><p class="promise">This view is compiled from revision-pinned source symbols. It connects the paper's formulas to implementation sites, then follows the function/data DAG into the experimental readout.</p><div class="intent-line"><b>INTENT</b><span>Separate mathematical meaning, implementation mechanism, and experimental setting without asking a coding agent to infer runtime behavior.</span></div></header>
+      <div class="blocks code-understanding-blocks">
+        <section class="block mapping-lab"><span class="eyebrow">Formula ↔ repository bipartite graph</span><h2>One equation can act through several code sites.</h2><div class="code-bipartite"><div class="code-map-column"><h3>Paper formulas</h3>${map.formula_nodes.map((formula) => `<article class="code-formula-node"><strong>${esc(formula.label)}</strong><code>${esc(formula.expression)}</code>${formula.source_url ? `<a href="${esc(formula.source_url)}" target="_blank" rel="noreferrer">paper source ↗</a>` : ""}</article>`).join("")}</div><div class="code-edge-column">${map.formula_nodes.flatMap((formula) => (edgesByFormula.get(formula.node_id) || []).map((edge) => { const target = codeById.get(edge.target); return `<article><span>${esc(formula.label)}</span><i>→</i><strong>${esc(target.symbol)}</strong><p>${esc(edge.role)}</p><small>${edge.evidence_refs.map(esc).join(" · ")}</small></article>`; })).join("")}</div><div class="code-map-column"><h3>Confirmed code sites</h3>${map.code_nodes.map((node) => `<article class="code-symbol-node"><strong>${esc(node.symbol)}</strong><code>${esc(node.path)}:${node.line_start}–${node.line_end}</code><p>${esc(node.role)}</p></article>`).join("")}</div></div></section>
+        <section class="block function-dag"><span class="eyebrow">Function / data DAG</span><h2>Follow the actual computational path.</h2><div class="dag-grid">${map.dag_nodes.map((node) => `<article class="dag-node kind-${esc(node.kind)}" style="--dag-row:${Math.max(1, 1 + map.dag_edges.filter((edge) => edge.target === node.id).length)}"><span>${esc(node.kind)}</span><strong>${esc(node.label)}</strong><p>${esc(node.detail)}</p><div>${map.dag_edges.filter((edge) => edge.target === node.id).map((edge) => `<small>← ${esc(edge.label)} · ${esc(map.dag_nodes.find((item) => item.id === edge.source)?.label || edge.source)}</small>`).join("")}</div></article>`).join("")}</div></section>
+        <section class="block experiment-pipeline"><span class="eyebrow">Experiment pipeline</span><h2>What changes, what runs, and what gets measured.</h2><div>${map.experiment_pipeline.map((step, index) => `<article><b>${String(index + 1).padStart(2, "0")}</b><strong>${esc(step.label)}</strong><p>${esc(step.detail)}</p><small>${step.source_refs.map(esc).join(" · ")}</small></article>`).join("")}</div></section>
+      </div>`;
+    renderSourcePanel(bundle, { deep_links: [], id: CODE_SECTION_ID, title: "Code understanding" });
+  }
+
   function renderBlock(block, bundle) {
     const renderer = blockRenderers[block.type];
     if (!renderer) return `<section class="block"><p>Unsupported block: ${esc(block.type)}</p></section>`;
@@ -293,7 +319,7 @@
     comparison: (b) => `<section class="block"><div class="comparison">${b.columns.map((column) => `<article class="accent-${esc(column.accent)}"><span class="label">${esc(column.label)}</span><div class="question">${esc(column.question)}</div><div class="answer">${esc(column.answer)}</div></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
     learner_check: (b) => `<details class="block learner-check"><summary><span class="eyebrow">Pause and predict</span><h3>${esc(b.prompt)}</h3><button type="button" tabindex="-1">Reveal answer</button></summary><p class="answer">${esc(b.answer)}</p></details>`,
     lineage: (b) => `<section class="block"><span class="eyebrow">Conceptual lineage</span><div class="lineage-track" style="--count:${b.nodes.length}">${b.nodes.map((node, index) => `<article class="lineage-node" style="--node-color:${index === b.nodes.length - 1 ? "var(--orange)" : index > b.nodes.length / 2 ? "var(--green)" : "var(--violet)"}"><strong>${esc(node.label)}</strong><span>${esc(node.note)}</span></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
-    equation_thread: (b) => `<section class="block equation-thread"><span class="eyebrow">Equation lineage · source order</span><h2>${esc(b.title)}</h2><div class="equation-thread-list">${b.stages.map((stage, index) => `<article><span class="thread-index">${String(index + 1).padStart(2, "0")}</span><div><strong>${esc(stage.equation)}</strong><code>${esc(stage.formula)}</code><p>${esc(stage.intent)}</p><small>${esc(stage.change)}</small></div></article>`).join("")}</div><details class="folded-equations"><summary>${b.folded.length} folded equation famil${b.folded.length === 1 ? "y" : "ies"}</summary>${b.folded.map((item) => `<p><strong>${esc(item.equations)}</strong> ${esc(item.reason)}</p>`).join("")}</details>${refs(b.source_refs)}</section>`,
+    equation_thread: (b) => `<section class="block equation-thread"><span class="eyebrow">Paper → equation → limitation → next move</span><h2>${esc(b.title)}</h2><div class="equation-thread-list">${b.stages.map((stage, index) => `<article><span class="thread-index">${String(index + 1).padStart(2, "0")}</span><div>${stage.paper ? `<div class="thread-paper"><b>${esc(stage.paper)}</b><span>${esc(stage.year)}</span>${stage.source_url ? `<a href="${esc(stage.source_url)}" target="_blank" rel="noreferrer">primary source ↗</a>` : ""}</div>` : ""}<strong>${esc(stage.equation)}</strong><code>${esc(stage.formula)}</code><p>${esc(stage.intent)}</p><small>${esc(stage.change)}</small></div></article>`).join("")}</div><details class="folded-equations"><summary>${b.folded.length} folded equation famil${b.folded.length === 1 ? "y" : "ies"}</summary>${b.folded.map((item) => `<p><strong>${esc(item.equations)}</strong> ${esc(item.reason)}</p>`).join("")}</details>${refs(b.source_refs)}</section>`,
     result_story: (b) => `<section class="block result-story"><div class="result-question"><span class="eyebrow">Experimental question</span><h2>${esc(b.question)}</h2></div><dl><div><dt>Setting / factor</dt><dd>${esc(b.setting)}</dd></div><div><dt>Metric</dt><dd>${esc(b.metric)}</dd></div><div><dt>Evidence</dt><dd><span class="claim-label">${esc(b.evidence_kind.replaceAll("_", " "))}</span>${esc(b.evidence)}</dd></div><div><dt>Takeaway</dt><dd>${esc(b.takeaway)}</dd></div></dl>${refs(b.source_refs)}</section>`,
     related_reading: (b) => `<section class="block related-reading"><span class="eyebrow">Primary-source links</span><h2>${esc(b.title)}</h2><div class="reading-grid">${b.items.map((item) => `<a href="${esc(item.url)}" target="_blank" rel="noreferrer"><strong>${esc(item.title)}</strong><span>${esc(item.relation)}</span><i aria-hidden="true">↗</i></a>`).join("")}</div>${refs(b.source_refs)}</section>`,
     numeric_fixture: (b) => `<section class="block"><span class="eyebrow">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="formula-display">${esc(b.formula)}</div><div class="fixture-grid">${b.fixtures.map((fixture) => { const max = Math.max(...fixture.values); return `<article class="fixture"><h3>${esc(fixture.label)}</h3><div class="weight-bars">${fixture.values.map((value) => `<i style="height:${Math.max(2, value / max * 100)}%;--bar-color:${accent(fixture.accent)}" title="${esc(value)}"></i>`).join("")}</div><div class="ess-readout"><span>ρ = [${fixture.values.map(esc).join(", ")}]</span><b>ESS ${esc(fixture.ess)}</b></div></article>`; }).join("")}</div><p>${esc(b.note)}</p>${refs(b.source_refs)}</section>`,
