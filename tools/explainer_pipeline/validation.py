@@ -87,7 +87,7 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
                     errors.append(f"section {section.get('id')} missing {field}")
     elif stage == "section_content":
         allowed_blocks = {
-            "prose", "comparison", "formula_steps", "code", "video",
+            "prose", "comparison", "formula_steps", "code", "video", "micro_video",
             "line_chart", "bar_chart", "lineage", "numeric_fixture",
             "rotation", "limitation", "learner_check", "reported_trends",
             "paper_question", "related_reading",
@@ -113,10 +113,14 @@ def validate_stage_payload(stage: str, payload: dict[str, Any], packet: dict[str
                         continue
                     if block_type != "learner_check" and not block.get("source_refs"):
                         errors.append(f"section {section_id} block {index} needs source_refs")
-                    if block_type == "video":
+                    if block_type in {"video", "micro_video"}:
                         for field in ("media_id", "poster_id", "captions_id"):
                             if block.get(field) not in media_ids:
-                                errors.append(f"section {section_id} video has unknown {field} {block.get(field)}")
+                                errors.append(f"section {section_id} {block_type} has unknown {field} {block.get(field)}")
+                    if block_type == "micro_video":
+                        for field in ("intro", "observation", "consequence"):
+                            if not block.get(field):
+                                errors.append(f"section {section_id} micro_video needs {field}")
                     if block_type == "code" and block.get("code_source_id") not in code_ids:
                         errors.append(f"section {section_id} code block has unknown code_source_id")
                     if block_type in {"bar_chart", "line_chart", "reported_trends"} and not block.get("claim_label"):
@@ -151,6 +155,14 @@ def validate_bundle(bundle: dict[str, Any], check_local_assets: bool = True) -> 
         dangling = set(section.get("deep_links", [])) - appendix_ids
         if dangling:
             errors.append(f"section {section.get('id')} has dangling appendix refs {sorted(dangling)}")
+    formula_map = bundle.get("formula_map", {})
+    formula_node_ids = {item.get("node_id") for item in formula_map.get("formula_nodes", [])}
+    manim_node_ids = {item.get("primitive_id") for item in formula_map.get("manim_nodes", [])}
+    for edge in formula_map.get("edges", []):
+        if edge.get("source") not in formula_node_ids or edge.get("target") not in manim_node_ids:
+            errors.append(f"dangling formula-to-Manim edge: {edge.get('edge_id')}")
+    if len(formula_map.get("formulas", [])) != len(packet.get("formula_refs", [])):
+        errors.append("formula map inventory must match source packet formula refs")
     if errors:
         raise ExplainerValidationError("explainer bundle invalid:\n" + "\n".join(f"- {item}" for item in errors))
 

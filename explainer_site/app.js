@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const FORMULA_SECTION_ID = "formula";
   const state = { catalog: null, bundles: new Map(), activePaper: null, activeSection: null };
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
@@ -79,7 +80,7 @@
     }
     state.activePaper = parts[0];
     const bundle = state.bundles.get(state.activePaper);
-    const validSections = bundle.source_packet.required_section_ids;
+    const validSections = [...bundle.source_packet.required_section_ids, FORMULA_SECTION_ID];
     state.activeSection = validSections.includes(parts[1]) ? parts[1] : validSections[0];
     renderPaper(bundle, state.activeSection);
     setView("paper");
@@ -117,12 +118,20 @@
 
   function renderPaper(bundle, sectionId) {
     const plan = bundle.lesson_plan;
-    const sectionPlan = plan.sections.find((item) => item.id === sectionId);
-    const content = bundle.section_content.sections[sectionId];
-    $("#section-nav").innerHTML = plan.sections.map((item) => `<button type="button" data-section="${esc(item.id)}" aria-current="${item.id === sectionId ? "step" : "false"}">${esc(item.nav_label)}</button>`).join("");
+    const navItems = [
+      ...plan.sections,
+      { id: FORMULA_SECTION_ID, nav_label: "Formula", title: "Formula → Manim map" },
+    ];
+    $("#section-nav").innerHTML = navItems.map((item) => `<button type="button" data-section="${esc(item.id)}" aria-current="${item.id === sectionId ? "step" : "false"}">${esc(item.nav_label)}</button>`).join("");
     $("#section-nav").querySelectorAll("button").forEach((button) => button.addEventListener("click", () => location.hash = `${bundle.paper_id}/${button.dataset.section}`));
     const activeSectionButton = $("#section-nav").querySelector('[aria-current="step"]');
     requestAnimationFrame(() => activeSectionButton?.scrollIntoView({ block: "nearest", inline: "center" }));
+    if (sectionId === FORMULA_SECTION_ID) {
+      renderFormulaMap(bundle);
+      return;
+    }
+    const sectionPlan = plan.sections.find((item) => item.id === sectionId);
+    const content = bundle.section_content.sections[sectionId];
     $("#lesson").innerHTML = `
       <header class="lesson-header">
         <span class="eyebrow">${esc(bundle.source_packet.short_title)} · ${esc(sectionPlan.nav_label)} · generated scene</span>
@@ -133,6 +142,90 @@
       <div class="blocks">${content.blocks.map((block) => renderBlock(block, bundle)).join("")}</div>`;
     bindLessonInteractions();
     renderSourcePanel(bundle, sectionPlan);
+  }
+
+  function renderFormulaMap(bundle) {
+    const map = bundle.formula_map;
+    const formulaLookup = new Map(map.formulas.map((item) => [item.formula_id, item]));
+    const edgeStateLabel = { implemented: "implemented", candidate: "candidate mapping", unresolved: "unresolved" };
+    $("#lesson").innerHTML = `
+      <header class="lesson-header formula-header">
+        <span class="eyebrow">${esc(bundle.source_packet.short_title)} · 07 Formula · deterministic capability view</span>
+        <h1>Formula → Manim map</h1>
+        <p class="promise">Formula IR is on the left; callable Manim functions are on the right. An edge means the registry can express that operation—not that every compatible animation is equally explanatory.</p>
+        <div class="question-line"><b>QUESTION</b><span>Which mappings are implemented, merely compatible, or still unresolved?</span></div>
+      </header>
+      <div class="blocks formula-blocks">
+        <section class="block formula-inventory">
+          <span class="eyebrow">Paper-native formula inventory</span>
+          <div class="formula-inventory-grid">${map.formulas.map((formula, index) => `<article>
+            <span class="formula-index">F${String(index + 1).padStart(2, "0")}</span>
+            <h2>${esc(formula.title)}</h2>
+            <div class="formula-display">${esc(formula.plain_text)}</div>
+            <a href="${esc(formula.source_anchor.source_url)}" target="_blank" rel="noreferrer">${esc(formula.source_anchor.locator)} ↗</a>
+          </article>`).join("")}</div>
+        </section>
+        <section class="block mapping-lab">
+          <div class="mapping-intro"><div><span class="eyebrow">Bipartite capability graph</span><h2>Fragments and operations ↔ render functions</h2></div><div class="mapping-legend">${Object.entries(edgeStateLabel).map(([stateName, label]) => `<span class="edge-${stateName}"><i></i>${esc(label)}</span>`).join("")}</div></div>
+          <p class="mapping-help">Focus either side to isolate its N-to-N mappings. Solid edges are backed by a callable implementation; dashed edges are compatible alternatives still awaiting scene-level selection.</p>
+          <div class="formula-bipartite" id="formula-bipartite">
+            <svg class="mapping-lines" id="mapping-lines" aria-hidden="true"></svg>
+            <div class="mapping-column formula-side"><h3>Formula layer</h3>${map.formula_nodes.map((node) => {
+              const formula = formulaLookup.get(node.formula_id);
+              return `<button type="button" class="mapping-node level-${esc(node.level)}" data-map-node="${esc(node.node_id)}"><span>${esc(node.level)}</span><strong>${esc(node.label)}</strong><small>${esc(node.expression)}</small><i>${esc(formula?.title || "")}</i></button>`;
+            }).join("")}</div>
+            <div class="mapping-column manim-side"><h3>Manim layer</h3>${map.manim_nodes.map((node) => `<button type="button" class="mapping-node origin-${esc(node.origin)}" data-map-node="${esc(node.primitive_id)}"><span>${esc(node.origin_label)}</span><strong>${esc(node.label)}</strong><small>${esc(node.primitive_id)}</small><i>${esc(node.status)}</i></button>`).join("")}</div>
+          </div>
+          <div class="mapping-evidence" id="mapping-evidence" aria-live="polite"><span class="eyebrow">Mapping evidence</span><p>Focus a formula fragment or Manim function to inspect why the edge exists.</p></div>
+        </section>
+        <section class="block prose"><span class="eyebrow">How to read this</span><h2>The graph is also a pipeline test surface.</h2><p>A missing edge means the formula compiler has no registered visual operation. A candidate edge means the API signatures are compatible, but the scene planner still needs evidence that the mapping teaches the intended concept. Implemented edges resolve to real source symbols; no runtime coding agent is needed.</p><span class="source-ref">${esc(map.registry_ref)} · Manim ${map.manim_compatibility.validated_render_versions.map(esc).join(" / ")}</span></section>
+      </div>`;
+    bindFormulaMap(map);
+    renderSourcePanel(bundle, {
+      deep_links: [],
+      id: FORMULA_SECTION_ID,
+      title: "Formula → Manim map",
+    });
+  }
+
+  function bindFormulaMap(map) {
+    const graph = $("#formula-bipartite");
+    const svg = $("#mapping-lines");
+    if (!graph || !svg) return;
+    const nodeElements = [...graph.querySelectorAll("[data-map-node]")];
+
+    const draw = () => {
+      const graphRect = graph.getBoundingClientRect();
+      svg.setAttribute("viewBox", `0 0 ${graphRect.width} ${graphRect.height}`);
+      svg.innerHTML = map.edges.map((edge) => {
+        const from = nodeElements.find((item) => item.dataset.mapNode === edge.source)?.getBoundingClientRect();
+        const to = nodeElements.find((item) => item.dataset.mapNode === edge.target)?.getBoundingClientRect();
+        if (!from || !to) return "";
+        const x1 = from.right - graphRect.left;
+        const y1 = from.top + from.height / 2 - graphRect.top;
+        const x2 = to.left - graphRect.left;
+        const y2 = to.top + to.height / 2 - graphRect.top;
+        const bend = Math.max(28, (x2 - x1) * .42);
+        return `<path data-map-edge="${esc(edge.edge_id)}" data-source="${esc(edge.source)}" data-target="${esc(edge.target)}" class="edge-${esc(edge.state)}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}"/>`;
+      }).join("");
+    };
+
+    const inspect = (nodeId) => {
+      const connected = map.edges.filter((edge) => edge.source === nodeId || edge.target === nodeId);
+      nodeElements.forEach((item) => item.classList.toggle("is-related", connected.some((edge) => edge.source === item.dataset.mapNode || edge.target === item.dataset.mapNode)));
+      svg.querySelectorAll("[data-map-edge]").forEach((path) => path.classList.toggle("is-active", connected.some((edge) => edge.edge_id === path.dataset.mapEdge)));
+      const evidence = $("#mapping-evidence");
+      evidence.innerHTML = `<span class="eyebrow">${connected.length} connected mapping${connected.length === 1 ? "" : "s"}</span>${connected.map((edge) => `<article><b>${esc(edge.operation_type.replaceAll("_", " "))}</b><span class="edge-pill edge-${esc(edge.state)}">${esc(edge.state)}</span><p>${esc(edge.reason)}</p><small>${edge.evidence_refs.map(esc).join(" · ")}</small></article>`).join("") || "<p>No registered mapping.</p>"}`;
+    };
+
+    nodeElements.forEach((node) => {
+      node.addEventListener("mouseenter", () => inspect(node.dataset.mapNode));
+      node.addEventListener("focus", () => inspect(node.dataset.mapNode));
+      node.addEventListener("click", () => inspect(node.dataset.mapNode));
+    });
+    requestAnimationFrame(draw);
+    const observer = new ResizeObserver(draw);
+    observer.observe(graph);
   }
 
   function renderBlock(block, bundle) {
@@ -150,6 +243,7 @@
     related_reading: (b) => `<section class="block related-reading"><span class="eyebrow">Primary-source links</span><h2>${esc(b.title)}</h2><div class="reading-grid">${b.items.map((item) => `<a href="${esc(item.url)}" target="_blank" rel="noreferrer"><strong>${esc(item.title)}</strong><span>${esc(item.relation)}</span><i aria-hidden="true">↗</i></a>`).join("")}</div>${refs(b.source_refs)}</section>`,
     numeric_fixture: (b) => `<section class="block"><span class="eyebrow">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="formula-display">${esc(b.formula)}</div><div class="fixture-grid">${b.fixtures.map((fixture) => { const max = Math.max(...fixture.values); return `<article class="fixture"><h3>${esc(fixture.label)}</h3><div class="weight-bars">${fixture.values.map((value) => `<i style="height:${Math.max(2, value / max * 100)}%;--bar-color:${accent(fixture.accent)}" title="${esc(value)}"></i>`).join("")}</div><div class="ess-readout"><span>ρ = [${fixture.values.map(esc).join(", ")}]</span><b>ESS ${esc(fixture.ess)}</b></div></article>`; }).join("")}</div><p>${esc(b.note)}</p>${refs(b.source_refs)}</section>`,
     video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); return `<section class="block"><span class="eyebrow">Manim where motion carries meaning</span><h2>${esc(b.title)}</h2><div class="video-frame"><video controls preload="metadata" poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="video-caption"><span>${esc(b.caption)}</span><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></div>${refs(b.source_refs)}</section>`; },
+    micro_video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); return `<section class="block micro-video"><div class="micro-copy"><span class="eyebrow">Micro-video · one state change</span><h2>${esc(b.title)}</h2><p class="micro-intro">${esc(b.intro)}</p><dl><div><dt>Observe</dt><dd>${esc(b.observation)}</dd></div><div><dt>Therefore</dt><dd>${esc(b.consequence)}</dd></div></dl>${refs(b.source_refs)}</div><div class="micro-media"><video controls preload="metadata" playsinline poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></section>`; },
     formula_steps: (b) => `<section class="block"><span class="claim-label">${esc(b.claim_label)}</span><div class="formula-display">${esc(b.formula)}</div><div class="formula-steps">${b.steps.map((step, index) => `<article class="formula-step"><span class="step-number">0${index + 1} / ${esc(step.label)}</span><div class="step-expression">${esc(step.expression)}</div><p>${esc(step.meaning)}</p><span class="primitive-tag origin-${esc(step.primitive.origin)}">${esc(step.primitive.id)}</span></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
     code: (b) => `<section class="block"><span class="eyebrow">Confirmed code mapping</span><h2>${esc(b.symbol)}</h2><div class="code-block"><div class="code-head"><span>${esc(b.path)}</span><span>${esc(b.code_source_id)}</span></div>${b.lines.map((line) => `<div class="code-line"><span class="line-no">${esc(line.number)}</span><code>${esc(line.code)}</code><span class="code-map">↳ ${esc(line.maps_to)}</span></div>`).join("")}</div>${refs(b.source_refs)}</section>`,
     bar_chart: (b) => { const min = b.axis_min || 0; const range = b.axis_max - min; return `<section class="block chart"><span class="claim-label">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="chart-bars">${b.groups.map((group) => `<div class="chart-row"><span>${esc(group.label)}</span><div class="chart-track" title="axis ${min} to ${b.axis_max}"><div class="chart-fill" style="--width:${Math.max(0, (group.value - min) / range * 100)}%;--bar-color:${accent(group.accent)}"></div></div><span class="chart-value">${esc(group.value)}${group.uncertainty ? ` ${esc(group.uncertainty)}` : ""}</span></div>`).join("")}</div><div class="chart-note">axis ${esc(min)}–${esc(b.axis_max)} ${esc(b.unit)} · ${esc(b.claim_label)}</div>${refs(b.source_refs)}</section>`; },

@@ -38,35 +38,35 @@
     "engine": "Manim Community 0.19.0",
     "entrypoint": "scenes/explainer_pipeline_native.py",
     "coding_agent_required": false,
-    "scene_ids": ["RoPEFormulationAndCode", "RoPEFindings"]
+    "scene_ids": ["RoPERelativeMicro", "RoPEFindings"]
   },
   "media": [
     {
-      "media_id": "rope-formulation-code",
+      "media_id": "rope-relative-micro",
       "role": "video",
-      "path": "data/explainer_pipeline/media/rope/formulation-code.mp4",
-      "sha256": "488c414790ce4be8e669512429c52cf0544d0d214ef183e3926deb4088bb26f1",
+      "path": "data/explainer_pipeline/media/rope/relative-micro.mp4",
+      "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2",
       "media_type": "video/mp4",
       "origin": "project_new",
-      "caption": "New paper-native Manim scene for Eq. 11, Eqs. 14-16, and the official implementation pattern."
+      "caption": "Five-second Manim scene for the Eq. 16 collapse from separate query/key rotations to n minus m."
     },
     {
-      "media_id": "rope-formulation-code-poster",
+      "media_id": "rope-relative-micro-poster",
       "role": "poster",
-      "path": "data/explainer_pipeline/media/rope/formulation-code-poster.png",
-      "sha256": "b7a02e032833a512987e376e2fd1c4ff97418c4a07d2c28f9d18afb44abe40f6",
+      "path": "data/explainer_pipeline/media/rope/relative-micro-poster.png",
+      "sha256": "2c5b38ea48d16cbaeceafe51b3288db033ae7b62e943432400f82f684ec739de",
       "media_type": "image/png",
       "origin": "project_new",
-      "caption": "Poster for the new RoPE formulation and implementation scene."
+      "caption": "Poster for the relative-rotation micro-video."
     },
     {
-      "media_id": "rope-formulation-code-captions",
+      "media_id": "rope-relative-micro-captions",
       "role": "captions",
-      "path": "data/explainer_pipeline/media/rope/formulation-code.vtt",
-      "sha256": "a5d74bfa53a03fef59f666f80fd0a6f08525931bc80cb248610d2fc795f2b752",
+      "path": "data/explainer_pipeline/media/rope/relative-micro.vtt",
+      "sha256": "9953ddb34d9ee2e3b4bc5caf23a7e2f98ecba7fa79d7288482aba950514e3763",
       "media_type": "text/vtt",
       "origin": "project_new",
-      "caption": "English captions for the RoPE formulation and implementation scene."
+      "caption": "English captions for the relative-rotation micro-video."
     },
     {
       "media_id": "rope-findings",

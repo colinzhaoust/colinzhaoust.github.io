@@ -22,7 +22,7 @@ class ExplainerPipelineTests(unittest.TestCase):
             ]
             manifest = render_site(bundles, root / "site")
             self.assertEqual(manifest["papers"], ["feynrl", "rope"])
-            self.assertEqual(len(manifest["media"]), 12)
+            self.assertEqual(len(manifest["media"]), 15)
             self.assertTrue((root / "site" / "data" / "catalog.json").is_file())
             for bundle in bundles:
                 self.assertEqual(
@@ -34,6 +34,23 @@ class ExplainerPipelineTests(unittest.TestCase):
                     {"frozen_replay"},
                 )
                 self.assertTrue(all(not Path(trace["source_record"]).is_absolute() for trace in bundle["generation"]["stage_traces"]))
+                self.assertEqual(len(bundle["formula_map"]["formulas"]), len(bundle["source_packet"]["formula_refs"]))
+                self.assertTrue(bundle["formula_map"]["edges"])
+                self.assertTrue(all(edge["source"].startswith("node:") for edge in bundle["formula_map"]["edges"]))
+
+    def test_formula_map_exposes_real_and_candidate_n_to_n_mappings(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = run_pipeline(DATA_ROOT / "papers" / "feynrl.json", Path(temporary), replay_provider())
+            mapping = bundle["formula_map"]
+            self.assertEqual("formula-manim-map/0.1.0", mapping["schema_version"])
+            self.assertTrue(any(node["label"].endswith("EssTradeoffGauge") for node in mapping["manim_nodes"]))
+            self.assertIn("implemented", {edge["state"] for edge in mapping["edges"]})
+            self.assertIn("candidate", {edge["state"] for edge in mapping["edges"]})
+            targets_per_formula = {}
+            node_formula = {node["node_id"]: node["formula_id"] for node in mapping["formula_nodes"]}
+            for edge in mapping["edges"]:
+                targets_per_formula.setdefault(node_formula[edge["source"]], set()).add(edge["target"])
+            self.assertTrue(all(len(targets) > 1 for targets in targets_per_formula.values()))
 
     def test_manifest_hash_matches_exact_written_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -57,8 +74,8 @@ class ExplainerPipelineTests(unittest.TestCase):
             invalid = copy.deepcopy(bundle)
             video = next(
                 block
-                for block in invalid["section_content"]["sections"]["formulation"]["blocks"]
-                if block["type"] == "video"
+                for block in invalid["section_content"]["sections"]["rope"]["blocks"]
+                if block["type"] == "micro_video"
             )
             video["media_id"] = "missing-video"
             from tools.explainer_pipeline.validation import validate_stage_payload

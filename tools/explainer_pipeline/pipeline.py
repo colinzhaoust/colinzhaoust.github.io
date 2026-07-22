@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .common import DATA_ROOT, load_json, sha256_json
+from .formula_map import build_formula_map
 from .prompts import build_prompt
 from .providers import ReplayProvider, StageProvider
 from .validation import validate_bundle, validate_source_packet, validate_stage_payload
@@ -56,6 +57,7 @@ def run_pipeline(
         "concept_graph": outputs["concept_graph"],
         "lesson_plan": outputs["lesson_plan"],
         "section_content": outputs["section_content"],
+        "formula_map": build_formula_map(packet),
         "generation": {
             "pipeline_version": "explainer-pipeline/0.1.0",
             "source_packet_sha256": sha256_json(packet),

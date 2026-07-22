@@ -112,11 +112,23 @@ class FormulaExplainerTests(unittest.TestCase):
             for operation in formula["operations"]:
                 self.assertIn(operation["operation_type"], supported[operation["primitive_ref"]])
 
+    def test_available_authored_composites_resolve_to_source_symbols(self):
+        registry = load_json(REGISTRY_PATH)
+        source = (ROOT / "scenes/explainer_primitives.py").read_text(encoding="utf-8")
+        for item in registry["primitives"]:
+            if item["origin"] != "generated_one_off" or item["status"] != "available":
+                continue
+            symbol = item["source_symbol"]
+            self.assertTrue(symbol)
+            self.assertIn(f"class {symbol.rsplit('.', 1)[-1]}", source)
+
     def test_manim_version_is_observed_render_provenance_not_an_unverified_pin(self):
         registry = load_json(REGISTRY_PATH)
         manifest = load_json(ROOT / "experiments/formula_explainer/babel_smoke_manifest.json")
         compatibility = registry["manim_compatibility"]
-        self.assertEqual([manifest["render_environment"]["manim_version"]], compatibility["validated_render_versions"])
+        self.assertIn(manifest["render_environment"]["manim_version"], compatibility["validated_render_versions"])
+        local_manifest = load_json(ROOT / "experiments/explainer_pipeline/micro_scene_manifest.json")
+        self.assertIn(local_manifest["render_environment"]["manim_version"], compatibility["validated_render_versions"])
         self.assertIsNone(compatibility["minimum_supported_version"])
         self.assertNotIn("manim_version", registry)
 

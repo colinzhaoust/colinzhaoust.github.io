@@ -39,24 +39,27 @@ The generic contract requires a motivation and related-work entry and ends with 
 
 FeynRL:
 
-`motivation → related_work → ess → p3o → findings → limits`
+`motivation → related_work → ess → p3o → findings → limits → 07 Formula`
 
 RoPE:
 
-`motivation → related_work → formulation → rope → findings → limits`
+`motivation → related_work → formulation → rope → findings → limits → 07 Formula`
 
-Titles, questions, and mechanism labels preserve the papers' terminology. Code is placed next to the equation or mechanism it implements instead of being separated into a generic “Code” scene.
+Titles, questions, and mechanism labels preserve the papers' terminology. Code is placed next to the equation or mechanism it implements instead of being separated into a generic “Code” scene. `07 Formula` is compiled deterministically after the six generated learning sections; it is not another LLM-authored section.
+
+The formula view is a bipartite capability graph. Formula and operation nodes come from the source packet's formula IR. Manim nodes come from `data/formula_explainer/primitive_registry.json`. Edges preserve three different claims: an implemented callable mapping, a compatible candidate, or an unresolved mapping. This makes missing animation capabilities visible instead of silently improvising a scene.
 
 ## Native Manim contract
 
-The reviewed demos use newly authored scenes in `scenes/explainer_pipeline_native.py`:
+The reviewed demos use text-light micro-scenes in `scenes/explainer_pipeline_native.py`:
 
-- `FeynRLEssP3O`: trust-region concern, off-policy concern, Eq. 11, Eq. 12, and confirmed P3O code;
+- `FeynRLEssMicro`: Eq. 11 with fixed token count and changing ratio concentration;
+- `FeynRLP3OMicro`: the two Eq. 12 controls coupled through the same e_B;
 - `FeynRLFindings`: Section 4 experimental axes and exact Table 7 values;
-- `RoPEFormulationAndCode`: Eq. 11, Eqs. 14–16, and efficient implementation;
+- `RoPERelativeMicro`: the Eq. 16 collapse from separate rotations to n−m;
 - `RoPEFindings`: Section 3.3 properties, Table 1, and Figure 3 findings.
 
-These scenes use a shared paper palette and reusable Manim helpers for headings, terms, formulas, ratio bars, value bars, and formula-to-code panels. They do not reuse the earlier `progress_site/assets/self-refine` media. Captions, posters, video hashes, engine version, entrypoint, and scene IDs are part of each source packet.
+The stock layer is Manim Community: `MathTex`, `Text`, `VGroup`, `Rectangle`, `Arrow`, `NumberLine`, and standard animations. The project layer lives in `scenes/explainer_primitives.py`: `RatioBars`, `EssTradeoffGauge`, `FormulaCodeBridge`, `RoPERelativeRotation`, and the shared paper-native scene shell. The website carries motivation, interpretation, and consequences; each micro-video is limited to one state change. The scenes do not reuse the earlier `progress_site/assets/self-refine` media. Captions, posters, video hashes, engine version, entrypoint, and scene IDs are part of each source packet.
 
 Render the reviewed scenes directly:
 
@@ -64,7 +67,8 @@ Render the reviewed scenes directly:
 .venv-arm64/bin/manim -qm \
   --media_dir runs/explainer_pipeline/native_manim \
   scenes/explainer_pipeline_native.py \
-  FeynRLEssP3O FeynRLFindings RoPEFormulationAndCode RoPEFindings
+  FeynRLEssMicro FeynRLP3OMicro FeynRLFindings \
+  RoPERelativeMicro RoPEFindings
 ```
 
 For a new paper, the API can select only registered scene/media IDs. Adding a new reusable visual grammar is an ordinary repository change with review and tests; it is not delegated to a coding agent during generation.

@@ -41,35 +41,62 @@
     "engine": "Manim Community 0.19.0",
     "entrypoint": "scenes/explainer_pipeline_native.py",
     "coding_agent_required": false,
-    "scene_ids": ["FeynRLEssP3O", "FeynRLFindings"]
+    "scene_ids": ["FeynRLEssMicro", "FeynRLP3OMicro", "FeynRLFindings"]
   },
   "media": [
     {
-      "media_id": "feynrl-ess-p3o",
+      "media_id": "feynrl-ess-micro",
       "role": "video",
-      "path": "data/explainer_pipeline/media/feynrl/ess-p3o.mp4",
-      "sha256": "8c8653812fb508ac04a109724a2928d14a7834858e6cb9aedef99b88895b60ca",
+      "path": "data/explainer_pipeline/media/feynrl/ess-micro.mp4",
+      "sha256": "4c463415fa93f920dbf95302b12e8d25599c702b96f26a5999417ae8af30676f",
       "media_type": "video/mp4",
       "origin": "project_new",
-      "caption": "New paper-native Manim scene for the trust-region concern, off-policy concern, Eq. 11, Eq. 12, and confirmed implementation lines."
+      "caption": "Five-second Manim scene for the Eq. 11 state change: fixed token count and concentrated policy ratios."
     },
     {
-      "media_id": "feynrl-ess-p3o-poster",
+      "media_id": "feynrl-ess-micro-poster",
       "role": "poster",
-      "path": "data/explainer_pipeline/media/feynrl/ess-p3o-poster.png",
-      "sha256": "2b4a42950ffd4a516860e4f5ae0500ef906742cdf2aca6d63dd7c8f9bd9c7461",
+      "path": "data/explainer_pipeline/media/feynrl/ess-micro-poster.png",
+      "sha256": "4e3ad31447784de0a72e41f53ddadf439cda5763b2544293cd6a0dcb810775e4",
       "media_type": "image/png",
       "origin": "project_new",
-      "caption": "Poster for the new FeynRL mechanism scene."
+      "caption": "Poster for the normalized ESS micro-video."
     },
     {
-      "media_id": "feynrl-ess-p3o-captions",
+      "media_id": "feynrl-ess-micro-captions",
       "role": "captions",
-      "path": "data/explainer_pipeline/media/feynrl/ess-p3o.vtt",
-      "sha256": "ed77ae7c9ad540fbeccf1bce11887620ef5af707c8b6075681201935aa3f6ee2",
+      "path": "data/explainer_pipeline/media/feynrl/ess-micro.vtt",
+      "sha256": "7960c595fe2c239cc360951f00cdf9616ecf1c3ac738c03523d20bacc74de07a",
       "media_type": "text/vtt",
       "origin": "project_new",
-      "caption": "English captions for the FeynRL mechanism scene."
+      "caption": "English captions for the normalized ESS micro-video."
+    },
+    {
+      "media_id": "feynrl-p3o-micro",
+      "role": "video",
+      "path": "data/explainer_pipeline/media/feynrl/p3o-micro.mp4",
+      "sha256": "3833b46cfed2553261537ce85b8c8b6506526b0993f9fb4fdcd24036d30be0c1",
+      "media_type": "video/mp4",
+      "origin": "project_new",
+      "caption": "Five-second Manim scene coupling the Eq. 12 score cap and behavioral KL weight through e_B."
+    },
+    {
+      "media_id": "feynrl-p3o-micro-poster",
+      "role": "poster",
+      "path": "data/explainer_pipeline/media/feynrl/p3o-micro-poster.png",
+      "sha256": "25959d6fc7646b5a66ff63e2292c563d0811770c862d6d9de5b790a363829427",
+      "media_type": "image/png",
+      "origin": "project_new",
+      "caption": "Poster for the P3O control-coupling micro-video."
+    },
+    {
+      "media_id": "feynrl-p3o-micro-captions",
+      "role": "captions",
+      "path": "data/explainer_pipeline/media/feynrl/p3o-micro.vtt",
+      "sha256": "26d920b9c42bc61315a317f258a6772874978001bcfdf4bd264fd715f735d00a",
+      "media_type": "text/vtt",
+      "origin": "project_new",
+      "caption": "English captions for the P3O control-coupling micro-video."
     },
     {
       "media_id": "feynrl-findings",

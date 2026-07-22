@@ -1,10 +1,10 @@
 {
   "schema_version": "primitive-registry/0.1.0",
   "manim_compatibility": {
-    "validated_render_versions": ["0.20.1"],
+    "validated_render_versions": ["0.19.0", "0.20.1"],
     "minimum_supported_version": null,
-    "render_evidence_refs": ["experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"],
-    "statement": "Manim 0.20.1 is the only validated render environment. No minimum-version compatibility claim is made yet."
+    "render_evidence_refs": ["experiments/explainer_pipeline/micro_scene_manifest.json", "experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"],
+    "statement": "The formula primitives have observed render evidence on Manim 0.19.0 and 0.20.1. No minimum-version compatibility claim is made."
   },
   "primitives": [
     {
@@ -24,6 +24,24 @@
       "used_by": ["formula:transformers.attention", "formula:attention.softmax", "formula:dpo.objective", "formula:feynrl.ess", "formula:rope.relative"],
       "verification": {"test_refs": [], "golden_scene_refs": []},
       "limitations": ["Plain text fallback does not perform TeX layout."]
+    },
+    {
+      "primitive_id": "manim.math_tex",
+      "canonical_node_id": "primitive:manim.math_tex",
+      "version": "0.19.0-0.20.1",
+      "origin": "built_in",
+      "origin_badge": {"label": "Manim built-in", "color": "#16A34A", "icon": "library"},
+      "source_symbol": "manim.MathTex",
+      "source_revision": "manim-community-v0.19.0-v0.20.1",
+      "operations": ["formula_display"],
+      "inputs": ["latex", "isolated_substrings"],
+      "outputs": ["tex_mobject"],
+      "visual_states": {"initial": "hidden", "intermediate": "written or token-matched", "terminal": "typeset equation"},
+      "animation_contract": "Use MathTex for paper equations; isolate semantic substrings before applying Write, Indicate, or TransformMatchingTex.",
+      "status": "available",
+      "used_by": ["formula:feynrl.ess", "formula:feynrl.p3o_objective", "formula:rope.relative"],
+      "verification": {"test_refs": [], "golden_scene_refs": ["experiments/explainer_pipeline/micro_scene_manifest.json"]},
+      "limitations": ["Requires a working LaTeX toolchain in the render environment."]
     },
     {
       "primitive_id": "manim.bar_chart",
@@ -140,22 +158,40 @@
       "limitations": ["Not implemented by the generic smoke renderer yet."]
     },
     {
+      "primitive_id": "project.formula_code_bridge",
+      "canonical_node_id": "primitive:project.formula_code_bridge",
+      "version": "0.1.0",
+      "origin": "generated_one_off",
+      "origin_badge": {"label": "Project composite", "color": "#EA580C", "icon": "spark"},
+      "source_symbol": "scenes.explainer_primitives.FormulaCodeBridge",
+      "source_revision": "explainer-pipeline-native/0.2.0",
+      "operations": ["formula_code_mapping"],
+      "inputs": ["code_rows", "formula_fragment_labels"],
+      "outputs": ["formula_code_panel"],
+      "visual_states": {"initial": "formula fragment", "intermediate": "matched code row", "terminal": "reviewable formula-to-code correspondence"},
+      "animation_contract": "Keep exact repository text and paper formula fragments side by side; let the website carry the prose interpretation.",
+      "status": "available",
+      "used_by": ["formula:feynrl.ess", "formula:feynrl.p3o_objective"],
+      "verification": {"test_refs": ["tests/formula_explainer/test_formula_explainer.py::FormulaExplainerTests.test_available_authored_composites_resolve_to_source_symbols"], "golden_scene_refs": ["experiments/explainer_pipeline/micro_scene_manifest.json"]},
+      "limitations": ["The composite assumes short reviewed code excerpts; it is not a source-code browser."]
+    },
+    {
       "primitive_id": "project.ess_tradeoff_gauge",
       "canonical_node_id": "primitive:project.ess_tradeoff_gauge",
       "version": "0.1.0",
       "origin": "generated_one_off",
       "origin_badge": {"label": "Authored one-off", "color": "#EA580C", "icon": "spark"},
-      "source_symbol": null,
-      "source_revision": "planned-q9/0.1.0",
+      "source_symbol": "scenes.explainer_primitives.EssTradeoffGauge",
+      "source_revision": "explainer-pipeline-native/0.2.0",
       "operations": ["ess", "minimum", "kl"],
       "inputs": ["policy_ratios"],
       "outputs": ["normalized_ess", "score_cap", "behavioral_kl_weight"],
       "visual_states": {"initial": "balanced ratios", "intermediate": "one ratio dominates", "terminal": "ESS down, cap down, KL weight up"},
       "animation_contract": "The ratio histogram, ESS gauge, cap, and KL weight update from the same batch values.",
-      "status": "candidate",
+      "status": "available",
       "used_by": ["formula:feynrl.ess", "formula:feynrl.p3o_objective"],
       "verification": {"test_refs": [], "golden_scene_refs": []},
-      "limitations": ["Needs a golden scene before promotion to project_reusable."]
+      "limitations": ["The composite is rendered and callable; its formula-to-scene mapping remains candidate until a reviewed teaching scene promotes it."]
     },
     {
       "primitive_id": "project.rope_relative_rotation",
@@ -163,17 +199,17 @@
       "version": "0.1.0",
       "origin": "generated_one_off",
       "origin_badge": {"label": "Authored one-off", "color": "#EA580C", "icon": "spark"},
-      "source_symbol": null,
-      "source_revision": "planned-q9/0.1.0",
+      "source_symbol": "scenes.explainer_primitives.RoPERelativeRotation",
+      "source_revision": "explainer-pipeline-native/0.2.0",
       "operations": ["rotation", "dot", "subtract"],
       "inputs": ["query", "key", "position_m", "position_n"],
       "outputs": ["relative_rotation", "attention_score"],
       "visual_states": {"initial": "q and k", "intermediate": "separate m/n rotations", "terminal": "single n-m relative rotation"},
       "animation_contract": "Preserve vector identity while collapsing two rotations into one relative angle.",
-      "status": "candidate",
+      "status": "available",
       "used_by": ["formula:rope.relative"],
       "verification": {"test_refs": [], "golden_scene_refs": []},
-      "limitations": ["Numeric equality labels need a worked-example fixture."]
+      "limitations": ["The geometry exposes the exact relative-rotation identity; a numeric equality fixture is still absent."]
     },
     {
       "primitive_id": "project.multihead_fanout",

@@ -52,40 +52,71 @@
       "entrypoint": "scenes/explainer_pipeline_native.py",
       "coding_agent_required": false,
       "scene_ids": [
-        "FeynRLEssP3O",
+        "FeynRLEssMicro",
+        "FeynRLP3OMicro",
         "FeynRLFindings"
       ]
     },
     "media": [
       {
-        "media_id": "feynrl-ess-p3o",
+        "media_id": "feynrl-ess-micro",
         "role": "video",
-        "path": "data/explainer_pipeline/media/feynrl/ess-p3o.mp4",
-        "sha256": "8c8653812fb508ac04a109724a2928d14a7834858e6cb9aedef99b88895b60ca",
+        "path": "data/explainer_pipeline/media/feynrl/ess-micro.mp4",
+        "sha256": "4c463415fa93f920dbf95302b12e8d25599c702b96f26a5999417ae8af30676f",
         "media_type": "video/mp4",
         "origin": "project_new",
-        "caption": "New paper-native Manim scene for the trust-region concern, off-policy concern, Eq. 11, Eq. 12, and confirmed implementation lines.",
-        "published_path": "assets/feynrl/feynrl-ess-p3o.mp4"
+        "caption": "Five-second Manim scene for the Eq. 11 state change: fixed token count and concentrated policy ratios.",
+        "published_path": "assets/feynrl/feynrl-ess-micro.mp4"
       },
       {
-        "media_id": "feynrl-ess-p3o-poster",
+        "media_id": "feynrl-ess-micro-poster",
         "role": "poster",
-        "path": "data/explainer_pipeline/media/feynrl/ess-p3o-poster.png",
-        "sha256": "2b4a42950ffd4a516860e4f5ae0500ef906742cdf2aca6d63dd7c8f9bd9c7461",
+        "path": "data/explainer_pipeline/media/feynrl/ess-micro-poster.png",
+        "sha256": "4e3ad31447784de0a72e41f53ddadf439cda5763b2544293cd6a0dcb810775e4",
         "media_type": "image/png",
         "origin": "project_new",
-        "caption": "Poster for the new FeynRL mechanism scene.",
-        "published_path": "assets/feynrl/feynrl-ess-p3o-poster.png"
+        "caption": "Poster for the normalized ESS micro-video.",
+        "published_path": "assets/feynrl/feynrl-ess-micro-poster.png"
       },
       {
-        "media_id": "feynrl-ess-p3o-captions",
+        "media_id": "feynrl-ess-micro-captions",
         "role": "captions",
-        "path": "data/explainer_pipeline/media/feynrl/ess-p3o.vtt",
-        "sha256": "ed77ae7c9ad540fbeccf1bce11887620ef5af707c8b6075681201935aa3f6ee2",
+        "path": "data/explainer_pipeline/media/feynrl/ess-micro.vtt",
+        "sha256": "7960c595fe2c239cc360951f00cdf9616ecf1c3ac738c03523d20bacc74de07a",
         "media_type": "text/vtt",
         "origin": "project_new",
-        "caption": "English captions for the FeynRL mechanism scene.",
-        "published_path": "assets/feynrl/feynrl-ess-p3o-captions.vtt"
+        "caption": "English captions for the normalized ESS micro-video.",
+        "published_path": "assets/feynrl/feynrl-ess-micro-captions.vtt"
+      },
+      {
+        "media_id": "feynrl-p3o-micro",
+        "role": "video",
+        "path": "data/explainer_pipeline/media/feynrl/p3o-micro.mp4",
+        "sha256": "3833b46cfed2553261537ce85b8c8b6506526b0993f9fb4fdcd24036d30be0c1",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Five-second Manim scene coupling the Eq. 12 score cap and behavioral KL weight through e_B.",
+        "published_path": "assets/feynrl/feynrl-p3o-micro.mp4"
+      },
+      {
+        "media_id": "feynrl-p3o-micro-poster",
+        "role": "poster",
+        "path": "data/explainer_pipeline/media/feynrl/p3o-micro-poster.png",
+        "sha256": "25959d6fc7646b5a66ff63e2292c563d0811770c862d6d9de5b790a363829427",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Poster for the P3O control-coupling micro-video.",
+        "published_path": "assets/feynrl/feynrl-p3o-micro-poster.png"
+      },
+      {
+        "media_id": "feynrl-p3o-micro-captions",
+        "role": "captions",
+        "path": "data/explainer_pipeline/media/feynrl/p3o-micro.vtt",
+        "sha256": "26d920b9c42bc61315a317f258a6772874978001bcfdf4bd264fd715f735d00a",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for the P3O control-coupling micro-video.",
+        "published_path": "assets/feynrl/feynrl-p3o-micro-captions.vtt"
       },
       {
         "media_id": "feynrl-findings",
@@ -560,24 +591,21 @@
             "claim_label": "Eq. 11 with a derived numeric fixture"
           },
           {
-            "type": "video",
-            "media_id": "feynrl-ess-p3o",
-            "poster_id": "feynrl-ess-p3o-poster",
-            "captions_id": "feynrl-ess-p3o-captions",
-            "title": "From the two concerns to Eq. 11 and Eq. 12",
-            "caption": "A newly authored Manim scene; no earlier bottom-up asset is reused.",
+            "type": "micro_video",
+            "media_id": "feynrl-ess-micro",
+            "poster_id": "feynrl-ess-micro-poster",
+            "captions_id": "feynrl-ess-micro-captions",
+            "title": "What changes when policy ratios concentrate?",
+            "intro": "Both states contain the same four valid tokens. Only the distribution of policy ratios changes.",
+            "observation": "When one ratio dominates, the second moment in the denominator grows and normalized ESS falls from 1.000 to 0.292.",
+            "consequence": "This is why Eq. 11 is not a substitute for batch size: it measures effective support in the current batch.",
             "beats": [
-              "Trust-region concern",
-              "Off-policy concern",
-              "Normalized ESS",
-              "P3O objective",
-              "Confirmed code"
+              "four tokens remain",
+              "ratios concentrate",
+              "e_B falls"
             ],
             "source_refs": [
-              "feynrl-paper:sec1",
-              "feynrl-paper:eq11",
-              "feynrl-paper:eq12",
-              "feynrl-p3o:compute_policy_loss"
+              "feynrl-paper:eq11"
             ]
           }
         ]
@@ -621,6 +649,25 @@
               "feynrl-paper:eq12"
             ],
             "claim_label": "FeynRL Eq. 11 and Eq. 12"
+          },
+          {
+            "type": "micro_video",
+            "media_id": "feynrl-p3o-micro",
+            "poster_id": "feynrl-p3o-micro-poster",
+            "captions_id": "feynrl-p3o-micro-captions",
+            "title": "One batch value controls two responses",
+            "intro": "Equation 12 does not use e_B in only one place. The same value enters the detached score-function weight and the behavioral KL coefficient.",
+            "observation": "As e_B falls, min{ρ_t,e_B} imposes a lower cap while 1−e_B applies a larger KL weight.",
+            "consequence": "P3O couples how strongly the batch drives the score term with how strongly the update is regularized toward the behavior policy.",
+            "beats": [
+              "e_B falls",
+              "score cap falls",
+              "KL weight rises"
+            ],
+            "source_refs": [
+              "feynrl-paper:eq12",
+              "feynrl-p3o:compute_policy_loss"
+            ]
           },
           {
             "type": "code",
@@ -834,9 +881,465 @@
       }
     ]
   },
+  "formula_map": {
+    "schema_version": "formula-manim-map/0.1.0",
+    "registry_ref": "data/formula_explainer/primitive_registry.json",
+    "manim_compatibility": {
+      "validated_render_versions": [
+        "0.19.0",
+        "0.20.1"
+      ],
+      "minimum_supported_version": null,
+      "render_evidence_refs": [
+        "experiments/explainer_pipeline/micro_scene_manifest.json",
+        "experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"
+      ],
+      "statement": "The formula primitives have observed render evidence on Manim 0.19.0 and 0.20.1. No minimum-version compatibility claim is made."
+    },
+    "formulas": [
+      {
+        "formula_id": "formula:feynrl.ess",
+        "title": "Normalized effective sample size used by FeynRL",
+        "latex": "\\operatorname{ESS}(B;\\theta)=\\widehat{\\mathbb{E}}_B[\\rho_t]^2/\\widehat{\\mathbb{E}}_B[\\rho_t^2]",
+        "plain_text": "ESS(B;theta) = mean_B(rho_t)^2 / mean_B(rho_t^2)",
+        "source_anchor": {
+          "source_id": "paper:feynrl-trust-the-batch",
+          "source_url": "https://arxiv.org/pdf/2605.12380v1",
+          "revision": "arXiv:2605.12380v1",
+          "content_hash": "sha256:19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
+          "locator": "Section 3, page 5, Equation (11)",
+          "verification": "primary_source_visual"
+        }
+      },
+      {
+        "formula_id": "formula:feynrl.p3o_objective",
+        "title": "P3O objective adopted in the FeynRL paper",
+        "latex": "\\mathcal{L}_{P3O}=-\\operatorname{sg}(\\min\\{\\rho_t,e_B\\})\\log\\pi_\\theta A+(1-e_B)\\operatorname{KL}(\\pi_\\theta\\|\\pi_{old})",
+        "plain_text": "L_P3O = -stopgrad(min(rho_t,e_B)) log(pi_theta) A + (1-e_B) KL(pi_theta || pi_old)",
+        "source_anchor": {
+          "source_id": "paper:feynrl-trust-the-batch",
+          "source_url": "https://arxiv.org/pdf/2605.12380v1",
+          "revision": "arXiv:2605.12380v1",
+          "content_hash": "sha256:19b66e9758e35de7988ef96a6ef7ed84dda1572bddb07efee23fa1992bf7b15e",
+          "locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]",
+          "verification": "primary_source_visual"
+        }
+      }
+    ],
+    "formula_nodes": [
+      {
+        "node_id": "node:formula:feynrl.ess:display",
+        "formula_id": "formula:feynrl.ess",
+        "level": "formula",
+        "label": "Normalized effective sample size used by FeynRL",
+        "expression": "ESS(B;theta) = mean_B(rho_t)^2 / mean_B(rho_t^2)",
+        "source_locator": "Section 3, page 5, Equation (11)"
+      },
+      {
+        "node_id": "node:op:feynrl.mean_ratio",
+        "formula_id": "formula:feynrl.ess",
+        "level": "operation",
+        "label": "expectation",
+        "expression": "mean ratio",
+        "source_locator": "Section 3, page 5, Equation (11)"
+      },
+      {
+        "node_id": "node:op:feynrl.mean_square",
+        "formula_id": "formula:feynrl.ess",
+        "level": "operation",
+        "label": "expectation",
+        "expression": "mean square",
+        "source_locator": "Section 3, page 5, Equation (11)"
+      },
+      {
+        "node_id": "node:op:feynrl.ess",
+        "formula_id": "formula:feynrl.ess",
+        "level": "operation",
+        "label": "ess",
+        "expression": "ess",
+        "source_locator": "Section 3, page 5, Equation (11)"
+      },
+      {
+        "node_id": "node:formula:feynrl.p3o_objective:display",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "formula",
+        "label": "P3O objective adopted in the FeynRL paper",
+        "expression": "L_P3O = -stopgrad(min(rho_t,e_B)) log(pi_theta) A + (1-e_B) KL(pi_theta || pi_old)",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.cap",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "minimum",
+        "expression": "cap",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.stopgrad",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "stop gradient",
+        "expression": "stopgrad",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.raw_score_term",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "multiply",
+        "expression": "raw score term",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.negate_score_term",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "multiply",
+        "expression": "negate score term",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.behavior_kl",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "kl",
+        "expression": "behavior kl",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.off_policy_weight",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "subtract",
+        "expression": "off policy weight",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.weighted_behavior_kl",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "multiply",
+        "expression": "weighted behavior kl",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      },
+      {
+        "node_id": "node:op:feynrl.objective_sum",
+        "formula_id": "formula:feynrl.p3o_objective",
+        "level": "operation",
+        "label": "add",
+        "expression": "objective sum",
+        "source_locator": "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+      }
+    ],
+    "manim_nodes": [
+      {
+        "primitive_id": "manim.bar_chart",
+        "label": "manim.BarChart",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "softmax",
+          "normalize",
+          "weighted_sum",
+          "ess",
+          "expectation"
+        ],
+        "animation_contract": "Axis ranges and labels must be fixed before transforming between charts.",
+        "limitations": [
+          "Negative values require an explicit y-range."
+        ]
+      },
+      {
+        "primitive_id": "manim.math_tex",
+        "label": "manim.MathTex",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "formula_display"
+        ],
+        "animation_contract": "Use MathTex for paper equations; isolate semantic substrings before applying Write, Indicate, or TransformMatchingTex.",
+        "limitations": [
+          "Requires a working LaTeX toolchain in the render environment."
+        ]
+      },
+      {
+        "primitive_id": "manim.transform",
+        "label": "manim.Transform",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "add",
+          "subtract",
+          "multiply",
+          "divide",
+          "matmul",
+          "scale",
+          "concatenate",
+          "linear_projection"
+        ],
+        "animation_contract": "Source and target objects occupy compatible scene regions.",
+        "limitations": [
+          "Semantic token matching needs TransformMatchingTex or authored grouping."
+        ]
+      },
+      {
+        "primitive_id": "project.ess_tradeoff_gauge",
+        "label": "scenes.explainer_primitives.EssTradeoffGauge",
+        "origin": "generated_one_off",
+        "origin_label": "Authored one-off",
+        "status": "available",
+        "operations": [
+          "ess",
+          "minimum",
+          "kl"
+        ],
+        "animation_contract": "The ratio histogram, ESS gauge, cap, and KL weight update from the same batch values.",
+        "limitations": [
+          "The composite is rendered and callable; its formula-to-scene mapping remains candidate until a reviewed teaching scene promotes it."
+        ]
+      },
+      {
+        "primitive_id": "project.formula_code_bridge",
+        "label": "scenes.explainer_primitives.FormulaCodeBridge",
+        "origin": "generated_one_off",
+        "origin_label": "Project composite",
+        "status": "available",
+        "operations": [
+          "formula_code_mapping"
+        ],
+        "animation_contract": "Keep exact repository text and paper formula fragments side by side; let the website carry the prose interpretation.",
+        "limitations": [
+          "The composite assumes short reviewed code excerpts; it is not a source-code browser."
+        ]
+      },
+      {
+        "primitive_id": "project.formula_operation_walk",
+        "label": "scenes.formula_explainer_scene.OperationWalk",
+        "origin": "project_reusable",
+        "origin_label": "Project reusable",
+        "status": "available",
+        "operations": [
+          "formula_operation_dag",
+          "stop_gradient"
+        ],
+        "animation_contract": "Every operation chip shows semantic operation text plus a non-color origin badge.",
+        "limitations": [
+          "The first renderer lays out a topological sequence rather than arbitrary branches."
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "edge:node:formula:feynrl.ess:display:manim.math_tex",
+        "source": "node:formula:feynrl.ess:display",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_display",
+        "reason": "Typeset the paper equation as the stable visual anchor.",
+        "evidence_refs": [
+          "Section 3, page 5, Equation (11)"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:feynrl.ess:display:project.formula_operation_walk",
+        "source": "node:formula:feynrl.ess:display",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_display",
+        "reason": "Expose the equation's operation order before selecting specialized views.",
+        "evidence_refs": [
+          "Section 3, page 5, Equation (11)"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:feynrl.ess:display:project.formula_code_bridge",
+        "source": "node:formula:feynrl.ess:display",
+        "target": "project.formula_code_bridge",
+        "state": "implemented",
+        "operation_type": "formula_code_mapping",
+        "reason": "Keep exact repository text and paper formula fragments side by side; let the website carry the prose interpretation.",
+        "evidence_refs": [
+          "external/FeynRL/algs/P3O/p3o.py"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.mean_ratio:manim.bar_chart",
+        "source": "node:op:feynrl.mean_ratio",
+        "target": "manim.bar_chart",
+        "state": "implemented",
+        "operation_type": "expectation",
+        "reason": "Axis ranges and labels must be fixed before transforming between charts.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq11"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.mean_square:manim.bar_chart",
+        "source": "node:op:feynrl.mean_square",
+        "target": "manim.bar_chart",
+        "state": "implemented",
+        "operation_type": "expectation",
+        "reason": "Axis ranges and labels must be fixed before transforming between charts.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq11"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.ess:project.ess_tradeoff_gauge",
+        "source": "node:op:feynrl.ess",
+        "target": "project.ess_tradeoff_gauge",
+        "state": "implemented",
+        "operation_type": "ess",
+        "reason": "The ratio histogram, ESS gauge, cap, and KL weight update from the same batch values.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq11",
+          "scene:FeynRLEssMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.ess:manim.bar_chart:alternative",
+        "source": "node:op:feynrl.ess",
+        "target": "manim.bar_chart",
+        "state": "candidate",
+        "operation_type": "ess",
+        "reason": "Compatible registry operation; not selected by this formula IR. Axis ranges and labels must be fixed before transforming between charts.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq11",
+          "scene:FeynRLEssMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:feynrl.p3o_objective:display:manim.math_tex",
+        "source": "node:formula:feynrl.p3o_objective:display",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "formula_display",
+        "reason": "Typeset the paper equation as the stable visual anchor.",
+        "evidence_refs": [
+          "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:feynrl.p3o_objective:display:project.formula_operation_walk",
+        "source": "node:formula:feynrl.p3o_objective:display",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "formula_display",
+        "reason": "Expose the equation's operation order before selecting specialized views.",
+        "evidence_refs": [
+          "Section 3, page 5, Equation (12); paper explicitly says it adopts the P3O objective of reference [7]"
+        ]
+      },
+      {
+        "edge_id": "edge:node:formula:feynrl.p3o_objective:display:project.formula_code_bridge",
+        "source": "node:formula:feynrl.p3o_objective:display",
+        "target": "project.formula_code_bridge",
+        "state": "implemented",
+        "operation_type": "formula_code_mapping",
+        "reason": "Keep exact repository text and paper formula fragments side by side; let the website carry the prose interpretation.",
+        "evidence_refs": [
+          "external/FeynRL/algs/P3O/p3o.py"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.cap:project.ess_tradeoff_gauge",
+        "source": "node:op:feynrl.cap",
+        "target": "project.ess_tradeoff_gauge",
+        "state": "implemented",
+        "operation_type": "minimum",
+        "reason": "The ratio histogram, ESS gauge, cap, and KL weight update from the same batch values.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12",
+          "scene:FeynRLP3OMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.stopgrad:project.formula_operation_walk",
+        "source": "node:op:feynrl.stopgrad",
+        "target": "project.formula_operation_walk",
+        "state": "implemented",
+        "operation_type": "stop_gradient",
+        "reason": "Every operation chip shows semantic operation text plus a non-color origin badge.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.raw_score_term:manim.transform",
+        "source": "node:op:feynrl.raw_score_term",
+        "target": "manim.transform",
+        "state": "implemented",
+        "operation_type": "multiply",
+        "reason": "Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.negate_score_term:manim.transform",
+        "source": "node:op:feynrl.negate_score_term",
+        "target": "manim.transform",
+        "state": "implemented",
+        "operation_type": "multiply",
+        "reason": "Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.behavior_kl:project.ess_tradeoff_gauge",
+        "source": "node:op:feynrl.behavior_kl",
+        "target": "project.ess_tradeoff_gauge",
+        "state": "implemented",
+        "operation_type": "kl",
+        "reason": "The ratio histogram, ESS gauge, cap, and KL weight update from the same batch values.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12",
+          "scene:FeynRLP3OMicro"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.off_policy_weight:manim.transform",
+        "source": "node:op:feynrl.off_policy_weight",
+        "target": "manim.transform",
+        "state": "implemented",
+        "operation_type": "subtract",
+        "reason": "Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.weighted_behavior_kl:manim.transform",
+        "source": "node:op:feynrl.weighted_behavior_kl",
+        "target": "manim.transform",
+        "state": "implemented",
+        "operation_type": "multiply",
+        "reason": "Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12"
+        ]
+      },
+      {
+        "edge_id": "edge:node:op:feynrl.objective_sum:manim.transform",
+        "source": "node:op:feynrl.objective_sum",
+        "target": "manim.transform",
+        "state": "implemented",
+        "operation_type": "add",
+        "reason": "Source and target objects occupy compatible scene regions.",
+        "evidence_refs": [
+          "paper:feynrl-trust-the-batch#eq12"
+        ]
+      }
+    ]
+  },
   "generation": {
     "pipeline_version": "explainer-pipeline/0.1.0",
-    "source_packet_sha256": "2b4c2937118ae00f6d336f6631f786154b748e80704ab2f55e9adc5e143f619d",
+    "source_packet_sha256": "d90804907314ee883af93ec054924cb921550fa5751642a84368388a9190830e",
     "stage_traces": [
       {
         "stage": "concept_graph",
@@ -844,7 +1347,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "6b1a0962a43e0ec8759b0284ece20b4a289ed83244ee322347a7811cd5e3bcb4",
+        "prompt_sha256": "d41cf332fc36580d1a31f894c363bb5ff49fe3bad4f7acfdd9c8193575d4c48d",
         "response_sha256": "aba9e2236eface439f5e30e995899508317c0893f8e40a91738231fcfb92a181",
         "source_record": "data/explainer_pipeline/replays/feynrl/concept_graph.json"
       },
@@ -854,7 +1357,7 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "d314b4b3b98f4843be9110a190e759be0babb50b9973b734e1f5c07b60f8ab15",
+        "prompt_sha256": "ea117d5b6385b4aa50ce7a2078202a0123934f1c914ed75eead13059335b203a",
         "response_sha256": "c3b83722cdbac8eeea63cd5e844647a8a8592f189bc2b0c067283beef927723c",
         "source_record": "data/explainer_pipeline/replays/feynrl/lesson_plan.json"
       },
@@ -864,8 +1367,8 @@
         "provider": "reviewed_fixture",
         "model": "paper-native-demo-0.2",
         "generation_mode": "frozen_replay",
-        "prompt_sha256": "e13d9be1bb3af3d15f86c20fc5fc40d9f2cac0d683a7c11d37892f3d46cc6394",
-        "response_sha256": "9afdd60fd75b072669dd6c3788cb83cbc76ed276b01f0fe9bc91c0e225e89aa8",
+        "prompt_sha256": "53d3888a76e7069578bed7b0b1d93424ee56ef9e1657be0711af0ffd89a5c802",
+        "response_sha256": "4e005cd6988d4fe30f9d117cb0e7b83c0621d6752dbe6d6946cc1c21a0c19eab",
         "source_record": "data/explainer_pipeline/replays/feynrl/section_content.json"
       }
     ],

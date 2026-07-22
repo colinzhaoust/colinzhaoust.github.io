@@ -14,7 +14,7 @@
   "operations": [
     {"operation_id": "op:feynrl.mean_ratio", "canonical_node_id": "operation:feynrl.mean_ratio", "operation_type": "expectation", "input_refs": ["atom:feynrl.ratios", "atom:feynrl.batch"], "output_ref": "value:feynrl.mean_ratio", "primitive_ref": "manim.bar_chart", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11"]},
     {"operation_id": "op:feynrl.mean_square", "canonical_node_id": "operation:feynrl.mean_square", "operation_type": "expectation", "input_refs": ["atom:feynrl.ratios", "atom:feynrl.batch"], "output_ref": "value:feynrl.mean_square", "primitive_ref": "manim.bar_chart", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11"]},
-    {"operation_id": "op:feynrl.ess", "canonical_node_id": "operation:feynrl.ess", "operation_type": "ess", "input_refs": ["value:feynrl.mean_ratio", "value:feynrl.mean_square"], "output_ref": "value:feynrl.ess", "primitive_ref": "project.ess_tradeoff_gauge", "mapping_state": "unresolved", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11"]}
+    {"operation_id": "op:feynrl.ess", "canonical_node_id": "operation:feynrl.ess", "operation_type": "ess", "input_refs": ["value:feynrl.mean_ratio", "value:feynrl.mean_square"], "output_ref": "value:feynrl.ess", "primitive_ref": "project.ess_tradeoff_gauge", "mapping_state": "candidate", "evidence_refs": ["paper:feynrl-trust-the-batch#eq11", "scene:FeynRLEssMicro"]}
   ],
   "output_ref": "value:feynrl.ess",
   "code_mappings": [

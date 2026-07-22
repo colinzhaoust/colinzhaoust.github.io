@@ -6,93 +6,95 @@ write scene code at runtime.
 
 Render:
     .venv-arm64/bin/manim -qm --media_dir runs/explainer_pipeline/native_manim \
-      scenes/explainer_pipeline_native.py FeynRLEssP3O FeynRLFindings \
-      RoPEFormulationAndCode RoPEFindings
+      scenes/explainer_pipeline_native.py FeynRLEssMicro FeynRLP3OMicro \
+      FeynRLFindings RoPERelativeMicro RoPEFindings
 """
 
 from __future__ import annotations
 
-import math
-
 from manim import *
+from explainer_primitives import (
+    ADAPTIVE,
+    BEHAVIOR,
+    CORAL,
+    CURRENT,
+    EssTradeoffGauge,
+    FormulaCodeBridge,
+    INK,
+    MUTED,
+    PAPER,
+    PaperNativeScene,
+    RoPERelativeRotation,
+    RULE,
+    SOFT,
+    WARNING,
+)
 
 
-PAPER = "#F6F1E7"
-INK = "#18202B"
-MUTED = "#657083"
-RULE = "#CBD0C8"
-CURRENT = "#2563A9"
-BEHAVIOR = "#7652A8"
-ADAPTIVE = "#16815D"
-WARNING = "#D36A29"
-CORAL = "#C74E45"
-SOFT = "#E9E4D9"
-CODE_BG = "#202735"
-CODE_INK = "#ECF0EA"
+class FeynRLEssMicro(PaperNativeScene):
+    """Eq. (11) as one state change: token count fixed, concentration changes."""
+
+    def construct(self) -> None:
+        formula = MathTex(
+            r"e_B=\frac{\widehat{\mathbb E}_B[\rho_t]^2}{\widehat{\mathbb E}_B[\rho_t^2]}",
+            font_size=48,
+            color=INK,
+        ).to_edge(UP, buff=0.7)
+        balanced = EssTradeoffGauge([1.0, 1.0, 1.0, 1.0]).scale(1.25).move_to(DOWN * 0.2)
+        concentrated = EssTradeoffGauge([0.1, 0.1, 0.1, 3.7]).scale(1.25).move_to(balanced)
+        source = self.source("FeynRL Eq. (11) · same four valid tokens")
+        self.play(Write(formula), FadeIn(balanced), FadeIn(source), run_time=1.0)
+        self.wait(0.45)
+        self.play(Transform(balanced, concentrated), run_time=1.8)
+        self.wait(0.85)
 
 
-class PaperNativeScene(Scene):
-    def setup(self) -> None:
-        self.camera.background_color = PAPER
+class FeynRLP3OMicro(PaperNativeScene):
+    """Eq. (12) control coupling from the same batch value e_B."""
 
-    def heading(self, title: str, section: str) -> VGroup:
-        tag = Text(section, font="Menlo", font_size=18, color=WARNING, weight=BOLD)
-        name = Text(title, font_size=38, color=INK, weight=BOLD)
-        group = VGroup(tag, name).arrange(DOWN, aligned_edge=LEFT, buff=0.12).to_edge(UP, buff=0.34).to_edge(LEFT, buff=0.52)
-        rule = Line(LEFT * 6.15, RIGHT * 6.15, stroke_color=RULE, stroke_width=1).next_to(group, DOWN, buff=0.2)
-        return VGroup(group, rule)
+    def construct(self) -> None:
+        formula = MathTex(
+            r"\operatorname{sg}(\min\{\rho_t,e_B\})",
+            r"\qquad",
+            r"(1-e_B)\operatorname{KL}(\pi_\theta\Vert\pi_b)",
+            font_size=41,
+        ).to_edge(UP, buff=0.65)
+        formula[0].set_color(ADAPTIVE)
+        formula[2].set_color(WARNING)
+        matched = EssTradeoffGauge([1.0, 1.0, 1.0, 1.0], include_controls=True).scale(0.88).move_to(DOWN * 0.25)
+        mismatched = EssTradeoffGauge([0.1, 0.1, 0.1, 3.7], include_controls=True).scale(0.88).move_to(matched)
+        coupling = VGroup(
+            Text("cap", font="Menlo", font_size=18, color=ADAPTIVE),
+            Arrow(LEFT * 0.7, RIGHT * 0.7, color=RULE, buff=0.08),
+            Text("KL weight", font="Menlo", font_size=18, color=WARNING),
+        ).arrange(RIGHT, buff=0.14).to_edge(DOWN, buff=0.62)
+        source = self.source("FeynRL Eq. (12) · both controls use e_B")
+        self.play(Write(formula), FadeIn(matched), FadeIn(source), run_time=1.0)
+        self.play(FadeIn(coupling), run_time=0.45)
+        self.play(Transform(matched, mismatched), run_time=1.8)
+        self.wait(0.85)
 
-    def source(self, text: str) -> Text:
-        return Text(text, font="Menlo", font_size=14, color=MUTED).to_edge(DOWN, buff=0.24).to_edge(RIGHT, buff=0.42)
 
-    def term(self, title: str, body: str, color: str, width: float = 5.5) -> VGroup:
-        dot = Dot(radius=0.07, color=color)
-        title_mob = Text(title, font_size=25, color=INK, weight=BOLD)
-        body_mob = Text(body, font_size=18, color=MUTED, line_spacing=0.9)
-        if body_mob.width > width - 0.42:
-            body_mob.scale_to_fit_width(width - 0.42)
-        copy = VGroup(title_mob, body_mob).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
-        row = VGroup(dot, copy).arrange(RIGHT, aligned_edge=UP, buff=0.17)
-        return row
+class RoPERelativeMicro(PaperNativeScene):
+    """Eq. (16) as a single geometric collapse from two rotations to n-m."""
 
-    def ratio_bars(self, values: list[float], labels: list[str] | None = None) -> VGroup:
-        maximum = max(values)
-        bars = VGroup()
-        for index, value in enumerate(values):
-            height = max(0.08, 1.65 * value / maximum)
-            bar = Rectangle(width=0.58, height=height, fill_color=ADAPTIVE, fill_opacity=0.9, stroke_width=0)
-            value_label = DecimalNumber(value, num_decimal_places=1, font_size=18, color=INK).next_to(bar, UP, buff=0.08)
-            token = Text((labels or [f"t{i+1}" for i in range(len(values))])[index], font="Menlo", font_size=14, color=MUTED).next_to(bar, DOWN, buff=0.1)
-            bars.add(VGroup(bar, value_label, token))
-        bars.arrange(RIGHT, aligned_edge=DOWN, buff=0.18)
-        baseline = Line(bars.get_left() + DOWN * 0.12, bars.get_right() + DOWN * 0.12, color=RULE, stroke_width=2)
-        return VGroup(baseline, bars)
-
-    def code_panel(self, rows: list[tuple[str, str]], width: float = 11.7) -> VGroup:
-        box = RoundedRectangle(width=width, height=0.62 * len(rows) + 0.42, corner_radius=0.12, fill_color=CODE_BG, fill_opacity=1, stroke_width=0)
-        lines = VGroup()
-        for code, meaning in rows:
-            code_mob = Text(code, font="Menlo", font_size=17, color=CODE_INK)
-            meaning_mob = Text(meaning, font_size=16, color="#F1A56E")
-            row = VGroup(code_mob, meaning_mob).arrange(RIGHT, buff=0.35)
-            if row.width > width - 0.56:
-                row.scale_to_fit_width(width - 0.56)
-            lines.add(row)
-        lines.arrange(DOWN, aligned_edge=LEFT, buff=0.18).move_to(box).align_to(box, LEFT).shift(RIGHT * 0.28)
-        return VGroup(box, lines)
-
-    def value_bar(self, label: str, value: float, maximum: float, color: str, unit: str = "") -> VGroup:
-        name = Text(label, font_size=19, color=INK)
-        if name.width > 2.35:
-            name.scale_to_fit_width(2.35)
-        label_slot = Rectangle(width=2.45, height=0.44, stroke_opacity=0, fill_opacity=0)
-        name.move_to(label_slot).align_to(label_slot, LEFT)
-        track = RoundedRectangle(width=5.0, height=0.38, corner_radius=0.06, fill_color=SOFT, fill_opacity=1, stroke_width=0)
-        fill = RoundedRectangle(width=max(0.08, 5.0 * value / maximum), height=0.38, corner_radius=0.06, fill_color=color, fill_opacity=1, stroke_width=0)
-        fill.align_to(track, LEFT)
-        number = Text(f"{value:.3f}{unit}", font="Menlo", font_size=18, color=color, weight=BOLD)
-        row = VGroup(VGroup(label_slot, name), VGroup(track, fill), number).arrange(RIGHT, buff=0.22)
-        return row
+    def construct(self) -> None:
+        identity = MathTex(
+            r"(R_m q)^\top(R_n k)=q^\top R_{n-m}k",
+            font_size=47,
+            color=INK,
+        ).to_edge(UP, buff=0.58)
+        visual = RoPERelativeRotation(m_angle=0.55, n_angle=1.2).scale(1.18).shift(DOWN * 0.25)
+        source = self.source("RoFormer Eq. (16) · R_m^T R_n = R_{n-m}")
+        self.play(Write(identity), FadeIn(visual.frame), FadeIn(visual.initial_vectors), FadeIn(source), run_time=1.1)
+        self.wait(0.35)
+        self.play(
+            FadeOut(visual.initial_vectors),
+            visual.rotated_vectors.animate.set_opacity(1),
+            run_time=1.5,
+        )
+        self.play(visual.labels.animate.set_opacity(1), run_time=0.65)
+        self.wait(0.9)
 
 
 class FeynRLEssP3O(PaperNativeScene):

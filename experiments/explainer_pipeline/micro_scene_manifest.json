@@ -1,0 +1,32 @@
+{
+  "schema_version": "explainer-micro-render/0.1.0",
+  "rendered_at": "2026-07-21T22:43:20-07:00",
+  "render_environment": {
+    "manim_version": "0.19.0",
+    "quality": "720p30",
+    "renderer": "cairo"
+  },
+  "source": {
+    "scene_ref": "scenes/explainer_pipeline_native.py",
+    "scene_sha256": "b84a5b867e52e27c07315d47fac6f2281bb3e2d9ea67b385b73eac8a315945e9",
+    "primitive_ref": "scenes/explainer_primitives.py",
+    "primitive_sha256": "b5f24cb2a80f1a2ee5be906c9e403d6b30a9743bb21334d0160c8395c5b715fa"
+  },
+  "scenes": [
+    {
+      "scene_id": "FeynRLEssMicro",
+      "artifact_ref": "data/explainer_pipeline/media/feynrl/ess-micro.mp4",
+      "sha256": "4c463415fa93f920dbf95302b12e8d25599c702b96f26a5999417ae8af30676f"
+    },
+    {
+      "scene_id": "FeynRLP3OMicro",
+      "artifact_ref": "data/explainer_pipeline/media/feynrl/p3o-micro.mp4",
+      "sha256": "3833b46cfed2553261537ce85b8c8b6506526b0993f9fb4fdcd24036d30be0c1"
+    },
+    {
+      "scene_id": "RoPERelativeMicro",
+      "artifact_ref": "data/explainer_pipeline/media/rope/relative-micro.mp4",
+      "sha256": "fabddd7c257952228eda3f5a3d5337b88747cfc6be09636e251d4157912f9fa2"
+    }
+  ]
+}
