@@ -133,15 +133,15 @@
       "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-32b.html"
     },
     {
-      "candidate_id": "llama-3-1-8b-bedrock",
-      "label": "Llama 3.1 8B · Bedrock",
-      "provider": "Amazon Bedrock Runtime",
-      "model_id": "us.meta.llama3-1-8b-instruct-v1:0",
+      "candidate_id": "qwen3-8b-babel-vllm",
+      "label": "Qwen3 8B · Babel/vLLM",
+      "provider": "Self-hosted vLLM on Babel",
+      "model_id": "Qwen/Qwen3-8B@895c8d171bc03c30e113cd7a28c02494b5e068b7",
       "status": "smoke_tested",
-      "model_summary": "8B instruction-tuned baseline used to test how a smaller model handles the same grounded planner contract.",
-      "endpoint": "Bedrock Runtime · Converse",
-      "note": "Smoke-tested locally on 2026-07-22. Bedrock has 8B models, but the available baseline is Llama rather than Qwen.",
-      "documentation_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-meta.html"
+      "model_summary": "Qwen's 8.2B dense hybrid-thinking model, served in BF16 on one Babel L40S with a 32K native context.",
+      "endpoint": "SSH-tunneled vLLM · OpenAI chat/completions",
+      "note": "Smoke-tested end to end on 2026-07-22. There is no per-token vendor charge; GPU allocation time must be measured separately.",
+      "documentation_url": "https://huggingface.co/Qwen/Qwen3-8B"
     }
   ]
 }
