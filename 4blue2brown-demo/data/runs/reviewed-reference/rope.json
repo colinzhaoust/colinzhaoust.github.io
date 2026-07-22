@@ -233,7 +233,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Equation-transition scene from additive position encodings to the RoPE functional requirement and rotary solution.",
-        "published_path": "assets/rope/rope-lineage-micro.mp4"
+        "published_path": "assets/reviewed-reference/rope/rope-lineage-micro.mp4"
       },
       {
         "media_id": "rope-lineage-micro-poster",
@@ -243,7 +243,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the RoPE equation-lineage micro-video.",
-        "published_path": "assets/rope/rope-lineage-micro-poster.png"
+        "published_path": "assets/reviewed-reference/rope/rope-lineage-micro-poster.png"
       },
       {
         "media_id": "rope-lineage-micro-captions",
@@ -253,7 +253,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the RoPE equation-lineage micro-video.",
-        "published_path": "assets/rope/rope-lineage-micro-captions.vtt"
+        "published_path": "assets/reviewed-reference/rope/rope-lineage-micro-captions.vtt"
       },
       {
         "media_id": "rope-decay-micro",
@@ -263,7 +263,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Text-light schematic animation of the distance-dependent bound discussed in RoFormer Equations 35 through 37.",
-        "published_path": "assets/rope/rope-decay-micro.mp4"
+        "published_path": "assets/reviewed-reference/rope/rope-decay-micro.mp4"
       },
       {
         "media_id": "rope-decay-micro-poster",
@@ -273,7 +273,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the RoPE long-term-decay micro-video.",
-        "published_path": "assets/rope/rope-decay-micro-poster.png"
+        "published_path": "assets/reviewed-reference/rope/rope-decay-micro-poster.png"
       },
       {
         "media_id": "rope-decay-micro-captions",
@@ -283,7 +283,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the RoPE long-term-decay micro-video.",
-        "published_path": "assets/rope/rope-decay-micro-captions.vtt"
+        "published_path": "assets/reviewed-reference/rope/rope-decay-micro-captions.vtt"
       },
       {
         "media_id": "rope-relative-micro",
@@ -293,7 +293,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "Five-second Manim scene for the Eq. 16 collapse from separate query/key rotations to n minus m.",
-        "published_path": "assets/rope/rope-relative-micro.mp4"
+        "published_path": "assets/reviewed-reference/rope/rope-relative-micro.mp4"
       },
       {
         "media_id": "rope-relative-micro-poster",
@@ -303,7 +303,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the relative-rotation micro-video.",
-        "published_path": "assets/rope/rope-relative-micro-poster.png"
+        "published_path": "assets/reviewed-reference/rope/rope-relative-micro-poster.png"
       },
       {
         "media_id": "rope-relative-micro-captions",
@@ -313,7 +313,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the relative-rotation micro-video.",
-        "published_path": "assets/rope/rope-relative-micro-captions.vtt"
+        "published_path": "assets/reviewed-reference/rope/rope-relative-micro-captions.vtt"
       },
       {
         "media_id": "rope-findings",
@@ -323,7 +323,7 @@
         "media_type": "video/mp4",
         "origin": "project_new",
         "caption": "New Manim scene connecting the paper's stated properties to Table 1 and Figure 3 findings.",
-        "published_path": "assets/rope/rope-findings.mp4"
+        "published_path": "assets/reviewed-reference/rope/rope-findings.mp4"
       },
       {
         "media_id": "rope-findings-poster",
@@ -333,7 +333,7 @@
         "media_type": "image/png",
         "origin": "project_new",
         "caption": "Poster for the RoPE findings scene.",
-        "published_path": "assets/rope/rope-findings-poster.png"
+        "published_path": "assets/reviewed-reference/rope/rope-findings-poster.png"
       },
       {
         "media_id": "rope-findings-captions",
@@ -343,7 +343,7 @@
         "media_type": "text/vtt",
         "origin": "project_new",
         "caption": "English captions for the RoPE findings scene.",
-        "published_path": "assets/rope/rope-findings-captions.vtt"
+        "published_path": "assets/reviewed-reference/rope/rope-findings-captions.vtt"
       }
     ],
     "agent_input": {
