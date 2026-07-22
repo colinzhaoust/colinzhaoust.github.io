@@ -1,12 +1,12 @@
 {
   "schema_version": "explainer-site-catalog/0.1.0",
-  "title": "Living Technical Atlas",
+  "title": "Paper + Code Explainer Pipeline",
   "papers": [
     {
       "paper_id": "feynrl",
       "short_title": "FeynRL / P3O",
       "title": "A New Policy Optimization Paradigm for LLM Reasoning",
-      "central_question": "Can one training signal respond to both trust-region drift and off-policy sampling without tuning PPO-style clip bounds?",
+      "central_question": "Can the current batch quantify behavior-policy mismatch and set both policy-gradient weighting and off-policy regularization without a fixed clipping factor?",
       "bundle": "data/bundles/feynrl.json",
       "completion": "full"
     },
@@ -14,7 +14,7 @@
       "paper_id": "rope",
       "short_title": "RoPE / RoFormer",
       "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
-      "central_question": "How can absolute token positions enter query and key vectors while attention scores depend only on relative displacement?",
+      "central_question": "Can absolute position be encoded in query and key representations while their inner product depends explicitly on relative position?",
       "bundle": "data/bundles/rope.json",
       "completion": "full"
     }

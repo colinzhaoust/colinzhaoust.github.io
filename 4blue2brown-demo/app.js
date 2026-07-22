@@ -17,7 +17,7 @@
       state.bundles.set(paper.paper_id, await response.json());
     }));
     buildTabs();
-    $("#status-strip span:last-child").textContent = `${state.bundles.size} reviewed runs · 3 agent stages each · frozen replay`;
+    $("#status-strip span:last-child").textContent = `${state.bundles.size} reviewed runs · 3 JSON API stages · deterministic Manim · no coding agent`;
     route();
   }
 
@@ -90,23 +90,23 @@
     const runs = state.catalog.papers.map((paper) => `<div class="run-row"><strong>${esc(paper.short_title)}</strong><span>${esc(paper.central_question)}</span><button type="button" data-open-paper="${esc(paper.paper_id)}">Open run</button></div>`).join("");
     $("#overview-view").innerHTML = `
       <div class="overview-hero">
-        <div><span class="eyebrow">Agentic explainer pipeline / 0.1.0</span><h1>Teach the field, not just the PDF.</h1></div>
-        <p>A paper and its code become a concept graph, a lesson path, typed scene blocks, and a traceable website. Animation is reserved for geometry and state change. Detail moves into deep links instead of disappearing.</p>
+        <div><span class="eyebrow">Paper + repository → sourced explainer</span><h1>From source material to scientific scenes.</h1></div>
+        <p>The API returns grounded JSON: the paper's motivation, terms, related work, formula/code mappings, and findings. A fixed renderer builds the website; a reusable Manim library renders selected state changes without asking a coding agent to write Python.</p>
       </div>
       <div class="pipeline-flow" aria-label="Pipeline stages">
         ${[
-          ["01", "Source packet", "Paper revision, code commit, formulas, media, hashes"],
-          ["02", "Concept graph", "Foundations, related work, mechanism, unresolved edges"],
-          ["03", "Lesson plan", "Seven learning transitions and medium choices"],
-          ["04", "Scene blocks", "Prose, formula cascade, code map, result views"],
-          ["05", "Validated site", "One generic renderer with appendix provenance"],
+          ["01", "Ingest", "Paper PDF + revision-pinned repository"],
+          ["02", "Ground", "Paper terms, questions, equations, code symbols, citations"],
+          ["03", "Plan", "Concept graph and paper-native section transitions"],
+          ["04", "Render scenes", "Typed HTML blocks + deterministic Manim templates"],
+          ["05", "Validate", "Claims, links, hashes, media, and appendix provenance"],
         ].map(([n, title, body]) => `<article class="pipeline-step"><b>${n}</b><h2>${title}</h2><p>${body}</p></article>`).join("")}
       </div>
       <div class="legend" aria-label="Animation primitive provenance">
-        <span style="--legend-color:var(--green)"><i></i>Manim built-in</span>
-        <span style="--legend-color:var(--violet)"><i></i>project inherited</span>
-        <span style="--legend-color:var(--orange)"><i></i>newly authored</span>
-        <span style="--legend-color:var(--gray)"><i></i>unresolved / planned</span>
+        <span style="--legend-color:var(--green)"><i></i>paper equation or exact value</span>
+        <span style="--legend-color:var(--violet)"><i></i>confirmed repository mapping</span>
+        <span style="--legend-color:var(--orange)"><i></i>new native Manim scene</span>
+        <span style="--legend-color:var(--gray)"><i></i>conditional claim / open issue</span>
       </div>
       <div class="run-table"><span class="eyebrow">Generated outputs</span>${runs}</div>`;
     $("#overview-view").querySelectorAll("[data-open-paper]").forEach((button) => button.addEventListener("click", () => {
@@ -142,10 +142,12 @@
   }
 
   const blockRenderers = {
+    paper_question: (b) => `<section class="block paper-question"><span class="eyebrow">${esc(b.label || "Paper question")}</span><h2>${esc(b.question)}</h2><p>${esc(b.context)}</p>${refs(b.source_refs)}</section>`,
     prose: (b) => `<section class="block prose">${b.eyebrow ? `<span class="eyebrow">${esc(b.eyebrow)}</span>` : ""}${b.heading ? `<h2>${esc(b.heading)}</h2>` : ""}${(b.paragraphs || []).map((p) => `<p>${esc(p)}</p>`).join("")}${refs(b.source_refs)}</section>`,
     comparison: (b) => `<section class="block"><div class="comparison">${b.columns.map((column) => `<article class="accent-${esc(column.accent)}"><span class="label">${esc(column.label)}</span><div class="question">${esc(column.question)}</div><div class="answer">${esc(column.answer)}</div></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
     learner_check: (b) => `<details class="block learner-check"><summary><span class="eyebrow">Pause and predict</span><h3>${esc(b.prompt)}</h3><button type="button" tabindex="-1">Reveal answer</button></summary><p class="answer">${esc(b.answer)}</p></details>`,
     lineage: (b) => `<section class="block"><span class="eyebrow">Conceptual lineage</span><div class="lineage-track" style="--count:${b.nodes.length}">${b.nodes.map((node, index) => `<article class="lineage-node" style="--node-color:${index === b.nodes.length - 1 ? "var(--orange)" : index > b.nodes.length / 2 ? "var(--green)" : "var(--violet)"}"><strong>${esc(node.label)}</strong><span>${esc(node.note)}</span></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
+    related_reading: (b) => `<section class="block related-reading"><span class="eyebrow">Primary-source links</span><h2>${esc(b.title)}</h2><div class="reading-grid">${b.items.map((item) => `<a href="${esc(item.url)}" target="_blank" rel="noreferrer"><strong>${esc(item.title)}</strong><span>${esc(item.relation)}</span><i aria-hidden="true">↗</i></a>`).join("")}</div>${refs(b.source_refs)}</section>`,
     numeric_fixture: (b) => `<section class="block"><span class="eyebrow">${esc(b.claim_label)}</span><h2>${esc(b.title)}</h2><div class="formula-display">${esc(b.formula)}</div><div class="fixture-grid">${b.fixtures.map((fixture) => { const max = Math.max(...fixture.values); return `<article class="fixture"><h3>${esc(fixture.label)}</h3><div class="weight-bars">${fixture.values.map((value) => `<i style="height:${Math.max(2, value / max * 100)}%;--bar-color:${accent(fixture.accent)}" title="${esc(value)}"></i>`).join("")}</div><div class="ess-readout"><span>ρ = [${fixture.values.map(esc).join(", ")}]</span><b>ESS ${esc(fixture.ess)}</b></div></article>`; }).join("")}</div><p>${esc(b.note)}</p>${refs(b.source_refs)}</section>`,
     video: (b, bundle) => { const video = media(bundle, b.media_id); const poster = media(bundle, b.poster_id); const captions = media(bundle, b.captions_id); return `<section class="block"><span class="eyebrow">Manim where motion carries meaning</span><h2>${esc(b.title)}</h2><div class="video-frame"><video controls preload="metadata" poster="${esc(poster?.published_path || "")}"><source src="${esc(video?.published_path || "")}" type="video/mp4">${captions ? `<track default kind="captions" srclang="en" label="English" src="${esc(captions.published_path)}">` : ""}</video><div class="video-caption"><span>${esc(b.caption)}</span><div class="beat-list">${b.beats.map((beat) => `<span>${esc(beat)}</span>`).join("")}</div></div></div>${refs(b.source_refs)}</section>`; },
     formula_steps: (b) => `<section class="block"><span class="claim-label">${esc(b.claim_label)}</span><div class="formula-display">${esc(b.formula)}</div><div class="formula-steps">${b.steps.map((step, index) => `<article class="formula-step"><span class="step-number">0${index + 1} / ${esc(step.label)}</span><div class="step-expression">${esc(step.expression)}</div><p>${esc(step.meaning)}</p><span class="primitive-tag origin-${esc(step.primitive.origin)}">${esc(step.primitive.id)}</span></article>`).join("")}</div>${refs(b.source_refs)}</section>`,
@@ -159,13 +161,14 @@
   function media(bundle, id) { return bundle.source_packet.media.find((item) => item.media_id === id); }
 
   function renderSourcePanel(bundle, sectionPlan) {
-    const sourceLinks = bundle.source_packet.sources.map((source) => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.revision)} · ${source.page_count} pages ↗</a>`).join("");
+    const sourceLinks = bundle.source_packet.sources.map((source) => source.url ? `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.revision)} · ${source.page_count} pages ↗</a>` : `<div class="source-meta">${esc(source.revision)} · ${source.page_count} pages · local input</div>`).join("");
+    const codeLinks = bundle.source_packet.code_sources.map((source) => `<a href="${esc(source.repository)}/tree/${esc(source.revision)}" target="_blank" rel="noreferrer">repository @ ${esc(source.revision.slice(0, 8))} ↗</a>`).join("");
     const deep = sectionPlan.deep_links.map((id) => {
       const entry = bundle.section_content.appendix_entries.find((item) => item.id === id);
       return `<button type="button" data-appendix="${esc(id)}">${esc(entry?.title || id)} →</button>`;
     }).join("");
     const trace = bundle.generation.stage_traces.map((item) => `${item.stage}: ${item.response_sha256.slice(0, 8)}`).join("<br>");
-    $("#source-panel").innerHTML = `<section><h2>Primary sources</h2>${sourceLinks}<div class="source-meta">PDF SHA ${esc(bundle.source_packet.sources[0].sha256.slice(0, 16))}…<br>Code ${esc(bundle.source_packet.code_sources[0].revision.slice(0, 12))}</div></section><section><h2>Deep links</h2>${deep}</section><section><h2>Agent trace</h2><div class="source-meta">${trace}<br>mode: ${esc(bundle.generation.stage_traces[0].generation_mode)}</div></section>`;
+    $("#source-panel").innerHTML = `<section><h2>Primary sources</h2>${sourceLinks}${codeLinks}<div class="source-meta">PDF SHA ${esc(bundle.source_packet.sources[0].sha256.slice(0, 16))}…<br>Manim: ${esc(bundle.source_packet.scene_renderer.engine)}<br>coding agent: not required</div></section><section><h2>Deep links</h2>${deep}</section><section><h2>API trace</h2><div class="source-meta">${trace}<br>mode: ${esc(bundle.generation.stage_traces[0].generation_mode)}</div></section>`;
     $("#source-panel").querySelectorAll("[data-appendix]").forEach((button) => button.addEventListener("click", () => location.hash = `appendix/${bundle.paper_id}/${button.dataset.appendix}`));
   }
 
@@ -180,7 +183,7 @@
 
   function renderAppendix(paperFilter, entryId) {
     const bundles = paperFilter && state.bundles.has(paperFilter) ? [state.bundles.get(paperFilter)] : [...state.bundles.values()];
-    $("#appendix-view").innerHTML = `<header class="appendix-header"><span class="eyebrow">Deep detail without breaking the lesson</span><h1>Appendix</h1><p>Provenance, derivations, code mappings, formula-to-Manim status, result-reading notes, and explicit claim boundaries.</p></header>${bundles.map((bundle) => `<section><h2>${esc(bundle.source_packet.short_title)}</h2><div class="appendix-grid">${bundle.section_content.appendix_entries.map((entry) => `<article class="appendix-entry ${entry.id === entryId ? "highlight" : ""}" id="${esc(entry.id)}"><span class="eyebrow">${esc(bundle.paper_id)} / deep link</span><h2>${esc(entry.title)}</h2><p>${esc(entry.body)}</p>${refs(entry.source_refs)}</article>`).join("")}</div></section>`).join("")}`;
+    $("#appendix-view").innerHTML = `<header class="appendix-header"><span class="eyebrow">Derivations, provenance, and claim boundaries</span><h1>Appendix</h1><p>Paper and repository provenance, equation notes, formula-to-code mappings, results-reading guidance, and explicit limitations.</p></header>${bundles.map((bundle) => `<section><h2>${esc(bundle.source_packet.short_title)}</h2><div class="appendix-grid">${bundle.section_content.appendix_entries.map((entry) => `<article class="appendix-entry ${entry.id === entryId ? "highlight" : ""}" id="${esc(entry.id)}"><span class="eyebrow">${esc(bundle.paper_id)} / deep link</span><h2>${esc(entry.title)}</h2><p>${esc(entry.body)}</p>${refs(entry.source_refs)}</article>`).join("")}</div></section>`).join("")}`;
     if (entryId) requestAnimationFrame(() => document.getElementById(entryId)?.scrollIntoView({ block: "center" }));
   }
 
