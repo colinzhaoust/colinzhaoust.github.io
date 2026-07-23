@@ -876,5 +876,13 @@
       "sha256": "97516f9a6b5129fe69758608a5d35a4b6014109f2404a82641a6a155d39a66f5",
       "size_bytes": 224
     }
-  ]
+  ],
+  "backtranslation": {
+    "experiment_id": "3b1b-human-video-reconstruction-v2",
+    "case_count": 10,
+    "model_candidate_count": 3,
+    "completed_rounds": 0,
+    "catalog": "data/backtranslation/catalog.json",
+    "catalog_sha256": "ee67c381652b3b4f9d10c6bb57c065941b9a6cef7f35d99b6d32cde04bf9c4e0"
+  }
 }

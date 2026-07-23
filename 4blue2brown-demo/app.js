@@ -3,7 +3,7 @@
 
   const FORMULA_SECTION_ID = "formula";
   const CODE_SECTION_ID = "code-understanding";
-  const state = { catalog: null, bundles: new Map(), activeRun: null, activePaper: null, activeSection: null };
+  const state = { catalog: null, backtranslation: null, bundles: new Map(), activeRun: null, activePaper: null, activeSection: null, activeBacktranslationModel: null };
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
   const refs = (items = []) => `<span class="source-ref">${items.map(esc).join(" · ")}</span>`;
@@ -18,11 +18,18 @@
   const fmtTokens = (value) => value == null ? "not recorded" : value >= 1000000 ? `${(value / 1000000).toFixed(2)}M` : value >= 1000 ? `${(value / 1000).toFixed(1)}K` : String(value);
   const fmtDuration = (value) => !value ? "replay / 0 s" : value >= 60000 ? `${(value / 60000).toFixed(1)} min` : `${(value / 1000).toFixed(1)} s`;
   const fmtCost = (value) => value == null ? "not available" : `$${value < .01 ? value.toFixed(4) : value.toFixed(2)}`;
+  const defaultStatusText = () => `${state.catalog.runs.length} rendered model run${state.catalog.runs.length === 1 ? "" : "s"} · ${state.catalog.papers.length} fixed papers · 3 JSON API stages · deterministic renderer`;
 
   async function load() {
-    const catalogResponse = await fetch("data/catalog.json", { cache: "no-store" });
+    const [catalogResponse, backtranslationResponse] = await Promise.all([
+      fetch("data/catalog.json", { cache: "no-store" }),
+      fetch("data/backtranslation/catalog.json", { cache: "no-store" }),
+    ]);
     if (!catalogResponse.ok) throw new Error(`catalog ${catalogResponse.status}`);
+    if (!backtranslationResponse.ok) throw new Error(`backtranslation catalog ${backtranslationResponse.status}`);
     state.catalog = await catalogResponse.json();
+    state.backtranslation = await backtranslationResponse.json();
+    state.activeBacktranslationModel = state.backtranslation.models[0].candidate_id;
     state.activeRun = state.catalog.default_run;
     await Promise.all(state.catalog.runs.flatMap((run) => run.papers.map(async (paper) => {
       const response = await fetch(paper.bundle, { cache: "no-store" });
@@ -31,7 +38,7 @@
     })));
     buildModelSelector();
     buildTabs();
-    $("#status-strip span:last-child").textContent = `${state.catalog.runs.length} rendered model run${state.catalog.runs.length === 1 ? "" : "s"} · ${state.catalog.papers.length} fixed papers · 3 JSON API stages · deterministic renderer`;
+    $("#status-strip span:last-child").textContent = defaultStatusText();
     route();
   }
 
@@ -43,7 +50,7 @@
       const button = event.target.closest("button[data-run-id]");
       if (!button || button.dataset.runId === state.activeRun) return;
       state.activeRun = button.dataset.runId;
-      const view = state.activePaper && !$("#paper-view").hidden ? state.activePaper : !$("#appendix-view").hidden ? "appendix" : "overview";
+      const view = state.activePaper && !$("#paper-view").hidden ? state.activePaper : !$("#backtranslation-view").hidden ? "backtranslation" : !$("#appendix-view").hidden ? "appendix" : "overview";
       const section = view === state.activePaper ? state.activeSection : undefined;
       location.hash = routeHash(view, section);
     });
@@ -53,6 +60,7 @@
     const tabs = [
       { id: "overview", label: "Overview" },
       ...state.catalog.papers.map((paper) => ({ id: paper.paper_id, label: paper.short_title.split("/")[0].trim() })),
+      { id: "backtranslation", label: "Backtranslation" },
       { id: "appendix", label: "Appendix" },
     ];
     $("#top-tabs").innerHTML = tabs.map((tab, index) => `<button type="button" role="tab" id="tab-${esc(tab.id)}" data-view="${esc(tab.id)}" aria-selected="false" tabindex="${index === 0 ? 0 : -1}">${esc(tab.label)}</button>`).join("");
@@ -60,7 +68,13 @@
       const button = event.target.closest("button[data-view]");
       if (!button) return;
       const id = button.dataset.view;
-      location.hash = id === "overview" || id === "appendix" ? routeHash(id) : routeHash(id, currentBundle(id).lesson_plan.sections[0].id);
+      if (id === "overview" || id === "appendix") {
+        location.hash = routeHash(id);
+      } else if (id === "backtranslation") {
+        location.hash = routeHash(id, state.activeBacktranslationModel);
+      } else {
+        location.hash = routeHash(id, currentBundle(id).lesson_plan.sections[0].id);
+      }
     });
     $("#top-tabs").addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -78,8 +92,13 @@
 
   function setView(name) {
     $("#overview-view").hidden = name !== "overview";
+    $("#backtranslation-view").hidden = name !== "backtranslation";
     $("#paper-view").hidden = name !== "paper";
     $("#appendix-view").hidden = name !== "appendix";
+    document.body.classList.toggle("is-backtranslation", name === "backtranslation");
+    $("#status-strip span:last-child").textContent = name === "backtranslation"
+      ? `${state.backtranslation.execution_summary.cases} human references · ${state.backtranslation.models.length} model candidates · ${state.backtranslation.execution_summary.completed_rounds} completed reconstruction rounds · evidence, not mockups`
+      : defaultStatusText();
     const selected = name === "paper" ? state.activePaper : name;
     $("#top-tabs").querySelectorAll("button").forEach((button) => {
       const active = button.dataset.view === selected;
@@ -108,6 +127,14 @@
     if (parts[0] === "appendix") {
       renderAppendix(parts[1], parts[2]);
       setView("appendix");
+      return;
+    }
+    if (parts[0] === "backtranslation") {
+      const requested = parts[1];
+      state.activeBacktranslationModel = state.backtranslation.models.some((model) => model.candidate_id === requested) ? requested : state.backtranslation.models[0].candidate_id;
+      renderBacktranslation();
+      setView("backtranslation");
+      window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       return;
     }
     if (!currentBundle(parts[0])) {
@@ -404,6 +431,79 @@
         if (button) button.textContent = details.open ? "Answer revealed" : "Reveal answer";
       });
     });
+  }
+
+  function renderBacktranslation() {
+    const data = state.backtranslation;
+    const model = data.models.find((item) => item.candidate_id === state.activeBacktranslationModel);
+    const completedForModel = data.cases.reduce((total, item) => total + item.runs[model.candidate_id].rounds.filter((round) => round.status === "completed").length, 0);
+    const modelButtons = data.models.map((item) => `<button type="button" data-bt-model="${esc(item.candidate_id)}" aria-pressed="${item.candidate_id === model.candidate_id ? "true" : "false"}"><strong>${esc(item.label)}</strong><span>${esc(item.model_id)}</span></button>`).join("");
+    const loop = data.feedback_loop.map((item, index) => `<li><b>${String(index + 1).padStart(2, "0")}</b><span>${esc(item)}</span></li>`).join("");
+    const headers = ["Description", "Human original", ...data.display_columns].map((item, index) => `<div class="bt-column-head ${index < 2 ? "bt-sticky-head" : ""}" style="--sticky-index:${index}">${esc(item)}</div>`).join("");
+    const matrixRows = data.cases.map((item) => renderBacktranslationRow(item, model)).join("");
+    const weights = Object.entries(data.score_policy).filter(([, value]) => typeof value === "number").map(([key, value]) => `<span><b>${Math.round(value * 100)}%</b>${esc(key.replaceAll("_", " "))}</span>`).join("");
+    const smoke = model.adapter_smoke?.successful_attempt;
+    const adapterEvidence = smoke ? `${fmtTokens(smoke.total_tokens)} tokens · ${fmtDuration(smoke.duration_ms)} · ${esc(smoke.perception_mode_observed.replaceAll("_", " "))}` : "video capability is not yet verified";
+    $("#backtranslation-view").innerHTML = `
+      <header class="bt-hero">
+        <div>
+          <span class="eyebrow">Human video → recovered visual program</span>
+          <h1>Backtranslation,<br>as signal finding.</h1>
+        </div>
+        <div class="bt-hero-copy">
+          <p>Each model first watches an authorized reference, writes a time-coded visual inventory, generates ManimGL, then watches the candidate beside the reference and repairs the largest explanatory mismatch. We optimize narrative and state transitions before pixels.</p>
+          <div class="bt-run-status"><span>${esc(data.execution_summary.status.replaceAll("_", " "))}</span><b>${data.execution_summary.cases} sources</b><b>${completedForModel} completed rounds</b><b>iter0 → iter5 → X</b></div>
+          <small>${esc(data.execution_summary.note)}</small>
+        </div>
+      </header>
+      <section class="bt-method" aria-labelledby="bt-loop-title">
+        <div>
+          <span class="eyebrow">Closed visual feedback loop</span>
+          <h2 id="bt-loop-title">The candidate is also its own critic.</h2>
+          <p>The upstream 3b1b source path stays hidden in the primary condition. It is linked here for auditability, not supplied to the model.</p>
+        </div>
+        <ol>${loop}</ol>
+      </section>
+      <section class="bt-candidate-bar" aria-label="Backtranslation model candidate">
+        <div><span class="eyebrow">Candidate</span><strong>${esc(model.label)}</strong><small>${esc(model.provider)} · ${esc(model.model_id)}</small><small>${esc(model.status.replaceAll("_", " "))}</small><small>${adapterEvidence}</small></div>
+        <div class="bt-candidate-options">${modelButtons}</div>
+      </section>
+      <section class="bt-score-strip" aria-label="Best round score weights">${weights}<small>Pixel similarity is a tiebreaker only.</small></section>
+      <section class="bt-matrix-section" aria-labelledby="bt-matrix-title">
+        <div class="bt-matrix-intro"><div><span class="eyebrow">10-source reconstruction contact sheet</span><h2 id="bt-matrix-title">One authored reference. Six observed attempts. One selected round.</h2></div><p>Scroll horizontally to follow a row. The first two columns stay anchored on wide screens. Click a source poster to load the creator-hosted YouTube embed.</p></div>
+        <div class="bt-matrix" role="table" aria-label="Backtranslation iterations for ${esc(model.label)}">
+          <div class="bt-grid bt-header-row" role="row">${headers}</div>
+          ${matrixRows}
+        </div>
+      </section>
+      <section class="bt-boundary"><span class="eyebrow">Evidence boundary</span><p>${esc(data.claim_scope)} ${esc(data.public_original_policy)}</p></section>`;
+    $("#backtranslation-view").querySelectorAll("[data-bt-model]").forEach((button) => button.addEventListener("click", () => {
+      location.hash = routeHash("backtranslation", button.dataset.btModel);
+    }));
+    $("#backtranslation-view").querySelectorAll("[data-load-source]").forEach((button) => button.addEventListener("click", () => {
+      const host = button.parentElement;
+      host.innerHTML = `<iframe src="${esc(button.dataset.embed)}?autoplay=1&rel=0" title="${esc(button.dataset.title)} — original 3Blue1Brown video" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+    }));
+  }
+
+  function renderBacktranslationRow(item, model) {
+    const run = item.runs[model.candidate_id];
+    const description = `<article class="bt-description bt-sticky-cell" style="--sticky-index:0"><div><span>${esc(item.case_id)}</span><b>${esc(item.year)}</b></div><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><strong>Why this case</strong><p>${esc(item.why_in_set)}</p><div class="bt-signal-list">${item.signal_targets.map((signal) => `<i>${esc(signal)}</i>`).join("")}</div><div class="bt-source-links"><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">lesson ↗</a><a href="${esc(item.source_url)}" target="_blank" rel="noreferrer">hidden source audit ↗</a></div></article>`;
+    const original = `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><button type="button" data-load-source data-embed="${esc(item.original_embed_url)}" data-title="${esc(item.title)}" aria-label="Load original video: ${esc(item.title)}"><img src="https://i.ytimg.com/vi/${esc(item.video_id)}/hqdefault.jpg" alt="" loading="lazy"><span aria-hidden="true">▶</span><small>Load human original</small></button><a href="${esc(item.original_watch_url)}" target="_blank" rel="noreferrer">Watch on YouTube ↗</a></div>`;
+    const iterations = run.rounds.map((round) => renderBacktranslationRound(round, run.selected_round)).join("");
+    const selected = run.selected_round == null
+      ? `<div class="bt-round bt-selected bt-empty"><span>X</span><strong>No observed best yet</strong><p>Selection waits for at least one completed, scored render.</p></div>`
+      : `<div class="bt-round bt-selected"><span>X → iter${run.selected_round}</span><strong>Best observed round</strong><p>Weighted score ${run.rounds[run.selected_round].score.toFixed(3)}</p><a href="${esc(run.rounds[run.selected_round].video_url)}">Open selected video ↗</a></div>`;
+    return `<div class="bt-grid bt-case-row" role="row">${description}${original}${iterations}${selected}</div>`;
+  }
+
+  function renderBacktranslationRound(round, selectedRound) {
+    const selected = round.index === selectedRound;
+    if (round.status !== "completed") {
+      return `<div class="bt-round bt-empty"><span>iter${round.index}</span><strong>${esc(round.status.replaceAll("_", " "))}</strong><p>${round.index === 0 ? "Initial video-conditioned generation." : "Reference/candidate critique, then one targeted repair."}</p></div>`;
+    }
+    const media = round.video_url ? `<video controls preload="metadata" ${round.poster_url ? `poster="${esc(round.poster_url)}"` : ""}><source src="${esc(round.video_url)}" type="video/mp4"></video>` : "";
+    return `<div class="bt-round ${selected ? "bt-round-best" : ""}"><span>iter${round.index}${selected ? " · selected" : ""}</span>${media}<strong>Score ${Number(round.score).toFixed(3)}</strong><p>${esc(round.critic_summary || "Critique recorded in the run manifest.")}</p>${round.changes ? `<small>${esc(round.changes)}</small>` : ""}</div>`;
   }
 
   function renderAppendix(paperFilter, entryId) {

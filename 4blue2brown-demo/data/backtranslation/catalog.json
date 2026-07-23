@@ -1,0 +1,2467 @@
+{
+  "schema_version": "longform-backtranslation-site/v2",
+  "experiment_id": "3b1b-human-video-reconstruction-v2",
+  "title": "3Blue1Brown long-form reconstruction set",
+  "claim_scope": "Public, source-available development set. This is a harness-development benchmark, not an unseen generalization benchmark.",
+  "public_original_policy": "Embed the creator-hosted YouTube video. Do not download or rehost the original in the public website.",
+  "models": [
+    {
+      "candidate_id": "gemini-3-flash",
+      "label": "Gemini 3 Flash",
+      "provider": "Google Vertex",
+      "model_id": "gemini-3-flash-preview",
+      "perception_mode": "native_video_required",
+      "status": "native_video_smoke_tested_2026-07-23",
+      "adapter_smoke": {
+        "reference_case": "manim-gallery-v1/bt-001",
+        "reference_duration_seconds": 15,
+        "attempts": 3,
+        "successful_attempt": {
+          "perception_mode_observed": "native_video_inline_data",
+          "total_tokens": 2851,
+          "duration_ms": 10002,
+          "response_sha256": "36cf48ea3181823db2928ddfa04969a28e0456856359158e03c0feb2971c8685"
+        },
+        "note": "The first two provider responses accepted the MP4 but failed the output contract (truncated JSON, then a top-level array); responseSchema made the third attempt valid."
+      }
+    },
+    {
+      "candidate_id": "gemini-3-1-pro",
+      "label": "Gemini 3.1 Pro",
+      "provider": "Google Vertex",
+      "model_id": "gemini-3.1-pro-preview",
+      "perception_mode": "native_video_required",
+      "status": "native_video_smoke_tested_2026-07-23",
+      "adapter_smoke": {
+        "reference_case": "manim-gallery-v1/bt-001",
+        "reference_duration_seconds": 15,
+        "attempts": 1,
+        "successful_attempt": {
+          "perception_mode_observed": "native_video_inline_data",
+          "total_tokens": 3227,
+          "duration_ms": 17944,
+          "response_sha256": "6c3690beca2afec43aa45211160a9304d1a67366682b5ae8b455be28ae747336"
+        },
+        "note": "Schema-constrained native-video perception completed on the first attempt."
+      }
+    },
+    {
+      "candidate_id": "gpt-5-5",
+      "label": "GPT-5.5",
+      "provider": "Bedrock Mantle",
+      "model_id": "openai.gpt-5.5",
+      "perception_mode": "capability_gated_native_video_or_temporal_frame_packet",
+      "status": "ordered_frame_packet_smoke_tested_2026-07-23_native_video_unverified",
+      "adapter_smoke": {
+        "reference_case": "manim-gallery-v1/bt-001",
+        "reference_duration_seconds": 15,
+        "attempts": 1,
+        "successful_attempt": {
+          "perception_mode_observed": "ordered_temporal_frame_packet",
+          "frame_count": 5,
+          "total_tokens": 2018,
+          "duration_ms": 10743,
+          "response_sha256": "be14e118ca47e7757004156b53b5bc3c1863c76a3a2cc1b45c1b789c3ca78d48"
+        },
+        "note": "GPT-5.5 received five ordered temporal JPEG samples. This proves frame-packet perception, not native MP4 input."
+      }
+    }
+  ],
+  "display_columns": [
+    "iter0",
+    "iter1",
+    "iter2",
+    "iter3",
+    "iter4",
+    "iter5",
+    "X"
+  ],
+  "feedback_loop": [
+    "model extracts a time-coded visual signal inventory and storyboard",
+    "model emits one self-contained ManimGL scene package and an intent manifest",
+    "external network-disabled sandbox renders the package",
+    "harness computes deterministic media, layout, text, color, motion, and timing evidence",
+    "the same candidate model receives paired reference/candidate evidence and writes a ranked error diagnosis",
+    "model revises code while preserving already-matched signals",
+    "harness scores every completed round and selects X"
+  ],
+  "signal_hierarchy": [
+    "narrative beats and scene boundaries",
+    "persistent visual vocabulary and object identity",
+    "causal or mathematical state transitions",
+    "spatial composition and camera",
+    "motion path and timing",
+    "text, formula, color, and local styling",
+    "pixel-level residuals"
+  ],
+  "score_policy": {
+    "technical_validity": 0.15,
+    "narrative_beat_coverage": 0.2,
+    "object_and_layout_correspondence": 0.15,
+    "state_transition_correctness": 0.2,
+    "motion_and_timing": 0.15,
+    "text_formula_color": 0.1,
+    "critic_acceptance": 0.05,
+    "pixel_similarity_is_tiebreaker_only": true
+  },
+  "execution_summary": {
+    "cases": 10,
+    "model_candidates": 3,
+    "planned_candidate_runs": 30,
+    "completed_rounds": 0,
+    "status": "protocol_ready_no_billable_runs",
+    "note": "Empty cells are not fabricated results; they remain not run until a validated artifact exists."
+  },
+  "cases": [
+    {
+      "case_id": "lf-001",
+      "lesson_id": "2016/linear-transformations",
+      "year": 2016,
+      "title": "Linear transformations and matrices",
+      "description": "Coordinate-grid deformations turn a matrix from a table of numbers into an action on space.",
+      "why_in_set": "Tests persistent geometry, camera framing, basis-vector identity, and continuous object transforms.",
+      "video_id": "kYB8IZa5AuE",
+      "lesson_url": "https://www.3blue1brown.com/lessons/linear-transformations",
+      "source_path": "_2016/eola/chapter3.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2016/eola/chapter3.py",
+      "signal_targets": [
+        "coordinate grid",
+        "basis vectors",
+        "continuous deformation",
+        "before/after correspondence"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/kYB8IZa5AuE",
+      "original_watch_url": "https://www.youtube.com/watch?v=kYB8IZa5AuE",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-002",
+      "lesson_id": "2016/hanoi-and-sierpinski",
+      "year": 2016,
+      "title": "Binary, Hanoi and Sierpinski",
+      "description": "A recursive puzzle becomes a binary counting process and then a geometric pattern.",
+      "why_in_set": "Tests discrete state transitions, recursion, repeated motifs, and conceptual transitions between representations.",
+      "video_id": "2SUvWfNJSsM",
+      "lesson_url": "https://www.3blue1brown.com/lessons/hanoi-and-sierpinski",
+      "source_path": "_2016/hanoi.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2016/hanoi.py",
+      "signal_targets": [
+        "disk state",
+        "recursive subproblem",
+        "binary counter",
+        "Sierpinski correspondence"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/2SUvWfNJSsM",
+      "original_watch_url": "https://www.youtube.com/watch?v=2SUvWfNJSsM",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-003",
+      "lesson_id": "2017/bitcoin",
+      "year": 2017,
+      "title": "But how does bitcoin actually work?",
+      "description": "A sequence of trust failures incrementally motivates signatures, distributed ledgers, hashing, and proof of work.",
+      "why_in_set": "Tests long causal storytelling, evolving diagrams, ledger state, and semantic continuity across many scenes.",
+      "video_id": "bBC-nXj3Ng4",
+      "lesson_url": "https://www.3blue1brown.com/lessons/bitcoin",
+      "source_path": "_2017/crypto.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2017/crypto.py",
+      "signal_targets": [
+        "problem/repair cadence",
+        "ledger state",
+        "identity and signatures",
+        "hash search"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/bBC-nXj3Ng4",
+      "original_watch_url": "https://www.youtube.com/watch?v=bBC-nXj3Ng4",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-004",
+      "lesson_id": "2017/neural-networks",
+      "year": 2017,
+      "title": "But what is a neural network?",
+      "description": "Neuron activations and weighted connections build a visual vocabulary for a digit classifier.",
+      "why_in_set": "Tests dense graph layout, activation encoding, focus changes, and reuse of a stable visual system.",
+      "video_id": "aircAruvnKk",
+      "lesson_url": "https://www.3blue1brown.com/lessons/neural-networks",
+      "source_path": "_2017/nn/part1.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2017/nn/part1.py",
+      "signal_targets": [
+        "layer topology",
+        "activation intensity",
+        "edge weights",
+        "digit-to-network mapping"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/aircAruvnKk",
+      "original_watch_url": "https://www.youtube.com/watch?v=aircAruvnKk",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-005",
+      "lesson_id": "2017/backpropagation",
+      "year": 2017,
+      "title": "What is backpropagation really doing?",
+      "description": "Local desired changes propagate backward through a network before notation formalizes the intuition.",
+      "why_in_set": "Tests attention choreography, causal arrows, local-to-global reasoning, and delayed formula introduction.",
+      "video_id": "Ilg3gGewQ5U",
+      "lesson_url": "https://www.3blue1brown.com/lessons/backpropagation",
+      "source_path": "_2017/nn/part3.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2017/nn/part3.py",
+      "signal_targets": [
+        "desired activation change",
+        "backward influence",
+        "sensitivity",
+        "example aggregation"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/Ilg3gGewQ5U",
+      "original_watch_url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-006",
+      "lesson_id": "2018/fourier-transforms",
+      "year": 2018,
+      "title": "But what is the Fourier Transform?",
+      "description": "A time-domain signal is wrapped around a circle so frequency becomes visible as geometric concentration.",
+      "why_in_set": "Tests synchronized plots, parameter sweeps, traced paths, and a formula grounded in a visual procedure.",
+      "video_id": "spUNpyF58BY",
+      "lesson_url": "https://www.3blue1brown.com/lessons/fourier-transforms",
+      "source_path": "_2018/fourier.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2018/fourier.py",
+      "signal_targets": [
+        "time signal",
+        "winding frequency",
+        "center of mass",
+        "frequency sweep"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/spUNpyF58BY",
+      "original_watch_url": "https://www.youtube.com/watch?v=spUNpyF58BY",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-007",
+      "lesson_id": "2018/divergence-and-curl",
+      "year": 2018,
+      "title": "Divergence and curl",
+      "description": "Particle flow and tiny probes make two local vector-field measurements physically interpretable.",
+      "why_in_set": "Tests particle systems, vector fields, local probes, and the transition from intuition to operators.",
+      "video_id": "rB83DpBJQsE",
+      "lesson_url": "https://www.3blue1brown.com/lessons/divergence-and-curl",
+      "source_path": "_2018/div_curl.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2018/div_curl.py",
+      "signal_targets": [
+        "vector field",
+        "particle flow",
+        "expansion probe",
+        "rotation probe"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/rB83DpBJQsE",
+      "original_watch_url": "https://www.youtube.com/watch?v=rB83DpBJQsE",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-008",
+      "lesson_id": "2018/quaternions",
+      "year": 2018,
+      "title": "Visualizing quaternions",
+      "description": "Stereographic projection provides a moving 3D window into four-dimensional multiplication.",
+      "why_in_set": "Tests 3D camera motion, surfaces, projection, depth cues, and state that cannot be judged frame-by-frame alone.",
+      "video_id": "d4EgbgTm0Bg",
+      "lesson_url": "https://www.3blue1brown.com/lessons/quaternions",
+      "source_path": "_2018/quaternions.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2018/quaternions.py",
+      "signal_targets": [
+        "3D camera",
+        "stereographic projection",
+        "quaternion action",
+        "depth continuity"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/d4EgbgTm0Bg",
+      "original_watch_url": "https://www.youtube.com/watch?v=d4EgbgTm0Bg",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-009",
+      "lesson_id": "2019/clacks-solution",
+      "year": 2019,
+      "title": "Why do colliding blocks compute pi?",
+      "description": "A physics simulation is re-expressed as billiards in velocity space to explain a surprising digit count.",
+      "why_in_set": "Tests physically correct timing, collision events, conserved quantities, and a representation-changing proof.",
+      "video_id": "jsYwFizhncE",
+      "lesson_url": "https://www.3blue1brown.com/lessons/clacks-solution",
+      "source_path": "_2019/clacks/solution1.py",
+      "source_url": "https://github.com/3b1b/videos/blob/master/_2019/clacks/solution1.py",
+      "signal_targets": [
+        "collision timing",
+        "mass ratio",
+        "velocity-space point",
+        "geometric counting argument"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/jsYwFizhncE",
+      "original_watch_url": "https://www.youtube.com/watch?v=jsYwFizhncE",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    },
+    {
+      "case_id": "lf-010",
+      "lesson_id": "2019/fourier-series",
+      "year": 2019,
+      "title": "But what is a Fourier series?",
+      "description": "Heat flow motivates a decomposition that moves from sine waves to rotating vectors and drawn paths.",
+      "why_in_set": "Tests narrative lineage, formula-to-geometry transitions, many synchronized vectors, and cumulative approximation.",
+      "video_id": "r6sGWTCMz2k",
+      "lesson_url": "https://www.3blue1brown.com/lessons/fourier-series",
+      "source_path": "_2019/diffyq/part4",
+      "source_url": "https://github.com/3b1b/videos/tree/master/_2019/diffyq/part4",
+      "signal_targets": [
+        "heat motivation",
+        "sine decomposition",
+        "rotating vectors",
+        "partial-sum convergence"
+      ],
+      "original_embed_url": "https://www.youtube-nocookie.com/embed/r6sGWTCMz2k",
+      "original_watch_url": "https://www.youtube.com/watch?v=r6sGWTCMz2k",
+      "runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "selected_round": null,
+          "rounds": [
+            {
+              "index": 0,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 1,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 2,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 3,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 4,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            },
+            {
+              "index": 5,
+              "status": "not_run",
+              "video_url": null,
+              "poster_url": null,
+              "score": null,
+              "score_components": null,
+              "critic_summary": null,
+              "changes": null
+            }
+          ],
+          "perception_mode_observed": null,
+          "token_usage": null,
+          "estimated_cost_usd": null,
+          "duration_ms": null,
+          "run_manifest_url": null
+        }
+      }
+    }
+  ]
+}
