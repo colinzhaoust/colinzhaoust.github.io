@@ -4176,5 +4176,85 @@
         }
       }
     }
-  ]
+  ],
+  "trajectory_dataset": {
+    "schema_version": "manim-trajectory-dataset-summary/v1",
+    "benchmark_id": "3b1b-human-video-reconstruction-v2",
+    "claim_scope": "Public, source-available development set. This is a harness-development benchmark, not an unseen generalization benchmark.",
+    "data_split": "development_only",
+    "cases_with_completed_runs": 1,
+    "candidate_trajectories": 3,
+    "round_records": 10,
+    "transition_records": 7,
+    "training_views": {
+      "sft_positive": 2,
+      "reward_labeled": 7,
+      "preference_pairs": 0,
+      "preference_requirement": "Two or more repairs must share the same immutable parent package and feedback packet."
+    },
+    "transition_label_counts": {
+      "duplicate_noop": 1,
+      "negative_regression": 4,
+      "positive_repair": 2
+    },
+    "error_label_counts": {
+      "critic_disagreement": 10,
+      "geometry_layout": 10,
+      "motion_timing": 10,
+      "notation_text_color": 10,
+      "persistent_object_identity": 9,
+      "scene_decomposition": 6,
+      "state_transition": 10
+    },
+    "prompt_capture": {
+      "exact": 0,
+      "hash_only_legacy": 10,
+      "policy": "Future rounds persist exact prompt text before the provider call."
+    },
+    "selected_cross_model_scores": {
+      "lf-001/gemini-3-1-pro": 0.51,
+      "lf-001/gemini-3-flash": 0.65,
+      "lf-001/gpt-5-5": 0.97
+    },
+    "training_contract": "Each transition contains prior code, paired critic feedback, localized error labels, revised code, and observed score delta. Regressions and duplicate outputs remain as supervision.",
+    "harness": {
+      "schema_version": "manim-generation-harness/v1",
+      "stages": 12,
+      "tools": 6,
+      "error_types": 13,
+      "repair_priority": [
+        "render or package validity",
+        "scene decomposition and narrative coverage",
+        "persistent object identity",
+        "initial and final mathematical state",
+        "causal transition",
+        "geometry and layout",
+        "motion and timing",
+        "notation, text, and semantic color",
+        "pixel residuals"
+      ],
+      "control_loop": [
+        "reference signal inventory",
+        "scene contracts",
+        "Manim API retrieval",
+        "isolated package synthesis",
+        "static validation",
+        "sandbox render",
+        "paired evaluation",
+        "localized repair or rollback"
+      ]
+    },
+    "limitations": [
+      "Current corpus contains one six-second development case.",
+      "Historical prompts predate exact-prompt capture and retain hashes only.",
+      "Scores are evaluator evidence, not claims of semantic equivalence."
+    ],
+    "artifacts": {
+      "rounds": "rounds.jsonl",
+      "transitions": "transitions.jsonl",
+      "sft_positive": "sft_positive.jsonl",
+      "reward_labeled": "reward_labeled.jsonl",
+      "preference_pairs": "preference_pairs.jsonl"
+    }
+  }
 }

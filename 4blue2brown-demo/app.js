@@ -444,6 +444,16 @@
     const weights = Object.entries(data.score_policy).filter(([, value]) => typeof value === "number").map(([key, value]) => `<span><b>${Math.round(value * 100)}%</b>${esc(key.replaceAll("_", " "))}</span>`).join("");
     const smoke = model.adapter_smoke?.successful_attempt;
     const library = data.library_context;
+    const trajectory = data.trajectory_dataset;
+    const trajectoryLabels = trajectory?.transition_label_counts || {};
+    const trajectoryErrors = Object.entries(trajectory?.error_label_counts || {})
+      .sort((left, right) => right[1] - left[1])
+      .slice(0, 7)
+      .map(([label, count]) => `<span><b>${count}</b>${esc(label.replaceAll("_", " "))}</span>`)
+      .join("");
+    const harnessFlow = (trajectory?.harness?.control_loop || [])
+      .map((step, index) => `<li><b>${String(index + 1).padStart(2, "0")}</b><span>${esc(step)}</span></li>`)
+      .join("");
     const adapterEvidence = smoke ? `${fmtTokens(smoke.total_tokens)} tokens · ${fmtDuration(smoke.duration_ms)} · ${esc(smoke.perception_mode_observed.replaceAll("_", " "))}` : "video capability is not yet verified";
     $("#backtranslation-view").innerHTML = `
       <header class="bt-hero">
@@ -475,6 +485,21 @@
         <div class="bt-compose-path"><b>Complete video</b><i>→</i><b>Scene graph</b><i>→</i><b>Independent renders</b><i>→</i><b>Composed candidate</b></div>
         <div><span>Extension boundary</span><strong>model_extensions/&lt;candidate&gt;/</strong><small>case-local · cross-model reads disabled</small></div>
       </section>
+      ${trajectory ? `<section class="bt-harness-corpus" aria-labelledby="bt-harness-title">
+        <div class="bt-harness-heading">
+          <span class="eyebrow">Two durable outputs</span>
+          <h2 id="bt-harness-title">A better generation harness—and the mistakes that can train the next model.</h2>
+          <p>The harness narrows each revision to observable evidence. The trajectory corpus keeps the old code, paired feedback, error labels, new code, and measured outcome. A worse revision is supervision, not discarded history.</p>
+        </div>
+        <div class="bt-harness-metrics">
+          <article><span>Harness</span><strong>${trajectory.harness.stages} stages</strong><small>${trajectory.harness.tools} tools · ${trajectory.harness.error_types} error types</small></article>
+          <article><span>Observed corpus</span><strong>${trajectory.round_records} rounds</strong><small>${trajectory.training_views.sft_positive} SFT · ${trajectory.training_views.reward_labeled} reward · ${trajectory.training_views.preference_pairs} valid preference pairs</small></article>
+          <article><span>Repair outcomes</span><strong>${trajectoryLabels.positive_repair || 0} better / ${trajectoryLabels.negative_regression || 0} worse</strong><small>${trajectoryLabels.duplicate_noop || 0} rendered no-op · all retained</small></article>
+          <article><span>Prompt provenance</span><strong>${trajectory.prompt_capture.exact} exact / ${trajectory.prompt_capture.hash_only_legacy} hash-only</strong><small>exact prompt capture is mandatory for future rounds</small></article>
+        </div>
+        <ol class="bt-harness-flow">${harnessFlow}</ol>
+        <div class="bt-error-ledger"><b>Observed error labels</b><div>${trajectoryErrors}</div></div>
+      </section>` : ""}
       <section class="bt-matrix-section" aria-labelledby="bt-matrix-title">
         <div class="bt-matrix-intro"><div><span class="eyebrow">10-source reconstruction contact sheet</span><h2 id="bt-matrix-title">One authored reference. Six observed attempts. One selected round.</h2></div><p>Scroll horizontally to follow a row. Exact lesson clips play inline; remaining source posters load the creator-hosted YouTube video. The first two columns stay anchored on wide screens.</p></div>
         <div class="bt-matrix" role="table" aria-label="Backtranslation iterations for ${esc(model.label)}">
