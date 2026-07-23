@@ -443,6 +443,7 @@
     const matrixRows = data.cases.map((item) => renderBacktranslationRow(item, model)).join("");
     const weights = Object.entries(data.score_policy).filter(([, value]) => typeof value === "number").map(([key, value]) => `<span><b>${Math.round(value * 100)}%</b>${esc(key.replaceAll("_", " "))}</span>`).join("");
     const smoke = model.adapter_smoke?.successful_attempt;
+    const library = data.library_context;
     const adapterEvidence = smoke ? `${fmtTokens(smoke.total_tokens)} tokens · ${fmtDuration(smoke.duration_ms)} · ${esc(smoke.perception_mode_observed.replaceAll("_", " "))}` : "video capability is not yet verified";
     $("#backtranslation-view").innerHTML = `
       <header class="bt-hero">
@@ -451,7 +452,7 @@
           <h1>Backtranslation,<br>as signal finding.</h1>
         </div>
         <div class="bt-hero-copy">
-          <p>Each model first watches an authorized reference, writes a time-coded visual inventory, generates Manim Community code, then watches the candidate beside the reference and repairs the largest explanatory mismatch. We optimize narrative and state transitions before pixels.</p>
+          <p>Each model watches one complete reference video, decomposes it into teaching scenes, then renders and composes those scenes into one candidate. It reads a pinned Manim repository and may add reusable functions only inside its own isolated namespace.</p>
           <div class="bt-run-status"><span>${esc(data.execution_summary.status.replaceAll("_", " "))}</span><b>${data.execution_summary.cases} sources</b><b>${completedForModel} completed rounds</b><b>iter0 → iter5 → X</b></div>
           <small>${esc(data.execution_summary.note)}</small>
         </div>
@@ -460,7 +461,7 @@
         <div>
           <span class="eyebrow">Closed visual feedback loop</span>
           <h2 id="bt-loop-title">The candidate is also its own critic.</h2>
-          <p>The upstream 3b1b source path stays hidden in the primary condition. It is linked here for auditability, not supplied to the model.</p>
+          <p>The official Manim library source is visible. The upstream 3b1b scene source and every other model workspace stay hidden. This separates API grounding from answer leakage.</p>
         </div>
         <ol>${loop}</ol>
       </section>
@@ -469,6 +470,11 @@
         <div class="bt-candidate-options">${modelButtons}</div>
       </section>
       <section class="bt-score-strip" aria-label="Best round score weights">${weights}<small>Pixel similarity is a tiebreaker only.</small></section>
+      <section class="bt-library-contract" aria-label="Multi-scene and library contract">
+        <div><span>Library substrate</span><strong>Manim Community ${esc(library.version)}</strong><small>${esc(library.revision.slice(0, 12))} · pinned source</small></div>
+        <div class="bt-compose-path"><b>Complete video</b><i>→</i><b>Scene graph</b><i>→</i><b>Independent renders</b><i>→</i><b>Composed candidate</b></div>
+        <div><span>Extension boundary</span><strong>model_extensions/&lt;candidate&gt;/</strong><small>case-local · cross-model reads disabled</small></div>
+      </section>
       <section class="bt-matrix-section" aria-labelledby="bt-matrix-title">
         <div class="bt-matrix-intro"><div><span class="eyebrow">10-source reconstruction contact sheet</span><h2 id="bt-matrix-title">One authored reference. Six observed attempts. One selected round.</h2></div><p>Scroll horizontally to follow a row. Exact lesson clips play inline; remaining source posters load the creator-hosted YouTube video. The first two columns stay anchored on wide screens.</p></div>
         <div class="bt-matrix" role="table" aria-label="Backtranslation iterations for ${esc(model.label)}">
@@ -509,7 +515,12 @@
     const judgeScore = round.score == null ? "n/a" : Number(round.score).toFixed(3);
     const modelComponents = renderBacktranslationScoreComponents(round.model_score_components);
     const judgeComponents = renderBacktranslationScoreComponents(round.score_components);
-    return `<div class="bt-round ${selected ? "bt-round-best" : ""}"><span>iter${round.index}${selected ? " · selected" : ""}</span>${media}<div class="bt-round-scores"><div><small>Model self-score</small><strong>${modelScore}</strong></div><div><small>Cross-model judge</small><strong>${judgeScore}</strong></div></div><small class="bt-judge-label">${esc(round.judge_label || "Independent evaluator")}</small><details class="bt-score-detail"><summary>Score components</summary><div><b>Self</b>${modelComponents}</div><div><b>Judge</b>${judgeComponents}</div></details><p>${esc(round.critic_summary || "Critique recorded in the run manifest.")}</p>${round.changes ? `<small>${esc(round.changes)}</small>` : ""}</div>`;
+    const sceneCount = round.scene_count || 1;
+    const extensionCount = Array.isArray(round.library_extensions) ? round.library_extensions.length : 0;
+    const packageLabel = round.package_contract === "legacy-single-scene/v2" ? "legacy pilot" : "isolated package";
+    const scenePlan = Array.isArray(round.scene_plan) ? round.scene_plan : [];
+    const scenePlanDetail = scenePlan.length ? `<details class="bt-package-detail"><summary>Scene plan & model functions</summary><ol>${scenePlan.map((scene) => `<li><b>${esc(scene.scene_id)}</b><span>${Number(scene.start_time).toFixed(1)}–${Number(scene.end_time).toFixed(1)}s</span><p>${esc(scene.purpose)}</p></li>`).join("")}</ol>${extensionCount ? `<div>${round.library_extensions.map((item) => `<code>${esc(item.symbol)}</code>`).join("")}</div>` : `<small>No candidate-owned extension in this round.</small>`}</details>` : "";
+    return `<div class="bt-round ${selected ? "bt-round-best" : ""}"><span>iter${round.index}${selected ? " · selected" : ""}</span>${media}<div class="bt-package-meta"><b>${sceneCount} scene${sceneCount === 1 ? "" : "s"}</b><b>${extensionCount} new function${extensionCount === 1 ? "" : "s"}</b><small>${esc(packageLabel)}</small></div>${scenePlanDetail}<div class="bt-round-scores"><div><small>Model self-score</small><strong>${modelScore}</strong></div><div><small>Cross-model judge</small><strong>${judgeScore}</strong></div></div><small class="bt-judge-label">${esc(round.judge_label || "Independent evaluator")}</small><details class="bt-score-detail"><summary>Score components</summary><div><b>Self</b>${modelComponents}</div><div><b>Judge</b>${judgeComponents}</div></details><p>${esc(round.critic_summary || "Critique recorded in the run manifest.")}</p>${round.changes ? `<small>${esc(round.changes)}</small>` : ""}</div>`;
   }
 
   function renderBacktranslationScoreComponents(components) {
