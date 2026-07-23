@@ -123,7 +123,7 @@
     "cases": 10,
     "model_candidates": 3,
     "planned_candidate_runs": 30,
-    "completed_rounds": 3,
+    "completed_rounds": 10,
     "status": "evidence_available",
     "note": "Empty cells are not fabricated results; they remain not run until a validated artifact exists."
   },
@@ -199,61 +199,133 @@
             },
             {
               "index": 1,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gemini-3-flash/iter1/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gemini-3-flash/iter1/poster.jpg",
+              "score": 0.5925,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 0.65,
+                "object_and_layout_correspondence": 0.45,
+                "state_transition_correctness": 0.5,
+                "motion_and_timing": 0.6,
+                "text_formula_color": 0.55,
+                "critic_acceptance": 0.0
+              },
+              "model_score": 0.88,
+              "model_score_components": {
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.7,
+                "state_transition_correctness": 0.8,
+                "motion_and_timing": 0.9,
+                "text_formula_color": 1.0
+              },
+              "judge_label": "Cross-model · openai.gpt-5.5",
+              "judge_summary": "The candidate preserves the main diagonal arrow and its rough rotation/color progression, but the reference’s dense blue coordinate mesh and white axes are much more prominent and deform differently over time. The candidate grid is too sparse, green, and weak, with mismatched warping/layout, so the central visual structure of the animation is not faithfully reconstructed.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "linear-transform-scene",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Demonstrate a linear transformation on a coordinate grid and a vector with color change.",
+                  "source_path": "scenes/linear_transform_scene.py",
+                  "class_name": "LinearTransformScene",
+                  "transition_out": "None"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate animation correctly captures the linear transformation of the grid and the vector's color change from yellow to purple. However, the grid lines in the candidate are significantly sparser than the reference, and the final transformation state shows a different shear/rotation angle.",
+              "changes": "Increase the density of the background grid lines and adjust the transformation matrix to match the specific shear and rotation seen in the reference video."
             },
             {
               "index": 2,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gemini-3-flash/iter2/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gemini-3-flash/iter2/poster.jpg",
+              "score": 0.4325,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 0.45,
+                "object_and_layout_correspondence": 0.25,
+                "state_transition_correctness": 0.35,
+                "motion_and_timing": 0.3,
+                "text_formula_color": 0.4,
+                "critic_acceptance": 0.0
+              },
+              "model_score": 0.96,
+              "model_score_components": {
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.9,
+                "state_transition_correctness": 0.9,
+                "motion_and_timing": 1.0,
+                "text_formula_color": 1.0
+              },
+              "judge_label": "Cross-model · openai.gpt-5.5",
+              "judge_summary": "The candidate includes the basic axes/grid/arrow motif and a yellow-to-purple arrow change, but it misses the dense blue reference grid and the stable framed layout. Its camera/grid deformation and arrow scale/position drift substantially from the reference, especially in the later samples where the arrow becomes too large and the scene composition no longer matches.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "linear-transform-scene",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Demonstrate a linear transformation on a coordinate grid and a vector.",
+                  "source_path": "scenes/linear_transform_scene.py",
+                  "class_name": "LinearTransformScene",
+                  "transition_out": "None"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate animation correctly captures the linear transformation of the grid and the vector, including the color shift from yellow to purple. However, the grid lines in the candidate are significantly thinner and less visible than the reference, and the final transformation state appears slightly more skewed than the original.",
+              "changes": "Increase the stroke width and opacity of the grid lines to match the reference's visual prominence."
             },
             {
               "index": 3,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gemini-3-flash/iter3/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gemini-3-flash/iter3/poster.jpg",
+              "score": 0.5895,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 0.7,
+                "object_and_layout_correspondence": 0.45,
+                "state_transition_correctness": 0.42,
+                "motion_and_timing": 0.62,
+                "text_formula_color": 0.55,
+                "critic_acceptance": 0.0
+              },
+              "model_score": 0.8,
+              "model_score_components": {
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.6,
+                "state_transition_correctness": 0.7,
+                "motion_and_timing": 0.8,
+                "text_formula_color": 0.9
+              },
+              "judge_label": "Cross-model · openai.gpt-5.5",
+              "judge_summary": "The candidate preserves the broad idea of a grid undergoing a continuous deformation with an anchored arrow changing orientation/color. However, the grid density/color, camera/layout, final deformation, and vector length/endpoint diverge substantially from the reference, especially in later frames where the candidate arrow becomes far too long and the mesh is not the same blue dense lattice.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "linear-transform-scene",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Demonstrate a linear transformation of a 2D vector space and a specific vector.",
+                  "source_path": "scenes/linear_transform_scene.py",
+                  "class_name": "LinearTransformScene",
+                  "transition_out": "None"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate successfully captures the linear transformation of the grid and the vector's color shift from yellow to purple. However, it introduces an unauthorized camera zoom and pan that deviates from the static framing of the reference, and the grid lines are gray instead of blue.",
+              "changes": "Remove the camera movement (zoom and pan) to keep the frame static and update the grid line color to the specific blue used in the reference."
             },
             {
               "index": 4,
-              "status": "not_run",
+              "status": "stopped_no_improvement",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -266,12 +338,12 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after two successive revisions failed to beat the earlier best; no artifact was fabricated.",
               "changes": null
             },
             {
               "index": 5,
-              "status": "not_run",
+              "status": "stopped_no_improvement",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -284,24 +356,24 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after two successive revisions failed to beat the earlier best; no artifact was fabricated.",
               "changes": null
             }
           ],
           "perception_mode_observed": "native_video_inline_data",
           "token_usage": {
-            "input_tokens": 2162,
-            "output_tokens": 983,
-            "reasoning_tokens": 0,
-            "total_tokens": 3145
+            "input_tokens": 74917,
+            "output_tokens": 4607,
+            "reasoning_tokens": 619,
+            "total_tokens": 80143
           },
           "estimated_cost_usd": null,
-          "duration_ms": 15278,
+          "duration_ms": 83085,
           "run_manifest_url": null
         },
         "gemini-3-1-pro": {
           "status": "completed",
-          "selected_round": 0,
+          "selected_round": 1,
           "rounds": [
             {
               "index": 0,
@@ -347,61 +419,133 @@
             },
             {
               "index": 1,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter1/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter1/poster.jpg",
+              "score": 0.51,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 0.55,
+                "object_and_layout_correspondence": 0.48,
+                "state_transition_correctness": 0.25,
+                "motion_and_timing": 0.42,
+                "text_formula_color": 0.65,
+                "critic_acceptance": 0.0
+              },
+              "model_score": 0.72,
+              "model_score_components": {
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.6,
+                "state_transition_correctness": 0.2,
+                "motion_and_timing": 0.8,
+                "text_formula_color": 1.0
+              },
+              "judge_label": "Cross-model · openai.gpt-5.5",
+              "judge_summary": "The candidate captures the basic setup of a dark grid with a vector whose color shifts from yellow toward purple, but the grid transformation is visibly the wrong motion: it becomes a rotated diamond lattice instead of the reference's skewed/sheared Cartesian deformation with persistent emphasized axes. The vector also ends with the wrong orientation/length relative to the transformed grid, so the main mathematical state transition is only loosely matched.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "lineartransformation",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Show a linear transformation of a grid and a vector.",
+                  "source_path": "scenes/linear_transformation.py",
+                  "class_name": "LinearTransformation",
+                  "transition_out": "None"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate applies a pure rotation to the grid instead of the shear/scale transformation seen in the reference. While the vector color transition is correct, the fundamental linear transformation is wrong.",
+              "changes": "Change the linear transformation applied to the grid and vector from a rotation matrix to the correct shear/scale matrix that matches the reference."
             },
             {
               "index": 2,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter2/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter2/poster.jpg",
+              "score": 0.482,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 0.45,
+                "object_and_layout_correspondence": 0.48,
+                "state_transition_correctness": 0.25,
+                "motion_and_timing": 0.4,
+                "text_formula_color": 0.6,
+                "critic_acceptance": 0.0
+              },
+              "model_score": 0.68,
+              "model_score_components": {
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.4,
+                "state_transition_correctness": 0.2,
+                "motion_and_timing": 0.8,
+                "text_formula_color": 1.0
+              },
+              "judge_label": "Cross-model · openai.gpt-5.5",
+              "judge_summary": "The candidate captures the rough presence of a dark grid and a colored arrow undergoing a deformation, but the grid transformation is substantially different from the reference and loses the persistent bright axes/dense mesh structure. The arrow’s placement and final direction diverge strongly, especially in the later samples where the candidate points upward/left relative to the reference’s shallow rightward vector.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "lineartransformation",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Show a linear transformation applied to a grid and a vector.",
+                  "source_path": "scenes/linear_transformation.py",
+                  "class_name": "LinearTransformation",
+                  "transition_out": "None"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate applies an incorrect linear transformation (a pure rotation instead of the reference's shear/scale) and initializes the vector at the wrong coordinates. The grid scale and camera zoom also differ significantly from the reference.",
+              "changes": "Update the linear transformation matrix applied to the grid and vector to match the reference (likely a shear and scale rather than a simple rotation), and change the vector's initial coordinates from [1, 2] to [2, 3]."
             },
             {
               "index": 3,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter3/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter3/poster.jpg",
+              "score": 0.482,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 0.45,
+                "object_and_layout_correspondence": 0.48,
+                "state_transition_correctness": 0.25,
+                "motion_and_timing": 0.4,
+                "text_formula_color": 0.6,
+                "critic_acceptance": 0.0
+              },
+              "model_score": 0.66,
+              "model_score_components": {
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.4,
+                "state_transition_correctness": 0.2,
+                "motion_and_timing": 0.8,
+                "text_formula_color": 0.9
+              },
+              "judge_label": "Cross-model · openai.gpt-5.5",
+              "judge_summary": "The candidate captures the rough presence of a dark grid and a colored arrow undergoing a deformation, but the grid transformation is substantially different from the reference and loses the persistent bright axes/dense mesh structure. The arrow’s placement and final direction diverge strongly, especially in the later samples where the candidate points upward/left relative to the reference’s shallow rightward vector.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "linear-transformation",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Show a linear transformation applied to a grid and a vector.",
+                  "source_path": "scenes/linear_transformation.py",
+                  "class_name": "LinearTransformation",
+                  "transition_out": "None"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate animation applies an incorrect linear transformation matrix and starts with the wrong initial vector coordinates. While the color transition and general animation timing are present, the spatial mapping is fundamentally flawed.",
+              "changes": "Correct the initial vector coordinates and update the linear transformation matrix applied to the grid and vector to match the shear and scaling seen in the reference."
             },
             {
               "index": 4,
-              "status": "not_run",
+              "status": "stopped_no_improvement",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -414,12 +558,12 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after two successive revisions failed to beat the earlier best; no artifact was fabricated.",
               "changes": null
             },
             {
               "index": 5,
-              "status": "not_run",
+              "status": "stopped_no_improvement",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -432,19 +576,19 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after two successive revisions failed to beat the earlier best; no artifact was fabricated.",
               "changes": null
             }
           ],
           "perception_mode_observed": "native_video_inline_data",
           "token_usage": {
-            "input_tokens": 2162,
-            "output_tokens": 797,
-            "reasoning_tokens": 862,
-            "total_tokens": 3821
+            "input_tokens": 74385,
+            "output_tokens": 5014,
+            "reasoning_tokens": 4106,
+            "total_tokens": 83505
           },
           "estimated_cost_usd": null,
-          "duration_ms": 25599,
+          "duration_ms": 134063,
           "run_manifest_url": null
         },
         "gpt-5-5": {
@@ -495,25 +639,49 @@
             },
             {
               "index": 1,
-              "status": "not_run",
-              "video_url": null,
-              "poster_url": null,
-              "score": null,
-              "score_components": null,
-              "model_score": null,
-              "model_score_components": null,
-              "judge_label": null,
-              "judge_summary": null,
-              "scene_count": null,
-              "scene_plan": null,
-              "library_extensions": null,
-              "package_contract": null,
-              "critic_summary": null,
-              "changes": null
+              "status": "completed",
+              "video_url": "assets/backtranslation/lf-001/gpt-5-5/iter1/candidate.mp4",
+              "poster_url": "assets/backtranslation/lf-001/gpt-5-5/iter1/poster.jpg",
+              "score": 0.95,
+              "score_components": {
+                "technical_validity": 1.0,
+                "narrative_beat_coverage": 1.0,
+                "object_and_layout_correspondence": 0.8,
+                "state_transition_correctness": 1.0,
+                "motion_and_timing": 1.0,
+                "text_formula_color": 0.8,
+                "critic_acceptance": 1.0
+              },
+              "model_score": 0.66,
+              "model_score_components": {
+                "narrative_beat_coverage": 0.72,
+                "object_and_layout_correspondence": 0.55,
+                "state_transition_correctness": 0.7,
+                "motion_and_timing": 0.75,
+                "text_formula_color": 0.58
+              },
+              "judge_label": "Cross-model · gemini-3.1-pro-preview",
+              "judge_summary": "The candidate successfully replicates the linear transformation and the vector's color transition. However, the grid lines in the candidate are significantly fainter than in the reference video.",
+              "scene_count": 1,
+              "scene_plan": [
+                {
+                  "scene_id": "linear-grid-vector",
+                  "start_time": 0.0,
+                  "end_time": 6.0,
+                  "purpose": "Reconstruct teaching beat 1 from visible temporal evidence.",
+                  "source_path": "scenes/linear_grid_vector.py",
+                  "class_name": "LinearGridVectorScene",
+                  "transition_out": "end"
+                }
+              ],
+              "library_extensions": [],
+              "package_contract": "backtranslation-scene-package/v1",
+              "critic_summary": "The candidate captures the main animated vector changing direction over a dark coordinate grid, with broadly similar timing and endpoint progression. However, the reference’s dense bright blue warped grid and stronger axis/line visibility are largely missing, making the scene much darker, sparser, and less faithful in layout and color.",
+              "changes": "Rebuild the background grid to match the reference: dense blue minor/major grid lines with higher opacity, correct spacing, and the same perspective/shear deformation throughout the animation."
             },
             {
               "index": 2,
-              "status": "not_run",
+              "status": "early_stopped",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -526,12 +694,12 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after iter0 met the acceptance gate; no artifact was fabricated for this column.",
               "changes": null
             },
             {
               "index": 3,
-              "status": "not_run",
+              "status": "early_stopped",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -544,12 +712,12 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after iter0 met the acceptance gate; no artifact was fabricated for this column.",
               "changes": null
             },
             {
               "index": 4,
-              "status": "not_run",
+              "status": "early_stopped",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -562,12 +730,12 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after iter0 met the acceptance gate; no artifact was fabricated for this column.",
               "changes": null
             },
             {
               "index": 5,
-              "status": "not_run",
+              "status": "early_stopped",
               "video_url": null,
               "poster_url": null,
               "score": null,
@@ -580,19 +748,19 @@
               "scene_plan": null,
               "library_extensions": null,
               "package_contract": null,
-              "critic_summary": null,
+              "critic_summary": "Stopped after iter0 met the acceptance gate; no artifact was fabricated for this column.",
               "changes": null
             }
           ],
           "perception_mode_observed": "ordered_temporal_frame_packet",
           "token_usage": {
-            "input_tokens": 4579,
-            "output_tokens": 5391,
-            "reasoning_tokens": 3622,
-            "total_tokens": 9970
+            "input_tokens": 26718,
+            "output_tokens": 8785,
+            "reasoning_tokens": 5085,
+            "total_tokens": 35503
           },
           "estimated_cost_usd": null,
-          "duration_ms": 79106,
+          "duration_ms": 131587,
           "run_manifest_url": null
         }
       }

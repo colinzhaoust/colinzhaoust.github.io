@@ -508,7 +508,10 @@
   function renderBacktranslationRound(round, selectedRound) {
     const selected = round.index === selectedRound;
     if (round.status !== "completed") {
-      return `<div class="bt-round bt-empty"><span>iter${round.index}</span><strong>${esc(round.status.replaceAll("_", " "))}</strong><p>${round.index === 0 ? "Initial video-conditioned generation." : "Reference/candidate critique, then one targeted repair."}</p></div>`;
+      const emptyNote = round.status !== "not_run" && round.critic_summary
+        ? round.critic_summary
+        : (round.index === 0 ? "Initial video-conditioned generation." : "Reference/candidate critique, then one targeted repair.");
+      return `<div class="bt-round bt-empty"><span>iter${round.index}</span><strong>${esc(round.status.replaceAll("_", " "))}</strong><p>${esc(emptyNote)}</p></div>`;
     }
     const media = round.video_url ? `<video controls preload="metadata" ${round.poster_url ? `poster="${esc(round.poster_url)}"` : ""}><source src="${esc(round.video_url)}" type="video/mp4"></video>` : "";
     const modelScore = round.model_score == null ? "n/a" : Number(round.model_score).toFixed(3);
