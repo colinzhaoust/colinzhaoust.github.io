@@ -451,7 +451,7 @@
           <h1>Backtranslation,<br>as signal finding.</h1>
         </div>
         <div class="bt-hero-copy">
-          <p>Each model first watches an authorized reference, writes a time-coded visual inventory, generates ManimGL, then watches the candidate beside the reference and repairs the largest explanatory mismatch. We optimize narrative and state transitions before pixels.</p>
+          <p>Each model first watches an authorized reference, writes a time-coded visual inventory, generates Manim Community code, then watches the candidate beside the reference and repairs the largest explanatory mismatch. We optimize narrative and state transitions before pixels.</p>
           <div class="bt-run-status"><span>${esc(data.execution_summary.status.replaceAll("_", " "))}</span><b>${data.execution_summary.cases} sources</b><b>${completedForModel} completed rounds</b><b>iter0 → iter5 → X</b></div>
           <small>${esc(data.execution_summary.note)}</small>
         </div>
@@ -470,7 +470,7 @@
       </section>
       <section class="bt-score-strip" aria-label="Best round score weights">${weights}<small>Pixel similarity is a tiebreaker only.</small></section>
       <section class="bt-matrix-section" aria-labelledby="bt-matrix-title">
-        <div class="bt-matrix-intro"><div><span class="eyebrow">10-source reconstruction contact sheet</span><h2 id="bt-matrix-title">One authored reference. Six observed attempts. One selected round.</h2></div><p>Scroll horizontally to follow a row. The first two columns stay anchored on wide screens. Click a source poster to load the creator-hosted YouTube embed.</p></div>
+        <div class="bt-matrix-intro"><div><span class="eyebrow">10-source reconstruction contact sheet</span><h2 id="bt-matrix-title">One authored reference. Six observed attempts. One selected round.</h2></div><p>Scroll horizontally to follow a row. Exact lesson clips play inline; remaining source posters load the creator-hosted YouTube video. The first two columns stay anchored on wide screens.</p></div>
         <div class="bt-matrix" role="table" aria-label="Backtranslation iterations for ${esc(model.label)}">
           <div class="bt-grid bt-header-row" role="row">${headers}</div>
           ${matrixRows}
@@ -489,7 +489,9 @@
   function renderBacktranslationRow(item, model) {
     const run = item.runs[model.candidate_id];
     const description = `<article class="bt-description bt-sticky-cell" style="--sticky-index:0"><div><span>${esc(item.case_id)}</span><b>${esc(item.year)}</b></div><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><strong>Why this case</strong><p>${esc(item.why_in_set)}</p><div class="bt-signal-list">${item.signal_targets.map((signal) => `<i>${esc(signal)}</i>`).join("")}</div><div class="bt-source-links"><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">lesson ↗</a><a href="${esc(item.source_url)}" target="_blank" rel="noreferrer">hidden source audit ↗</a></div></article>`;
-    const original = `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><button type="button" data-load-source data-embed="${esc(item.original_embed_url)}" data-title="${esc(item.title)}" aria-label="Load original video: ${esc(item.title)}"><img src="https://i.ytimg.com/vi/${esc(item.video_id)}/hqdefault.jpg" alt="" loading="lazy"><span aria-hidden="true">▶</span><small>Load human original</small></button><a href="${esc(item.original_watch_url)}" target="_blank" rel="noreferrer">Watch on YouTube ↗</a></div>`;
+    const original = item.reference_clip_url
+      ? `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><video controls preload="metadata"><source src="${esc(item.reference_clip_url)}" type="video/mp4"></video><small class="bt-reference-label">${esc(item.reference_unit)}</small><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">Open creator-hosted lesson ↗</a></div>`
+      : `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><button type="button" data-load-source data-embed="${esc(item.original_embed_url)}" data-title="${esc(item.title)}" aria-label="Load original video: ${esc(item.title)}"><img src="https://i.ytimg.com/vi/${esc(item.video_id)}/hqdefault.jpg" alt="" loading="lazy"><span aria-hidden="true">▶</span><small>Load human original</small></button><a href="${esc(item.original_watch_url)}" target="_blank" rel="noreferrer">Watch on YouTube ↗</a></div>`;
     const iterations = run.rounds.map((round) => renderBacktranslationRound(round, run.selected_round)).join("");
     const selected = run.selected_round == null
       ? `<div class="bt-round bt-selected bt-empty"><span>X</span><strong>No observed best yet</strong><p>Selection waits for at least one completed, scored render.</p></div>`
@@ -503,7 +505,16 @@
       return `<div class="bt-round bt-empty"><span>iter${round.index}</span><strong>${esc(round.status.replaceAll("_", " "))}</strong><p>${round.index === 0 ? "Initial video-conditioned generation." : "Reference/candidate critique, then one targeted repair."}</p></div>`;
     }
     const media = round.video_url ? `<video controls preload="metadata" ${round.poster_url ? `poster="${esc(round.poster_url)}"` : ""}><source src="${esc(round.video_url)}" type="video/mp4"></video>` : "";
-    return `<div class="bt-round ${selected ? "bt-round-best" : ""}"><span>iter${round.index}${selected ? " · selected" : ""}</span>${media}<strong>Score ${Number(round.score).toFixed(3)}</strong><p>${esc(round.critic_summary || "Critique recorded in the run manifest.")}</p>${round.changes ? `<small>${esc(round.changes)}</small>` : ""}</div>`;
+    const modelScore = round.model_score == null ? "n/a" : Number(round.model_score).toFixed(3);
+    const judgeScore = round.score == null ? "n/a" : Number(round.score).toFixed(3);
+    const modelComponents = renderBacktranslationScoreComponents(round.model_score_components);
+    const judgeComponents = renderBacktranslationScoreComponents(round.score_components);
+    return `<div class="bt-round ${selected ? "bt-round-best" : ""}"><span>iter${round.index}${selected ? " · selected" : ""}</span>${media}<div class="bt-round-scores"><div><small>Model self-score</small><strong>${modelScore}</strong></div><div><small>Cross-model judge</small><strong>${judgeScore}</strong></div></div><small class="bt-judge-label">${esc(round.judge_label || "Independent evaluator")}</small><details class="bt-score-detail"><summary>Score components</summary><div><b>Self</b>${modelComponents}</div><div><b>Judge</b>${judgeComponents}</div></details><p>${esc(round.critic_summary || "Critique recorded in the run manifest.")}</p>${round.changes ? `<small>${esc(round.changes)}</small>` : ""}</div>`;
+  }
+
+  function renderBacktranslationScoreComponents(components) {
+    if (!components) return `<small class="bt-score-missing">not recorded</small>`;
+    return Object.entries(components).map(([key, value]) => `<span title="${esc(key.replaceAll("_", " "))}"><i style="--score:${Math.max(0, Math.min(1, Number(value)))}"></i><em>${esc(key.split("_").map((word) => word[0]).join("").toUpperCase())}</em><strong>${Number(value).toFixed(2)}</strong></span>`).join("");
   }
 
   function renderAppendix(paperFilter, entryId) {
