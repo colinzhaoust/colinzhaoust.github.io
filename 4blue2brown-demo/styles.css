@@ -413,6 +413,9 @@ main { min-height: calc(100vh - 140px); }
 .bt-round > strong { display: block; margin-top: 34px; font: 600 1.02rem var(--serif); }
 .bt-round p { color: var(--muted); font-size: .7rem; }
 .bt-round video { display: block; width: 100%; margin-top: 16px; aspect-ratio: 16 / 9; object-fit: contain; background: var(--ink); }
+.bt-composed-video { background: linear-gradient(145deg, var(--violet-soft), var(--paper) 72%); }
+.bt-composed-video video { max-width: 960px; margin-inline: auto; }
+.bt-composed-video > p { max-width: 72ch; margin-inline: auto; text-align: center; }
 .bt-round > small { display: block; margin-top: 14px; color: var(--violet); font: .56rem/1.4 var(--mono); }
 .bt-package-meta { display: flex; flex-wrap: wrap; margin-top: 9px; border-block: 1px solid var(--line); }
 .bt-package-meta > * { padding: 6px 7px 6px 0; font: 800 .44rem/1.2 var(--mono); text-transform: uppercase; }

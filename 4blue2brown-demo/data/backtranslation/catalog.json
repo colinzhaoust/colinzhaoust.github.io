@@ -2,7 +2,7 @@
   "schema_version": "longform-backtranslation-site/v3",
   "experiment_id": "3b1b-human-video-reconstruction-v2",
   "title": "3Blue1Brown long-form reconstruction set",
-  "claim_scope": "Public, source-available development set. This is a harness-development benchmark, not an unseen generalization benchmark.",
+  "claim_scope": "Ten planned complete-video cases in a public, source-available development set. The historical six-second Linear Transform artifact is a scene pilot, not a completed full-video case.",
   "public_original_policy": "Embed creator-hosted media only: an official lesson clip when that exact clip is the reconstruction unit, otherwise the creator-hosted YouTube video. Do not rehost the original in the public website.",
   "models": [
     {
@@ -77,14 +77,14 @@
     "X"
   ],
   "feedback_loop": [
-    "model extracts a time-coded visual signal inventory and decomposes the complete video into one or more scenes",
-    "model reads the pinned Manim repository context and its own isolated extension workspace",
-    "model emits a multi-scene package, composition timeline, and optional reusable functions inside its own namespace",
-    "external network-disabled sandbox renders every scene and composes one candidate video",
-    "harness computes deterministic media, layout, text, color, motion, and timing evidence",
-    "the same candidate model receives paired reference/candidate evidence and writes a ranked error diagnosis",
-    "model revises code while preserving already-matched signals",
-    "harness scores every completed round and selects X"
+    "scene-planning model watches the complete video and proposes one exhaustive time-coded teaching-scene manifest",
+    "harness validates full timeline coverage, freezes the manifest, and cuts one human reference clip per scene",
+    "candidate model reads one frozen scene contract, its neighbor invariants, the pinned Manim repository context, and only its own workspace",
+    "candidate model emits one isolated scene package and optional reusable functions inside its own namespace",
+    "external network-disabled sandbox renders the scene clip",
+    "harness compares the human scene slice and generated scene clip using deterministic evidence and declared visual judges",
+    "candidate model revises only that scene while preserving already-matched signals and cross-scene invariants",
+    "harness selects X per scene, composes all selected clips, and runs a separate full-video continuity evaluation"
   ],
   "signal_hierarchy": [
     "narrative beats and scene boundaries",
@@ -121,11 +121,16 @@
   },
   "execution_summary": {
     "cases": 10,
+    "planned_full_videos": 10,
     "model_candidates": 3,
     "planned_candidate_runs": 30,
+    "decomposed_full_video_cases": 0,
+    "completed_full_video_candidate_runs": 0,
+    "completed_full_video_scenes": 0,
     "completed_rounds": 10,
-    "status": "evidence_available",
-    "note": "Empty cells are not fabricated results; they remain not run until a validated artifact exists."
+    "completed_scene_pilot_rounds": 10,
+    "status": "scene_pilot_evidence_only",
+    "note": "The historical Linear Transform evidence is one six-second scene pilot. It is not counted as a completed full-video case. Empty full-video scenes and rounds remain not run."
   },
   "cases": [
     {
@@ -763,7 +768,43 @@
           "duration_ms": 131587,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "scene_pilot"
     },
     {
       "case_id": "lf-002",
@@ -1142,7 +1183,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-003",
@@ -1521,7 +1598,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-004",
@@ -1900,7 +2013,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-005",
@@ -2279,7 +2428,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-006",
@@ -2658,7 +2843,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-007",
@@ -3037,7 +3258,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-008",
@@ -3416,7 +3673,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-009",
@@ -3795,7 +4088,43 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     },
     {
       "case_id": "lf-010",
@@ -4174,17 +4503,55 @@
           "duration_ms": null,
           "run_manifest_url": null
         }
-      }
+      },
+      "full_video_scene_manifest": {
+        "status": "not_run",
+        "scene_count": null,
+        "proposal_model": null,
+        "scenes": []
+      },
+      "full_video_runs": {
+        "gemini-3-flash": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gemini-3-1-pro": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        },
+        "gpt-5-5": {
+          "status": "not_run",
+          "scene_count": null,
+          "scenes": [],
+          "scores": null,
+          "full_video_url": null,
+          "continuity": null,
+          "model_run_summary": null
+        }
+      },
+      "legacy_evidence_scope": "none"
     }
   ],
   "trajectory_dataset": {
     "schema_version": "manim-trajectory-dataset-summary/v1",
     "benchmark_id": "3b1b-human-video-reconstruction-v2",
-    "claim_scope": "Public, source-available development set. This is a harness-development benchmark, not an unseen generalization benchmark.",
+    "claim_scope": "Ten planned complete-video cases in a public, source-available development set. The historical six-second Linear Transform artifact is a scene pilot, not a completed full-video case.",
     "data_split": "development_only",
     "cases_with_completed_runs": 1,
     "candidate_trajectories": 3,
     "round_records": 10,
+    "legacy_scene_pilot_round_records": 10,
+    "full_video_scene_round_records": 0,
     "transition_records": 7,
     "training_views": {
       "sft_positive": 2,
@@ -4245,7 +4612,7 @@
       ]
     },
     "limitations": [
-      "Current corpus contains one six-second development case.",
+      "Current corpus contains one six-second scene pilot and no completed full-video scene trajectory.",
       "Historical prompts predate exact-prompt capture and retain hashes only.",
       "Scores are evaluator evidence, not claims of semantic equivalence."
     ],

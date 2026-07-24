@@ -96,8 +96,9 @@
     $("#paper-view").hidden = name !== "paper";
     $("#appendix-view").hidden = name !== "appendix";
     document.body.classList.toggle("is-backtranslation", name === "backtranslation");
+    const execution = state.backtranslation.execution_summary;
     $("#status-strip span:last-child").textContent = name === "backtranslation"
-      ? `${state.backtranslation.execution_summary.cases} human references · ${state.backtranslation.models.length} model candidates · ${state.backtranslation.execution_summary.completed_rounds} completed reconstruction rounds · evidence, not mockups`
+      ? `${execution.planned_full_videos} planned full videos · ${execution.decomposed_full_video_cases} decomposed · ${execution.completed_full_video_candidate_runs} completed full-video runs · ${execution.completed_scene_pilot_rounds} legacy scene-pilot rounds`
       : defaultStatusText();
     const selected = name === "paper" ? state.activePaper : name;
     $("#top-tabs").querySelectorAll("button").forEach((button) => {
@@ -437,6 +438,7 @@
     const data = state.backtranslation;
     const model = data.models.find((item) => item.candidate_id === state.activeBacktranslationModel);
     const completedForModel = data.cases.reduce((total, item) => total + item.runs[model.candidate_id].rounds.filter((round) => round.status === "completed").length, 0);
+    const scenePilotCases = data.cases.filter((item) => item.legacy_evidence_scope === "scene_pilot").length;
     const modelButtons = data.models.map((item) => `<button type="button" data-bt-model="${esc(item.candidate_id)}" aria-pressed="${item.candidate_id === model.candidate_id ? "true" : "false"}"><strong>${esc(item.label)}</strong><span>${esc(item.model_id)}</span></button>`).join("");
     const loop = data.feedback_loop.map((item, index) => `<li><b>${String(index + 1).padStart(2, "0")}</b><span>${esc(item)}</span></li>`).join("");
     const headers = ["Description", "Human original", ...data.display_columns].map((item, index) => `<div class="bt-column-head ${index < 2 ? "bt-sticky-head" : ""}" style="--sticky-index:${index}">${esc(item)}</div>`).join("");
@@ -462,8 +464,8 @@
           <h1>Backtranslation,<br>as signal finding.</h1>
         </div>
         <div class="bt-hero-copy">
-          <p>Each model watches one complete reference video, decomposes it into teaching scenes, then renders and composes those scenes into one candidate. It reads a pinned Manim repository and may add reusable functions only inside its own isolated namespace.</p>
-          <div class="bt-run-status"><span>${esc(data.execution_summary.status.replaceAll("_", " "))}</span><b>${data.execution_summary.cases} sources</b><b>${completedForModel} completed rounds</b><b>iter0 → iter5 → X</b></div>
+          <p>The input is one complete human video. A declared model proposes one exhaustive scene manifest; the harness freezes it, cuts human scene references, and every candidate reconstructs and iterates those scenes independently before composition.</p>
+          <div class="bt-run-status"><span>${esc(data.execution_summary.status.replaceAll("_", " "))}</span><b>${data.execution_summary.planned_full_videos} planned full videos</b><b>${data.execution_summary.completed_full_video_candidate_runs} completed full-video runs</b><b>${scenePilotCases} scene pilot · ${completedForModel} rounds for this model</b></div>
           <small>${esc(data.execution_summary.note)}</small>
         </div>
       </header>
@@ -493,7 +495,7 @@
         </div>
         <div class="bt-harness-metrics">
           <article><span>Harness</span><strong>${trajectory.harness.stages} stages</strong><small>${trajectory.harness.tools} tools · ${trajectory.harness.error_types} error types</small></article>
-          <article><span>Observed corpus</span><strong>${trajectory.round_records} rounds</strong><small>${trajectory.training_views.sft_positive} SFT · ${trajectory.training_views.reward_labeled} reward · ${trajectory.training_views.preference_pairs} valid preference pairs</small></article>
+          <article><span>Observed corpus</span><strong>${trajectory.round_records} rounds</strong><small>${trajectory.legacy_scene_pilot_round_records} legacy scene-pilot · ${trajectory.full_video_scene_round_records} full-video scene · ${trajectory.training_views.sft_positive} SFT</small></article>
           <article><span>Repair outcomes</span><strong>${trajectoryLabels.positive_repair || 0} better / ${trajectoryLabels.negative_regression || 0} worse</strong><small>${trajectoryLabels.duplicate_noop || 0} rendered no-op · all retained</small></article>
           <article><span>Prompt provenance</span><strong>${trajectory.prompt_capture.exact} exact / ${trajectory.prompt_capture.hash_only_legacy} hash-only</strong><small>exact prompt capture is mandatory for future rounds</small></article>
         </div>
@@ -501,7 +503,7 @@
         <div class="bt-error-ledger"><b>Observed error labels</b><div>${trajectoryErrors}</div></div>
       </section>` : ""}
       <section class="bt-matrix-section" aria-labelledby="bt-matrix-title">
-        <div class="bt-matrix-intro"><div><span class="eyebrow">10-source reconstruction contact sheet</span><h2 id="bt-matrix-title">One authored reference. Six observed attempts. One selected round.</h2></div><p>Scroll horizontally to follow a row. Exact lesson clips play inline; remaining source posters load the creator-hosted YouTube video. The first two columns stay anchored on wide screens.</p></div>
+        <div class="bt-matrix-intro"><div><span class="eyebrow">Full-video benchmark · scene-level evidence</span><h2 id="bt-matrix-title">One complete video. One frozen scene manifest. A trajectory for every scene.</h2></div><p>The historical Linear Transform evidence below is one six-second scene pilot, not a full-video run. Future completed cases expand into scene rows: human timeline slice, iter0–5, then the selected scene clip.</p></div>
         <div class="bt-matrix" role="table" aria-label="Backtranslation iterations for ${esc(model.label)}">
           <div class="bt-grid bt-header-row" role="row">${headers}</div>
           ${matrixRows}
@@ -513,21 +515,56 @@
     }));
     $("#backtranslation-view").querySelectorAll("[data-load-source]").forEach((button) => button.addEventListener("click", () => {
       const host = button.parentElement;
-      host.innerHTML = `<iframe src="${esc(button.dataset.embed)}?autoplay=1&rel=0" title="${esc(button.dataset.title)} — original 3Blue1Brown video" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+      const join = button.dataset.embed.includes("?") ? "&" : "?";
+      host.innerHTML = `<iframe src="${esc(button.dataset.embed)}${join}autoplay=1&rel=0" title="${esc(button.dataset.title)} — original creator-hosted video" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
     }));
   }
 
   function renderBacktranslationRow(item, model) {
+    const fullRun = item.full_video_runs?.[model.candidate_id];
+    if (fullRun?.scenes?.length) {
+      return `${renderBacktranslationFullVideoOverview(item, model, fullRun)}${renderBacktranslationFullVideoRows(item, model, fullRun)}`;
+    }
     const run = item.runs[model.candidate_id];
-    const description = `<article class="bt-description bt-sticky-cell" style="--sticky-index:0"><div><span>${esc(item.case_id)}</span><b>${esc(item.year)}</b></div><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><strong>Why this case</strong><p>${esc(item.why_in_set)}</p><div class="bt-signal-list">${item.signal_targets.map((signal) => `<i>${esc(signal)}</i>`).join("")}</div><div class="bt-source-links"><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">lesson ↗</a><a href="${esc(item.source_url)}" target="_blank" rel="noreferrer">hidden source audit ↗</a></div></article>`;
+    const description = `<article class="bt-description bt-sticky-cell" style="--sticky-index:0"><div><span>${esc(item.case_id)}</span><b>${esc(item.year)}</b></div><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><strong>Evidence scope</strong><p>${item.legacy_evidence_scope === "scene_pilot" ? "Six-second legacy scene pilot. Full-video decomposition has not run." : "Planned full-video case. No generated scene artifact yet."}</p><strong>Why this case</strong><p>${esc(item.why_in_set)}</p><div class="bt-signal-list">${item.signal_targets.map((signal) => `<i>${esc(signal)}</i>`).join("")}</div><div class="bt-source-links"><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">lesson ↗</a><a href="${esc(item.source_url)}" target="_blank" rel="noreferrer">hidden source audit ↗</a></div></article>`;
     const original = item.reference_clip_url
-      ? `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><video controls preload="metadata"><source src="${esc(item.reference_clip_url)}" type="video/mp4"></video><small class="bt-reference-label">${esc(item.reference_unit)}</small><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">Open creator-hosted lesson ↗</a></div>`
+      ? `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><video controls preload="metadata"><source src="${esc(item.reference_clip_url)}" type="video/mp4"></video><small class="bt-reference-label">Legacy human scene pilot · not the full video</small><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">Open complete creator-hosted lesson ↗</a></div>`
       : `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><button type="button" data-load-source data-embed="${esc(item.original_embed_url)}" data-title="${esc(item.title)}" aria-label="Load original video: ${esc(item.title)}"><img src="https://i.ytimg.com/vi/${esc(item.video_id)}/hqdefault.jpg" alt="" loading="lazy"><span aria-hidden="true">▶</span><small>Load human original</small></button><a href="${esc(item.original_watch_url)}" target="_blank" rel="noreferrer">Watch on YouTube ↗</a></div>`;
     const iterations = run.rounds.map((round) => renderBacktranslationRound(round, run.selected_round)).join("");
     const selected = run.selected_round == null
       ? `<div class="bt-round bt-selected bt-empty"><span>X</span><strong>No observed best yet</strong><p>Selection waits for at least one completed, scored render.</p></div>`
       : `<div class="bt-round bt-selected"><span>X → iter${run.selected_round}</span><strong>Best observed round</strong><p>Weighted score ${run.rounds[run.selected_round].score.toFixed(3)}</p><a href="${esc(run.rounds[run.selected_round].video_url)}">Open selected video ↗</a></div>`;
     return `<div class="bt-grid bt-case-row" role="row">${description}${original}${iterations}${selected}</div>`;
+  }
+
+  function renderBacktranslationFullVideoOverview(item, model, fullRun) {
+    if (!fullRun.full_video_url) return "";
+    const aggregate = fullRun.scores?.aggregate_score == null ? "n/a" : Number(fullRun.scores.aggregate_score).toFixed(3);
+    const sceneScore = fullRun.scores?.duration_weighted_scene_score == null ? "n/a" : Number(fullRun.scores.duration_weighted_scene_score).toFixed(3);
+    const continuity = fullRun.scores?.continuity_score == null ? "not scored" : Number(fullRun.scores.continuity_score).toFixed(3);
+    const description = `<article class="bt-description bt-sticky-cell" style="--sticky-index:0"><div><span>${esc(item.case_id)} / composed</span><b>${fullRun.scene_count} scenes</b></div><h3>${esc(item.title)}</h3><p>Best observed clip from every frozen scene, composed in the original timeline order.</p><strong>Aggregate</strong><p>${aggregate} · duration-weighted scenes ${sceneScore} · continuity ${continuity}</p></article>`;
+    const original = `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><button type="button" data-load-source data-embed="${esc(item.original_embed_url)}" data-title="${esc(item.title)}" aria-label="Load complete human video: ${esc(item.title)}"><img src="https://i.ytimg.com/vi/${esc(item.video_id)}/hqdefault.jpg" alt="" loading="lazy"><span aria-hidden="true">▶</span><small>Load complete human original</small></button><a href="${esc(item.original_watch_url)}" target="_blank" rel="noreferrer">Watch creator-hosted original ↗</a></div>`;
+    const candidate = `<div class="bt-round bt-composed-video" style="grid-column: span 7"><span>Complete model-generated video · ${esc(model.label)}</span><video controls preload="metadata"><source src="${esc(fullRun.full_video_url)}" type="video/mp4"></video><p>Use the scene rows below to inspect which local reconstruction produced each segment.</p></div>`;
+    return `<div class="bt-grid bt-case-row bt-full-video-overview" role="row">${description}${original}${candidate}</div>`;
+  }
+
+  function renderBacktranslationFullVideoRows(item, model, fullRun) {
+    const contracts = new Map((item.full_video_scene_manifest?.scenes || []).map((scene) => [scene.scene_id, scene]));
+    return fullRun.scenes.map((sceneRun, sceneIndex) => {
+      const contract = contracts.get(sceneRun.scene_id) || {};
+      const start = Math.max(0, Math.floor(Number(contract.start_time || 0)));
+      const end = Math.max(start + 1, Math.ceil(Number(contract.end_time || start + 1)));
+      const description = `<article class="bt-description bt-sticky-cell" style="--sticky-index:0"><div><span>${esc(item.case_id)} / ${esc(sceneRun.scene_id)}</span><b>${start}–${end}s</b></div><h3>${esc(contract.title || item.title)}</h3><p>${esc(contract.teaching_purpose || item.description)}</p><strong>State transition</strong><p>${esc(contract.state_transition || "Recorded in the frozen scene contract.")}</p>${sceneIndex === 0 ? `<div class="bt-source-links"><a href="${esc(item.lesson_url)}" target="_blank" rel="noreferrer">complete lesson ↗</a></div>` : ""}</article>`;
+      const timedEmbed = `${item.original_embed_url}?start=${start}&end=${end}`;
+      const original = `<div class="bt-original bt-sticky-cell" style="--sticky-index:1"><button type="button" data-load-source data-embed="${esc(timedEmbed)}" data-title="${esc(contract.title || item.title)}" aria-label="Load human scene: ${esc(contract.title || item.title)}"><img src="https://i.ytimg.com/vi/${esc(item.video_id)}/hqdefault.jpg" alt="" loading="lazy"><span aria-hidden="true">▶</span><small>Load human scene ${start}–${end}s</small></button><a href="${esc(item.original_watch_url)}&t=${start}s" target="_blank" rel="noreferrer">Open complete video at scene ↗</a></div>`;
+      const byRound = new Map((sceneRun.rounds || []).map((round) => [round.index, round]));
+      const iterations = [0, 1, 2, 3, 4, 5].map((index) => renderBacktranslationRound(byRound.get(index) || { index, status: "not_run" }, sceneRun.selected_round)).join("");
+      const selectedRound = (sceneRun.rounds || []).find((round) => round.index === sceneRun.selected_round);
+      const selected = selectedRound
+        ? `<div class="bt-round bt-selected"><span>X → iter${sceneRun.selected_round}</span><strong>Best observed scene round</strong><p>Weighted score ${Number(sceneRun.selected_score).toFixed(3)}</p>${selectedRound.video_url ? `<a href="${esc(selectedRound.video_url)}">Open selected scene ↗</a>` : ""}</div>`
+        : `<div class="bt-round bt-selected bt-empty"><span>X</span><strong>No observed best yet</strong><p>Selection waits for a completed scene render.</p></div>`;
+      return `<div class="bt-grid bt-case-row bt-full-scene-row" role="row">${description}${original}${iterations}${selected}</div>`;
+    }).join("");
   }
 
   function renderBacktranslationRound(round, selectedRound) {
