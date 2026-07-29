@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeCL-smith — continual-learning streams from code benchmarks</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --bg:#ffffff; --card:#f6f6f4; --line:#e2e2de;
+          --accent:#0b6e4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg:#e8e8e6; --muted:#9a9a96; --bg:#141414; --card:#1e1e1c; --line:#333; --accent:#4cc38a; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0 auto; max-width:880px; padding:2.5rem 1.2rem 5rem; background:var(--bg);
+         color:var(--fg); font:16px/1.65 Georgia,'Times New Roman',serif; }
+  h1 { font-size:1.9rem; margin:.2rem 0 .3rem; }
+  h2 { font-size:1.25rem; margin:2.4rem 0 .6rem; border-bottom:1px solid var(--line); padding-bottom:.3rem; }
+  h3 { font-size:1.02rem; margin:1.4rem 0 .4rem; }
+  .sub { color:var(--muted); margin:0 0 1.2rem; }
+  code, pre { font-family:var(--mono); font-size:.84em; }
+  code { background:var(--card); padding:.1em .35em; border-radius:4px; }
+  pre { background:var(--card); border:1px solid var(--line); border-radius:8px;
+        padding:.9rem 1rem; overflow-x:auto; line-height:1.5; }
+  pre code { background:none; padding:0; }
+  table { border-collapse:collapse; width:100%; margin:.8rem 0; font-size:.92rem; }
+  th, td { border:1px solid var(--line); padding:.4rem .6rem; text-align:left; vertical-align:top; }
+  th { background:var(--card); }
+  .pill { display:inline-block; background:var(--card); border:1px solid var(--line);
+          border-radius:999px; padding:.05rem .6rem; font-size:.8rem; margin:.1rem .15rem .1rem 0;
+          font-family:var(--mono); }
+  .good { color:var(--accent); font-weight:bold; }
+  .note { background:var(--card); border-left:3px solid var(--accent); padding:.6rem .9rem;
+          border-radius:0 8px 8px 0; margin:.9rem 0; font-size:.95rem; }
+  .muted { color:var(--muted); }
+  a { color:var(--accent); }
+  .flow { font-family:var(--mono); font-size:.85rem; }
+</style>
+</head>
+<body>
+
+<h1>CodeCL-smith</h1>
+<p class="sub">A toolkit that converts <em>(code benchmark + verifier)</em> into ordered
+continual-learning streams — to benchmark how well a model learns from verifiable
+feedback at test time. <span class="muted">2026-07 · design page, intentionally plain.</span></p>
+
+<pre class="flow">source tasks + verifier ──► <b>compose</b> ──► sequence manifest (the benchmark instance)
+                                              │
+                              <b>run</b> ◄──────────┘   prequential loop: solve → verify → feedback → update
+                               │
+                              <b>score</b> ──► learning curves, ΔAUC vs frozen, probes, slices</pre>
+
+<h2>1 · The base case</h2>
+<p>Take 10 tasks, batch size 2. The learner starts with state s₀ (empty playbook /
+frozen weights). For each batch <em>t</em>:</p>
+<pre>solve all of batch t using state s_{t-1}     ← every task is scored HERE, exactly once
+verify each solution  → VerifierReport(s)
+aggregate + render    → feedback text (at the configured ladder rung)
+learner.update(...)   → state s_t</pre>
+<p>This is <b>prequential (test-then-learn)</b> evaluation: no task's score is ever
+contaminated by its own feedback — only by what came before it. The frozen model runs
+the same stream as the control arm; the difference is the value of learning.</p>
+
+<div class="note"><b>Why streams at all?</b> Static benchmarks measure what a model
+already knows. A stream measures whether it can <em>get better while working</em> —
+the thing that matters for deployed coding agents. No existing benchmark does this
+for code with executable feedback (see §6).</div>
+
+<h2>2 · What is a benchmark instance?</h2>
+<p>An instance is a <b>SequenceManifest</b> JSON — fully reproducible, shareable:</p>
+<table>
+<tr><th>field</th><th>meaning</th></tr>
+<tr><td><code>source</code> + <code>dataset_hash</code></td><td>which tasks; the hash is re-checked at run time (data changed ⇒ manifest refuses to run)</td></tr>
+<tr><td><code>order_rule</code> + <code>seed</code></td><td>how the K sequences were generated</td></tr>
+<tr><td><code>sequences[]</code></td><td>K orderings of the same task set, each a list of batches (task ids)</td></tr>
+<tr><td><code>probes[]</code></td><td>where retention / unseen-twin probes are inserted</td></tr>
+</table>
+<p>The same 100 tasks yield many different streams. Ordering rules:</p>
+<p>
+<span class="pill">balanced</span> latin-square-style rotation — every task appears
+early/mid/late across the K sequences, enabling per-task P(correct&nbsp;|&nbsp;position)
+regression that controls for task difficulty
+<span class="pill">clustered</span> pattern families adjacent in time (strongest learning signal)
+<span class="pill">interleaved</span> families alternate (tests interference)
+<span class="pill">curriculum</span> by difficulty
+<span class="pill">temporal</span> by real contest date (LiveCodeBench)
+<span class="pill">random</span> control
+</p>
+<div class="note">CL only has signal when patterns <em>recur</em>. Ordering is therefore a
+first-class experimental variable, not a preprocessing detail — and results are reported
+across multiple orderings with variance, never from a single sequence.</div>
+
+<h2>3 · What can it do — the settings space</h2>
+<table>
+<tr><th>axis</th><th>options today</th><th>notes</th></tr>
+<tr><td>task sources</td><td><code>evalplus</code> <code>lcb</code> <code>bfcl</code> (offline samples) · <code>humaneval</code> <code>bfcl_real</code> <code>lcb_real</code> (real data)</td>
+    <td>BFCL is “code-gen’d”: the model writes a Python call expression, graded by AST matching</td></tr>
+<tr><td>verifiers</td><td><code>exec</code> (sandboxed unit-test / stdin-IO) · <code>bfcl_ast</code> · <code>analytics</code> (lint, advisory)</td>
+    <td>one primary decides pass/fail; advisories only add findings; fail-open verifiers can never flip fail→pass</td></tr>
+<tr><td>feedback ladder</td><td><code>binary → exec → patterns → +snippets → full</code> (+<code>--with-reference</code>)</td>
+    <td>monotone information; each rung is a <em>renderer</em> over the same VerifierReport, not a different oracle</td></tr>
+<tr><td>feedback window</td><td><code>0</code> none · <code>1</code> Markovian · <code>-1</code> everything; merge / separate</td>
+    <td>cross-task aggregation lives in one place (the Aggregator), verifiers stay stateless</td></tr>
+<tr><td>learners</td><td><code>frozen</code> · <code>context</code> (replay) · <code>playbook</code> (distilled bullets)</td>
+    <td>interface = <code>solve(task) / update(feedback)</code>; LoRA-style weight learners plug in via a TraceFormatter</td></tr>
+<tr><td>backends</td><td><code>mock</code> · <code>openai_compat</code> (vllm, any compatible API) · <code>gemini</code></td>
+    <td>registry: a new provider = one file with <code>generate()</code></td></tr>
+<tr><td>within-task repair</td><td><code>--attempts N</code></td>
+    <td>orthogonal to cross-task learning; prequential score is always first-attempt</td></tr>
+<tr><td>probes</td><td>unseen-twin (generalization, headline) · retention (memorization, reported separately)</td>
+    <td>probes run <em>after</em> the batch-boundary update and never feed the learner</td></tr>
+</table>
+
+<h2>4 · Scoring</h2>
+<p>One number hides everything interesting, so a run reports:</p>
+<table>
+<tr><td><b>prequential accuracy</b></td><td>mean over all first encounters (± across sequences)</td></tr>
+<tr><td><b>learning-curve AUC</b></td><td>area under accuracy-vs-position — rewards learning <em>fast</em>, not just learning eventually</td></tr>
+<tr><td><b>gain</b></td><td>last 20% − first 20% of the stream</td></tr>
+<tr><td><b>ΔAUC vs frozen + McNemar</b></td><td>paired by (sequence, task); exact binomial test on discordant pairs</td></tr>
+<tr><td><b>probe metrics</b></td><td>twin (did the pattern transfer?) and retention (memorized?) — kept apart on purpose: retention-high + twin-low = “memorizing, not learning”</td></tr>
+<tr><td><b>slices</b></td><td>per verifier category and task family — compliance-shaped vs capability-shaped failures behave differently under text feedback</td></tr>
+<tr><td><b>cost sidebar</b></td><td>tokens, update overhead, state-size curve (guards against unbounded-memory “wins”)</td></tr>
+</table>
+
+<h2>5 · Design choices (and why)</h2>
+<ol>
+<li><b>Verifiers are stateless; the Aggregator owns cross-task.</b> One (task, solution)
+in, one report out. Anything spanning tasks — failure-pattern counts, windows — happens
+in a single aggregation layer. Keeps every verifier trivially testable.</li>
+<li><b>Measurement and feedback are two projections of one report.</b> The scorer reads
+<code>passed/score</code>; the learner sees <code>render(report, rung)</code>. The ladder
+is a pure function, so the self-test can assert exactly what each rung leaks
+(binary must not contain tracebacks, patterns must carry family markers…).</li>
+<li><b>Self-test gate, on by default.</b> Before any run: (a) environment preflight —
+can each requested source/verifier/backend actually run here? warn the user instead of
+producing garbage; (b) oracle injection — known-good reference must pass, known-bad must
+fail with the right category. Motivated by hard experience: four separate “the model
+can’t do X” findings that were actually harness bugs. The gate caught a real bug
+(relative path + cwd) on its first-ever run.</li>
+<li><b>Probes after the update, excluded from the headline.</b> A twin probe asks “you
+just learned from that batch — does it transfer to a fresh instance of the same
+pattern?” Retention probes are deliberately leak-suspect (that’s what they measure) and
+never merged into headline accuracy.</li>
+<li><b>Leak audit with severities.</b> Reference (answer) content in learner state =
+always flagged. Task-id mentions = informational — by-design for replay learners, a
+smell for compressing ones.</li>
+<li><b>Workspace isolation.</b> Every execution gets its own directory as cwd+TMPDIR;
+candidate code never runs in a shared directory. Parallelism follows the protocol:
+solves within a batch share s_{t-1} (parallelizable), updates are serial at boundaries,
+sequences are fully independent.</li>
+<li><b>Everything is a registry.</b> Sources, verifiers, learners, backends, orderings,
+ladder rungs — adding one is a file plus a decorator, and it appears in the CLI.</li>
+<li><b>Honest resume.</b> Learner state can’t be replayed from records (yet), so a
+partial sequence restarts rather than silently resuming with wrong state.</li>
+</ol>
+
+<h2>6 · Does it work? (validation so far)</h2>
+<p>A deterministic <b>mock backend</b> simulates learning (a task family is solved iff
+the context mentions it), so curve shapes are predictable — and reproduced end-to-end:</p>
+<table>
+<tr><th>arm</th><th>predicted</th><th>observed (built-in EvalPlus-style set)</th></tr>
+<tr><td>frozen</td><td>flat</td><td class="good">flat at 0.500</td></tr>
+<tr><td>context + binary</td><td>flat (rung carries no family info)</td><td class="good">flat at 0.500, Δ=0</td></tr>
+<tr><td>context + patterns</td><td>rises after a family first fails</td><td class="good">0.667, Δacc +0.167, twin 1.0</td></tr>
+<tr><td>playbook + patterns</td><td>rises via distilled hints</td><td class="good">0.667, Δacc +0.167, twin 1.0</td></tr>
+</table>
+<p>Real-data smoke (mock solver on real tasks): all 164 HumanEval canonical solutions
+pass our harness; BFCL v4 synthesized reference calls pass the AST oracle; real
+Codeforces IO cases produce correct expected/actual evidence. A playbook arm on real
+HumanEval: <b>Δacc +0.400 vs frozen, McNemar p = 0.0078</b> (8 learner-only wins, 0 frozen-only).</p>
+
+<h2>7 · How it sits in the literature</h2>
+<table>
+<tr><th></th><th>stream conversion</th><th>prequential</th><th>exec feedback</th><th>feedback ladder</th><th>multi-ordering</th><th>code domain</th></tr>
+<tr><td>Evo-Memory</td><td>✓</td><td>✓</td><td>✗</td><td>~</td><td>~ (easy↔hard)</td><td>✗</td></tr>
+<tr><td>StreamBench</td><td>✓</td><td>✓</td><td>~</td><td>✗ (binary only)</td><td>✗</td><td>~</td></tr>
+<tr><td>ConvCodeWorld</td><td>✗</td><td>✗</td><td>✓</td><td>✓ (single problem)</td><td>✗</td><td>✓</td></tr>
+<tr><td>SWE-Bench-CL</td><td>✓</td><td>?</td><td>✓</td><td>✗</td><td>✗ (chronological)</td><td>✓</td></tr>
+<tr><td>SWE-smith / R2E-Gym</td><td>task gen only</td><td>✗</td><td>✓</td><td>✗</td><td>✗</td><td>✓</td></tr>
+<tr><td><b>CodeCL-smith</b></td><td class="good">✓</td><td class="good">✓</td><td class="good">✓</td><td class="good">✓</td><td class="good">✓ (balanced K-seq)</td><td class="good">✓</td></tr>
+</table>
+<p class="muted">The contribution is the intersection — every individual axis exists
+somewhere. Nearest neighbors to cite and differentiate: Evo-Memory (2511.20857),
+StreamBench (2406.08747), ConvCodeWorld (2502.19852), SWE-Bench-CL (2507.00014).</p>
+
+<h2>8 · Try it</h2>
+<pre><code>codecl compose --source humaneval --limit 10 --n-seqs 2 --batch-size 2 \
+    --order clustered --probes retention --out streams/he.json
+codecl run  --manifest streams/he.json --learner frozen   --feedback-level none     --out runs/frozen
+codecl run  --manifest streams/he.json --learner playbook --feedback-level patterns --out runs/playbook --debug
+codecl score --run runs/playbook --vs-frozen runs/frozen</code></pre>
+<p class="muted">Repo: <a href="https://github.com/colinzhaoust/codecl-smith">colinzhaoust/codecl-smith</a>
+(private for now). Open items: verifier-category pre-pass for family tagging, EvalPlus
+extended tests, BFCL multi-call categories, LCB private tests, agentic verifier, LoRA
+learner, feedback budget/delay.</p>
+
+</body>
+</html>
