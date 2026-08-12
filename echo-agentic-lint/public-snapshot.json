@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-08-12T18:31:12.691219+00:00",
+  "pages": 18,
+  "redactions": [
+    "observable evidence bodies",
+    "task and repository context footer",
+    "database and moderator capabilities",
+    "private provenance APIs"
+  ],
+  "schema_version": "echo.public-snapshot.v1",
+  "subdirectory": "echo-agentic-lint",
+  "thread_count": 14
+}
