@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-12T18:41:10.751133+00:00",
-  "pages": 26,
+  "generated_at": "2026-08-12T19:52:44.946596+00:00",
+  "pages": 42,
   "redactions": [
     "observable evidence bodies",
     "task and repository context footer",
@@ -9,5 +9,5 @@
   ],
   "schema_version": "echo.public-snapshot.v1",
   "subdirectory": "echo-agentic-lint",
-  "thread_count": 22
+  "thread_count": 38
 }
