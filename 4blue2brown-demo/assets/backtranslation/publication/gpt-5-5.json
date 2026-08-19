@@ -1,0 +1,80 @@
+{
+  "schema_version": "backtranslation-publication-evidence/v1",
+  "candidate_id": "gpt-5-5",
+  "model_id": "openai.gpt-5.5",
+  "status": "published",
+  "minimum_distinct_videos": 2,
+  "verified_distinct_videos": 2,
+  "rounds": [
+    {
+      "case_id": "lf-001",
+      "round_index": 0,
+      "video_url": "assets/backtranslation/lf-001/gpt-5-5/iter0/candidate.mp4",
+      "video_sha256": "b2ce3d45ac7af730c55ca43e0f23b107bb0025ee8d592bff48707361ac7bf685",
+      "media": {
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "duration_seconds": 6.0,
+        "size_bytes": 812680,
+        "codec": "h264",
+        "width": 854,
+        "height": 480,
+        "pixel_format": "yuv420p",
+        "fps": 15.0,
+        "audio_stream_count": 0,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavc62.28.102 libx264",
+          "comment": "Rendered with Manim Community v0.20.1",
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      },
+      "support_sha256": {
+        "generation_trace.json": "6cf113c6d11991aaac2875410321b128a8792d35e08a713995dc22d6f006a7d1",
+        "model_output.json": "af9ac1c6b9d53156b94eb4fb4e213de2226663520156a162b2e542f2ae36070b",
+        "scores.json": "44c9c5dc0b03f7df9084c63c73e4e987b202c4d2839675bdbc27360fea4b86fd",
+        "scene.py": "a0b738c715a7287c2f69b07dbaf342b97f200ac3ddebec614017ba32b9a3c485"
+      },
+      "provenance_tier": "legacy_frozen_run_evidence",
+      "limitation": "Historical pilot predates render_manifest.json; attribution is frozen by the model generation trace, source, scores, and run manifest."
+    },
+    {
+      "case_id": "lf-001",
+      "round_index": 1,
+      "video_url": "assets/backtranslation/lf-001/gpt-5-5/iter1/candidate.mp4",
+      "video_sha256": "20418287dfcc5d2f0720561d8cd912f3891fb86577b29c2a3206ee6a95a0c4f9",
+      "media": {
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "duration_seconds": 6.0,
+        "size_bytes": 755426,
+        "codec": "h264",
+        "width": 854,
+        "height": 480,
+        "pixel_format": "yuv420p",
+        "fps": 15.0,
+        "audio_stream_count": 0,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavc62.28.102 libx264",
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      },
+      "support_sha256": {
+        "generation_trace.json": "89c5fc3003ae697d574d7f4569796d0e8c9e774e2447c794f163f26ec4d13fd0",
+        "model_output.json": "a0cf94de73c144407b6d594ec2e67d1ed9ff938e0ef5e7e627f4f63baa2c951c",
+        "scores.json": "d21f5d05b267a69fe7e073f95e6db572d7d851c9f762a39f03916108be7797d8",
+        "package_manifest.json": "3f0279d9c7aba72010e81327325c09065fe69e74b5517cd7b5a0f6ec0ff7d245",
+        "package_source_0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "package_source_1": "ccd4e20ec933e83b85adb5cb6f4e923ff1ef4dffa115362da342ba656e46c644"
+      },
+      "provenance_tier": "render_manifest",
+      "limitation": null
+    }
+  ],
+  "withheld_observations": []
+}

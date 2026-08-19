@@ -1,0 +1,49 @@
+WEBVTT
+
+1
+00:00:00.700 --> 00:00:01.361
+Input: learning topic — Linear transformations and matrices
+
+2
+00:00:01.361 --> 00:00:02.022
+Input: TeachingVideoAgent.__init__ — output_dir, assets_dir, reference mapping
+
+3
+00:00:02.022 --> 00:00:02.683
+Planner: get_prompt1_outline — outline prompt
+
+4
+00:00:02.683 --> 00:00:03.344
+Planner: generate_outline — outline.json
+
+5
+00:00:03.344 --> 00:00:04.006
+Planner: get_prompt2_storyboard — storyboard prompt
+
+6
+00:00:04.006 --> 00:00:04.667
+Planner: _enhance_storyboard_with_assets — storyboard_with_assets.json
+
+7
+00:00:04.667 --> 00:00:05.328
+Coder: generate_storyboard — Section objects
+
+8
+00:00:05.328 --> 00:00:05.989
+Coder: get_prompt3_code — Manim code prompt
+
+9
+00:00:05.989 --> 00:00:06.650
+Coder: generate_codes — section .py files
+
+10
+00:00:06.650 --> 00:00:07.311
+Render: debug_and_fix_code — section mp4
+
+11
+00:00:07.311 --> 00:00:07.972
+Critic: get_mllm_feedback and optimize_with_feedback — optimized section video
+
+12
+00:00:07.972 --> 00:00:08.633
+Output: merge_videos — Linear_transformations_and_matrices.mp4

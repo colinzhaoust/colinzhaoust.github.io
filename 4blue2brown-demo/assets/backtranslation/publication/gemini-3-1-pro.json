@@ -1,0 +1,117 @@
+{
+  "schema_version": "backtranslation-publication-evidence/v1",
+  "candidate_id": "gemini-3-1-pro",
+  "model_id": "gemini-3.1-pro-preview",
+  "status": "published",
+  "minimum_distinct_videos": 2,
+  "verified_distinct_videos": 3,
+  "rounds": [
+    {
+      "case_id": "lf-001",
+      "round_index": 0,
+      "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter0/candidate.mp4",
+      "video_sha256": "1018be4b89df9f363162323e812c4c98c4db7e67f7e13919cfc2db135dcc6a8c",
+      "media": {
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "duration_seconds": 6.0,
+        "size_bytes": 393294,
+        "codec": "h264",
+        "width": 854,
+        "height": 480,
+        "pixel_format": "yuv420p",
+        "fps": 15.0,
+        "audio_stream_count": 0,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavc62.28.102 libx264",
+          "comment": "Rendered with Manim Community v0.20.1",
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      },
+      "support_sha256": {
+        "generation_trace.json": "a66bc1f99977e6f066c41498330bfe1a388d87c02e9ddaae5562e519605099cd",
+        "model_output.json": "01d00893347b81321f306d7075433785dcc55c3b7cc216a1511ee72fdb9b9e48",
+        "scores.json": "6445130fa25d80fa533ae2db7bf3915785d7695b43d99575561b8f4c24304677",
+        "scene.py": "46485c06752ad8369eb8d9ff306697a2331ae22d4a497bc67de6fa481baf560a"
+      },
+      "provenance_tier": "legacy_frozen_run_evidence",
+      "limitation": "Historical pilot predates render_manifest.json; attribution is frozen by the model generation trace, source, scores, and run manifest."
+    },
+    {
+      "case_id": "lf-001",
+      "round_index": 1,
+      "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter1/candidate.mp4",
+      "video_sha256": "ded0d627d4b49af493f0efed508e6de3786fb6f12fb104ff127873669fe1b59c",
+      "media": {
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "duration_seconds": 6.0,
+        "size_bytes": 710014,
+        "codec": "h264",
+        "width": 854,
+        "height": 480,
+        "pixel_format": "yuv420p",
+        "fps": 15.0,
+        "audio_stream_count": 0,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavc62.28.102 libx264",
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      },
+      "support_sha256": {
+        "generation_trace.json": "6d2d06873ab953fbe927bdafc6b1150032bdd0dce06c68584ac973bc708ec22b",
+        "model_output.json": "271b69aed9e422612277f3e19d98a889b9153e99d1c171e9ca8d8b6661cd091a",
+        "scores.json": "52b30d53e809a22ab338754525fdc3bedc09df0566c00f2c65c2f0c5242db449",
+        "package_manifest.json": "0c15393bc7decc332655ac0aaebf3876e892fa8115f531485331b5576438e0bf",
+        "package_source_0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "package_source_1": "a47b29b78399553791915a35aa0d32da509bc3d1ee7b9c8227ac3f6dd9533289"
+      },
+      "provenance_tier": "render_manifest",
+      "limitation": null
+    },
+    {
+      "case_id": "lf-001",
+      "round_index": 2,
+      "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter2/candidate.mp4",
+      "video_sha256": "333a1f9960dc0f089d84ef9f92f17198ffa76e31369bd6357803d9075906d92e",
+      "media": {
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "duration_seconds": 6.0,
+        "size_bytes": 724290,
+        "codec": "h264",
+        "width": 854,
+        "height": 480,
+        "pixel_format": "yuv420p",
+        "fps": 15.0,
+        "audio_stream_count": 0,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavc62.28.102 libx264",
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      },
+      "support_sha256": {
+        "generation_trace.json": "be78ba6d6a508607f8df6d5417712e2e35a4e3d170cc9acaeb621ea432a1cd2d",
+        "model_output.json": "eb57a55b28625ce1d6bff57f79ab4defc4acf6edb3fd4c7e069a5ea1240dca69",
+        "scores.json": "246a631488469baeb419a518c6dbb2dc222de9d1974526b765eef80a0c790d58",
+        "package_manifest.json": "b287789e9f25609209248f4f19c0b92df3ad26e1a6362900a7b3f3df8e66e5c4",
+        "package_source_0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "package_source_1": "c83956e1f67016ce87a8fe9d977b2d9938039b25999dc66f6347d1a7d4dfddbc"
+      },
+      "provenance_tier": "render_manifest",
+      "limitation": null
+    }
+  ],
+  "withheld_observations": [
+    "lf-001/iter3: duplicate video bytes"
+  ]
+}

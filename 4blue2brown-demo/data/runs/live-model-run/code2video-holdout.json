@@ -1,0 +1,3491 @@
+{
+  "schema_version": "explainer-bundle/0.1.0",
+  "paper_id": "code2video-holdout",
+  "source_packet": {
+    "schema_version": "explainer-source-packet/0.1.0",
+    "paper_id": "code2video-holdout",
+    "title": "Code2Video: Automated Video Generation from Source Code",
+    "short_title": "Code2Video: Automated Video Gener…",
+    "audience": "Technical readers learning the paper, its related work, implementation, and findings.",
+    "central_question": "How can educational videos maintain temporal coherence and spatial clarity, and be evaluated beyond appearance for educational effectiveness and semantic alignment?",
+    "required_section_ids": [
+      "introduction_code_centric_paradigm",
+      "related_work_video_generation_and_coding_agents",
+      "mmmc_benchmark",
+      "method_code2video",
+      "experiment",
+      "conclusion"
+    ],
+    "section_policy": {
+      "mode": "model_proposed",
+      "min_sections": 5,
+      "max_sections": 8,
+      "required_roles": [
+        "motivation",
+        "lineage",
+        "mechanism",
+        "evidence",
+        "limitations"
+      ],
+      "sequence_rule": "Begin with the paper's motivating question, teach prerequisites before each mechanism, connect formulas to original code, and end by separating evidence from limitations."
+    },
+    "sources": [
+      {
+        "source_id": "code2video-holdout-paper",
+        "kind": "paper",
+        "url": "https://arxiv.org/abs/2305.05714",
+        "revision": "local PDF sha256:d60affc90d107327",
+        "sha256": "d60affc90d10732718de8fec8203aa480f54d63729e08946a7e895d8b9565fca",
+        "page_count": 26,
+        "retrieved_at": "2026-08-19"
+      }
+    ],
+    "code_sources": [
+      {
+        "code_id": "code2video-holdout-repo",
+        "repository": "https://github.com/showlab/Code2Video",
+        "revision": "7729a8b71582b3982bef70f5860a9a98354e9a70",
+        "mapping_state": "confirmed",
+        "excerpts": [
+          {
+            "path": "README.md",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 360
+          },
+          {
+            "path": "README.zh-CN.md",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 214
+          },
+          {
+            "path": "json_files/long_video_ref_mapping.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "json_files/long_video_topics_list.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "json_files/long_video_topics_list_safe.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "json_files/questions_by_topic_10.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 661
+          },
+          {
+            "path": "json_files/topics_list_safe.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "prompts/__init__.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 24
+          },
+          {
+            "path": "prompts/base_class.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 43
+          },
+          {
+            "path": "prompts/stage1.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 49
+          },
+          {
+            "path": "prompts/stage2.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 126
+          },
+          {
+            "path": "prompts/stage3.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 78
+          },
+          {
+            "path": "prompts/stage4.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 101
+          },
+          {
+            "path": "prompts/stage5_eva.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 108
+          },
+          {
+            "path": "prompts/stage5_unlearning.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 59
+          },
+          {
+            "path": "src/agent.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 737
+          },
+          {
+            "path": "src/api_config.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 39
+          }
+        ]
+      }
+    ],
+    "code_understanding": {
+      "example": {
+        "label": "Linear transformations and matrices through Code2Video",
+        "input": "learning topic from long_video_topics_list.json",
+        "output": "merged Manim-rendered educational video mp4"
+      },
+      "nodes": [
+        {
+          "id": "n_topic",
+          "label": "learning topic",
+          "kind": "input",
+          "stage": "repository lifecycle stage",
+          "artifact": "Linear transformations and matrices",
+          "detail": "A topic string is available in the benchmark list and can be selected for single or batch generation.",
+          "path": "json_files/long_video_topics_list.json",
+          "line_start": 10,
+          "line_end": 10
+        },
+        {
+          "id": "n_init",
+          "label": "TeachingVideoAgent.__init__",
+          "kind": "operation",
+          "stage": "repository lifecycle stage",
+          "artifact": "output_dir, assets_dir, reference mapping",
+          "detail": "The agent stores the learning topic, creates output folders, loads long_video_ref_mapping, and initializes ScopeRefine and grid extraction.",
+          "path": "src/agent.py",
+          "line_start": 42,
+          "line_end": 93
+        },
+        {
+          "id": "n_outline_prompt",
+          "label": "get_prompt1_outline",
+          "kind": "function",
+          "stage": "Planner",
+          "artifact": "outline prompt",
+          "detail": "The prompt asks for a JSON teaching outline with target audience, ordered sections, content, and examples.",
+          "path": "prompts/stage1.py",
+          "line_start": 1,
+          "line_end": 46
+        },
+        {
+          "id": "n_outline",
+          "label": "generate_outline",
+          "kind": "operation",
+          "stage": "Planner",
+          "artifact": "outline.json",
+          "detail": "The agent either loads outline.json or requests an LLM, parses JSON, and stores topic, target_audience, and sections.",
+          "path": "src/agent.py",
+          "line_start": 119,
+          "line_end": 174
+        },
+        {
+          "id": "n_storyboard_prompt",
+          "label": "get_prompt2_storyboard",
+          "kind": "function",
+          "stage": "Planner",
+          "artifact": "storyboard prompt",
+          "detail": "The prompt converts the outline into section-level lecture_lines and matching animations for Manim.",
+          "path": "prompts/stage2.py",
+          "line_start": 4,
+          "line_end": 78
+        },
+        {
+          "id": "n_assets",
+          "label": "_enhance_storyboard_with_assets",
+          "kind": "operation",
+          "stage": "External Database",
+          "artifact": "storyboard_with_assets.json",
+          "detail": "If enabled, storyboard data is passed to process_storyboard_with_assets and saved with asset references.",
+          "path": "src/agent.py",
+          "line_start": 255,
+          "line_end": 273
+        },
+        {
+          "id": "n_sections",
+          "label": "generate_storyboard",
+          "kind": "buffer",
+          "stage": "Planner to Coder",
+          "artifact": "Section objects",
+          "detail": "Enhanced storyboard sections become Section dataclasses carrying id, title, lecture_lines, and animations.",
+          "path": "src/agent.py",
+          "line_start": 176,
+          "line_end": 253
+        },
+        {
+          "id": "n_code_prompt",
+          "label": "get_prompt3_code",
+          "kind": "function",
+          "stage": "Coder",
+          "artifact": "Manim code prompt",
+          "detail": "The prompt requires TeachingScene, 6×6 anchor positions, and code blocks matching lecture lines.",
+          "path": "prompts/stage3.py",
+          "line_start": 4,
+          "line_end": 64
+        },
+        {
+          "id": "n_parallel_code",
+          "label": "generate_codes",
+          "kind": "operation",
+          "stage": "Coder",
+          "artifact": "section .py files",
+          "detail": "Sections are submitted to a ThreadPoolExecutor and each section code is generated independently.",
+          "path": "src/agent.py",
+          "line_start": 495,
+          "line_end": 516
+        },
+        {
+          "id": "n_debug_render",
+          "label": "debug_and_fix_code",
+          "kind": "operation",
+          "stage": "Coder",
+          "artifact": "section mp4",
+          "detail": "Manim is run on each section; on failure, ScopeRefine attempts a smart fix before retrying.",
+          "path": "src/agent.py",
+          "line_start": 335,
+          "line_end": 381
+        },
+        {
+          "id": "n_critic",
+          "label": "get_mllm_feedback and optimize_with_feedback",
+          "kind": "operation",
+          "stage": "Critic",
+          "artifact": "optimized section video",
+          "detail": "The VLM inspects rendered video and grid occupancy; suggested grid fixes can modify code and rerender.",
+          "path": "src/agent.py",
+          "line_start": 383,
+          "line_end": 493
+        },
+        {
+          "id": "n_merge",
+          "label": "merge_videos",
+          "kind": "output",
+          "stage": "repository lifecycle stage",
+          "artifact": "Linear_transformations_and_matrices.mp4",
+          "detail": "Rendered section videos are listed in sorted section order and concatenated into the final mp4.",
+          "path": "src/agent.py",
+          "line_start": 659,
+          "line_end": 692
+        }
+      ],
+      "edges": [
+        {
+          "source": "n_topic",
+          "target": "n_init",
+          "label": "topic string is passed into TeachingVideoAgent as knowledge_point"
+        },
+        {
+          "source": "n_init",
+          "target": "n_outline_prompt",
+          "label": "agent chooses reference image path when mapping contains a filename"
+        },
+        {
+          "source": "n_outline_prompt",
+          "target": "n_outline",
+          "label": "prompt is sent to API; response is parsed as outline.json"
+        },
+        {
+          "source": "n_outline",
+          "target": "n_storyboard_prompt",
+          "label": "TeachingOutline dictionary is serialized into the storyboard prompt"
+        },
+        {
+          "source": "n_storyboard_prompt",
+          "target": "n_assets",
+          "label": "storyboard JSON branches to asset enhancement when use_assets is true"
+        },
+        {
+          "source": "n_assets",
+          "target": "n_sections",
+          "label": "enhanced storyboard is loaded and each section becomes a Section object"
+        },
+        {
+          "source": "n_sections",
+          "target": "n_code_prompt",
+          "label": "each Section supplies title, lecture_lines, and animations to the code prompt"
+        },
+        {
+          "source": "n_code_prompt",
+          "target": "n_parallel_code",
+          "label": "ThreadPoolExecutor loops over sections for independent code synthesis"
+        },
+        {
+          "source": "n_parallel_code",
+          "target": "n_debug_render",
+          "label": "generated section .py files are handed to Manim rendering and ScopeRefine retry"
+        },
+        {
+          "source": "n_debug_render",
+          "target": "n_critic",
+          "label": "successful section videos enter feedback rounds if use_feedback is true"
+        },
+        {
+          "source": "n_critic",
+          "target": "n_debug_render",
+          "label": "critic feedback loops back into code modification and rerender attempts"
+        },
+        {
+          "source": "n_debug_render",
+          "target": "n_merge",
+          "label": "successful section mp4 paths are collected for ffmpeg concatenation"
+        }
+      ],
+      "experiment_pipeline": [
+        {
+          "id": "p_dataset",
+          "label": "MMMC construction",
+          "detail": "117 full videos and 339 sub-clips from 3Blue1Brown across 13 subject areas.",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.2"
+          ]
+        },
+        {
+          "id": "p_task",
+          "label": "learning query to Manim",
+          "detail": "The task maps a learning query to executable Manim code and a rendered tutorial video.",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.1"
+          ]
+        },
+        {
+          "id": "p_baselines",
+          "label": "baseline families",
+          "detail": "Human-crafted, pixel-based diffusion, CodeLLM Generation, and Agentic Generation are compared.",
+          "source_refs": [
+            "code2video-holdout-paper:sec5.1"
+          ]
+        },
+        {
+          "id": "p_aes",
+          "label": "VLM-as-Judges",
+          "detail": "Element Layout, Attractiveness, Logic Flow, Visual Consistency, Accuracy & Depth use 100-point scoring.",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.3"
+          ]
+        },
+        {
+          "id": "p_teachquiz",
+          "label": "TeachQuiz",
+          "detail": "Unlearning then Learning-from-Video measures knowledge recovery from generated video evidence.",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.3",
+            "code2video-holdout-paper:fig3"
+          ]
+        },
+        {
+          "id": "p_efficiency",
+          "label": "efficiency",
+          "detail": "Average code generation time and token usage per video measure scalability and feasibility.",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.3"
+          ]
+        },
+        {
+          "id": "p_main",
+          "label": "main results",
+          "detail": "Table 1 reports Efficiency, Aesthetics dimensions, Avg, and Quiz for all methods.",
+          "source_refs": [
+            "code2video-holdout-paper:table1"
+          ]
+        },
+        {
+          "id": "p_quality_ablation",
+          "label": "quality ablations",
+          "detail": "Planner, External Database, Visual Anchor, and Critic removals are measured by Aesthetics and Quiz.",
+          "source_refs": [
+            "code2video-holdout-paper:table2"
+          ]
+        },
+        {
+          "id": "p_eff_ablation",
+          "label": "efficiency ablations",
+          "detail": "Parallel execution and ScopeRefine are removed to measure time and token overhead.",
+          "source_refs": [
+            "code2video-holdout-paper:table3"
+          ]
+        },
+        {
+          "id": "p_human",
+          "label": "human study",
+          "detail": "Participants rate Aesthetics, TeachQuiz, Completion Willingness, and Average Ranking.",
+          "source_refs": [
+            "code2video-holdout-paper:table4"
+          ]
+        }
+      ],
+      "formula_code_links": [
+        {
+          "code_id": "code2video-holdout-repo",
+          "equation_ids": [
+            "Eq. 1"
+          ],
+          "formula_label": "student model score",
+          "expression": "S(Vα)=1[ϕ(Q,Vα)=Y]",
+          "path": "json_files/questions_by_topic_10.json",
+          "symbol": "question/options/answer",
+          "line_start": 1,
+          "line_end": 80,
+          "role": "The quiz set Q and answer key Y are repository artifacts used by the scoring expression; scoring script is referenced but not included in corpus.",
+          "state": "candidate",
+          "evidence_refs": [
+            "code2video-holdout-paper:eq1",
+            "code2video-holdout-repo:json_files/questions_by_topic_10.json"
+          ]
+        },
+        {
+          "code_id": "code2video-holdout-repo",
+          "equation_ids": [
+            "Eq. 2"
+          ],
+          "formula_label": "TeachQuiz score",
+          "expression": "S̃(Vα)=S(Vα)-S(Vα|unlearn)",
+          "path": "README.md",
+          "symbol": "eval_TQ.py",
+          "line_start": 210,
+          "line_end": 215,
+          "role": "README exposes TeachQuiz evaluation as eval_TQ.py; the implementation file is not present in the supplied corpus.",
+          "state": "candidate",
+          "evidence_refs": [
+            "code2video-holdout-paper:eq2",
+            "code2video-holdout-repo:README.md"
+          ]
+        },
+        {
+          "code_id": "code2video-holdout-repo",
+          "equation_ids": [
+            "Eq. 3"
+          ],
+          "formula_label": "unlearning answer constraint",
+          "expression": "f(qi|Punlearn) ∈ {yi, NULL}",
+          "path": "prompts/stage5_unlearning.py",
+          "symbol": "get_unlearning_prompt",
+          "line_start": 4,
+          "line_end": 27,
+          "role": "The prompt blocks shadow knowledge and requires INSUFFICIENT EVIDENCE/NULL when the question depends on forbidden concept knowledge.",
+          "state": "confirmed",
+          "evidence_refs": [
+            "code2video-holdout-paper:eq3",
+            "code2video-holdout-repo:prompts/stage5_unlearning.py:get_unlearning_prompt"
+          ]
+        },
+        {
+          "code_id": "code2video-holdout-repo",
+          "equation_ids": [
+            "Eq. 4"
+          ],
+          "formula_label": "video-grounded relearning constraint",
+          "expression": "f(qi|Plearn,V) ∈ {yi, NULL}",
+          "path": "prompts/stage5_unlearning.py",
+          "symbol": "get_unlearning_and_video_learning_prompt",
+          "line_start": 30,
+          "line_end": 47,
+          "role": "The prompt restricts evidence to attached educational video plus question/options and returns NULL if video evidence is insufficient.",
+          "state": "confirmed",
+          "evidence_refs": [
+            "code2video-holdout-paper:eq4",
+            "code2video-holdout-repo:prompts/stage5_unlearning.py:get_unlearning_and_video_learning_prompt"
+          ]
+        },
+        {
+          "code_id": "code2video-holdout-repo",
+          "equation_ids": [
+            "Eq. 2",
+            "Eq. 3",
+            "Eq. 4"
+          ],
+          "formula_label": "TeachQuiz prompt lifecycle",
+          "expression": "Punlearn then Plearn with V",
+          "path": "prompts/__init__.py",
+          "symbol": "get_unlearning_prompt, get_unlearning_and_video_learning_prompt",
+          "line_start": 10,
+          "line_end": 22,
+          "role": "The prompt package exports both unlearning and video-learning prompts used to instantiate TeachQuiz stages.",
+          "state": "confirmed",
+          "evidence_refs": [
+            "code2video-holdout-paper:eq2",
+            "code2video-holdout-repo:prompts/__init__.py"
+          ]
+        }
+      ]
+    },
+    "formula_refs": [],
+    "equation_coverage": [
+      {
+        "equation_ids": [
+          "Eq. 1"
+        ],
+        "coverage": "animate",
+        "animation_recipe": "metric_animation",
+        "intent": "Define a student model score for a teacher video by quiz correctness.",
+        "role": "analysis",
+        "source_refs": [
+          "code2video-holdout-paper:eq1"
+        ],
+        "thread_stage": "TeachQuiz"
+      },
+      {
+        "equation_ids": [
+          "Eq. 2"
+        ],
+        "coverage": "animate",
+        "animation_recipe": "metric_animation",
+        "intent": "Subtract the unlearned baseline to isolate video-induced knowledge transfer.",
+        "role": "mechanism",
+        "source_refs": [
+          "code2video-holdout-paper:eq2"
+        ],
+        "thread_stage": "TeachQuiz score"
+      },
+      {
+        "equation_ids": [
+          "Eq. 3"
+        ],
+        "coverage": "explain",
+        "animation_recipe": "none",
+        "intent": "Constrain answers during selective unlearning to ground the knowledge-removed baseline.",
+        "role": "mechanism",
+        "source_refs": [
+          "code2video-holdout-paper:eq3"
+        ],
+        "thread_stage": "Unlearning stage"
+      },
+      {
+        "equation_ids": [
+          "Eq. 4"
+        ],
+        "coverage": "explain",
+        "animation_recipe": "none",
+        "intent": "Constrain relearning answers to video-grounded evidence after exposure to V.",
+        "role": "mechanism",
+        "source_refs": [
+          "code2video-holdout-paper:eq4"
+        ],
+        "thread_stage": "Relearning stage"
+      }
+    ],
+    "finding_coverage": [
+      {
+        "finding_id": "main_pixel_models_underperform",
+        "question": "Do pixel-based models satisfy educational video requirements?",
+        "setting": "OpenSora-v2, Wan2.2-T2V-A14B, Veo3 versus code-centric methods on MMMC",
+        "metric": "AES Avg and TeachQuiz",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table1"
+        ],
+        "takeaway": "Pixel-based models score lowest, with Veo3 AES 9.0 and Quiz 2.5."
+      },
+      {
+        "finding_id": "direct_code_improves",
+        "question": "Does Manim code generation improve over pixel-space synthesis?",
+        "setting": "Code LLM baselines GPT-5, GPT-4.1, Claude Opus 4.1",
+        "metric": "AES Avg and TeachQuiz",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table1"
+        ],
+        "takeaway": "Direct code-centric generation beats pixel-based models, supporting code as a controllable medium."
+      },
+      {
+        "finding_id": "agentic_framework_boosts",
+        "question": "Does Planner–Coder–Critic improve across backbones?",
+        "setting": "Code2Video variants with Gemini-2.5 Pro, GPT-4o, GPT-o4 mini, GPT-5, GPT-4.1, Claude Opus 4.1",
+        "metric": "AES Avg and TeachQuiz",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table1"
+        ],
+        "takeaway": "Claude Opus 4.1 rises from AES 37.8/Quiz 40.0 to AES 87.9/Quiz 86.0."
+      },
+      {
+        "finding_id": "qualitative_code_layout",
+        "question": "Do generated videos preserve readable educational structure?",
+        "setting": "Code2Video versus Veo3 on Pure Fourier Series and Neural Network Learning",
+        "metric": "visual clarity, semantic grounding, logic flow",
+        "evidence_kind": "authors_reported_curve",
+        "source_refs": [
+          "code2video-holdout-paper:fig6"
+        ],
+        "takeaway": "Code-driven synthesis gives clearer text, formulas, stable layouts, and lecture-aligned steps."
+      },
+      {
+        "finding_id": "quality_components",
+        "question": "Which quality components matter?",
+        "setting": "Ablating Planner, External Database, Visual Anchor, Critic from Code2Video Chat-4.1",
+        "metric": "Aesthetics and TeachQuiz",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table2"
+        ],
+        "takeaway": "Removing Planner causes the largest collapse, about 41 points on both metrics."
+      },
+      {
+        "finding_id": "efficiency_components",
+        "question": "Which efficiency modules make generation scalable?",
+        "setting": "Removing parallel execution and/or ScopeRefine from Code2Video Chat-4.1",
+        "metric": "Time and Token",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table3"
+        ],
+        "takeaway": "Without parallel execution time rises 15.4 to 86.6 minutes; without both it reaches 149.8 minutes."
+      },
+      {
+        "finding_id": "human_study_patterns",
+        "question": "Do human ratings align with automated trends?",
+        "setting": "Five video types, volunteers, 20 topics, 5 quiz questions",
+        "metric": "Aesthetics, TeachQuiz, CW, AR",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table4"
+        ],
+        "takeaway": "Humans show similar trends but sharper contrast and stronger sensitivity to layout errors."
+      },
+      {
+        "finding_id": "unlearning_evidence_sources",
+        "question": "Are TeachQuiz gains caused by semantically aligned videos?",
+        "setting": "Text-only, Animation-only, Random-video ablations",
+        "metric": "Accuracy and TeachQuiz",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table5"
+        ],
+        "takeaway": "Full videos outperform text-only or animation-only; random videos collapse near unlearn levels."
+      },
+      {
+        "finding_id": "anchor_granularity",
+        "question": "What visual anchor granularity works best?",
+        "setting": "w/o Pvis, Center Point, 4×4, 6×6, 8×8, Self-directed",
+        "metric": "Element Layout, Attractiveness, AES Avg",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table7"
+        ],
+        "takeaway": "A 6×6 grid gives the best trade-off, with AES Avg 79.0."
+      },
+      {
+        "finding_id": "theorem_explain_generalization",
+        "question": "Does Code2Video generalize to TheoremExplainBench?",
+        "setting": "Code2Video versus TEA on visualization-only explanations",
+        "metric": "Accuracy and Depth, Visual Relevance, Logical Flow, Element Layout, Visual Consistency, Overall",
+        "evidence_kind": "exact_table",
+        "source_refs": [
+          "code2video-holdout-paper:table8"
+        ],
+        "takeaway": "Code2Video improves overall quality, especially Element Layout and Visual Relevance."
+      }
+    ],
+    "scene_renderer": {
+      "engine": "Manim Community 0.19.0",
+      "entrypoint": "scenes/explainer_pipeline_lifecycle.py",
+      "coding_agent_required": false,
+      "scene_ids": [
+        "ExplainerLifecycleScene"
+      ]
+    },
+    "media": [
+      {
+        "media_id": "code2video-holdout-repository-lifecycle",
+        "role": "video",
+        "path": "runs/explainer_pipeline/packages/code2video-holdout-gpt55/media/code2video-holdout-repository-lifecycle.mp4",
+        "sha256": "1a4449e26225b32fa7acb8bb070a07f63fc2453d70b6d74d15d9151b0811e304",
+        "media_type": "video/mp4",
+        "origin": "project_new",
+        "caption": "Grounded repository lifecycle compiled from code-understanding nodes.",
+        "published_path": "assets/live-model-run/code2video-holdout/code2video-holdout-repository-lifecycle.mp4"
+      },
+      {
+        "media_id": "code2video-holdout-repository-lifecycle-poster",
+        "role": "poster",
+        "path": "runs/explainer_pipeline/packages/code2video-holdout-gpt55/media/code2video-holdout-repository-lifecycle-poster.png",
+        "sha256": "c03f432d6a3a765fe56d5b8c920fb384239801975a3488292bf640820a75292a",
+        "media_type": "image/png",
+        "origin": "project_new",
+        "caption": "Readable terminal overview for the repository lifecycle animation.",
+        "published_path": "assets/live-model-run/code2video-holdout/code2video-holdout-repository-lifecycle-poster.png"
+      },
+      {
+        "media_id": "code2video-holdout-repository-lifecycle-captions",
+        "role": "captions",
+        "path": "runs/explainer_pipeline/packages/code2video-holdout-gpt55/media/code2video-holdout-repository-lifecycle-captions.vtt",
+        "sha256": "590c692a9f774c1afabb0ecd283ae2fbf7f252bfdfcbd0d9b8369f6ea54e19c6",
+        "media_type": "text/vtt",
+        "origin": "project_new",
+        "caption": "English captions for every grounded repository lifecycle step.",
+        "published_path": "assets/live-model-run/code2video-holdout/code2video-holdout-repository-lifecycle-captions.vtt"
+      }
+    ],
+    "agent_input": {
+      "paper_excerpts": [
+        {
+          "locator": "Abstract",
+          "source_refs": [
+            "code2video-holdout-paper:abstract"
+          ],
+          "text": "Code2Video is a code-centric agent framework for generating educational videos via executable Python code, with Planner, Coder, and Critic agents."
+        },
+        {
+          "locator": "Section 1 Introduction",
+          "source_refs": [
+            "code2video-holdout-paper:sec1"
+          ],
+          "text": "Educational videos require temporal coherence, spatial clarity, and evaluation of educational effectiveness beyond appearance."
+        },
+        {
+          "locator": "Figure 1",
+          "source_refs": [
+            "code2video-holdout-paper:fig1"
+          ],
+          "text": "The paper contrasts pixel-based generation with a code-centric paradigm and evaluates Code2Video through Efficiency, Aesthetic, and TeachQuiz."
+        },
+        {
+          "locator": "Section 3.1 Task Formulation",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.1"
+          ],
+          "text": "The task maps a learning query to executable Manim code whose rendering yields a tutorial video."
+        },
+        {
+          "locator": "Section 3.2 Data Curation and Statistics",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.2"
+          ],
+          "text": "MMMC curates 117 long-form 3Blue1Brown videos and 339 timestamped sub-clips across 13 subject areas."
+        },
+        {
+          "locator": "Section 3.3 Evaluation Metrics",
+          "source_refs": [
+            "code2video-holdout-paper:sec3.3"
+          ],
+          "text": "Evaluation uses VLM-as-Judges, TeachQuiz, token cost, and generation time to assess quality, knowledge transfer, and scalability."
+        },
+        {
+          "locator": "Section 4 Overview",
+          "source_refs": [
+            "code2video-holdout-paper:sec4"
+          ],
+          "text": "Given a topic query Q, Code2Video outputs video V through Planner, Coder, and Critic stages."
+        },
+        {
+          "locator": "Section 4.2 Coder",
+          "source_refs": [
+            "code2video-holdout-paper:sec4.2"
+          ],
+          "text": "ScopeRefine repairs code progressively from line scope to block scope to global scope to reduce token usage and latency."
+        },
+        {
+          "locator": "Section 4.3 Critic",
+          "source_refs": [
+            "code2video-holdout-paper:sec4.3"
+          ],
+          "text": "The visual anchor prompt discretizes the 2D canvas into a 6×6 grid with point-level and region-level placement."
+        },
+        {
+          "locator": "Section 5.2 Main Results",
+          "source_refs": [
+            "code2video-holdout-paper:sec5.2"
+          ],
+          "text": "Code2Video improves AES and TeachQuiz over pixel-based models and direct code-centric generation, while human-made videos remain strong."
+        },
+        {
+          "locator": "Section 5.3 Ablation Studies",
+          "source_refs": [
+            "code2video-holdout-paper:sec5.3"
+          ],
+          "text": "Planner, External Database, Visual Anchor, Critic, parallel synthesis, and ScopeRefine are evaluated through ablations."
+        },
+        {
+          "locator": "Section 6 Conclusion",
+          "source_refs": [
+            "code2video-holdout-paper:sec6"
+          ],
+          "text": "Future work includes broadening the video scope and developing more lightweight, scalable agent frameworks."
+        }
+      ],
+      "code_notes": [
+        {
+          "locator": "README.md:Overview and Try Code2Video",
+          "source_refs": [
+            "code2video-holdout-repo:README.md"
+          ],
+          "text": "The repository presents Code2Video as a tri-agent, code-centric framework and exposes single-query and benchmark modes."
+        },
+        {
+          "locator": "json_files/long_video_topics_list.json:1-20",
+          "source_refs": [
+            "code2video-holdout-repo:json_files/long_video_topics_list.json"
+          ],
+          "text": "MMMC-style learning topics include Euler's Formula, Proof of Snell's law, Space-filling curves, and Linear transformations and matrices."
+        },
+        {
+          "locator": "json_files/long_video_ref_mapping.json:1-45",
+          "source_refs": [
+            "code2video-holdout-repo:json_files/long_video_ref_mapping.json"
+          ],
+          "text": "The external reference mapping stores topic-to-image filenames or null, matching the paper's External Database idea."
+        },
+        {
+          "locator": "prompts/base_class.py:1-31",
+          "source_refs": [
+            "code2video-holdout-repo:prompts/base_class.py"
+          ],
+          "text": "TeachingScene fixes the black background, left lecture area, and a 6×6 right-side grid used by visual anchors."
+        },
+        {
+          "locator": "prompts/stage1.py:get_prompt1_outline",
+          "source_refs": [
+            "code2video-holdout-repo:prompts/stage1.py"
+          ],
+          "text": "The outline prompt requests topic, target_audience, and progressive sections with examples."
+        },
+        {
+          "locator": "prompts/stage2.py:get_prompt2_storyboard",
+          "source_refs": [
+            "code2video-holdout-repo:prompts/stage2.py"
+          ],
+          "text": "The storyboard prompt maps outline sections into lecture_lines and animations, with reference-image guidance."
+        },
+        {
+          "locator": "prompts/stage3.py:get_prompt3_code",
+          "source_refs": [
+            "code2video-holdout-repo:prompts/stage3.py"
+          ],
+          "text": "The code prompt mandates Manim v0.19.0, TeachingScene, 6×6 anchors, and place_at_grid/place_in_area positioning."
+        },
+        {
+          "locator": "prompts/stage4.py:get_prompt4_layout_feedback",
+          "source_refs": [
+            "code2video-holdout-repo:prompts/stage4.py"
+          ],
+          "text": "The Critic prompt asks a VLM to report layout issues as JSON with grid-coordinate fixes and line numbers."
+        },
+        {
+          "locator": "prompts/stage5_unlearning.py:1-47",
+          "source_refs": [
+            "code2video-holdout-repo:prompts/stage5_unlearning.py"
+          ],
+          "text": "TeachQuiz prompts implement selective unlearning and video-only relearning constraints."
+        },
+        {
+          "locator": "src/agent.py:694-709",
+          "source_refs": [
+            "code2video-holdout-repo:src/agent.py"
+          ],
+          "text": "GENERATE_VIDEO executes outline, storyboard, code generation, section rendering, and merge in the repository lifecycle."
+        }
+      ],
+      "claim_policy": "Preserve paper terminology. Cite equation, table, figure, section, and code locators. Separate exact results, authors' reported findings, derived explanations, and open questions."
+    }
+  },
+  "concept_graph": {
+    "thesis": "Code2Video argues that educational video generation should move from pixel-based generation to executable Manim code, then evaluate videos by Aesthetic, TeachQuiz, and Efficiency.",
+    "nodes": [
+      {
+        "id": "n_problem",
+        "label": "temporal coherence, spatial clarity",
+        "kind": "motivation",
+        "era": "Introduction",
+        "summary": "Educational videos require coherent time flow, clear spatial layout, and evaluation beyond visual appearance.",
+        "source_refs": [
+          "code2video-holdout-paper:sec1"
+        ]
+      },
+      {
+        "id": "n_pixel",
+        "label": "pixel-based generation",
+        "kind": "baseline paradigm",
+        "era": "Lineage",
+        "summary": "Figure 1 contrasts pixel synthesis with code-centric generation for structured educational videos.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "n_code_paradigm",
+        "label": "code-centric paradigm",
+        "kind": "method premise",
+        "era": "Lineage",
+        "summary": "The paper frames executable code as a controllable medium for diagrams, text, formulas, and timing.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1",
+          "code2video-holdout-paper:abstract"
+        ]
+      },
+      {
+        "id": "n_task",
+        "label": "learning query to executable Manim code",
+        "kind": "task formulation",
+        "era": "Task",
+        "summary": "A learning query is mapped to Python Manim code whose rendering yields a tutorial video.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.1"
+        ]
+      },
+      {
+        "id": "n_mmmc",
+        "label": "MMMC",
+        "kind": "benchmark",
+        "era": "Data",
+        "summary": "MMMC curates 117 long-form 3Blue1Brown videos and 339 timestamped sub-clips across 13 subject areas.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.2",
+          "code2video-holdout-repo:json_files/long_video_topics_list.json:1-20"
+        ]
+      },
+      {
+        "id": "n_planner",
+        "label": "Planner",
+        "kind": "agent",
+        "era": "Method",
+        "summary": "Planner builds a teaching outline and storyboard with progressive sections, lecture_lines, and animations.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4",
+          "code2video-holdout-repo:prompts/stage1.py:get_prompt1_outline",
+          "code2video-holdout-repo:prompts/stage2.py:get_prompt2_storyboard"
+        ]
+      },
+      {
+        "id": "n_external",
+        "label": "External Database",
+        "kind": "support module",
+        "era": "Method",
+        "summary": "Topic-to-reference-image mappings provide optional visual assets for storyboard enhancement.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.3",
+          "code2video-holdout-repo:json_files/long_video_ref_mapping.json:1-45"
+        ]
+      },
+      {
+        "id": "n_coder",
+        "label": "Coder",
+        "kind": "agent",
+        "era": "Method",
+        "summary": "Coder turns each section into Manim v0.19.0 code and uses ScopeRefine for line, block, then global repair.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.2",
+          "code2video-holdout-repo:prompts/stage3.py:get_prompt3_code",
+          "code2video-holdout-repo:src/agent.py:335-516"
+        ]
+      },
+      {
+        "id": "n_anchor",
+        "label": "visual anchor prompt",
+        "kind": "layout mechanism",
+        "era": "Method",
+        "summary": "A 6×6 grid gives point-level and region-level placement for stable layout on the Manim canvas.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.3",
+          "code2video-holdout-repo:prompts/base_class.py:1-31",
+          "code2video-holdout-repo:prompts/stage3.py:get_prompt3_code"
+        ]
+      },
+      {
+        "id": "n_critic",
+        "label": "Critic",
+        "kind": "agent",
+        "era": "Method",
+        "summary": "Critic uses a VLM to report layout issues as JSON with grid-coordinate fixes and line numbers.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.3",
+          "code2video-holdout-repo:prompts/stage4.py:get_prompt4_layout_feedback",
+          "code2video-holdout-repo:src/agent.py:383-493"
+        ]
+      },
+      {
+        "id": "n_lifecycle",
+        "label": "GENERATE_VIDEO",
+        "kind": "implementation lifecycle",
+        "era": "Code",
+        "summary": "The repository runs outline, storyboard, code generation, section rendering, feedback, and video merge.",
+        "source_refs": [
+          "code2video-holdout-repo:README.md:Overview and Try Code2Video",
+          "code2video-holdout-repo:src/agent.py:694-709"
+        ]
+      },
+      {
+        "id": "n_teachquiz",
+        "label": "TeachQuiz",
+        "kind": "evaluation metric",
+        "era": "Evaluation",
+        "summary": "TeachQuiz uses selective unlearning and video-only relearning to measure knowledge transfer from the video.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.3",
+          "code2video-holdout-paper:fig3",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py:1-47"
+        ]
+      },
+      {
+        "id": "n_eval",
+        "label": "Efficiency, Aesthetic, and TeachQuiz",
+        "kind": "evaluation suite",
+        "era": "Evaluation",
+        "summary": "The paper evaluates quality, knowledge transfer, token cost, and generation time for scalability.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1",
+          "code2video-holdout-paper:sec3.3",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "n_results",
+        "label": "Main Results",
+        "kind": "reported finding",
+        "era": "Findings",
+        "summary": "Code2Video improves AES and TeachQuiz over pixel-based and direct code-centric methods; human-made videos remain strong.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.2",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "n_ablation",
+        "label": "Ablation Studies",
+        "kind": "reported finding",
+        "era": "Findings",
+        "summary": "Planner, External Database, Visual Anchor, Critic, parallel synthesis, and ScopeRefine are tested by ablation.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.3",
+          "code2video-holdout-paper:table2",
+          "code2video-holdout-paper:table3"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "n_problem",
+        "target": "n_pixel",
+        "relation": "sets_requirement_for",
+        "teaching_point": "The paper’s target is not mere video realism; educational videos must sustain temporal and spatial pedagogy."
+      },
+      {
+        "source": "n_pixel",
+        "target": "n_code_paradigm",
+        "relation": "contrasted_with",
+        "teaching_point": "Pixel-based generation is the foil; the code-centric paradigm offers explicit structure and renderable control."
+      },
+      {
+        "source": "n_code_paradigm",
+        "target": "n_task",
+        "relation": "formalized_as",
+        "teaching_point": "The paradigm becomes a task: translate a learning query into executable Manim code and rendered video."
+      },
+      {
+        "source": "n_task",
+        "target": "n_mmmc",
+        "relation": "benchmarked_on",
+        "teaching_point": "MMMC supplies long-form and clip-level educational topics for evaluating the task."
+      },
+      {
+        "source": "n_task",
+        "target": "n_planner",
+        "relation": "decomposed_by",
+        "teaching_point": "Planner first turns the query into a progressive outline and storyboard before code is written."
+      },
+      {
+        "source": "n_planner",
+        "target": "n_external",
+        "relation": "augmented_by",
+        "teaching_point": "External Database adds reference-image guidance when a topic mapping contains a filename."
+      },
+      {
+        "source": "n_planner",
+        "target": "n_coder",
+        "relation": "hands_storyboard_to",
+        "teaching_point": "Section titles, lecture_lines, and animations become the semantic contract for Manim code generation."
+      },
+      {
+        "source": "n_external",
+        "target": "n_coder",
+        "relation": "guides_assets_for",
+        "teaching_point": "Asset-enhanced storyboard data stays linked to the code mechanism rather than becoming a separate citation artifact."
+      },
+      {
+        "source": "n_coder",
+        "target": "n_anchor",
+        "relation": "uses",
+        "teaching_point": "The code prompt mandates TeachingScene and 6×6 anchors so generated elements have explicit placement rules."
+      },
+      {
+        "source": "n_anchor",
+        "target": "n_critic",
+        "relation": "enables",
+        "teaching_point": "Grid coordinates make visual feedback actionable: the Critic can request specific placement repairs."
+      },
+      {
+        "source": "n_critic",
+        "target": "n_coder",
+        "relation": "feedback_loop",
+        "teaching_point": "Critic feedback loops into code modification and rerender attempts, preserving code as the repair surface."
+      },
+      {
+        "source": "n_coder",
+        "target": "n_lifecycle",
+        "relation": "implemented_in",
+        "teaching_point": "GENERATE_VIDEO operationalizes the paper pipeline through section code synthesis, Manim rendering, and merge."
+      },
+      {
+        "source": "n_lifecycle",
+        "target": "n_results",
+        "relation": "produces_evidence_for",
+        "teaching_point": "The reported results are tied to the executable pipeline rather than a detached video-only process."
+      },
+      {
+        "source": "n_mmmc",
+        "target": "n_eval",
+        "relation": "evaluated_with",
+        "teaching_point": "MMMC outputs are judged by aesthetics, knowledge transfer, and efficiency rather than appearance alone."
+      },
+      {
+        "source": "n_teachquiz",
+        "target": "n_eval",
+        "relation": "component_of",
+        "teaching_point": "TeachQuiz isolates video-induced learning by comparing unlearned and video-grounded answering."
+      },
+      {
+        "source": "n_eval",
+        "target": "n_results",
+        "relation": "supports",
+        "teaching_point": "Table 1 reports improvements in AES and Quiz for Code2Video variants over pixel-based models and direct code generation."
+      },
+      {
+        "source": "n_ablation",
+        "target": "n_results",
+        "relation": "qualifies",
+        "teaching_point": "Ablations show which modules drive quality and scalability; removing Planner causes the largest quality collapse."
+      },
+      {
+        "source": "n_coder",
+        "target": "n_ablation",
+        "relation": "tested_by",
+        "teaching_point": "Parallel synthesis and ScopeRefine are evaluated as efficiency modules through time and token ablations."
+      }
+    ],
+    "unresolved": [
+      {
+        "item": "Eq. 1 and Eq. 2 scoring implementation",
+        "status": "candidate mapping only",
+        "summary": "questions_by_topic_10.json and README eval_TQ.py references support the mapping, but the scoring script is not in the supplied corpus.",
+        "source_refs": [
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-repo:json_files/questions_by_topic_10.json",
+          "code2video-holdout-repo:README.md"
+        ]
+      },
+      {
+        "item": "TeachQuiz prompt constraints",
+        "status": "confirmed for Eq. 3 and Eq. 4",
+        "summary": "stage5_unlearning.py implements unlearning and video-grounded relearning prompts, not the full metric arithmetic.",
+        "source_refs": [
+          "code2video-holdout-paper:eq3",
+          "code2video-holdout-paper:eq4",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py:1-47"
+        ]
+      },
+      {
+        "item": "human-made videos remain strong",
+        "status": "limitation from results",
+        "summary": "The paper reports Code2Video gains, while human-made educational videos remain a strong reference point.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.2",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "item": "broader video scope",
+        "status": "future work",
+        "summary": "The conclusion names broadening the video scope as future work.",
+        "source_refs": [
+          "code2video-holdout-paper:sec6"
+        ]
+      },
+      {
+        "item": "lightweight, scalable agent frameworks",
+        "status": "future work",
+        "summary": "The conclusion calls for more lightweight and scalable agent frameworks.",
+        "source_refs": [
+          "code2video-holdout-paper:sec6"
+        ]
+      }
+    ]
+  },
+  "lesson_plan": {
+    "title": "Code2Video: Automated Video Generation from Source Code",
+    "promise": "Explain how Code2Video uses executable Manim code, agents, MMMC, and TeachQuiz to address temporal coherence, spatial clarity, and educational effectiveness.",
+    "sections": [
+      {
+        "id": "introduction_code_centric_paradigm",
+        "role": "motivation",
+        "nav_label": "Problem",
+        "title": "Why educational video needs more than pixels",
+        "intent": "Start with the paper's stated concern: educational videos need temporal coherence, spatial clarity, and effectiveness beyond appearance.",
+        "question": "How can generated educational videos maintain coherent time flow, clear layouts, and teachable content?",
+        "learning_goal": "See why the paper frames educational video generation as a structure and evaluation problem, not only a realism problem.",
+        "misconception": "A visually plausible video is enough if it looks like a lecture.",
+        "summary": "The introduction motivates a code-centric paradigm because educational videos must coordinate narration, diagrams, formulas, and learning outcomes.",
+        "source_refs": [
+          "code2video-holdout-paper:abstract",
+          "code2video-holdout-paper:sec1",
+          "code2video-holdout-paper:fig1"
+        ],
+        "medium": "static",
+        "deep_links": [
+          "intro_problem_statement",
+          "fig1_code_centric_contrast"
+        ]
+      },
+      {
+        "id": "related_work_video_generation_and_coding_agents",
+        "role": "lineage",
+        "nav_label": "Lineage",
+        "title": "From pixel generation to code-centric agents",
+        "intent": "Place Code2Video after pixel-based video generation and code agents so the method's design choices have a foil.",
+        "question": "Why does the paper prefer executable code over direct pixel synthesis for tutorials?",
+        "learning_goal": "Connect pixel-model limitations to code as a controllable medium for text, formulas, geometry, and timing.",
+        "misconception": "Code generation is just an implementation detail after a video model decides the content.",
+        "summary": "Figure 1 contrasts pixel-based generation with code-centric generation; the repository presents Code2Video as a tri-agent framework.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1",
+          "code2video-holdout-paper:sec5.2",
+          "code2video-holdout-repo:README.md"
+        ],
+        "medium": "static",
+        "deep_links": [
+          "pixel_vs_code_lineage",
+          "repo_tri_agent_overview"
+        ]
+      },
+      {
+        "id": "mmmc_benchmark",
+        "role": "mechanism",
+        "nav_label": "MMMC",
+        "title": "The task and benchmark that make the claim testable",
+        "intent": "Define the learning-query-to-Manim task before teaching the agent pipeline that solves it.",
+        "question": "What exactly is generated, and on what educational topics is it evaluated?",
+        "learning_goal": "Understand the task mapping Q to executable Manim code and the MMMC benchmark scale.",
+        "misconception": "The system is evaluated only on hand-picked demo prompts.",
+        "summary": "Section 3 maps a learning query to rendered Manim code and uses MMMC: 117 long videos and 339 timestamped clips across 13 areas.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.1",
+          "code2video-holdout-paper:sec3.2",
+          "code2video-holdout-repo:json_files/long_video_topics_list.json",
+          "code2video-holdout-repo:json_files/long_video_ref_mapping.json"
+        ],
+        "medium": "static",
+        "deep_links": [
+          "task_formulation_manim",
+          "mmmc_dataset_and_refs"
+        ]
+      },
+      {
+        "id": "method_code2video",
+        "role": "mechanism",
+        "nav_label": "Method",
+        "title": "Planner, Coder, Critic as an executable video pipeline",
+        "intent": "Teach the mechanism once the task is clear: storyboard first, code second, render and repair through visual feedback.",
+        "question": "How does Code2Video turn a topic query into a coherent rendered tutorial video?",
+        "learning_goal": "Trace the pipeline from outline and storyboard to section Manim code, ScopeRefine, visual anchors, Critic feedback, and merge.",
+        "misconception": "The agents merely write a single monolithic script and hope it renders.",
+        "summary": "Planner creates sections, Coder synthesizes Manim per section with ScopeRefine, and Critic uses 6×6 visual anchors to request layout fixes.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4",
+          "code2video-holdout-paper:sec4.2",
+          "code2video-holdout-paper:sec4.3",
+          "code2video-holdout-repo:prompts/stage1.py",
+          "code2video-holdout-repo:prompts/stage2.py",
+          "code2video-holdout-repo:prompts/stage3.py",
+          "code2video-holdout-repo:prompts/stage4.py",
+          "code2video-holdout-repo:src/agent.py:694-709"
+        ],
+        "medium": "animation",
+        "deep_links": [
+          "planner_storyboard_contract",
+          "coder_scope_refine_lifecycle",
+          "visual_anchor_critic_loop",
+          "generate_video_repository_flow"
+        ]
+      },
+      {
+        "id": "experiment",
+        "role": "evidence",
+        "nav_label": "Evidence",
+        "title": "Evaluation beyond appearance",
+        "intent": "Show how the paper tests aesthetics, knowledge transfer, and scalability after defining the generation mechanism.",
+        "question": "Do the generated videos look clear, teach content, and scale better than alternatives?",
+        "learning_goal": "Read the main results, TeachQuiz equations, ablations, and human study as distinct evidence types.",
+        "misconception": "Aesthetic scores alone establish educational effectiveness.",
+        "summary": "Code2Video improves AES and TeachQuiz over pixel and direct-code baselines; ablations identify Planner, anchors, Critic, parallelism, and ScopeRefine.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.3",
+          "code2video-holdout-paper:sec5.2",
+          "code2video-holdout-paper:sec5.3",
+          "code2video-holdout-paper:table1",
+          "code2video-holdout-paper:table2",
+          "code2video-holdout-paper:table3",
+          "code2video-holdout-paper:table4",
+          "code2video-holdout-paper:table5",
+          "code2video-holdout-paper:table7",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py"
+        ],
+        "medium": "animation",
+        "deep_links": [
+          "teachquiz_equations_and_prompts",
+          "main_results_table1",
+          "quality_and_efficiency_ablations",
+          "human_and_teachquiz_validity"
+        ]
+      },
+      {
+        "id": "conclusion",
+        "role": "limitations",
+        "nav_label": "Limits",
+        "title": "What the evidence supports, and what remains open",
+        "intent": "End by separating reported gains from limitations, missing implementation links, and future work named by the authors.",
+        "question": "What can be concluded, and where does the paper leave open work?",
+        "learning_goal": "Distinguish exact results, confirmed code grounding, candidate metric mappings, and future scope or scalability concerns.",
+        "misconception": "The reported gains mean the problem of automated educational video generation is solved.",
+        "summary": "The paper reports strong gains but notes future work on broader video scope and more lightweight, scalable agent frameworks.",
+        "source_refs": [
+          "code2video-holdout-paper:sec6",
+          "code2video-holdout-paper:table1",
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-repo:README.md",
+          "code2video-holdout-repo:json_files/questions_by_topic_10.json"
+        ],
+        "medium": "static",
+        "deep_links": [
+          "evidence_vs_open_questions",
+          "future_work_scope_scalability"
+        ]
+      }
+    ],
+    "appendix": [
+      {
+        "id": "intro_problem_statement",
+        "title": "Problem statement provenance",
+        "kind": "paper_grounding",
+        "summary": "Educational videos require temporal coherence, spatial clarity, and educational effectiveness beyond appearance.",
+        "source_refs": [
+          "code2video-holdout-paper:abstract",
+          "code2video-holdout-paper:sec1"
+        ]
+      },
+      {
+        "id": "fig1_code_centric_contrast",
+        "title": "Figure 1 contrast",
+        "kind": "figure_grounding",
+        "summary": "Figure 1 contrasts pixel-based generation with code-centric generation and frames Efficiency, Aesthetic, and TeachQuiz evaluation.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1"
+        ]
+      },
+      {
+        "id": "pixel_vs_code_lineage",
+        "title": "Pixel-based baseline versus code paradigm",
+        "kind": "lineage",
+        "summary": "Pixel methods are compared against code-centric and agentic generation; direct code improves but agentic structure improves further.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "repo_tri_agent_overview",
+        "title": "Repository overview",
+        "kind": "code_grounding",
+        "summary": "README describes Code2Video as Planner, Coder, and Critic with single-query and benchmark modes.",
+        "source_refs": [
+          "code2video-holdout-repo:README.md"
+        ]
+      },
+      {
+        "id": "task_formulation_manim",
+        "title": "Learning query to executable Manim",
+        "kind": "task_definition",
+        "summary": "The task maps a learning query to executable Python Manim code whose rendering yields a tutorial video.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.1"
+        ]
+      },
+      {
+        "id": "mmmc_dataset_and_refs",
+        "title": "MMMC and external references",
+        "kind": "data_grounding",
+        "summary": "MMMC has 117 long 3Blue1Brown videos and 339 sub-clips; repo topic lists and reference mappings mirror benchmark usage.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.2",
+          "code2video-holdout-repo:json_files/long_video_topics_list.json",
+          "code2video-holdout-repo:json_files/long_video_ref_mapping.json"
+        ]
+      },
+      {
+        "id": "planner_storyboard_contract",
+        "title": "Planner prompt contract",
+        "kind": "code_mechanism",
+        "summary": "Stage 1 asks for progressive sections; Stage 2 maps them into lecture_lines and animations with reference-image guidance.",
+        "source_refs": [
+          "code2video-holdout-repo:prompts/stage1.py:get_prompt1_outline",
+          "code2video-holdout-repo:prompts/stage2.py:get_prompt2_storyboard",
+          "code2video-holdout-repo:src/agent.py:119-273"
+        ]
+      },
+      {
+        "id": "coder_scope_refine_lifecycle",
+        "title": "Coder and ScopeRefine lifecycle",
+        "kind": "code_mechanism",
+        "summary": "Stage 3 requires Manim v0.19.0 and TeachingScene; failures are repaired from line to block to global scope.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.2",
+          "code2video-holdout-repo:prompts/stage3.py:get_prompt3_code",
+          "code2video-holdout-repo:src/agent.py:335-516"
+        ]
+      },
+      {
+        "id": "visual_anchor_critic_loop",
+        "title": "Visual anchors and Critic feedback",
+        "kind": "code_mechanism",
+        "summary": "TeachingScene fixes a 6×6 grid; Critic reports layout issues as JSON with grid-coordinate fixes and line numbers.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.3",
+          "code2video-holdout-repo:prompts/base_class.py:1-31",
+          "code2video-holdout-repo:prompts/stage4.py:get_prompt4_layout_feedback",
+          "code2video-holdout-repo:src/agent.py:383-493"
+        ]
+      },
+      {
+        "id": "generate_video_repository_flow",
+        "title": "GENERATE_VIDEO flow",
+        "kind": "implementation_trace",
+        "summary": "The repository lifecycle executes outline, storyboard, code generation, section rendering, feedback, and final ffmpeg merge.",
+        "source_refs": [
+          "code2video-holdout-repo:src/agent.py:694-709",
+          "code2video-holdout-repo:src/agent.py:659-692"
+        ]
+      },
+      {
+        "id": "teachquiz_equations_and_prompts",
+        "title": "TeachQuiz formulas and prompt grounding",
+        "kind": "formula_code_link",
+        "summary": "Eq. 1 scores quiz correctness; Eq. 2 subtracts unlearned baseline; Eq. 3 and Eq. 4 are grounded in unlearning prompts.",
+        "source_refs": [
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-paper:eq3",
+          "code2video-holdout-paper:eq4",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py:1-47",
+          "code2video-holdout-repo:json_files/questions_by_topic_10.json",
+          "code2video-holdout-repo:README.md:210-215"
+        ]
+      },
+      {
+        "id": "main_results_table1",
+        "title": "Main results",
+        "kind": "reported_results",
+        "summary": "Table 1 reports Code2Video gains in AES and Quiz over pixel-based and direct code-centric baselines, while human-made videos remain strong.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.2",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "quality_and_efficiency_ablations",
+        "title": "Ablation evidence",
+        "kind": "reported_results",
+        "summary": "Tables 2 and 3 test Planner, External Database, Visual Anchor, Critic, parallel execution, and ScopeRefine.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.3",
+          "code2video-holdout-paper:table2",
+          "code2video-holdout-paper:table3"
+        ]
+      },
+      {
+        "id": "human_and_teachquiz_validity",
+        "title": "Human study and TeachQuiz validity checks",
+        "kind": "reported_results",
+        "summary": "Human ratings align with automated trends; text-only, animation-only, and random-video ablations test semantic grounding.",
+        "source_refs": [
+          "code2video-holdout-paper:table4",
+          "code2video-holdout-paper:table5"
+        ]
+      },
+      {
+        "id": "evidence_vs_open_questions",
+        "title": "Evidence boundaries",
+        "kind": "limitation",
+        "summary": "Eq. 1 and Eq. 2 scoring implementation is only candidate-mapped to repo artifacts; full eval_TQ.py is not in the supplied corpus.",
+        "source_refs": [
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-repo:json_files/questions_by_topic_10.json",
+          "code2video-holdout-repo:README.md"
+        ]
+      },
+      {
+        "id": "future_work_scope_scalability",
+        "title": "Future work",
+        "kind": "limitation",
+        "summary": "The conclusion calls for broadening video scope and developing more lightweight, scalable agent frameworks.",
+        "source_refs": [
+          "code2video-holdout-paper:sec6"
+        ]
+      }
+    ]
+  },
+  "section_content": {
+    "sections": {
+      "introduction_code_centric_paradigm": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Motivating question",
+            "question": "How can generated educational videos maintain coherent time flow, clear layouts, and teachable content?",
+            "context": "The paper argues that educational videos require temporal coherence, spatial clarity, and evaluation of educational effectiveness beyond appearance, so the target is not merely making a plausible lecture-like clip.",
+            "source_refs": [
+              "code2video-holdout-paper:sec1",
+              "code2video-holdout-paper:abstract"
+            ]
+          },
+          {
+            "type": "prose",
+            "eyebrow": "Problem framing",
+            "heading": "Educational video is a structure-and-evaluation problem",
+            "paragraphs": [
+              "Code2Video is introduced as a code-centric agent framework for generating educational videos via executable Python code, with Planner, Coder, and Critic agents.",
+              "The introduction’s concern is that educational videos must coordinate narration, diagrams, formulas, and learning outcomes; visual appearance alone does not establish a useful tutorial."
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:abstract",
+              "code2video-holdout-paper:sec1"
+            ]
+          },
+          {
+            "type": "comparison",
+            "columns": [
+              {
+                "label": "Pixel-based generation",
+                "question": "What does the paper use as the foil?",
+                "answer": "Figure 1 contrasts pixel-based generation with the code-centric paradigm for educational video generation.",
+                "accent": "orange"
+              },
+              {
+                "label": "Code-centric paradigm",
+                "question": "What is the proposed shift?",
+                "answer": "The paper frames executable code as the controllable representation for educational structure, and evaluates Code2Video through Efficiency, Aesthetic, and TeachQuiz.",
+                "accent": "green"
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:fig1",
+              "code2video-holdout-paper:abstract"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why is a visually plausible lecture video insufficient under the paper’s framing?",
+            "answer": "Because the paper’s motivation requires temporal coherence, spatial clarity, and educational effectiveness, not only realistic appearance."
+          }
+        ]
+      },
+      "related_work_video_generation_and_coding_agents": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Lineage question",
+            "question": "Why does the paper prefer executable code over direct pixel synthesis for tutorials?",
+            "context": "The paper frames educational video generation around temporal coherence, spatial clarity, and educational effectiveness, not only visual appearance. Figure 1 contrasts pixel-based generation with a code-centric paradigm evaluated by Efficiency, Aesthetic, and TeachQuiz.",
+            "source_refs": [
+              "code2video-holdout-paper:sec1",
+              "code2video-holdout-paper:fig1",
+              "code2video-holdout-paper:sec3.3"
+            ]
+          },
+          {
+            "type": "comparison",
+            "columns": [
+              {
+                "label": "Pixel-based generation",
+                "question": "What is the foil?",
+                "answer": "The video is synthesized in pixel space, so text, formulas, geometry, and timing are not exposed as editable program structure.",
+                "accent": "orange"
+              },
+              {
+                "label": "Executable code",
+                "question": "What changes?",
+                "answer": "The task maps a learning query to executable Manim code, whose rendering yields the tutorial video.",
+                "accent": "cyan"
+              },
+              {
+                "label": "Code2Video agents",
+                "question": "Why agents?",
+                "answer": "The paper and repository present Planner, Coder, and Critic stages so content planning, code generation, and visual repair remain tied to the code surface.",
+                "accent": "green"
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:fig1",
+              "code2video-holdout-paper:sec3.1",
+              "code2video-holdout-paper:abstract",
+              "code2video-holdout-paper:sec4",
+              "code2video-holdout-repo:README.md"
+            ]
+          },
+          {
+            "type": "lineage",
+            "nodes": [
+              {
+                "label": "Educational-video requirement",
+                "note": "Tutorials need coherent time flow, clear spatial layout, and evaluation beyond appearance."
+              },
+              {
+                "label": "Pixel-based generation",
+                "note": "Figure 1 uses pixel-based generation as the contrasting paradigm for structured educational videos."
+              },
+              {
+                "label": "Code-centric paradigm",
+                "note": "Executable Manim code becomes the controllable medium for diagrams, text, formulas, geometry, and timing."
+              },
+              {
+                "label": "Planner–Coder–Critic",
+                "note": "Code2Video decomposes generation into planning, code synthesis, and visual criticism."
+              },
+              {
+                "label": "Repository lifecycle",
+                "note": "The repository presents a tri-agent framework and runs outline, storyboard, code generation, section rendering, and merge."
+              },
+              {
+                "label": "Reported motivation",
+                "note": "Main results report gains in AES and TeachQuiz over pixel-based and direct code-centric generation."
+              }
+            ],
+            "edges": [
+              {
+                "source": "Educational-video requirement",
+                "target": "Pixel-based generation",
+                "relation": "sets the constraint that realism alone is insufficient"
+              },
+              {
+                "source": "Pixel-based generation",
+                "target": "Code-centric paradigm",
+                "relation": "contrasted with in Figure 1"
+              },
+              {
+                "source": "Code-centric paradigm",
+                "target": "Planner–Coder–Critic",
+                "relation": "implemented as staged agents"
+              },
+              {
+                "source": "Planner–Coder–Critic",
+                "target": "Repository lifecycle",
+                "relation": "operationalized by the public repository pipeline"
+              },
+              {
+                "source": "Repository lifecycle",
+                "target": "Reported motivation",
+                "relation": "evaluated through Efficiency, Aesthetic, and TeachQuiz"
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:sec1",
+              "code2video-holdout-paper:fig1",
+              "code2video-holdout-paper:abstract",
+              "code2video-holdout-paper:sec3.1",
+              "code2video-holdout-paper:sec4",
+              "code2video-holdout-paper:sec5.2",
+              "code2video-holdout-repo:README.md",
+              "code2video-holdout-repo:src/agent.py:694-709"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "In this lineage, is code merely an implementation detail after a pixel video model decides the content?",
+            "answer": "No. The paper treats executable Manim code as the controllable representation itself: planning, layout, rendering, critique, and repair all act through code rather than through opaque pixel edits."
+          }
+        ]
+      },
+      "mmmc_benchmark": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Task before pipeline",
+            "question": "What exactly is generated, and on what educational topics is it evaluated?",
+            "context": "Section 3.1 formulates the task as mapping a learning query to executable Manim code whose rendering yields a tutorial video. Section 3.2 grounds evaluation in MMMC: 117 long-form 3Blue1Brown videos and 339 timestamped sub-clips across 13 subject areas, not only hand-picked demos.",
+            "source_refs": [
+              "code2video-holdout-paper:sec3.1",
+              "code2video-holdout-paper:sec3.2",
+              "code2video-holdout-repo:json_files/long_video_topics_list.json",
+              "code2video-holdout-repo:json_files/long_video_ref_mapping.json"
+            ]
+          },
+          {
+            "type": "equation_thread",
+            "title": "Task map used by the benchmark",
+            "stages": [
+              {
+                "paper": "Code2Video",
+                "equation": "Task formulation",
+                "formula": "Q → C_Manim, and render(C_Manim) → V",
+                "intent": "Define the learning-query-to-video task before introducing Planner, Coder, and Critic.",
+                "change": "The target artifact is executable Python Manim code, not direct pixel synthesis; the rendered video is the visible tutorial output."
+              }
+            ],
+            "folded": [
+              {
+                "equations": [
+                  "Eq. 1",
+                  "Eq. 2",
+                  "Eq. 3",
+                  "Eq. 4"
+                ],
+                "reason": "These equations define TeachQuiz scoring and unlearning/relearning constraints for evaluation. They are folded here because this MMMC section only establishes the task input-output map and benchmark scope."
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:sec3.1",
+              "code2video-holdout-paper:sec3.3",
+              "code2video-holdout-paper:eq1",
+              "code2video-holdout-paper:eq2",
+              "code2video-holdout-paper:eq3",
+              "code2video-holdout-paper:eq4"
+            ]
+          },
+          {
+            "type": "code",
+            "code_source_id": "code2video-holdout-repo",
+            "path": "json_files/long_video_topics_list.json",
+            "symbol": "MMMC-style learning topics",
+            "lines": [
+              {
+                "number": 1,
+                "code": "[",
+                "maps_to": "The repository materializes benchmark topics as data rather than as ad hoc prompts."
+              },
+              {
+                "number": 2,
+                "code": "\"Euler's Formula\",",
+                "maps_to": "Example learning query Q for the task map."
+              },
+              {
+                "number": 3,
+                "code": "\"Proof of Snell's law\",",
+                "maps_to": "Example topic showing mathematical-physics coverage."
+              },
+              {
+                "number": 4,
+                "code": "\"Space-filling curves\",",
+                "maps_to": "Example topic showing geometry/fractal coverage."
+              },
+              {
+                "number": 10,
+                "code": "\"Linear transformations and matrices\",",
+                "maps_to": "Example topic that can be passed through the Code2Video lifecycle."
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-repo:json_files/long_video_topics_list.json:1-20",
+              "code2video-holdout-paper:sec3.2"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Why does MMMC make the task claim more testable than a few showcase prompts?",
+            "answer": "Because the generation target is fixed as query → executable Manim code → rendered tutorial video, and the topics come from a curated benchmark rather than isolated demos."
+          }
+        ]
+      },
+      "method_code2video": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Method",
+            "question": "How does Code2Video turn a topic query into a coherent rendered tutorial video?",
+            "context": "The mechanism answers the task formulation: a learning query is converted into executable Manim code whose rendering yields an educational tutorial video, rather than a single pixel-space generation pass.",
+            "source_refs": [
+              "code2video-holdout-paper:sec3.1",
+              "code2video-holdout-paper:sec4"
+            ]
+          },
+          {
+            "type": "prose",
+            "eyebrow": "Mechanism overview",
+            "heading": "Storyboard first, code second, repair through rendered feedback",
+            "paragraphs": [
+              "Code2Video is described as a code-centric agent framework with Planner, Coder, and Critic agents. Given a topic query Q, the paper says the system outputs a video V through these staged agents.",
+              "The repository mirrors that contract: outline and storyboard prompts precede the Manim code prompt, and the final lifecycle runs outline, storyboard, code generation, rendering, feedback, and merge."
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:abstract",
+              "code2video-holdout-paper:sec4",
+              "code2video-holdout-repo:prompts/stage1.py",
+              "code2video-holdout-repo:prompts/stage2.py",
+              "code2video-holdout-repo:prompts/stage3.py",
+              "code2video-holdout-repo:src/agent.py:694-709"
+            ]
+          },
+          {
+            "type": "micro_video",
+            "media_id": "code2video-holdout-repository-lifecycle",
+            "poster_id": "code2video-holdout-repository-lifecycle-poster",
+            "captions_id": "code2video-holdout-repository-lifecycle-captions",
+            "title": "Watch the executable repository lifecycle",
+            "intro": "Each state is derived from a grounded code node, not invented visual glue.",
+            "observation": "topic → outline → storyboard → section code → render/critic loop → merged MP4",
+            "consequence": "The paper's code-centric claim becomes an inspectable repository path.",
+            "beats": [
+              "Linear transformations and matrices",
+              "output_dir, assets_dir, reference mapping",
+              "outline prompt",
+              "outline.json",
+              "storyboard prompt",
+              "storyboard_with_assets.json",
+              "Section objects",
+              "Manim code prompt",
+              "section .py files",
+              "section mp4",
+              "optimized section video",
+              "Linear_transformations_and_matrices.mp4"
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:abstract",
+              "code2video-holdout-paper:sec4",
+              "code2video-holdout-repo:prompts/stage1.py",
+              "code2video-holdout-repo:prompts/stage2.py",
+              "code2video-holdout-repo:prompts/stage3.py",
+              "code2video-holdout-repo:src/agent.py:694-709"
+            ]
+          },
+          {
+            "type": "lineage",
+            "nodes": [
+              {
+                "label": "Topic query",
+                "note": "A learning topic is the input to the teaching-video agent."
+              },
+              {
+                "label": "Outline",
+                "note": "Planner requests a target audience and progressive teaching sections."
+              },
+              {
+                "label": "Storyboard",
+                "note": "Planner maps sections into lecture_lines and animations, optionally with reference-image guidance."
+              },
+              {
+                "label": "Section Manim code",
+                "note": "Coder receives each section contract and is prompted to use TeachingScene, Manim v0.19.0, and 6×6 anchors."
+              },
+              {
+                "label": "Render and ScopeRefine",
+                "note": "Generated section files are rendered; failures are repaired progressively from line scope to block scope to global scope."
+              },
+              {
+                "label": "Critic feedback",
+                "note": "A VLM reports layout issues as JSON with grid-coordinate fixes and line numbers."
+              },
+              {
+                "label": "Merged video",
+                "note": "Successful section videos are concatenated into the final educational mp4."
+              }
+            ],
+            "edges": [
+              {
+                "from": "Topic query",
+                "to": "Outline",
+                "label": "Planner starts semantic plan"
+              },
+              {
+                "from": "Outline",
+                "to": "Storyboard",
+                "label": "sections become lecture timing and animation intent"
+              },
+              {
+                "from": "Storyboard",
+                "to": "Section Manim code",
+                "label": "Coder implements one section at a time"
+              },
+              {
+                "from": "Section Manim code",
+                "to": "Render and ScopeRefine",
+                "label": "executable code becomes the repair surface"
+              },
+              {
+                "from": "Render and ScopeRefine",
+                "to": "Critic feedback",
+                "label": "rendered output can be visually inspected"
+              },
+              {
+                "from": "Critic feedback",
+                "to": "Render and ScopeRefine",
+                "label": "grid fixes loop back into code modification"
+              },
+              {
+                "from": "Render and ScopeRefine",
+                "to": "Merged video",
+                "label": "successful sections are collected in order"
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:sec4",
+              "code2video-holdout-paper:sec4.2",
+              "code2video-holdout-paper:sec4.3",
+              "code2video-holdout-repo:prompts/stage1.py",
+              "code2video-holdout-repo:prompts/stage2.py",
+              "code2video-holdout-repo:prompts/stage3.py",
+              "code2video-holdout-repo:prompts/stage4.py",
+              "code2video-holdout-repo:src/agent.py:119-516",
+              "code2video-holdout-repo:src/agent.py:659-709"
+            ]
+          },
+          {
+            "type": "code",
+            "code_source_id": "code2video-holdout-repo",
+            "path": "src/agent.py",
+            "symbol": "GENERATE_VIDEO",
+            "lines": [
+              {
+                "number": 694,
+                "code": "GENERATE_VIDEO lifecycle entry",
+                "maps_to": "Runs the repository-level orchestration described by the method pipeline."
+              },
+              {
+                "number": 695,
+                "code": "outline stage",
+                "maps_to": "Calls the Planner-side outline step before storyboard or code synthesis."
+              },
+              {
+                "number": 697,
+                "code": "storyboard stage",
+                "maps_to": "Turns outline sections into lecture_lines and animation contracts."
+              },
+              {
+                "number": 700,
+                "code": "code generation and section rendering",
+                "maps_to": "Hands each Section to Coder and then to Manim rendering with repair attempts."
+              },
+              {
+                "number": 709,
+                "code": "merge final video",
+                "maps_to": "Collects successful rendered section mp4 files into the final tutorial video."
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-repo:src/agent.py:694-709",
+              "code2video-holdout-repo:src/agent.py:119-253",
+              "code2video-holdout-repo:src/agent.py:335-516",
+              "code2video-holdout-repo:src/agent.py:659-692"
+            ]
+          },
+          {
+            "type": "comparison",
+            "columns": [
+              {
+                "label": "Planner",
+                "question": "What does it own?",
+                "answer": "It owns the teaching contract: outline first, then storyboard with section-level lecture_lines and animations.",
+                "accent": "green"
+              },
+              {
+                "label": "Coder",
+                "question": "What does it own?",
+                "answer": "It owns executable section code, using TeachingScene, Manim v0.19.0, visual anchors, and ScopeRefine repair.",
+                "accent": "violet"
+              },
+              {
+                "label": "Critic",
+                "question": "What does it own?",
+                "answer": "It owns rendered-layout inspection, returning JSON feedback with grid-coordinate fixes and line numbers.",
+                "accent": "orange"
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:sec4",
+              "code2video-holdout-paper:sec4.2",
+              "code2video-holdout-paper:sec4.3",
+              "code2video-holdout-repo:prompts/stage1.py",
+              "code2video-holdout-repo:prompts/stage2.py",
+              "code2video-holdout-repo:prompts/stage3.py",
+              "code2video-holdout-repo:prompts/stage4.py"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "Misconception check: is Code2Video just one agent writing one monolithic Manim script and hoping it renders?",
+            "answer": "No. Planner fixes the storyboard contract first, Coder generates section code with ScopeRefine repair, Critic uses visual-anchor feedback, and the repository merges successful rendered sections."
+          }
+        ]
+      },
+      "experiment": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Evidence question",
+            "question": "Do the generated videos look clear, teach content, and scale better than alternatives?",
+            "context": "The evaluation separates VLM-as-Judges aesthetics, TeachQuiz knowledge transfer, token cost, and generation time, because the paper argues educational video quality is not just visual appearance.",
+            "source_refs": [
+              "code2video-holdout-paper:sec3.3",
+              "code2video-holdout-paper:sec5.2",
+              "code2video-holdout-paper:sec5.3"
+            ]
+          },
+          {
+            "type": "equation_thread",
+            "title": "TeachQuiz isolates video-induced knowledge transfer",
+            "stages": [
+              {
+                "paper": "Code2Video",
+                "source_url": "https://arxiv.org/abs/2305.05714",
+                "equation": "Eq. 1",
+                "formula": "S(V_α)=1[ϕ(Q,V_α)=Y]",
+                "intent": "Define a student-model score by whether answers after watching teacher video V_α match answer key Y.",
+                "change": "Reported definition: correctness is counted after conditioning on the video evidence."
+              },
+              {
+                "paper": "Code2Video",
+                "source_url": "https://arxiv.org/abs/2305.05714",
+                "equation": "Eq. 2",
+                "formula": "S̃(V_α)=S(V_α)-S(V_α|unlearn)",
+                "intent": "Subtract the unlearned baseline so the score reflects knowledge recovered from the video.",
+                "change": "Reported definition: TeachQuiz measures video-induced knowledge transfer rather than raw prior knowledge."
+              },
+              {
+                "paper": "Code2Video",
+                "source_url": "https://arxiv.org/abs/2305.05714",
+                "equation": "Eq. 3",
+                "formula": "f(q_i|P_unlearn) ∈ {y_i, NULL}",
+                "intent": "Constrain the selective-unlearning stage to answer only when retained evidence suffices.",
+                "change": "Reported constraint: otherwise the model should return NULL or insufficient evidence."
+              },
+              {
+                "paper": "Code2Video",
+                "source_url": "https://arxiv.org/abs/2305.05714",
+                "equation": "Eq. 4",
+                "formula": "f(q_i|P_learn,V) ∈ {y_i, NULL}",
+                "intent": "Constrain the relearning stage to use the educational video V as evidence.",
+                "change": "Reported constraint: after video exposure, correct answers count only when grounded in the video."
+              }
+            ],
+            "folded": [
+              {
+                "equations": [],
+                "reason": "No TeachQuiz equation is folded; Eq. 1, Eq. 2, Eq. 3, and Eq. 4 are all represented as stages."
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:sec3.3",
+              "code2video-holdout-paper:eq1",
+              "code2video-holdout-paper:eq2",
+              "code2video-holdout-paper:eq3",
+              "code2video-holdout-paper:eq4",
+              "code2video-holdout-paper:fig3"
+            ]
+          },
+          {
+            "type": "code",
+            "code_source_id": "code2video-holdout-repo",
+            "path": "prompts/stage5_unlearning.py",
+            "symbol": "get_unlearning_prompt, get_unlearning_and_video_learning_prompt",
+            "lines": [
+              {
+                "number": 4,
+                "code": "get_unlearning_prompt: prompt removes concept knowledge before quiz answering.",
+                "maps_to": "Eq. 3 selective-unlearning constraint f(q_i|P_unlearn) ∈ {y_i, NULL}."
+              },
+              {
+                "number": 27,
+                "code": "Prompt requires INSUFFICIENT EVIDENCE/NULL when forbidden concept knowledge is needed.",
+                "maps_to": "Eq. 3 NULL branch for the unlearned baseline."
+              },
+              {
+                "number": 30,
+                "code": "get_unlearning_and_video_learning_prompt: prompt permits evidence from the attached educational video.",
+                "maps_to": "Eq. 4 video-grounded relearning condition f(q_i|P_learn,V)."
+              },
+              {
+                "number": 47,
+                "code": "Prompt returns NULL if the video does not provide enough evidence.",
+                "maps_to": "Eq. 4 NULL branch for insufficient video evidence."
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-repo:prompts/stage5_unlearning.py:1-47",
+              "code2video-holdout-paper:eq3",
+              "code2video-holdout-paper:eq4"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Does the full agentic framework improve over pixel-space synthesis and direct code generation?",
+            "setting": "MMMC evaluation with pixel-based baselines, direct Code LLM generation, and Code2Video variants.",
+            "metric": "AES Avg and TeachQuiz Quiz score.",
+            "evidence_kind": "exact_table",
+            "evidence": "Reported, code2video-holdout-paper:table1: Veo3 has AES 9.0 and Quiz 2.5. Reported, same table: Claude Opus 4.1 direct code has AES 37.8 and Quiz 40.0; Code2Video with Claude Opus 4.1 has AES 87.9 and Quiz 86.0. Inferred subtraction: +50.1 AES and +46.0 Quiz for that backbone.",
+            "takeaway": "Appearance-only scores are insufficient: the main result pairs higher visual quality with higher measured knowledge transfer.",
+            "source_refs": [
+              "code2video-holdout-paper:sec5.2",
+              "code2video-holdout-paper:table1"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Which modules drive quality and scalability?",
+            "setting": "Ablations remove Planner, External Database, Visual Anchor, Critic, parallel execution, and ScopeRefine from Code2Video Chat-4.1; visual-anchor granularity is also varied.",
+            "metric": "Aesthetics, TeachQuiz, generation time, token usage, and AES Avg for anchor granularity.",
+            "evidence_kind": "exact_table",
+            "evidence": "Reported, code2video-holdout-paper:table2: removing Planner causes the largest quality collapse, about 41 points on both aesthetics and Quiz. Reported, code2video-holdout-paper:table3: time rises from 15.4 to 86.6 minutes without parallel execution and to 149.8 minutes without both parallel execution and ScopeRefine. Reported, code2video-holdout-paper:table7: the 6×6 grid reaches AES Avg 79.0.",
+            "takeaway": "The paper’s gains depend on both pedagogical decomposition and engineering choices that make multi-section Manim generation tractable.",
+            "source_refs": [
+              "code2video-holdout-paper:sec5.3",
+              "code2video-holdout-paper:table2",
+              "code2video-holdout-paper:table3",
+              "code2video-holdout-paper:table7"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Do human and TeachQuiz validity checks support the automated metrics?",
+            "setting": "Human study over five video types with volunteers, 20 topics, and 5 quiz questions; TeachQuiz ablations compare full videos with text-only, animation-only, and random-video evidence.",
+            "metric": "Human Aesthetics, TeachQuiz, Completion Willingness, Average Ranking, plus Accuracy and TeachQuiz under evidence-source ablations.",
+            "evidence_kind": "exact_table",
+            "evidence": "Reported, code2video-holdout-paper:table4: human ratings show trends similar to automated evaluation while being more sensitive to layout errors. Reported, code2video-holdout-paper:table5: full videos outperform text-only or animation-only evidence, and random videos collapse near unlearned levels.",
+            "takeaway": "The evidence argues against the misconception that aesthetic scores alone establish educational effectiveness; semantic alignment and video-grounded relearning are separately tested.",
+            "source_refs": [
+              "code2video-holdout-paper:sec3.3",
+              "code2video-holdout-paper:table4",
+              "code2video-holdout-paper:table5"
+            ]
+          }
+        ]
+      },
+      "conclusion": {
+        "blocks": [
+          {
+            "type": "paper_question",
+            "label": "Limits",
+            "question": "What can be concluded, and where does the paper leave open work?",
+            "context": "The conclusion should separate reported Code2Video gains from unresolved implementation grounding and from the authors’ stated future work on video scope and scalable agent frameworks.",
+            "source_refs": [
+              "code2video-holdout-paper:sec6",
+              "code2video-holdout-paper:table1",
+              "code2video-holdout-paper:eq1",
+              "code2video-holdout-paper:eq2",
+              "code2video-holdout-repo:README.md",
+              "code2video-holdout-repo:json_files/questions_by_topic_10.json"
+            ]
+          },
+          {
+            "type": "result_story",
+            "question": "Do the reported results support the code-centric agent framework?",
+            "setting": "Reported main results compare pixel-based models, direct code-centric generation, and Code2Video variants on MMMC using AES Avg and TeachQuiz.",
+            "metric": "AES Avg and TeachQuiz",
+            "evidence_kind": "exact_table",
+            "evidence": "reported: Table 1 reports low pixel-based scores such as Veo3 AES 9.0 and Quiz 2.5; reported: a Claude Opus 4.1 direct code baseline at AES 37.8 and Quiz 40.0 rises to Code2Video Claude Opus 4.1 at AES 87.9 and Quiz 86.0.",
+            "takeaway": "The evidence supports Code2Video as a strong framework in the paper’s evaluation setting, not as a solved general problem for all educational video generation.",
+            "source_refs": [
+              "code2video-holdout-paper:table1",
+              "code2video-holdout-paper:sec5.2"
+            ]
+          },
+          {
+            "type": "limitation",
+            "items": [
+              {
+                "label": "Metric implementation grounding is uneven",
+                "detail": "Eq. 1 and Eq. 2 are grounded only as candidate mappings in the supplied repository evidence: quiz questions and answers appear in questions_by_topic_10.json, and the README references TeachQuiz evaluation, but the full scoring script is not included in the supplied corpus."
+              },
+              {
+                "label": "Confirmed prompt grounding is narrower than the whole metric",
+                "detail": "The supplied code confirms TeachQuiz-style unlearning and video-grounded relearning prompts for Eq. 3 and Eq. 4, while the arithmetic score in Eq. 2 remains tied to paper equations and repository-facing evaluation entry points."
+              },
+              {
+                "label": "Future work remains explicit",
+                "detail": "The authors state future work as broadening the video scope and developing more lightweight, scalable agent frameworks."
+              }
+            ],
+            "source_refs": [
+              "code2video-holdout-paper:eq1",
+              "code2video-holdout-paper:eq2",
+              "code2video-holdout-paper:eq3",
+              "code2video-holdout-paper:eq4",
+              "code2video-holdout-paper:sec6",
+              "code2video-holdout-repo:README.md",
+              "code2video-holdout-repo:json_files/questions_by_topic_10.json",
+              "code2video-holdout-repo:prompts/stage5_unlearning.py"
+            ]
+          },
+          {
+            "type": "learner_check",
+            "prompt": "If Code2Video improves AES and TeachQuiz in Table 1, why is it still incorrect to say automated educational video generation is solved?",
+            "answer": "Because the gains are reported for the paper’s benchmark and metrics, while the paper itself names broader video scope and more lightweight, scalable agent frameworks as future work; some metric implementation links are also only candidate-grounded in the supplied repository evidence."
+          }
+        ]
+      }
+    },
+    "animation_plan": [
+      {
+        "section_id": "method_code2video",
+        "media_id": "code2video-holdout-repository-lifecycle",
+        "purpose": "Watch the executable repository lifecycle",
+        "before_state": "learning topic and grounded repository",
+        "after_state": "merged executable educational video",
+        "adjacent_block_index": 2
+      }
+    ],
+    "appendix_entries": [
+      {
+        "id": "intro_problem_statement",
+        "title": "Introduction problem statement",
+        "body": "Section 1 states that educational videos require temporal coherence, spatial clarity, and evaluation of educational effectiveness beyond appearance. This motivates treating video generation as a pedagogical structure problem rather than only a realism problem.",
+        "source_refs": [
+          "code2video-holdout-paper:sec1"
+        ]
+      },
+      {
+        "id": "fig1_code_centric_contrast",
+        "title": "Figure 1 code-centric contrast",
+        "body": "Figure 1 contrasts pixel-based generation with a code-centric paradigm and presents evaluation around Efficiency, Aesthetic, and TeachQuiz. The figure anchors the paper’s shift from pixels alone toward executable structure and learning-oriented assessment.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1"
+        ]
+      },
+      {
+        "id": "pixel_vs_code_lineage",
+        "title": "Pixel generation versus code-centric generation",
+        "body": "Figure 1 contrasts pixel-based generation with a code-centric paradigm. The paper’s motivation is that educational videos require temporal coherence, spatial clarity, and educational evaluation, so executable code provides a more controllable surface for text, formulas, geometry, and timing.",
+        "source_refs": [
+          "code2video-holdout-paper:fig1",
+          "code2video-holdout-paper:sec1",
+          "code2video-holdout-paper:sec3.1"
+        ]
+      },
+      {
+        "id": "repo_tri_agent_overview",
+        "title": "Repository tri-agent overview",
+        "body": "The repository presents Code2Video as a tri-agent, code-centric framework. Its lifecycle runs outline generation, storyboard generation, code generation, section rendering, feedback when enabled, and final video merge, matching the paper’s Planner, Coder, and Critic framing.",
+        "source_refs": [
+          "code2video-holdout-paper:abstract",
+          "code2video-holdout-paper:sec4",
+          "code2video-holdout-repo:README.md",
+          "code2video-holdout-repo:src/agent.py:694-709"
+        ]
+      },
+      {
+        "id": "task_formulation_manim",
+        "title": "Task formulation: learning query to Manim",
+        "body": "The paper’s Section 3.1 defines the task as mapping a learning query to executable Manim code; rendering that code produces the tutorial video. This is the bridge from the code-centric paradigm to an evaluable generation task.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.1"
+        ]
+      },
+      {
+        "id": "mmmc_dataset_and_refs",
+        "title": "MMMC dataset and repository topic artifacts",
+        "body": "MMMC is described as 117 long-form 3Blue1Brown videos and 339 timestamped clips across 13 subject areas. The repository includes long-video topic lists and topic-to-reference-image mappings that support benchmark-style generation inputs.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.2",
+          "code2video-holdout-repo:json_files/long_video_topics_list.json",
+          "code2video-holdout-repo:json_files/long_video_ref_mapping.json"
+        ]
+      },
+      {
+        "id": "planner_storyboard_contract",
+        "title": "Planner storyboard contract",
+        "body": "Planner first asks for a teaching outline with topic, target_audience, progressive sections, content, and examples. The next prompt turns that outline into storyboard sections with lecture_lines and animations, forming the contract that Coder must implement.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4",
+          "code2video-holdout-repo:prompts/stage1.py:get_prompt1_outline",
+          "code2video-holdout-repo:prompts/stage2.py:get_prompt2_storyboard"
+        ]
+      },
+      {
+        "id": "coder_scope_refine_lifecycle",
+        "title": "Coder and ScopeRefine lifecycle",
+        "body": "Coder receives section title, lecture_lines, and animations, then produces Manim v0.19.0 code using TeachingScene and anchor placement rules. The paper states ScopeRefine repairs progressively from line scope to block scope to global scope to reduce token usage and latency.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.2",
+          "code2video-holdout-repo:prompts/stage3.py:get_prompt3_code",
+          "code2video-holdout-repo:src/agent.py:335-381"
+        ]
+      },
+      {
+        "id": "visual_anchor_critic_loop",
+        "title": "Visual anchor and Critic loop",
+        "body": "The visual anchor prompt discretizes the canvas into a 6×6 grid for point-level and region-level placement. The Critic prompt asks a VLM to return layout issues as JSON with grid-coordinate fixes and line numbers, so repairs target code locations.",
+        "source_refs": [
+          "code2video-holdout-paper:sec4.3",
+          "code2video-holdout-repo:prompts/base_class.py:1-31",
+          "code2video-holdout-repo:prompts/stage4.py:get_prompt4_layout_feedback",
+          "code2video-holdout-repo:src/agent.py:383-493"
+        ]
+      },
+      {
+        "id": "generate_video_repository_flow",
+        "title": "Repository GENERATE_VIDEO flow",
+        "body": "The repository lifecycle executes outline generation, storyboard generation, code generation, section rendering, feedback-enabled repair, and final video merge. This grounds the paper’s Planner–Coder–Critic pipeline in the supplied implementation.",
+        "source_refs": [
+          "code2video-holdout-repo:README.md",
+          "code2video-holdout-repo:src/agent.py:694-709",
+          "code2video-holdout-paper:sec4"
+        ]
+      },
+      {
+        "id": "teachquiz_equations_and_prompts",
+        "title": "TeachQuiz equations and prompts",
+        "body": "TeachQuiz uses Eq. 1 for post-video quiz correctness and Eq. 2 to subtract an unlearned baseline. Eq. 3 and Eq. 4 are grounded in stage5_unlearning.py prompts that require NULL or insufficient evidence when knowledge is not available from the allowed source.",
+        "source_refs": [
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-paper:eq3",
+          "code2video-holdout-paper:eq4",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py:1-47"
+        ]
+      },
+      {
+        "id": "main_results_table1",
+        "title": "Main results in Table 1",
+        "body": "Table 1 compares human-crafted videos, pixel-based models, direct Code LLM generation, agentic generation, and Code2Video variants using efficiency, aesthetics dimensions, AES Avg, and Quiz. The section text reports Code2Video improves AES and TeachQuiz over pixel and direct-code baselines.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.2",
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "quality_and_efficiency_ablations",
+        "title": "Quality and efficiency ablations",
+        "body": "Table 2 removes Planner, External Database, Visual Anchor, and Critic to test quality components. Table 3 removes parallel execution and ScopeRefine to test scalability. Table 7 varies visual-anchor granularity and reports the 6×6 grid as the best trade-off in AES Avg.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.3",
+          "code2video-holdout-paper:table2",
+          "code2video-holdout-paper:table3",
+          "code2video-holdout-paper:table7"
+        ]
+      },
+      {
+        "id": "human_and_teachquiz_validity",
+        "title": "Human study and TeachQuiz validity",
+        "body": "Table 4 asks whether human ratings align with automated trends across aesthetics, TeachQuiz, completion willingness, and ranking. Table 5 tests evidence sources for TeachQuiz, separating full video learning from text-only, animation-only, and random-video alternatives.",
+        "source_refs": [
+          "code2video-holdout-paper:table4",
+          "code2video-holdout-paper:table5",
+          "code2video-holdout-paper:sec3.3"
+        ]
+      },
+      {
+        "id": "evidence_vs_open_questions",
+        "title": "Evidence versus open questions",
+        "body": "Table 1 supports reported gains in AES Avg and TeachQuiz for Code2Video variants. The open questions are not the same claim: Eq. 1–2 scoring is only candidate-grounded in the supplied repository artifacts, and the paper’s conclusion still names future work.",
+        "source_refs": [
+          "code2video-holdout-paper:table1",
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-paper:sec6",
+          "code2video-holdout-repo:README.md",
+          "code2video-holdout-repo:json_files/questions_by_topic_10.json"
+        ]
+      },
+      {
+        "id": "future_work_scope_scalability",
+        "title": "Future work on scope and scalability",
+        "body": "The paper’s conclusion states that future work includes broadening the video scope and developing more lightweight, scalable agent frameworks. This limits the conclusion to demonstrated gains, not universal coverage or final scalability.",
+        "source_refs": [
+          "code2video-holdout-paper:sec6"
+        ]
+      }
+    ]
+  },
+  "formula_map": {
+    "schema_version": "formula-manim-map/0.1.0",
+    "registry_ref": "data/formula_explainer/primitive_registry.json",
+    "manim_compatibility": {
+      "validated_render_versions": [
+        "0.19.0",
+        "0.20.1"
+      ],
+      "minimum_supported_version": null,
+      "render_evidence_refs": [
+        "experiments/explainer_pipeline/micro_scene_manifest.json",
+        "experiments/formula_explainer/babel_smoke_manifest.json#job:9313551"
+      ],
+      "statement": "The formula primitives have observed render evidence on Manim 0.19.0 and 0.20.1. No minimum-version compatibility claim is made."
+    },
+    "formulas": [],
+    "formula_nodes": [
+      {
+        "node_id": "node:coverage:code2video-holdout:1",
+        "formula_id": "coverage:code2video-holdout:1",
+        "level": "equation coverage",
+        "label": "Eq. 1 — TeachQuiz",
+        "expression": "Define a student model score for a teacher video by quiz correctness.",
+        "source_locator": "code2video-holdout-paper:eq1"
+      },
+      {
+        "node_id": "node:coverage:code2video-holdout:2",
+        "formula_id": "coverage:code2video-holdout:2",
+        "level": "equation coverage",
+        "label": "Eq. 2 — TeachQuiz score",
+        "expression": "Subtract the unlearned baseline to isolate video-induced knowledge transfer.",
+        "source_locator": "code2video-holdout-paper:eq2"
+      },
+      {
+        "node_id": "node:coverage:code2video-holdout:3",
+        "formula_id": "coverage:code2video-holdout:3",
+        "level": "equation coverage",
+        "label": "Eq. 3 — Unlearning stage",
+        "expression": "Constrain answers during selective unlearning to ground the knowledge-removed baseline.",
+        "source_locator": "code2video-holdout-paper:eq3"
+      },
+      {
+        "node_id": "node:coverage:code2video-holdout:4",
+        "formula_id": "coverage:code2video-holdout:4",
+        "level": "equation coverage",
+        "label": "Eq. 4 — Relearning stage",
+        "expression": "Constrain relearning answers to video-grounded evidence after exposure to V.",
+        "source_locator": "code2video-holdout-paper:eq4"
+      }
+    ],
+    "manim_nodes": [
+      {
+        "primitive_id": "manim.math_tex",
+        "label": "manim.MathTex",
+        "origin": "built_in",
+        "origin_label": "Manim built-in",
+        "status": "available",
+        "operations": [
+          "formula_display"
+        ],
+        "animation_contract": "Use MathTex for paper equations; isolate semantic substrings before applying Write, Indicate, or TransformMatchingTex.",
+        "limitations": [
+          "Requires a working LaTeX toolchain in the render environment."
+        ]
+      },
+      {
+        "primitive_id": "project.formula_operation_walk",
+        "label": "scenes.formula_explainer_scene.OperationWalk",
+        "origin": "project_reusable",
+        "origin_label": "Project reusable",
+        "status": "available",
+        "operations": [
+          "formula_operation_dag",
+          "stop_gradient"
+        ],
+        "animation_contract": "Every operation chip shows semantic operation text plus a non-color origin badge.",
+        "limitations": [
+          "The first renderer lays out a topological sequence rather than arbitrary branches."
+        ]
+      },
+      {
+        "primitive_id": "project.metric_bars",
+        "label": "scenes.explainer_primitives.MetricBars",
+        "origin": "project_reusable",
+        "origin_label": "Project reusable",
+        "status": "available",
+        "operations": [
+          "metric_animation",
+          "compare",
+          "ablation",
+          "setting_transition"
+        ],
+        "animation_contract": "Keep metric, scale, and row identity fixed while transforming only the controlled setting and sourced values.",
+        "limitations": [
+          "Exact numeric rows only; qualitative paper curves require an explicit schematic label."
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:1:manim.math_tex",
+        "source": "node:coverage:code2video-holdout:1",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "metric_animation",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq1"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:1:project.formula_operation_walk",
+        "source": "node:coverage:code2video-holdout:1",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "metric_animation",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq1"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:1:project.metric_bars",
+        "source": "node:coverage:code2video-holdout:1",
+        "target": "project.metric_bars",
+        "state": "implemented",
+        "operation_type": "metric_animation",
+        "reason": "Keep metric, scale, and row identity fixed while transforming only the controlled setting and sourced values.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq1"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:2:manim.math_tex",
+        "source": "node:coverage:code2video-holdout:2",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "metric_animation",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq2"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:2:project.formula_operation_walk",
+        "source": "node:coverage:code2video-holdout:2",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "metric_animation",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq2"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:2:project.metric_bars",
+        "source": "node:coverage:code2video-holdout:2",
+        "target": "project.metric_bars",
+        "state": "implemented",
+        "operation_type": "metric_animation",
+        "reason": "Keep metric, scale, and row identity fixed while transforming only the controlled setting and sourced values.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq2"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:3:manim.math_tex",
+        "source": "node:coverage:code2video-holdout:3",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "none",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq3"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:3:project.formula_operation_walk",
+        "source": "node:coverage:code2video-holdout:3",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "none",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq3"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:4:manim.math_tex",
+        "source": "node:coverage:code2video-holdout:4",
+        "target": "manim.math_tex",
+        "state": "implemented",
+        "operation_type": "none",
+        "reason": "Keep the paper equation visible as the stable anchor.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq4"
+        ]
+      },
+      {
+        "edge_id": "edge:node:coverage:code2video-holdout:4:project.formula_operation_walk",
+        "source": "node:coverage:code2video-holdout:4",
+        "target": "project.formula_operation_walk",
+        "state": "candidate",
+        "operation_type": "none",
+        "reason": "Expose operation order when a full Formula IR is available.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq4"
+        ]
+      }
+    ]
+  },
+  "code_map": {
+    "schema_version": "explainer-code-map/0.1.0",
+    "formula_nodes": [
+      {
+        "node_id": "formula:coverage:code2video-holdout:eq.-1",
+        "formula_id": "coverage:code2video-holdout:eq.-1",
+        "label": "student model score",
+        "expression": "S(Vα)=1[ϕ(Q,Vα)=Y]",
+        "source_url": "https://arxiv.org/abs/2305.05714"
+      },
+      {
+        "node_id": "formula:coverage:code2video-holdout:eq.-2",
+        "formula_id": "coverage:code2video-holdout:eq.-2",
+        "label": "TeachQuiz score",
+        "expression": "S̃(Vα)=S(Vα)-S(Vα|unlearn)",
+        "source_url": "https://arxiv.org/abs/2305.05714"
+      },
+      {
+        "node_id": "formula:coverage:code2video-holdout:eq.-3",
+        "formula_id": "coverage:code2video-holdout:eq.-3",
+        "label": "unlearning answer constraint",
+        "expression": "f(qi|Punlearn) ∈ {yi, NULL}",
+        "source_url": "https://arxiv.org/abs/2305.05714"
+      },
+      {
+        "node_id": "formula:coverage:code2video-holdout:eq.-4",
+        "formula_id": "coverage:code2video-holdout:eq.-4",
+        "label": "video-grounded relearning constraint",
+        "expression": "f(qi|Plearn,V) ∈ {yi, NULL}",
+        "source_url": "https://arxiv.org/abs/2305.05714"
+      },
+      {
+        "node_id": "formula:coverage:code2video-holdout:eq.-2.eq.-3.eq.-4",
+        "formula_id": "coverage:code2video-holdout:eq.-2.eq.-3.eq.-4",
+        "label": "TeachQuiz prompt lifecycle",
+        "expression": "Punlearn then Plearn with V",
+        "source_url": "https://arxiv.org/abs/2305.05714"
+      }
+    ],
+    "code_nodes": [
+      {
+        "node_id": "code:code2video-holdout-repo:question/options/answer",
+        "code_id": "code2video-holdout-repo",
+        "symbol": "question/options/answer",
+        "path": "json_files/questions_by_topic_10.json",
+        "line_start": 1,
+        "line_end": 80,
+        "role": "The quiz set Q and answer key Y are repository artifacts used by the scoring expression; scoring script is referenced but not included in corpus.",
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/json_files/questions_by_topic_10.json#L1-L80"
+      },
+      {
+        "node_id": "code:code2video-holdout-repo:eval_TQ.py",
+        "code_id": "code2video-holdout-repo",
+        "symbol": "eval_TQ.py",
+        "path": "README.md",
+        "line_start": 210,
+        "line_end": 215,
+        "role": "README exposes TeachQuiz evaluation as eval_TQ.py; the implementation file is not present in the supplied corpus.",
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/README.md#L210-L215"
+      },
+      {
+        "node_id": "code:code2video-holdout-repo:get_unlearning_prompt",
+        "code_id": "code2video-holdout-repo",
+        "symbol": "get_unlearning_prompt",
+        "path": "prompts/stage5_unlearning.py",
+        "line_start": 4,
+        "line_end": 27,
+        "role": "The prompt blocks shadow knowledge and requires INSUFFICIENT EVIDENCE/NULL when the question depends on forbidden concept knowledge.",
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/prompts/stage5_unlearning.py#L4-L27"
+      },
+      {
+        "node_id": "code:code2video-holdout-repo:get_unlearning_and_video_learning_prompt",
+        "code_id": "code2video-holdout-repo",
+        "symbol": "get_unlearning_and_video_learning_prompt",
+        "path": "prompts/stage5_unlearning.py",
+        "line_start": 30,
+        "line_end": 47,
+        "role": "The prompt restricts evidence to attached educational video plus question/options and returns NULL if video evidence is insufficient.",
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/prompts/stage5_unlearning.py#L30-L47"
+      },
+      {
+        "node_id": "code:code2video-holdout-repo:get_unlearning_prompt, get_unlearning_and_video_learning_prompt",
+        "code_id": "code2video-holdout-repo",
+        "symbol": "get_unlearning_prompt, get_unlearning_and_video_learning_prompt",
+        "path": "prompts/__init__.py",
+        "line_start": 10,
+        "line_end": 22,
+        "role": "The prompt package exports both unlearning and video-learning prompts used to instantiate TeachQuiz stages.",
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/prompts/__init__.py#L10-L22"
+      }
+    ],
+    "formula_code_edges": [
+      {
+        "edge_id": "formula:coverage:code2video-holdout:eq.-1->code:code2video-holdout-repo:question/options/answer",
+        "source": "formula:coverage:code2video-holdout:eq.-1",
+        "target": "code:code2video-holdout-repo:question/options/answer",
+        "state": "candidate",
+        "role": "The quiz set Q and answer key Y are repository artifacts used by the scoring expression; scoring script is referenced but not included in corpus.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq1",
+          "code2video-holdout-repo:json_files/questions_by_topic_10.json"
+        ]
+      },
+      {
+        "edge_id": "formula:coverage:code2video-holdout:eq.-2->code:code2video-holdout-repo:eval_TQ.py",
+        "source": "formula:coverage:code2video-holdout:eq.-2",
+        "target": "code:code2video-holdout-repo:eval_TQ.py",
+        "state": "candidate",
+        "role": "README exposes TeachQuiz evaluation as eval_TQ.py; the implementation file is not present in the supplied corpus.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-repo:README.md"
+        ]
+      },
+      {
+        "edge_id": "formula:coverage:code2video-holdout:eq.-3->code:code2video-holdout-repo:get_unlearning_prompt",
+        "source": "formula:coverage:code2video-holdout:eq.-3",
+        "target": "code:code2video-holdout-repo:get_unlearning_prompt",
+        "state": "confirmed",
+        "role": "The prompt blocks shadow knowledge and requires INSUFFICIENT EVIDENCE/NULL when the question depends on forbidden concept knowledge.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq3",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py:get_unlearning_prompt"
+        ]
+      },
+      {
+        "edge_id": "formula:coverage:code2video-holdout:eq.-4->code:code2video-holdout-repo:get_unlearning_and_video_learning_prompt",
+        "source": "formula:coverage:code2video-holdout:eq.-4",
+        "target": "code:code2video-holdout-repo:get_unlearning_and_video_learning_prompt",
+        "state": "confirmed",
+        "role": "The prompt restricts evidence to attached educational video plus question/options and returns NULL if video evidence is insufficient.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq4",
+          "code2video-holdout-repo:prompts/stage5_unlearning.py:get_unlearning_and_video_learning_prompt"
+        ]
+      },
+      {
+        "edge_id": "formula:coverage:code2video-holdout:eq.-2.eq.-3.eq.-4->code:code2video-holdout-repo:get_unlearning_prompt, get_unlearning_and_video_learning_prompt",
+        "source": "formula:coverage:code2video-holdout:eq.-2.eq.-3.eq.-4",
+        "target": "code:code2video-holdout-repo:get_unlearning_prompt, get_unlearning_and_video_learning_prompt",
+        "state": "confirmed",
+        "role": "The prompt package exports both unlearning and video-learning prompts used to instantiate TeachQuiz stages.",
+        "evidence_refs": [
+          "code2video-holdout-paper:eq2",
+          "code2video-holdout-repo:prompts/__init__.py"
+        ]
+      }
+    ],
+    "example": {
+      "label": "Linear transformations and matrices through Code2Video",
+      "input": "learning topic from long_video_topics_list.json",
+      "output": "merged Manim-rendered educational video mp4"
+    },
+    "dag_nodes": [
+      {
+        "id": "n_topic",
+        "label": "learning topic",
+        "kind": "input",
+        "stage": "repository lifecycle stage",
+        "artifact": "Linear transformations and matrices",
+        "detail": "A topic string is available in the benchmark list and can be selected for single or batch generation.",
+        "path": "json_files/long_video_topics_list.json",
+        "line_start": 10,
+        "line_end": 10,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/json_files/long_video_topics_list.json#L10-L10"
+      },
+      {
+        "id": "n_init",
+        "label": "TeachingVideoAgent.__init__",
+        "kind": "operation",
+        "stage": "repository lifecycle stage",
+        "artifact": "output_dir, assets_dir, reference mapping",
+        "detail": "The agent stores the learning topic, creates output folders, loads long_video_ref_mapping, and initializes ScopeRefine and grid extraction.",
+        "path": "src/agent.py",
+        "line_start": 42,
+        "line_end": 93,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L42-L93"
+      },
+      {
+        "id": "n_outline_prompt",
+        "label": "get_prompt1_outline",
+        "kind": "function",
+        "stage": "Planner",
+        "artifact": "outline prompt",
+        "detail": "The prompt asks for a JSON teaching outline with target audience, ordered sections, content, and examples.",
+        "path": "prompts/stage1.py",
+        "line_start": 1,
+        "line_end": 46,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/prompts/stage1.py#L1-L46"
+      },
+      {
+        "id": "n_outline",
+        "label": "generate_outline",
+        "kind": "operation",
+        "stage": "Planner",
+        "artifact": "outline.json",
+        "detail": "The agent either loads outline.json or requests an LLM, parses JSON, and stores topic, target_audience, and sections.",
+        "path": "src/agent.py",
+        "line_start": 119,
+        "line_end": 174,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L119-L174"
+      },
+      {
+        "id": "n_storyboard_prompt",
+        "label": "get_prompt2_storyboard",
+        "kind": "function",
+        "stage": "Planner",
+        "artifact": "storyboard prompt",
+        "detail": "The prompt converts the outline into section-level lecture_lines and matching animations for Manim.",
+        "path": "prompts/stage2.py",
+        "line_start": 4,
+        "line_end": 78,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/prompts/stage2.py#L4-L78"
+      },
+      {
+        "id": "n_assets",
+        "label": "_enhance_storyboard_with_assets",
+        "kind": "operation",
+        "stage": "External Database",
+        "artifact": "storyboard_with_assets.json",
+        "detail": "If enabled, storyboard data is passed to process_storyboard_with_assets and saved with asset references.",
+        "path": "src/agent.py",
+        "line_start": 255,
+        "line_end": 273,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L255-L273"
+      },
+      {
+        "id": "n_sections",
+        "label": "generate_storyboard",
+        "kind": "buffer",
+        "stage": "Planner to Coder",
+        "artifact": "Section objects",
+        "detail": "Enhanced storyboard sections become Section dataclasses carrying id, title, lecture_lines, and animations.",
+        "path": "src/agent.py",
+        "line_start": 176,
+        "line_end": 253,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L176-L253"
+      },
+      {
+        "id": "n_code_prompt",
+        "label": "get_prompt3_code",
+        "kind": "function",
+        "stage": "Coder",
+        "artifact": "Manim code prompt",
+        "detail": "The prompt requires TeachingScene, 6×6 anchor positions, and code blocks matching lecture lines.",
+        "path": "prompts/stage3.py",
+        "line_start": 4,
+        "line_end": 64,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/prompts/stage3.py#L4-L64"
+      },
+      {
+        "id": "n_parallel_code",
+        "label": "generate_codes",
+        "kind": "operation",
+        "stage": "Coder",
+        "artifact": "section .py files",
+        "detail": "Sections are submitted to a ThreadPoolExecutor and each section code is generated independently.",
+        "path": "src/agent.py",
+        "line_start": 495,
+        "line_end": 516,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L495-L516"
+      },
+      {
+        "id": "n_debug_render",
+        "label": "debug_and_fix_code",
+        "kind": "operation",
+        "stage": "Coder",
+        "artifact": "section mp4",
+        "detail": "Manim is run on each section; on failure, ScopeRefine attempts a smart fix before retrying.",
+        "path": "src/agent.py",
+        "line_start": 335,
+        "line_end": 381,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L335-L381"
+      },
+      {
+        "id": "n_critic",
+        "label": "get_mllm_feedback and optimize_with_feedback",
+        "kind": "operation",
+        "stage": "Critic",
+        "artifact": "optimized section video",
+        "detail": "The VLM inspects rendered video and grid occupancy; suggested grid fixes can modify code and rerender.",
+        "path": "src/agent.py",
+        "line_start": 383,
+        "line_end": 493,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L383-L493"
+      },
+      {
+        "id": "n_merge",
+        "label": "merge_videos",
+        "kind": "output",
+        "stage": "repository lifecycle stage",
+        "artifact": "Linear_transformations_and_matrices.mp4",
+        "detail": "Rendered section videos are listed in sorted section order and concatenated into the final mp4.",
+        "path": "src/agent.py",
+        "line_start": 659,
+        "line_end": 692,
+        "source_url": "https://github.com/showlab/Code2Video/blob/7729a8b71582b3982bef70f5860a9a98354e9a70/src/agent.py#L659-L692"
+      }
+    ],
+    "dag_edges": [
+      {
+        "source": "n_topic",
+        "target": "n_init",
+        "label": "topic string is passed into TeachingVideoAgent as knowledge_point"
+      },
+      {
+        "source": "n_init",
+        "target": "n_outline_prompt",
+        "label": "agent chooses reference image path when mapping contains a filename"
+      },
+      {
+        "source": "n_outline_prompt",
+        "target": "n_outline",
+        "label": "prompt is sent to API; response is parsed as outline.json"
+      },
+      {
+        "source": "n_outline",
+        "target": "n_storyboard_prompt",
+        "label": "TeachingOutline dictionary is serialized into the storyboard prompt"
+      },
+      {
+        "source": "n_storyboard_prompt",
+        "target": "n_assets",
+        "label": "storyboard JSON branches to asset enhancement when use_assets is true"
+      },
+      {
+        "source": "n_assets",
+        "target": "n_sections",
+        "label": "enhanced storyboard is loaded and each section becomes a Section object"
+      },
+      {
+        "source": "n_sections",
+        "target": "n_code_prompt",
+        "label": "each Section supplies title, lecture_lines, and animations to the code prompt"
+      },
+      {
+        "source": "n_code_prompt",
+        "target": "n_parallel_code",
+        "label": "ThreadPoolExecutor loops over sections for independent code synthesis"
+      },
+      {
+        "source": "n_parallel_code",
+        "target": "n_debug_render",
+        "label": "generated section .py files are handed to Manim rendering and ScopeRefine retry"
+      },
+      {
+        "source": "n_debug_render",
+        "target": "n_critic",
+        "label": "successful section videos enter feedback rounds if use_feedback is true"
+      },
+      {
+        "source": "n_critic",
+        "target": "n_debug_render",
+        "label": "critic feedback loops back into code modification and rerender attempts"
+      },
+      {
+        "source": "n_debug_render",
+        "target": "n_merge",
+        "label": "successful section mp4 paths are collected for ffmpeg concatenation"
+      }
+    ],
+    "experiment_pipeline": [
+      {
+        "id": "p_dataset",
+        "label": "MMMC construction",
+        "detail": "117 full videos and 339 sub-clips from 3Blue1Brown across 13 subject areas.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.2"
+        ]
+      },
+      {
+        "id": "p_task",
+        "label": "learning query to Manim",
+        "detail": "The task maps a learning query to executable Manim code and a rendered tutorial video.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.1"
+        ]
+      },
+      {
+        "id": "p_baselines",
+        "label": "baseline families",
+        "detail": "Human-crafted, pixel-based diffusion, CodeLLM Generation, and Agentic Generation are compared.",
+        "source_refs": [
+          "code2video-holdout-paper:sec5.1"
+        ]
+      },
+      {
+        "id": "p_aes",
+        "label": "VLM-as-Judges",
+        "detail": "Element Layout, Attractiveness, Logic Flow, Visual Consistency, Accuracy & Depth use 100-point scoring.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.3"
+        ]
+      },
+      {
+        "id": "p_teachquiz",
+        "label": "TeachQuiz",
+        "detail": "Unlearning then Learning-from-Video measures knowledge recovery from generated video evidence.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.3",
+          "code2video-holdout-paper:fig3"
+        ]
+      },
+      {
+        "id": "p_efficiency",
+        "label": "efficiency",
+        "detail": "Average code generation time and token usage per video measure scalability and feasibility.",
+        "source_refs": [
+          "code2video-holdout-paper:sec3.3"
+        ]
+      },
+      {
+        "id": "p_main",
+        "label": "main results",
+        "detail": "Table 1 reports Efficiency, Aesthetics dimensions, Avg, and Quiz for all methods.",
+        "source_refs": [
+          "code2video-holdout-paper:table1"
+        ]
+      },
+      {
+        "id": "p_quality_ablation",
+        "label": "quality ablations",
+        "detail": "Planner, External Database, Visual Anchor, and Critic removals are measured by Aesthetics and Quiz.",
+        "source_refs": [
+          "code2video-holdout-paper:table2"
+        ]
+      },
+      {
+        "id": "p_eff_ablation",
+        "label": "efficiency ablations",
+        "detail": "Parallel execution and ScopeRefine are removed to measure time and token overhead.",
+        "source_refs": [
+          "code2video-holdout-paper:table3"
+        ]
+      },
+      {
+        "id": "p_human",
+        "label": "human study",
+        "detail": "Participants rate Aesthetics, TeachQuiz, Completion Willingness, and Average Ranking.",
+        "source_refs": [
+          "code2video-holdout-paper:table4"
+        ]
+      }
+    ],
+    "repository_sources": [
+      {
+        "code_id": "code2video-holdout-repo",
+        "repository": "https://github.com/showlab/Code2Video",
+        "revision": "7729a8b71582b3982bef70f5860a9a98354e9a70",
+        "mapping_state": "confirmed",
+        "excerpts": [
+          {
+            "path": "README.md",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 360
+          },
+          {
+            "path": "README.zh-CN.md",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 214
+          },
+          {
+            "path": "json_files/long_video_ref_mapping.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "json_files/long_video_topics_list.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "json_files/long_video_topics_list_safe.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "json_files/questions_by_topic_10.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 661
+          },
+          {
+            "path": "json_files/topics_list_safe.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 119
+          },
+          {
+            "path": "prompts/__init__.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 24
+          },
+          {
+            "path": "prompts/base_class.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 43
+          },
+          {
+            "path": "prompts/stage1.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 49
+          },
+          {
+            "path": "prompts/stage2.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 126
+          },
+          {
+            "path": "prompts/stage3.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 78
+          },
+          {
+            "path": "prompts/stage4.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 101
+          },
+          {
+            "path": "prompts/stage5_eva.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 108
+          },
+          {
+            "path": "prompts/stage5_unlearning.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 59
+          },
+          {
+            "path": "src/agent.py",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 737
+          },
+          {
+            "path": "src/api_config.json",
+            "symbol": "tracked source selected for grounding",
+            "line_start": 1,
+            "line_end": 39
+          }
+        ]
+      }
+    ]
+  },
+  "generation": {
+    "pipeline_version": "explainer-pipeline/0.1.0",
+    "source_packet_sha256": "5553c197a1124918599d9f12b10dc8de4915972de42316c163d93e8fe7aef1c5",
+    "stage_traces": [
+      {
+        "stage": "source_grounding",
+        "paper_id": "code2video-holdout",
+        "provider": "amazon_bedrock_mantle",
+        "model": "openai.gpt-5.5",
+        "generation_mode": "live",
+        "prompt_sha256": "5fcaabbe853a51337951c0dc1230fbd90bc3254fa71561e6af9bc8f089448d79",
+        "final_prompt_sha256": "5fcaabbe853a51337951c0dc1230fbd90bc3254fa71561e6af9bc8f089448d79",
+        "response_sha256": "2930436663b4d69bd9d8048a57f65bd7d0e7356555af61d73ee81dac1f227d88",
+        "usage": {
+          "input_tokens": 55104,
+          "output_tokens": 7707,
+          "reasoning_tokens": 960,
+          "total_tokens": 62811
+        },
+        "duration_ms": 48242,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "prompt_sha256": "5fcaabbe853a51337951c0dc1230fbd90bc3254fa71561e6af9bc8f089448d79",
+            "response_sha256": "2930436663b4d69bd9d8048a57f65bd7d0e7356555af61d73ee81dac1f227d88",
+            "usage": {
+              "input_tokens": 55104,
+              "output_tokens": 7707,
+              "reasoning_tokens": 960,
+              "total_tokens": 62811
+            },
+            "duration_ms": 48242,
+            "status": "valid"
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.557403,
+          "rate_card": {
+            "rate_card_id": "aws-bedrock-gpt-5.5-us-east-2026-07-22",
+            "provider": "bedrock_mantle",
+            "input_per_million_usd": 5.5,
+            "output_per_million_usd": 33.0,
+            "source_url": "https://aws.amazon.com/bedrock/pricing/",
+            "note": "AWS in-region on-demand price for US East; output includes reasoning tokens."
+          }
+        },
+        "input_manifest_sha256": "b91b691b8081896507175aba7a2617be004c791c9c87652375ae9f075abb107c",
+        "grounding_location_audit": {
+          "checked_code_locations": 17
+        },
+        "structural_normalizations": [
+          {
+            "operation": "drop_empty_optional_fold_reason",
+            "equation_coverage_index": 0
+          },
+          {
+            "operation": "drop_empty_optional_fold_reason",
+            "equation_coverage_index": 1
+          },
+          {
+            "operation": "drop_empty_optional_fold_reason",
+            "equation_coverage_index": 2
+          },
+          {
+            "operation": "drop_empty_optional_fold_reason",
+            "equation_coverage_index": 3
+          }
+        ]
+      },
+      {
+        "stage": "concept_graph",
+        "paper_id": "code2video-holdout",
+        "provider": "amazon_bedrock_mantle",
+        "model": "openai.gpt-5.5",
+        "generation_mode": "live",
+        "prompt_sha256": "2eee5d077497a26e5e9c470c782754dedfebd7936c06e5079caca316e7767c3e",
+        "final_prompt_sha256": "2eee5d077497a26e5e9c470c782754dedfebd7936c06e5079caca316e7767c3e",
+        "response_sha256": "6df78c152b2d3984503f6bd7f1a34a8d1ebc60ab80dc17d55e68123f49100fba",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 5994,
+          "output_tokens": 3903,
+          "reasoning_tokens": 1552,
+          "total_tokens": 9897
+        },
+        "duration_ms": 29353,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "2eee5d077497a26e5e9c470c782754dedfebd7936c06e5079caca316e7767c3e",
+            "response_sha256": "6df78c152b2d3984503f6bd7f1a34a8d1ebc60ab80dc17d55e68123f49100fba",
+            "usage": {
+              "input_tokens": 5994,
+              "output_tokens": 3903,
+              "reasoning_tokens": 1552,
+              "total_tokens": 9897
+            },
+            "duration_ms": 29353
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.161766,
+          "rate_card": {
+            "rate_card_id": "aws-bedrock-gpt-5.5-us-east-2026-07-22",
+            "provider": "bedrock_mantle",
+            "input_per_million_usd": 5.5,
+            "output_per_million_usd": 33.0,
+            "source_url": "https://aws.amazon.com/bedrock/pricing/",
+            "note": "AWS in-region on-demand price for US East; output includes reasoning tokens."
+          }
+        }
+      },
+      {
+        "stage": "lesson_plan",
+        "paper_id": "code2video-holdout",
+        "provider": "amazon_bedrock_mantle",
+        "model": "openai.gpt-5.5",
+        "generation_mode": "live",
+        "prompt_sha256": "3fa34c6bf6de9758eb53228304c4f666fd2fe631aa5be038a658730cfb5d9088",
+        "final_prompt_sha256": "3fa34c6bf6de9758eb53228304c4f666fd2fe631aa5be038a658730cfb5d9088",
+        "response_sha256": "cb703be06fb45ef6f16e693a28e5f747308e6f77ebf2482ae308eeff0de48e93",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 8469,
+          "output_tokens": 4196,
+          "reasoning_tokens": 516,
+          "total_tokens": 12665
+        },
+        "duration_ms": 28093,
+        "attempt_count": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "3fa34c6bf6de9758eb53228304c4f666fd2fe631aa5be038a658730cfb5d9088",
+            "response_sha256": "cb703be06fb45ef6f16e693a28e5f747308e6f77ebf2482ae308eeff0de48e93",
+            "usage": {
+              "input_tokens": 8469,
+              "output_tokens": 4196,
+              "reasoning_tokens": 516,
+              "total_tokens": 12665
+            },
+            "duration_ms": 28093
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.185048,
+          "rate_card": {
+            "rate_card_id": "aws-bedrock-gpt-5.5-us-east-2026-07-22",
+            "provider": "bedrock_mantle",
+            "input_per_million_usd": 5.5,
+            "output_per_million_usd": 33.0,
+            "source_url": "https://aws.amazon.com/bedrock/pricing/",
+            "note": "AWS in-region on-demand price for US East; output includes reasoning tokens."
+          }
+        }
+      },
+      {
+        "stage": "section_content",
+        "paper_id": "code2video-holdout",
+        "provider": "amazon_bedrock_mantle",
+        "model": "openai.gpt-5.5",
+        "generation_mode": "live",
+        "prompt_sha256": "95e3963085651be180a6d640ae331d76580e231e968790b48489d4ab1dd24577",
+        "final_prompt_sha256": "95e3963085651be180a6d640ae331d76580e231e968790b48489d4ab1dd24577",
+        "response_sha256": "01755a39ccf6d7372058e54e67025d5a3f2255d9b34668ffe432bcc7b47c3297",
+        "source_record": null,
+        "usage": {
+          "input_tokens": 57948,
+          "output_tokens": 15661,
+          "reasoning_tokens": 8276,
+          "total_tokens": 73609
+        },
+        "duration_ms": 128304,
+        "attempt_count": 6,
+        "section_call_count": 6,
+        "structural_normalizations": [],
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "a5da4302746b47601f7ff8fb837d776e674e85ac6acb4ea9957134aa413bce2d",
+            "response_sha256": "ed663b80306ced8e6c8cff38618b0ac1d02054f01d45261ab72838e2e9330143",
+            "usage": {
+              "input_tokens": 9619,
+              "output_tokens": 1076,
+              "reasoning_tokens": 516,
+              "total_tokens": 10695
+            },
+            "duration_ms": 9880,
+            "section_id": "introduction_code_centric_paradigm"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "4a9e4ac624e96c825029e2be3b322c2b50ef7d6123c33f3427582c1752781d9a",
+            "response_sha256": "29fe46fa3c15be7c0225d1bd79d7092875dca3a7e32c45fba8eec3c4d80ac3e1",
+            "usage": {
+              "input_tokens": 9624,
+              "output_tokens": 2079,
+              "reasoning_tokens": 1034,
+              "total_tokens": 11703
+            },
+            "duration_ms": 17331,
+            "section_id": "related_work_video_generation_and_coding_agents"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "a189b600b6b291ed2016a29d603c788e4d0d9619af859b4dd45676481a7d1ace",
+            "response_sha256": "8769cc90196da094afd1d84bf0cd6734e2883127af6d40a4dd1b1a1000fd6c64",
+            "usage": {
+              "input_tokens": 9632,
+              "output_tokens": 3492,
+              "reasoning_tokens": 2588,
+              "total_tokens": 13124
+            },
+            "duration_ms": 31427,
+            "section_id": "mmmc_benchmark"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "46975cb781210d9d3ddce42ac8634403dd5506cf1feee680e85ad2ac6a9b4ac9",
+            "response_sha256": "6c2306f8e245c9f0933e468e124be51a522f0b62fdc4a0215421b7427b27eee9",
+            "usage": {
+              "input_tokens": 9732,
+              "output_tokens": 3398,
+              "reasoning_tokens": 1552,
+              "total_tokens": 13130
+            },
+            "duration_ms": 25485,
+            "section_id": "method_code2video"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "7b4cd255180d7a0b5029ef9091b029859e4a0307fad3b84da58701c1387c0e6b",
+            "response_sha256": "deb95c246203ec07605f41966b790fed5d9d0d890c8f1175959f0f8d075b5585",
+            "usage": {
+              "input_tokens": 9712,
+              "output_tokens": 4157,
+              "reasoning_tokens": 2070,
+              "total_tokens": 13869
+            },
+            "duration_ms": 32800,
+            "section_id": "experiment"
+          },
+          {
+            "attempt": 1,
+            "status": "valid",
+            "prompt_sha256": "c02c2a8f6871f9613191fbb389589ef853a4bc383ba1582a8d35adf6965f1478",
+            "response_sha256": "bd794154b5c3ddd6d12064bcef3f21ea601a754224fbbd15668f4d204d1f88c4",
+            "usage": {
+              "input_tokens": 9629,
+              "output_tokens": 1459,
+              "reasoning_tokens": 516,
+              "total_tokens": 11088
+            },
+            "duration_ms": 11381,
+            "section_id": "conclusion"
+          }
+        ],
+        "cost": {
+          "status": "estimated",
+          "estimated_usd": 0.835527,
+          "rate_card": {
+            "rate_card_id": "aws-bedrock-gpt-5.5-us-east-2026-07-22",
+            "provider": "bedrock_mantle",
+            "input_per_million_usd": 5.5,
+            "output_per_million_usd": 33.0,
+            "source_url": "https://aws.amazon.com/bedrock/pricing/",
+            "note": "AWS in-region on-demand price for US East; output includes reasoning tokens."
+          }
+        }
+      },
+      {
+        "stage": "media_compilation",
+        "paper_id": "code2video-holdout",
+        "provider": "local_deterministic_compiler",
+        "model": "manim-community-0.19.0",
+        "generation_mode": "deterministic",
+        "prompt_sha256": "400f61b65a709498e17c41410c4fafed9d6a742e10e029dfb91ea77f39d2d7ef",
+        "final_prompt_sha256": "400f61b65a709498e17c41410c4fafed9d6a742e10e029dfb91ea77f39d2d7ef",
+        "response_sha256": "3730f75a595143f59d49398f679dd107cc3c9f52349d0bb5b304473d6220c605",
+        "duration_ms": 10933,
+        "attempt_count": 1,
+        "structural_normalizations": [
+          {
+            "operation": "compile_grounded_lifecycle_media",
+            "section_id": "method_code2video",
+            "media_id": "code2video-holdout-repository-lifecycle"
+          }
+        ]
+      }
+    ],
+    "completion": "full"
+  }
+}

@@ -23,6 +23,12 @@
           "response_sha256": "36cf48ea3181823db2928ddfa04969a28e0456856359158e03c0feb2971c8685"
         },
         "note": "The first two provider responses accepted the MP4 but failed the output contract (truncated JSON, then a top-level array); responseSchema made the third attempt valid."
+      },
+      "publication": {
+        "status": "published",
+        "verified_distinct_videos": 4,
+        "minimum_required": 2,
+        "evidence_url": "assets/backtranslation/publication/gemini-3-flash.json"
       }
     },
     {
@@ -43,6 +49,12 @@
           "response_sha256": "6c3690beca2afec43aa45211160a9304d1a67366682b5ae8b455be28ae747336"
         },
         "note": "Schema-constrained native-video perception completed on the first attempt."
+      },
+      "publication": {
+        "status": "published",
+        "verified_distinct_videos": 3,
+        "minimum_required": 2,
+        "evidence_url": "assets/backtranslation/publication/gemini-3-1-pro.json"
       }
     },
     {
@@ -64,6 +76,12 @@
           "response_sha256": "be14e118ca47e7757004156b53b5bc3c1863c76a3a2cc1b45c1b789c3ca78d48"
         },
         "note": "GPT-5.5 received five ordered temporal JPEG samples. This proves frame-packet perception, not native MP4 input."
+      },
+      "publication": {
+        "status": "published",
+        "verified_distinct_videos": 2,
+        "minimum_required": 2,
+        "evidence_url": "assets/backtranslation/publication/gpt-5-5.json"
       }
     }
   ],
@@ -164,7 +182,7 @@
               "index": 0,
               "status": "completed",
               "video_url": "assets/backtranslation/lf-001/gemini-3-flash/iter0/candidate.mp4",
-              "poster_url": "assets/backtranslation/lf-001/gemini-3-flash/iter0/poster.jpg",
+              "poster_url": null,
               "score": 0.65,
               "score_components": {
                 "technical_validity": 1.0,
@@ -200,7 +218,12 @@
               "library_extensions": [],
               "package_contract": "legacy-single-scene/v2",
               "critic_summary": "The candidate animation correctly captures the linear transformation of the grid and the vector, including the color shift from yellow to purple. However, it fails to render the background grid lines correctly, showing only a sparse set of axes and major lines instead of the full coordinate grid present in the reference.",
-              "changes": "Increase the density of the background grid lines to match the reference's coordinate system throughout the transformation."
+              "changes": "Increase the density of the background grid lines to match the reference's coordinate system throughout the transformation.",
+              "publication": {
+                "status": "published",
+                "sha256": "d0717809d6c1ee3c42604aca428e424e65f8a3fe526ef71afcf159c0fcbf720b",
+                "provenance_tier": "legacy_frozen_run_evidence"
+              }
             },
             {
               "index": 1,
@@ -242,7 +265,12 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate animation correctly captures the linear transformation of the grid and the vector's color change from yellow to purple. However, the grid lines in the candidate are significantly sparser than the reference, and the final transformation state shows a different shear/rotation angle.",
-              "changes": "Increase the density of the background grid lines and adjust the transformation matrix to match the specific shear and rotation seen in the reference video."
+              "changes": "Increase the density of the background grid lines and adjust the transformation matrix to match the specific shear and rotation seen in the reference video.",
+              "publication": {
+                "status": "published",
+                "sha256": "a40bc0180c90b3cd7e54d1b25a119c3b8b50dc6f8ce17c6b110e40600fcb4064",
+                "provenance_tier": "render_manifest"
+              }
             },
             {
               "index": 2,
@@ -284,7 +312,12 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate animation correctly captures the linear transformation of the grid and the vector, including the color shift from yellow to purple. However, the grid lines in the candidate are significantly thinner and less visible than the reference, and the final transformation state appears slightly more skewed than the original.",
-              "changes": "Increase the stroke width and opacity of the grid lines to match the reference's visual prominence."
+              "changes": "Increase the stroke width and opacity of the grid lines to match the reference's visual prominence.",
+              "publication": {
+                "status": "published",
+                "sha256": "c2ddf142a8fc19816e9cebe5671e0e566f1bf22b83269ba88c50fd08e08dc181",
+                "provenance_tier": "render_manifest"
+              }
             },
             {
               "index": 3,
@@ -326,7 +359,12 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate successfully captures the linear transformation of the grid and the vector's color shift from yellow to purple. However, it introduces an unauthorized camera zoom and pan that deviates from the static framing of the reference, and the grid lines are gray instead of blue.",
-              "changes": "Remove the camera movement (zoom and pan) to keep the frame static and update the grid line color to the specific blue used in the reference."
+              "changes": "Remove the camera movement (zoom and pan) to keep the frame static and update the grid line color to the specific blue used in the reference.",
+              "publication": {
+                "status": "published",
+                "sha256": "d5ebeb87ceff2a74c830d4a4a644de9ceecfe5427315810ce3e75485cd8fff7e",
+                "provenance_tier": "render_manifest"
+              }
             },
             {
               "index": 4,
@@ -384,7 +422,7 @@
               "index": 0,
               "status": "completed",
               "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter0/candidate.mp4",
-              "poster_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter0/poster.jpg",
+              "poster_url": null,
               "score": 0.4965,
               "score_components": {
                 "technical_validity": 1.0,
@@ -420,7 +458,12 @@
               "library_extensions": [],
               "package_contract": "legacy-single-scene/v2",
               "critic_summary": "The candidate video successfully animates the grid transformation and vector color change, but the grid density and the final transformation state do not match the reference. The candidate's grid lines become too sparse, and the final vector position is incorrect.",
-              "changes": "Adjust the linear transformation matrix applied to the grid and vector to match the reference, and ensure the grid line density (number of lines) is consistent with the reference."
+              "changes": "Adjust the linear transformation matrix applied to the grid and vector to match the reference, and ensure the grid line density (number of lines) is consistent with the reference.",
+              "publication": {
+                "status": "published",
+                "sha256": "1018be4b89df9f363162323e812c4c98c4db7e67f7e13919cfc2db135dcc6a8c",
+                "provenance_tier": "legacy_frozen_run_evidence"
+              }
             },
             {
               "index": 1,
@@ -462,7 +505,12 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate applies a pure rotation to the grid instead of the shear/scale transformation seen in the reference. While the vector color transition is correct, the fundamental linear transformation is wrong.",
-              "changes": "Change the linear transformation applied to the grid and vector from a rotation matrix to the correct shear/scale matrix that matches the reference."
+              "changes": "Change the linear transformation applied to the grid and vector from a rotation matrix to the correct shear/scale matrix that matches the reference.",
+              "publication": {
+                "status": "published",
+                "sha256": "ded0d627d4b49af493f0efed508e6de3786fb6f12fb104ff127873669fe1b59c",
+                "provenance_tier": "render_manifest"
+              }
             },
             {
               "index": 2,
@@ -504,13 +552,18 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate applies an incorrect linear transformation (a pure rotation instead of the reference's shear/scale) and initializes the vector at the wrong coordinates. The grid scale and camera zoom also differ significantly from the reference.",
-              "changes": "Update the linear transformation matrix applied to the grid and vector to match the reference (likely a shear and scale rather than a simple rotation), and change the vector's initial coordinates from [1, 2] to [2, 3]."
+              "changes": "Update the linear transformation matrix applied to the grid and vector to match the reference (likely a shear and scale rather than a simple rotation), and change the vector's initial coordinates from [1, 2] to [2, 3].",
+              "publication": {
+                "status": "published",
+                "sha256": "333a1f9960dc0f089d84ef9f92f17198ffa76e31369bd6357803d9075906d92e",
+                "provenance_tier": "render_manifest"
+              }
             },
             {
               "index": 3,
               "status": "completed",
-              "video_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter3/candidate.mp4",
-              "poster_url": "assets/backtranslation/lf-001/gemini-3-1-pro/iter3/poster.jpg",
+              "video_url": null,
+              "poster_url": null,
               "score": 0.482,
               "score_components": {
                 "technical_validity": 1.0,
@@ -546,7 +599,11 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate animation applies an incorrect linear transformation matrix and starts with the wrong initial vector coordinates. While the color transition and general animation timing are present, the spatial mapping is fundamentally flawed.",
-              "changes": "Correct the initial vector coordinates and update the linear transformation matrix applied to the grid and vector to match the shear and scaling seen in the reference."
+              "changes": "Correct the initial vector coordinates and update the linear transformation matrix applied to the grid and vector to match the shear and scaling seen in the reference.",
+              "publication": {
+                "status": "withheld",
+                "reason": "duplicate_video_bytes"
+              }
             },
             {
               "index": 4,
@@ -604,7 +661,7 @@
               "index": 0,
               "status": "completed",
               "video_url": "assets/backtranslation/lf-001/gpt-5-5/iter0/candidate.mp4",
-              "poster_url": "assets/backtranslation/lf-001/gpt-5-5/iter0/poster.jpg",
+              "poster_url": null,
               "score": 0.97,
               "score_components": {
                 "technical_validity": 1.0,
@@ -640,7 +697,12 @@
               "library_extensions": [],
               "package_contract": "legacy-single-scene/v2",
               "critic_summary": "The candidate captures the basic temporal idea of a vector changing direction/color over a deforming grid, but the grid is far too dim and lacks the bright blue/white major-axis structure of the reference. The vector motion is roughly aligned, yet the deformation, contrast, and color semantics are visibly weaker, making the final state and persistent grid structure hard to read.",
-              "changes": "Increase the grid and axis visibility to match the reference: use bright blue grid lines with clear white major axes throughout the animation, while preserving the same deformation timing."
+              "changes": "Increase the grid and axis visibility to match the reference: use bright blue grid lines with clear white major axes throughout the animation, while preserving the same deformation timing.",
+              "publication": {
+                "status": "published",
+                "sha256": "b2ce3d45ac7af730c55ca43e0f23b107bb0025ee8d592bff48707361ac7bf685",
+                "provenance_tier": "legacy_frozen_run_evidence"
+              }
             },
             {
               "index": 1,
@@ -682,7 +744,12 @@
               "library_extensions": [],
               "package_contract": "backtranslation-scene-package/v1",
               "critic_summary": "The candidate captures the main animated vector changing direction over a dark coordinate grid, with broadly similar timing and endpoint progression. However, the reference’s dense bright blue warped grid and stronger axis/line visibility are largely missing, making the scene much darker, sparser, and less faithful in layout and color.",
-              "changes": "Rebuild the background grid to match the reference: dense blue minor/major grid lines with higher opacity, correct spacing, and the same perspective/shear deformation throughout the animation."
+              "changes": "Rebuild the background grid to match the reference: dense blue minor/major grid lines with higher opacity, correct spacing, and the same perspective/shear deformation throughout the animation.",
+              "publication": {
+                "status": "published",
+                "sha256": "20418287dfcc5d2f0720561d8cd912f3891fb86577b29c2a3206ee6a95a0c4f9",
+                "provenance_tier": "render_manifest"
+              }
             },
             {
               "index": 2,
@@ -4542,86 +4609,19 @@
       "legacy_evidence_scope": "none"
     }
   ],
-  "trajectory_dataset": {
-    "schema_version": "manim-trajectory-dataset-summary/v1",
-    "benchmark_id": "3b1b-human-video-reconstruction-v2",
-    "claim_scope": "Ten planned complete-video cases in a public, source-available development set. The historical six-second Linear Transform artifact is a scene pilot, not a completed full-video case.",
-    "data_split": "development_only",
-    "cases_with_completed_runs": 1,
-    "candidate_trajectories": 3,
-    "round_records": 10,
-    "legacy_scene_pilot_round_records": 10,
-    "full_video_scene_round_records": 0,
-    "transition_records": 7,
-    "training_views": {
-      "sft_positive": 2,
-      "reward_labeled": 7,
-      "preference_pairs": 0,
-      "preference_requirement": "Two or more repairs must share the same immutable parent package and feedback packet."
-    },
-    "transition_label_counts": {
-      "duplicate_noop": 1,
-      "negative_regression": 4,
-      "positive_repair": 2
-    },
-    "error_label_counts": {
-      "critic_disagreement": 10,
-      "geometry_layout": 10,
-      "motion_timing": 10,
-      "notation_text_color": 10,
-      "persistent_object_identity": 9,
-      "scene_decomposition": 6,
-      "state_transition": 10
-    },
-    "prompt_capture": {
-      "exact": 0,
-      "hash_only_legacy": 10,
-      "policy": "Future rounds persist exact prompt text before the provider call."
-    },
-    "selected_cross_model_scores": {
-      "lf-001/gemini-3-1-pro": 0.51,
-      "lf-001/gemini-3-flash": 0.65,
-      "lf-001/gpt-5-5": 0.97
-    },
-    "training_contract": "Each transition contains prior code, paired critic feedback, localized error labels, revised code, and observed score delta. Regressions and duplicate outputs remain as supervision.",
-    "harness": {
-      "schema_version": "manim-generation-harness/v1",
-      "stages": 12,
-      "tools": 6,
-      "error_types": 13,
-      "repair_priority": [
-        "render or package validity",
-        "scene decomposition and narrative coverage",
-        "persistent object identity",
-        "initial and final mathematical state",
-        "causal transition",
-        "geometry and layout",
-        "motion and timing",
-        "notation, text, and semantic color",
-        "pixel residuals"
-      ],
-      "control_loop": [
-        "reference signal inventory",
-        "scene contracts",
-        "Manim API retrieval",
-        "isolated package synthesis",
-        "static validation",
-        "sandbox render",
-        "paired evaluation",
-        "localized repair or rollback"
-      ]
-    },
-    "limitations": [
-      "Current corpus contains one six-second scene pilot and no completed full-video scene trajectory.",
-      "Historical prompts predate exact-prompt capture and retain hashes only.",
-      "Scores are evaluator evidence, not claims of semantic equivalence."
+  "publication_summary": {
+    "policy": "candidate_requires_two_distinct_locally_probed_videos/v1",
+    "minimum_distinct_videos": 2,
+    "published_models": [
+      "gemini-3-flash",
+      "gemini-3-1-pro",
+      "gpt-5-5"
     ],
-    "artifacts": {
-      "rounds": "rounds.jsonl",
-      "transitions": "transitions.jsonl",
-      "sft_positive": "sft_positive.jsonl",
-      "reward_labeled": "reward_labeled.jsonl",
-      "preference_pairs": "preference_pairs.jsonl"
+    "withheld_models": [],
+    "verified_distinct_videos": {
+      "gemini-3-flash": 4,
+      "gemini-3-1-pro": 3,
+      "gpt-5-5": 2
     }
   }
 }
