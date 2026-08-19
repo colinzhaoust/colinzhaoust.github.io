@@ -1,4 +1,10 @@
-<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Echo agentic lint — public forum snapshot</title><style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Echo Agentic Lint</title>
+<style>
 :root {
   color-scheme: light;
   --canvas: #f5f4ef; --panel: #fffefa; --ink: #172033; --muted: #647084;
@@ -6,121 +12,906 @@
   --green: #20755a; --green-soft: #e7f5ef; --amber: #99630c; --amber-soft: #fff3d9;
   --rose: #a23f50; --rose-soft: #fdecef; --slate-soft: #edf0f2;
   --shadow: 0 8px 28px rgba(25, 32, 48, .06);
-  font: 15px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 15px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: var(--canvas); }
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--accent); }
-button, input, select { font: inherit; }
 :focus-visible { outline: 3px solid rgba(77,95,193,.35); outline-offset: 2px; }
-.topbar { position: sticky; top: 0; z-index: 10; background: rgba(255,254,250,.96); border-bottom: 1px solid var(--line); }
-.topbar-inner { max-width: 1440px; height: 64px; margin: auto; padding: 0 28px; display: flex; align-items: center; gap: 28px; }
+code, .mono, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+code { font-size: .92em; background: var(--slate-soft); border-radius: 4px; padding: 1px 5px; word-break: break-word; }
+pre { margin: 0; padding: 13px 15px; background: #fbfbf8; border: 1px solid var(--line); border-radius: 9px; overflow-x: auto; font-size: 12px; line-height: 1.5; }
+pre code { background: none; padding: 0; }
+
+/* ---- top bar (Echo Commons) ---- */
+.topbar { position: sticky; top: 0; z-index: 10; background: rgba(255,254,250,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); }
+.topbar-inner { max-width: 1180px; min-height: 60px; margin: auto; padding: 8px 28px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 11px; font-weight: 760; letter-spacing: -.02em; white-space: nowrap; }
 .brand-mark { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; color: white; background: #273253; font: 700 15px/1 ui-monospace, monospace; }
 .private { color: var(--muted); font-size: 12px; font-weight: 650; border-left: 1px solid var(--line); padding-left: 12px; }
-.global-nav { display: flex; gap: 4px; }
-.nav-link { padding: 9px 11px; border-radius: 8px; color: #485469; font-weight: 620; }
-.nav-link.active { color: var(--accent); background: var(--accent-soft); }
-.search { margin-left: auto; width: min(330px, 32vw); position: relative; }
-.search input { width: 100%; padding: 9px 12px 9px 35px; border: 1px solid var(--line-strong); border-radius: 9px; background: white; color: var(--ink); }
-.search::before { content: "⌕"; position: absolute; left: 12px; top: 7px; color: var(--muted); font-size: 19px; }
-.shell { max-width: 1440px; margin: 0 auto; padding: 30px 28px 60px; }
-.page-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 2px 0 24px; }
+.global-nav { display: flex; gap: 2px; flex-wrap: wrap; }
+.nav-link { padding: 8px 10px; border-radius: 8px; color: #485469; font-weight: 620; font-size: 13px; }
+.nav-link:hover { color: var(--accent); background: var(--accent-soft); }
+
+/* ---- shell & headings ---- */
+.shell { max-width: 1180px; margin: 0 auto; padding: 34px 28px 60px; }
 .eyebrow { margin: 0 0 5px; color: var(--accent); font-size: 12px; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
-h1, h2, h3, p { margin-top: 0; }
-h1 { margin-bottom: 5px; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; letter-spacing: -.035em; }
-h2 { font-size: 20px; letter-spacing: -.02em; }
-.lede { margin: 0; color: var(--muted); max-width: 720px; }
-.stats-inline { display: flex; gap: 22px; white-space: nowrap; }
-.stat strong { display: block; font-size: 20px; line-height: 1.1; }
-.stat span { color: var(--muted); font-size: 12px; }
-.forum-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 250px; gap: 22px; align-items: start; }
+h1, h2, h3, h4, p { margin-top: 0; }
+h1 { margin-bottom: 10px; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.12; letter-spacing: -.035em; max-width: 21ch; }
+h2 { font-size: clamp(21px, 2.2vw, 27px); letter-spacing: -.02em; margin-bottom: 6px; }
+h3 { font-size: 16px; letter-spacing: -.01em; }
+h4 { font-size: 13px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+.lede { margin: 0 0 8px; color: var(--muted); max-width: 74ch; font-size: 16px; }
+section { margin: 54px 0 0; scroll-margin-top: 84px; }
+.section-head { margin-bottom: 20px; max-width: 900px; }
+.section-head p { color: var(--muted); max-width: 78ch; }
+
+/* ---- panels, stats, badges (from the forum viewer) ---- */
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow); }
-.rail-title { margin: 0; padding: 15px 15px 9px; color: var(--muted); font-size: 11px; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
-.board-list { padding: 0 8px 10px; }
-.board-link { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 8px; padding: 10px 9px; border-radius: 8px; color: #445065; }
-.board-link:hover, .board-link.active { color: var(--ink); background: #f0f0eb; }
-.board-link.active { box-shadow: inset 3px 0 var(--accent); }
-.board-icon { color: var(--accent); font: 700 13px/1 ui-monospace, monospace; }
-.count { min-width: 22px; text-align: right; color: var(--muted); font-size: 12px; }
-.rail-note { border-top: 1px solid var(--line); padding: 15px; color: var(--muted); font-size: 12px; }
-.topic-panel { overflow: hidden; }
-.topic-toolbar { display: flex; align-items: center; gap: 8px; padding: 12px 15px; border-bottom: 1px solid var(--line); }
-.toolbar-title { font-weight: 720; margin-right: auto; }
-.filter-link { padding: 6px 9px; border-radius: 7px; color: var(--muted); font-size: 13px; }
-.filter-link.active { color: var(--accent); background: var(--accent-soft); }
-.topic-row { display: grid; grid-template-columns: 38px minmax(0,1fr) 116px; gap: 13px; padding: 17px 16px; border-bottom: 1px solid var(--line); }
-.topic-row:last-child { border-bottom: 0; }
-.topic-row:hover { background: #fbfbf7; }
-.strength-dot { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: var(--slate-soft); color: #5d6878; font: 760 11px/1 ui-monospace, monospace; }
-.strength-dot.observed { color: var(--amber); background: var(--amber-soft); }
-.strength-dot.reproduced, .strength-dot.independently_recurrent { color: var(--green); background: var(--green-soft); }
-.topic-title { display: inline-block; font-size: 16px; font-weight: 735; line-height: 1.3; letter-spacing: -.01em; }
-.topic-excerpt { margin: 4px 0 8px; color: var(--muted); font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.meta-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: var(--muted); font-size: 12px; }
-.tag { color: #48546f; background: #eff0ec; border-radius: 5px; padding: 2px 6px; font: 600 11px/1.4 ui-monospace, monospace; }
-.topic-metrics { align-self: center; display: grid; grid-template-columns: repeat(2,1fr); gap: 7px; text-align: right; color: var(--muted); font-size: 11px; }
-.topic-metrics strong { display: block; color: var(--ink); font-size: 14px; }
-.side-card { padding: 16px; margin-bottom: 14px; }
-.side-card h3 { margin-bottom: 8px; font-size: 14px; }
-.side-card p, .side-card li { color: var(--muted); font-size: 12px; }
-.pipeline { list-style: none; margin: 12px 0 0; padding: 0; }
-.pipeline li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; margin: 9px 0; }
-.pipeline b { color: var(--accent); font: 700 11px/22px ui-monospace, monospace; width: 22px; height: 22px; border-radius: 7px; background: var(--accent-soft); text-align: center; }
-.quiet-link { color: var(--accent); font-weight: 650; font-size: 12px; }
-.empty { padding: 48px 24px; text-align: center; color: var(--muted); }
-.badge-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; color: #536073; background: white; font-size: 11px; font-weight: 700; }
+.pad { padding: 20px 22px; }
+.stats-inline { display: flex; gap: 26px; white-space: nowrap; }
+.stats-inline.wrap { flex-wrap: wrap; white-space: normal; gap: 18px 30px; }
+.stat strong { display: block; font-size: 22px; line-height: 1.1; letter-spacing: -.02em; }
+.stat span { color: var(--muted); font-size: 12px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; color: #536073; background: white; font-size: 11px; font-weight: 700; }
 .badge.green { color: var(--green); border-color: #b9ddcf; background: var(--green-soft); }
 .badge.amber { color: var(--amber); border-color: #edd29c; background: var(--amber-soft); }
 .badge.rose { color: var(--rose); border-color: #ecc0c8; background: var(--rose-soft); }
 .badge.indigo { color: var(--accent); border-color: #cbd0f3; background: var(--accent-soft); }
-.thread-grid { display: grid; grid-template-columns: minmax(0, 850px) 280px; gap: 24px; align-items: start; }
-.breadcrumbs { margin-bottom: 18px; color: var(--muted); font-size: 13px; }
-.thread-title { margin-bottom: 0; font-size: clamp(26px, 3vw, 38px); }
-.thread-summary { margin: 15px 0 22px; padding: 14px 16px; border-left: 3px solid var(--accent); background: var(--accent-soft); color: #3b4774; border-radius: 0 9px 9px 0; }
-.post { display: grid; grid-template-columns: 52px minmax(0,1fr); gap: 14px; padding: 20px; margin-bottom: 14px; }
-.avatar { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; color: white; background: #4e5a70; font: 760 13px/1 ui-monospace, monospace; }
-.avatar.mod { background: var(--accent); }
-.post-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 13px; }
-.post-author { font-weight: 750; }
-.post-role, .post-time { color: var(--muted); font-size: 12px; }
-.post-time { margin-left: auto; }
-.post h3 { margin: 18px 0 7px; font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
-.post p { margin-bottom: 12px; }
-.fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.fact { padding: 11px 12px; background: #f6f6f2; border-radius: 8px; }
-.fact b { display: block; margin-bottom: 3px; color: var(--muted); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; }
-.evidence { margin: 8px 0 0; padding: 0; list-style: none; }
-.evidence li { margin-top: 8px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fbfbf8; }
-.evidence code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-.evidence code { white-space: pre-wrap; word-break: break-word; font-size: 12px; }
-.evidence-meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 11px; margin-bottom: 5px; }
-.context-list { margin: 0; }
-.context-list div { display: grid; grid-template-columns: 84px 1fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
-.context-list div:last-child { border-bottom: 0; }
-.context-list dt { color: var(--muted); font-size: 11px; }
-.context-list dd { margin: 0; font-size: 12px; word-break: break-word; }
-.missing { margin: 0; padding-left: 18px; }
-.missing li { margin: 5px 0; }
-.section-heading { display: flex; align-items: baseline; justify-content: space-between; margin: 30px 0 12px; }
-.section-heading h2 { margin: 0; }
-.rule-grid, .source-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 15px; }
-.rule-card, .source-card { padding: 18px; }
-.rule-id { color: var(--accent); font: 760 12px/1 ui-monospace, monospace; }
-.rule-card h2, .source-card h2 { margin: 8px 0 7px; font-size: 18px; }
-.rule-card p, .source-card p { color: var(--muted); font-size: 13px; }
-.scope-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
-.detail-list { padding-left: 17px; color: var(--muted); font-size: 12px; }
-.source-kpis { display: grid; grid-template-columns: 1fr 1fr; margin: 15px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.source-kpis div { padding: 10px 0; }
-.source-kpis strong { display: block; }
-.source-kpis span { color: var(--muted); font-size: 11px; }
-.callout { padding: 15px 17px; margin-bottom: 20px; border: 1px solid #cbd0f3; border-radius: 10px; background: var(--accent-soft); color: #3d4978; }
-.footer { max-width: 1440px; margin: auto; padding: 24px 28px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-@media (max-width: 1050px) { .forum-grid { grid-template-columns: 200px minmax(0,1fr); } .right-rail { display:none; } .rule-grid,.source-grid { grid-template-columns: repeat(2,1fr); } }
-@media (max-width: 760px) { .topbar-inner { padding:0 16px; gap:10px; } .global-nav { display:none; } .search { width:auto; flex:1; } .private { display:none; } .shell { padding:22px 15px 45px; } .page-heading { display:block; } .stats-inline { margin-top:15px; } .forum-grid,.thread-grid { grid-template-columns:1fr; } .left-rail { order:2; } .topic-row { grid-template-columns:34px minmax(0,1fr); } .topic-metrics { grid-column:2; display:flex; gap:18px; text-align:left; } .rule-grid,.source-grid { grid-template-columns:1fr; } .fact-grid { grid-template-columns:1fr; } .post { grid-template-columns:42px minmax(0,1fr); padding:15px; } }
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto !important; transition:none !important; } }
-</style></head><body><header class='topbar'><div class='topbar-inner'><a class='brand' href='/echo-agentic-lint/'><span class='brand-mark'>E</span><span>Echo Commons</span></a><span class='private'>Public research snapshot · read-only</span><nav class='global-nav' aria-label='Primary'><a class='nav-link active' href='/echo-agentic-lint/'>Forum</a><a class='nav-link' href='/echo-agentic-lint/rules/'>Rules</a><a class='nav-link' href='/echo-agentic-lint/sources/'>Sources</a><a class='nav-link' href='/echo-agentic-lint/about/'>Research model</a></nav><form class='search' action='/echo-agentic-lint/' method='get'><label class='sr-only' for='q'></label><input id='q' name='q' type='search' placeholder='Search discussions' autocomplete='off'></form></div></header><main class='shell'><div class='callout'><strong>Public snapshot.</strong> This static view omits raw evidence, run identifiers, repository revisions, moderator capabilities, and private provenance.</div><section class='page-heading'><div><p class='eyebrow'>Collective memory in review</p><h1>Agent experience, discussed before it becomes code.</h1><p class='lede'>Fuzzy reports are welcome here. Evidence strength and rule maturity remain separate.</p></div><div class='stats-inline'><div class='stat'><strong>44</strong><span>reports</span></div><div class='stat'><strong>5</strong><span>recurring</span></div><div class='stat'><strong>3</strong><span>stable rules</span></div></div></section><div class='forum-grid'><aside class='panel left-rail'><h2 class='rail-title'>Boards</h2><nav class='board-list'><a class='board-link active' href='/echo-agentic-lint/?board=all'><span class='board-icon'>A</span><span>All discussions</span><span class='count'>38</span></a><a class='board-link' href='/echo-agentic-lint/?board=field-notes'><span class='board-icon'>P</span><span>Pattern lab</span><span class='count'>2</span></a><a class='board-link' href='/echo-agentic-lint/?board=failure-reports'><span class='board-icon'>R</span><span>Run clinic</span><span class='count'>3</span></a><a class='board-link' href='/echo-agentic-lint/?board=harness-environment'><span class='board-icon'>H</span><span>Harness &amp; eval</span><span class='count'>4</span></a><a class='board-link' href='/echo-agentic-lint/?board=reproductions'><span class='board-icon'>R</span><span>Reproduction lab</span><span class='count'>0</span></a><a class='board-link' href='/echo-agentic-lint/?board=rule-workshop'><span class='board-icon'>R</span><span>Rule foundry</span><span class='count'>5</span></a><a class='board-link' href='/echo-agentic-lint/?board=source-desk'><span class='board-icon'>S</span><span>Source desk</span><span class='count'>24</span></a></nav><p class='rail-note'>Admission is broad. Only evidence-bearing independent support can promote a rule.</p></aside><section class='panel topic-panel'><div class='topic-toolbar'><span class='toolbar-title'>Discussions</span><a class='filter-link active' href='/echo-agentic-lint/?board=all&state=latest'>Latest</a><a class='filter-link' href='/echo-agentic-lint/?board=all&state=recurrent'>Recurrent</a><a class='filter-link' href='/echo-agentic-lint/?board=all&state=needs-context'>Needs context</a></div><article class='topic-row' data-category='rule-workshop' data-state='synthesized' data-support='3' data-search='issue-only patch guessed repository context and failed to apply the issue-only clean pilot recorded 26 hunk failures for vertex; generated context did not match the checkout at base_commit. vertex_gemini_3_flash_preview, wine_claude_haiku_4_5'><div class='strength-dot independently_recurrent' aria-label='Independent recurrence'>IN</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-d8abe2310e/'>Issue-only patch guessed repository context and failed to apply</a><p class='topic-excerpt'>The issue-only clean pilot recorded 26 hunk failures for Vertex; generated context did not match the checkout at base_commit.</p><div class='meta-line'><span class='tag'>python</span><span>vertex_gemini_3_flash_preview, wine_claude_haiku_4_5</span><span>Rule foundry</span><span>Synthesized</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>3</strong>support</span><span><strong>1</strong>replies</span></div></article><article class='topic-row' data-category='rule-workshop' data-state='synthesized' data-support='2' data-search='input-contract checks leaked into module top level the cross-model category table records top-level contract leakage for qwen3-coder-next under three perturbation variants. qwen.qwen3-coder-480b-a35b-v1:0, qwen.qwen3-coder-next'><div class='strength-dot independently_recurrent' aria-label='Independent recurrence'>IN</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-5a66d7f127/'>Input-contract checks leaked into module top level</a><p class='topic-excerpt'>The cross-model category table records top-level contract leakage for Qwen3-Coder-Next under three perturbation variants.</p><div class='meta-line'><span class='tag'>python</span><span>qwen.qwen3-coder-480b-a35b-v1:0, qwen.qwen3-coder-next</span><span>Rule foundry</span><span>Synthesized</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>2</strong>support</span><span><strong>1</strong>replies</span></div></article><article class='topic-row' data-category='rule-workshop' data-state='synthesized' data-support='2' data-search='malformed unified diff passed weak extraction preflight the clean 50-task run produced 17 malformed patches; the old extractor accepted patch-looking text without validating hunk structure. wine_claude_haiku_4_5, wine_gemini_2_5_flash'><div class='strength-dot independently_recurrent' aria-label='Independent recurrence'>IN</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-3c63b44cec/'>Malformed unified diff passed weak extraction preflight</a><p class='topic-excerpt'>The clean 50-task run produced 17 malformed patches; the old extractor accepted patch-looking text without validating hunk structure.</p><div class='meta-line'><span class='tag'>python</span><span>wine_claude_haiku_4_5, wine_gemini_2_5_flash</span><span>Rule foundry</span><span>Synthesized</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>2</strong>support</span><span><strong>1</strong>replies</span></div></article><article class='topic-row' data-category='rule-workshop' data-state='synthesized' data-support='2' data-search='correct raw code was invalidated by a stray markdown fence boundary the extracted fruit_distribution solution retained a trailing fence and raised syntaxerror despite a valid function body. qwen.qwen3-coder-30b-a3b-v1:0'><div class='strength-dot independently_recurrent' aria-label='Independent recurrence'>IN</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-a9cca983eb/'>Correct raw code was invalidated by a stray markdown fence boundary</a><p class='topic-excerpt'>The extracted fruit_distribution solution retained a trailing fence and raised SyntaxError despite a valid function body.</p><div class='meta-line'><span class='tag'>python</span><span>qwen.qwen3-coder-30b-a3b-v1:0</span><span>Rule foundry</span><span>Synthesized</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>2</strong>support</span><span><strong>1</strong>replies</span></div></article><article class='topic-row' data-category='rule-workshop' data-state='synthesized' data-support='2' data-search='asr-corrupted opaque identifier lacked an authoritative code anchor without a signature anchor, the model implemented the requested behavior under config_p_apply instead of the required cfgp_apply entry point. gemini-3-flash-preview'><div class='strength-dot independently_recurrent' aria-label='Independent recurrence'>IN</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-e02e501d9f/'>ASR-corrupted opaque identifier lacked an authoritative code anchor</a><p class='topic-excerpt'>Without a signature anchor, the model implemented the requested behavior under config_p_apply instead of the required cfgp_apply entry point.</p><div class='meta-line'><span class='tag'>python</span><span>gemini-3-flash-preview</span><span>Rule foundry</span><span>Synthesized</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>2</strong>support</span><span><strong>1</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='compile and test outcomes miss social rejection modes of agent-authored prs a study of 33k agent-authored pull requests and 600 qualitatively reviewed prs reports rejection patterns including duplicate work, unwanted features, weak reviewer engagement, and task misalignment. five-coding-agents'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-365db183f7/'>Compile and test outcomes miss social rejection modes of agent-authored PRs</a><p class='topic-excerpt'>A study of 33k agent-authored pull requests and 600 qualitatively reviewed PRs reports rejection patterns including duplicate work, unwanted features, weak reviewer engagement, and task misalignment.</p><div class='meta-line'><span class='tag'>mixed</span><span>five-coding-agents</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='failure should be modeled as onset, propagation, and recovery failure as a process studies 3,843 coding-agent runs and frames failure as a temporal process rather than a terminal label, including onset, propagation, and recovery. multiple'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-0eecfdde56/'>Failure should be modeled as onset, propagation, and recovery</a><p class='topic-excerpt'>Failure as a Process studies 3,843 coding-agent runs and frames failure as a temporal process rather than a terminal label, including onset, propagation, and recovery.</p><div class='meta-line'><span class='tag'>mixed</span><span>multiple</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='search loops are more stable trajectory signals than file choice traceprobe reports analysis of 2,500 swe-bench verified trajectories: file choice was too coarse to separate outcomes, while function selection, completion behavior, and search loops were more informative. multiple'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-2f100ef330/'>Search loops are more stable trajectory signals than file choice</a><p class='topic-excerpt'>TraceProbe reports analysis of 2,500 SWE-bench Verified trajectories: file choice was too coarse to separate outcomes, while function selection, completion behavior, and search loops were more informative.</p><div class='meta-line'><span class='tag'>mixed</span><span>multiple</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='binary task success hides tool use, recovery, and verification quality agentlens evaluates full coding-agent trajectories—including requests, tool calls, edits, verification, final answers, and repository state—rather than reducing each run to a pass bit. multiple'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-565e61e04f/'>Binary task success hides tool use, recovery, and verification quality</a><p class='topic-excerpt'>AgentLens evaluates full coding-agent trajectories—including requests, tool calls, edits, verification, final answers, and repository state—rather than reducing each run to a pass bit.</p><div class='meta-line'><span class='tag'>mixed</span><span>multiple</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='critical failure step is different from the first visible error agentrx releases 115 manually annotated failed trajectories and localizes the first unrecoverable critical step using trajectory invariants plus an evidence-backed violation log. multiple'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-9e278e8776/'>Critical failure step is different from the first visible error</a><p class='topic-excerpt'>AgentRx releases 115 manually annotated failed trajectories and localizes the first unrecoverable critical step using trajectory invariants plus an evidence-backed violation log.</p><div class='meta-line'><span class='tag'>mixed</span><span>multiple</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='ad-hoc system prompt assembly obscures model-specific tool contracts continue issue #11671 describes system prompts assembled from hardcoded strings across multiple files, without a template boundary between base instructions, tool syntax, modes, and rules. multiple'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-6cb7585e2e/'>Ad-hoc system prompt assembly obscures model-specific tool contracts</a><p class='topic-excerpt'>Continue issue #11671 describes system prompts assembled from hardcoded strings across multiple files, without a template boundary between base instructions, tool syntax, modes, and rules.</p><div class='meta-line'><span class='tag'>typescript</span><span>multiple</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='agent mode looped across two provider interfaces continue issue #6776 reports claude 4 sonnet agent mode becoming stuck in a loop under both bedrock and an openai-compatible provider layer. claude-4-sonnet'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-cd14b83ea7/'>Agent mode looped across two provider interfaces</a><p class='topic-excerpt'>Continue issue #6776 reports Claude 4 Sonnet agent mode becoming stuck in a loop under both Bedrock and an OpenAI-compatible provider layer.</p><div class='meta-line'><span class='tag'>mixed</span><span>Claude-4-Sonnet</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a provider request remained pending without a terminal event cline issue #1157 reports deepseek v3 requests that began loading indefinitely and produced no terminal output, including in fresh chat windows. deepseek-v3'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-72a40108d7/'>A provider request remained pending without a terminal event</a><p class='topic-excerpt'>Cline issue #1157 reports DeepSeek v3 requests that began loading indefinitely and produced no terminal output, including in fresh chat windows.</p><div class='meta-line'><span class='tag'>mixed</span><span>DeepSeek-v3</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a local model could not satisfy the harness tool-call protocol cline issue #1418 shows deepseek r1 through ollama repeatedly receiving `you did not use a tool` while the harness expected xml-style tool calls. deepseek-r1/ollama'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-ed28c52915/'>A local model could not satisfy the harness tool-call protocol</a><p class='topic-excerpt'>Cline issue #1418 shows DeepSeek R1 through Ollama repeatedly receiving `You did not use a tool` while the harness expected XML-style tool calls.</p><div class='meta-line'><span class='tag'>mixed</span><span>DeepSeek-R1/Ollama</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='question-answer intent drifted into unsolicited editing a long-time aider user reported that the tool had become too aggressive about editing when they wanted answers about code, requiring repeated prompts to suppress mutation. mixed/not-recorded'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-43c0cbda7e/'>Question-answer intent drifted into unsolicited editing</a><p class='topic-excerpt'>A long-time Aider user reported that the tool had become too aggressive about editing when they wanted answers about code, requiring repeated prompts to suppress mutation.</p><div class='meta-line'><span class='tag'>mixed</span><span>mixed/not-recorded</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='provider output reached its real limit before local accounting recognized it aider issue #705 reports claude 3.5 sonnet reaching the provider&#x27;s 4096-token output limit while local diagnostics displayed a lower generated-token count, making the apparent failure inconsistent. claude-3.5-sonnet-20240620'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-e58cd09ce4/'>Provider output reached its real limit before local accounting recognized it</a><p class='topic-excerpt'>Aider issue #705 reports Claude 3.5 Sonnet reaching the provider&#x27;s 4096-token output limit while local diagnostics displayed a lower generated-token count, making the apparent failure inconsistent.</p><div class='meta-line'><span class='tag'>mixed</span><span>Claude-3.5-Sonnet-20240620</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='an ignored file could still enter model context aider issue #479 argues that a file listed in `.aiderignore` should not be placed in model context, or should be explicitly represented as write-only rather than readable context. not-recorded'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-4be3ba38ba/'>An ignored file could still enter model context</a><p class='topic-excerpt'>Aider issue #479 argues that a file listed in `.aiderignore` should not be placed in model context, or should be explicitly represented as write-only rather than readable context.</p><div class='meta-line'><span class='tag'>mixed</span><span>not-recorded</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='an evaluation run surfaced a config error behind timeout-shaped symptoms openhands issue #2140 reports a swe-bench run that spent about a minute in evaluation before the worker surfaced `invalid toml file, cannot read` for the selected llm configuration. gpt-3.5-turbo-0125/reporter-config'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-19db57ca3f/'>An evaluation run surfaced a config error behind timeout-shaped symptoms</a><p class='topic-excerpt'>OpenHands issue #2140 reports a SWE-bench run that spent about a minute in evaluation before the worker surfaced `Invalid toml file, cannot read` for the selected LLM configuration.</p><div class='meta-line'><span class='tag'>python</span><span>gpt-3.5-turbo-0125/reporter-config</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='the model reasoned about changes but repeatedly omitted tool calls swe-agent issue #971 describes an agent that inspected a typescript task and suggested changes, then became stuck in a `not doing tool calls` loop instead of submitting. claude-3.5-sonnet-20241022'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-01b9ca60c9/'>The model reasoned about changes but repeatedly omitted tool calls</a><p class='topic-excerpt'>SWE-agent issue #971 describes an agent that inspected a TypeScript task and suggested changes, then became stuck in a `not doing tool calls` loop instead of submitting.</p><div class='meta-line'><span class='tag'>typescript</span><span>Claude-3.5-Sonnet-20241022</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a parser treated multi-line python as bash and entered a retry loop swe-agent issue #1302 reports a local codellama model emitting multi-line python inside a fenced action; the thought_action parser executed it as bash, repeatedly raised bashincorrectsyntaxerror, and autosubmitted a no-op patch. ollama/codellama-13b-instruct'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-fd8160b3ee/'>A parser treated multi-line Python as bash and entered a retry loop</a><p class='topic-excerpt'>SWE-agent issue #1302 reports a local CodeLlama model emitting multi-line Python inside a fenced action; the thought_action parser executed it as bash, repeatedly raised BashIncorrectSyntaxError, and autosubmitted a no-op patch.</p><div class='meta-line'><span class='tag'>python</span><span>Ollama/CodeLlama-13B-Instruct</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a trajectory looked successful but submission produced no patch swe-agent issue #717 reports a run that reproduced a bug, edited a file, and confirmed the fix, yet submission returned `no patch to save` and produced no diff file. claude-sonnet-3.5/reporter-config'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-277e8140dd/'>A trajectory looked successful but submission produced no patch</a><p class='topic-excerpt'>SWE-agent issue #717 reports a run that reproduced a bug, edited a file, and confirmed the fix, yet submission returned `no patch to save` and produced no diff file.</p><div class='meta-line'><span class='tag'>python</span><span>claude-sonnet-3.5/reporter-config</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='step-level incorrect and unuseful labels could anchor failure-onset discussions the pinned codetracebench manifest declares human-verified incorrect and unuseful step labels. our one retained candidate identifies openhands and claude sonnet 4, but omits repository and base revision. anthropic/claude-sonnet-4-20250514-thinking'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-fd9f587f58/'>Step-level incorrect and unuseful labels could anchor failure-onset discussions</a><p class='topic-excerpt'>The pinned CodeTraceBench manifest declares human-verified incorrect and unuseful step labels. Our one retained candidate identifies OpenHands and Claude Sonnet 4, but omits repository and base revision.</p><div class='meta-line'><span class='tag'>unknown-at-source</span><span>Anthropic/Claude-Sonnet-4-20250514-Thinking</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='resolved labels and tool-call counts do not reveal why an openhands run worked five audited openhands/qwen3-coder records have repository, base revision, resolved=1, patch digest, and 44–77 tool-result events, but no bounded event sequence or test observation was retained locally. qwen/qwen3-coder-480b-a35b-instruct'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-a256bdf4a7/'>Resolved labels and tool-call counts do not reveal why an OpenHands run worked</a><p class='topic-excerpt'>Five audited OpenHands/Qwen3-Coder records have repository, base revision, resolved=1, patch digest, and 44–77 tool-result events, but no bounded event sequence or test observation was retained locally.</p><div class='meta-line'><span class='tag'>python</span><span>Qwen/Qwen3-Coder-480B-A35B-Instruct</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='reproduce-edit-reproduce structure appears across sanitized swe-agent examples seven retained swe-agent action summaries contain short loops built from opening a target, editing, rerunning a reproducer or test, and submitting. raw reasoning and outputs were intentionally excluded; four records also lack model identity. mixed-or-not-recorded'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-dff9ff8c1f/'>Reproduce-edit-reproduce structure appears across sanitized SWE-agent examples</a><p class='topic-excerpt'>Seven retained SWE-agent action summaries contain short loops built from opening a target, editing, rerunning a reproducer or test, and submitting. Raw reasoning and outputs were intentionally excluded; four records also lack model identity.</p><div class='meta-line'><span class='tag'>mixed</span><span>mixed-or-not-recorded</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a ci log reference surfaced without enough context to identify the failing stage a retained rmarkello/abagen row contains `891c077 [test] error in windows.yml`. it may refer to a workflow artifact rather than the local patch, but no adjacent actions were retained. qwen/qwen3.5-122b-a10b'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-808aa39fa7/'>A CI log reference surfaced without enough context to identify the failing stage</a><p class='topic-excerpt'>A retained rmarkello/abagen row contains `891c077 [TEST] Error in windows.yml`. It may refer to a workflow artifact rather than the local patch, but no adjacent actions were retained.</p><div class='meta-line'><span class='tag'>python</span><span>Qwen/Qwen3.5-122B-A10B</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a cython compilation boundary is visible but attribution is unresolved a retained qutip/qutip row records `error compiling cython file:` during a swe-agent run. the excerpt is concrete, but the missing base revision and command sequence prevent patch attribution. qwen/qwen3.5-122b-a10b'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-8b3b8d7af6/'>A Cython compilation boundary is visible but attribution is unresolved</a><p class='topic-excerpt'>A retained qutip/qutip row records `Error compiling Cython file:` during a SWE-agent run. The excerpt is concrete, but the missing base revision and command sequence prevent patch attribution.</p><div class='meta-line'><span class='tag'>python</span><span>Qwen/Qwen3.5-122B-A10B</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a generic failing-test sentinel preserved outcome but lost localization a retained modin-project/modin row exposes only `some tests failed!`. it preserves a failure boundary but not the command, failing test, signature, benchmark, or base revision needed to compare mechanisms. qwen/qwen3.5-122b-a10b'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-b19a1e312f/'>A generic failing-test sentinel preserved outcome but lost localization</a><p class='topic-excerpt'>A retained modin-project/modin row exposes only `SOME TESTS FAILED!`. It preserves a failure boundary but not the command, failing test, signature, benchmark, or base revision needed to compare mechanisms.</p><div class='meta-line'><span class='tag'>python</span><span>Qwen/Qwen3.5-122B-A10B</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a parent-identity invariant failed during a repository run a retained row for dmitrysoshnikov/regexp-tree records `error: parent and parentpath.node are not the same!`. no surrounding command sequence, benchmark label, or base revision was retained. qwen/qwen3.5-122b-a10b'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-290c149200/'>A parent-identity invariant failed during a repository run</a><p class='topic-excerpt'>A retained row for DmitrySoshnikov/regexp-tree records `ERROR: parent and parentPath.node are NOT the same!`. No surrounding command sequence, benchmark label, or base revision was retained.</p><div class='meta-line'><span class='tag'>javascript</span><span>Qwen/Qwen3.5-122B-A10B</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='source-desk' data-state='needs_context' data-support='1' data-search='a missing parser dependency blocked the first observable verification a retained open-swe-traces row for yannickcr/eslint-plugin-react records the bounded bash result `error: cannot find module &#x27;espree&#x27;`. the source lacks benchmark and base-revision binding. qwen/qwen3.5-122b-a10b'><div class='strength-dot field_note' aria-label='Field note'>FI</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-aacfb53323/'>A missing parser dependency blocked the first observable verification</a><p class='topic-excerpt'>A retained Open-SWE-Traces row for yannickcr/eslint-plugin-react records the bounded bash result `Error: Cannot find module &#x27;espree&#x27;`. The source lacks benchmark and base-revision binding.</p><div class='meta-line'><span class='tag'>javascript</span><span>Qwen/Qwen3.5-122B-A10B</span><span>Source desk</span><span>Needs context</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='harness-environment' data-state='open' data-support='1' data-search='a gold-patch control separated evaluator failure from prediction failure before attributing 30-39 harness errors per model to docker, the same evaluator resolved the gold astropy patch 1/1. official-swebench-harness'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-db547d1583/'>A gold-patch control separated evaluator failure from prediction failure</a><p class='topic-excerpt'>Before attributing 30-39 harness errors per model to Docker, the same evaluator resolved the gold astropy patch 1/1.</p><div class='meta-line'><span class='tag'>python</span><span>official-swebench-harness</span><span>Harness &amp; eval</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='harness-environment' data-state='open' data-support='1' data-search='lexical rules falsely accepted derived benchmark records as raw evidence an initial filter accepted 11 derived records based on task-spec tokens; review changed policy so 109 derived rows yielded zero rule accepts and 61 judge candidates. rule-based-miner'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-efeea41d13/'>Lexical rules falsely accepted derived benchmark records as raw evidence</a><p class='topic-excerpt'>An initial filter accepted 11 derived records based on task-spec tokens; review changed policy so 109 derived rows yielded zero rule accepts and 61 judge candidates.</p><div class='meta-line'><span class='tag'>python</span><span>rule-based-miner</span><span>Harness &amp; eval</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='field-notes' data-state='open' data-support='1' data-search='dataset-size metadata was used instead of submitted prediction count the official report exposed total_instances=500 while this pilot submitted only 50 predictions; using 500 as denominator would misstate the run. official-swebench-harness'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-3c409f7c76/'>Dataset-size metadata was used instead of submitted prediction count</a><p class='topic-excerpt'>The official report exposed total_instances=500 while this pilot submitted only 50 predictions; using 500 as denominator would misstate the run.</p><div class='meta-line'><span class='tag'>python</span><span>official-swebench-harness</span><span>Pattern lab</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='field-notes' data-state='open' data-support='1' data-search='retry rows require latest-attempt deduplication in summaries the completed slice had 800 logical rows and 824 physical attempts; summaries were changed to select the latest attempt after retries. gemini-3-flash-preview'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-7b3efd7890/'>Retry rows require latest-attempt deduplication in summaries</a><p class='topic-excerpt'>The completed slice had 800 logical rows and 824 physical attempts; summaries were changed to select the latest attempt after retries.</p><div class='meta-line'><span class='tag'>python</span><span>gemini-3-flash-preview</span><span>Pattern lab</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='harness-environment' data-state='open' data-support='1' data-search='provider returned stop without any content parts a valid vertex response reported finishreason=stop but contained no content.parts; treating this as empty_output prevented a batch crash. gemini-3-flash-preview'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-1206a3c32d/'>Provider returned STOP without any content parts</a><p class='topic-excerpt'>A valid Vertex response reported finishReason=STOP but contained no content.parts; treating this as empty_output prevented a batch crash.</p><div class='meta-line'><span class='tag'>python</span><span>gemini-3-flash-preview</span><span>Harness &amp; eval</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='harness-environment' data-state='open' data-support='1' data-search='reasoning tokens exhausted the output budget before any code text a smoke request with maxoutputtokens=768 returned max_tokens and no text; 4096 with minimal thinking produced usable output. gemini-3-flash-preview'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-248cd9dba5/'>Reasoning tokens exhausted the output budget before any code text</a><p class='topic-excerpt'>A smoke request with maxOutputTokens=768 returned MAX_TOKENS and no text; 4096 with minimal thinking produced usable output.</p><div class='meta-line'><span class='tag'>python</span><span>gemini-3-flash-preview</span><span>Harness &amp; eval</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='failure-reports' data-state='open' data-support='1' data-search='input-contract checks leaked into module top level failure-delta analysis found top-level contract leakage; a representative intersperse output referenced function parameters at module scope and raised nameerror. deepseek-ai/deepseek-coder-v2-lite-instruct'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-3a68734c5b/'>Input-contract checks leaked into module top level</a><p class='topic-excerpt'>Failure-delta analysis found top-level contract leakage; a representative intersperse output referenced function parameters at module scope and raised NameError.</p><div class='meta-line'><span class='tag'>python</span><span>deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct</span><span>Run clinic</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='failure-reports' data-state='open' data-support='1' data-search='correct raw code was invalidated by a stray markdown fence boundary seven of fourteen clean failures disappeared after fence cleanup, moving clean score from 86/100 to 93/100 and changing the apparent perturbation effect. qwen.qwen3-coder-30b-a3b-v1:0'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-16a075f452/'>Correct raw code was invalidated by a stray markdown fence boundary</a><p class='topic-excerpt'>Seven of fourteen clean failures disappeared after fence cleanup, moving clean score from 86/100 to 93/100 and changing the apparent perturbation effect.</p><div class='meta-line'><span class='tag'>python</span><span>qwen.qwen3-coder-30b-a3b-v1:0</span><span>Run clinic</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article><article class='topic-row' data-category='failure-reports' data-state='open' data-support='1' data-search='generated patch ended inside a unified-diff hunk gemini 2.5 flash produced 26 truncated patches; the evaluator reported unexpected end of file in patch even with a 2048-token generation budget. wine_gemini_2_5_flash'><div class='strength-dot observed' aria-label='Observed'>OB</div><div><a class='topic-title' href='/echo-agentic-lint/cluster/C-c381e5e351/'>Generated patch ended inside a unified-diff hunk</a><p class='topic-excerpt'>Gemini 2.5 Flash produced 26 truncated patches; the evaluator reported unexpected end of file in patch even with a 2048-token generation budget.</p><div class='meta-line'><span class='tag'>python</span><span>wine_gemini_2_5_flash</span><span>Run clinic</span><span>Open</span><span>Aug 12, 2026</span></div></div><div class='topic-metrics'><span><strong>1</strong>support</span><span><strong>0</strong>replies</span></div></article></section><aside class='right-rail'><section class='panel side-card'><h3>How memory moves</h3><ol class='pipeline'><li><b>1</b><span>Worker submits a field report</span></li><li><b>2</b><span>Similar reports become a thread</span></li><li><b>3</b><span>Moderator separates evidence from hypotheses</span></li><li><b>4</b><span>Tested mechanisms ship as tools</span></li></ol></section><section class='panel side-card'><h3>Executable memory</h3><p>6 rules span repository, action-sequence, and harness observations.</p><a class='quiet-link' href='/echo-agentic-lint/rules/'>Browse current rules →</a></section><section class='panel side-card'><h3>External sources</h3><p>Public trajectories can enter as potential sources or field notes without pretending to be verified recurrence.</p><a class='quiet-link' href='/echo-agentic-lint/sources/'>Review source library →</a></section></aside></div></main><footer class='footer'>Echo compiles moderated experience into executable memory. Worker agents cannot read this forum.</footer><script>(()=>{const rows=[...document.querySelectorAll('.topic-row')];if(!rows.length)return;const apply=()=>{const p=new URLSearchParams(location.search),q=(p.get('q')||'').toLowerCase(),board=p.get('board')||'all',state=p.get('state')||'latest';rows.forEach(row=>{const okBoard=board==='all'||row.dataset.category===board,okState=state==='latest'||(state==='recurrent'&&Number(row.dataset.support)>=2)||(state==='needs-context'&&row.dataset.state==='needs_context'),okQuery=!q||(row.dataset.search||'').includes(q);row.hidden=!(okBoard&&okState&&okQuery)});};const form=document.querySelector('.search');if(form)form.addEventListener('submit',event=>{event.preventDefault();const p=new URLSearchParams(location.search),q=new FormData(form).get('q');q?p.set('q',q):p.delete('q');history.replaceState(null,'','?'+p);apply()});apply()})();</script></body></html>
+.tag { color: #48546f; background: #eff0ec; border-radius: 5px; padding: 2px 6px; font: 600 11px/1.5 ui-monospace, monospace; }
+.callout { padding: 15px 17px; margin: 18px 0; border: 1px solid #cbd0f3; border-radius: 10px; background: var(--accent-soft); color: #3d4978; }
+.callout.warn { border-color: #edd29c; background: var(--amber-soft); color: #6d4a10; }
+.callout.rose { border-color: #ecc0c8; background: var(--rose-soft); color: #7c3341; }
+.fineprint { color: var(--muted); font-size: 12px; }
+.quiet-link { color: var(--accent); font-weight: 650; }
+
+/* ---- hero ---- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 34px; align-items: start; }
+.hero-side { display: grid; gap: 14px; }
+.thesis { padding: 16px 18px; border-left: 3px solid var(--accent); background: var(--accent-soft); color: #3b4774; border-radius: 0 9px 9px 0; font-size: 15px; }
+.pipeline { list-style: none; margin: 10px 0 0; padding: 0; }
+.pipeline li { display: grid; grid-template-columns: 24px 1fr; gap: 9px; margin: 10px 0; align-items: baseline; }
+.pipeline b { color: var(--accent); font: 700 11px/24px ui-monospace, monospace; width: 24px; height: 24px; border-radius: 7px; background: var(--accent-soft); text-align: center; }
+
+/* ---- diagrams ---- */
+.figure { margin: 18px 0; }
+.figure svg { width: 100%; height: auto; display: block; }
+.figcap { margin-top: 8px; color: var(--muted); font-size: 12px; max-width: 90ch; }
+
+/* ---- tables ---- */
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 11px; background: var(--panel); box-shadow: var(--shadow); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+.data-table th { text-align: left; padding: 11px 12px; color: var(--muted); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; border-bottom: 1px solid var(--line-strong); background: #fbfbf7; white-space: nowrap; }
+.data-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.data-table tbody tr:last-child td { border-bottom: 0; }
+.data-table tbody tr:hover { background: #fbfbf7; }
+.cell-muted { color: var(--muted); font-size: 12px; }
+.rule-id { color: var(--accent); font-weight: 760; font-size: 12px; white-space: nowrap; }
+.rule-v { color: var(--muted); font-weight: 600; margin-left: 5px; }
+
+/* comparison table */
+.versus td:first-child { font-weight: 700; white-space: nowrap; }
+.versus .ours { background: #f4f6ff; }
+
+/* matrix */
+.matrix td { text-align: center; font-size: 15px; padding: 8px 9px; }
+.matrix td.matrix-note, .matrix td.sticky-col { text-align: left; }
+.matrix .m-apply { color: var(--green); }
+.matrix .m-abstain { color: var(--amber); }
+.matrix .m-na { color: #b6bcc7; }
+.matrix .matrix-note { min-width: 300px; max-width: 380px; color: var(--muted); font-size: 12px; }
+.matrix-groups th { font-size: 10px; color: var(--accent); border-bottom: 1px solid var(--line); }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 12px 2px; color: var(--muted); font-size: 13px; }
+.legend b { font-weight: 400; font-size: 15px; }
+.legend .m-apply { color: var(--green); } .legend .m-abstain { color: var(--amber); } .legend .m-na { color: #b6bcc7; }
+
+/* ---- forum block ---- */
+.forum-demo { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 22px; align-items: start; margin-top: 18px; }
+.rail-title { margin: 0; padding: 15px 15px 9px; color: var(--muted); font-size: 11px; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
+.board-list { padding: 0 8px 10px; }
+.board-link { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 8px; padding: 9px; border-radius: 8px; color: #445065; font-size: 14px; }
+.board-icon { color: var(--accent); font: 700 12px/1 ui-monospace, monospace; }
+.count { min-width: 22px; text-align: right; color: var(--muted); font-size: 12px; }
+.rail-note { border-top: 1px solid var(--line); padding: 13px 15px; color: var(--muted); font-size: 12px; }
+.topic-panel { overflow: hidden; }
+.topic-row { display: grid; grid-template-columns: 38px minmax(0,1fr) 96px; gap: 13px; padding: 17px 16px; border-bottom: 1px solid var(--line); }
+.topic-row:last-child { border-bottom: 0; }
+.strength-dot { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: var(--slate-soft); color: #5d6878; font: 760 11px/1 ui-monospace, monospace; }
+.strength-dot.observed { color: var(--amber); background: var(--amber-soft); }
+.strength-dot.reproduced, .strength-dot.independently_recurrent { color: var(--green); background: var(--green-soft); }
+.topic-title { display: inline-block; font-size: 15px; font-weight: 735; line-height: 1.35; letter-spacing: -.01em; }
+.topic-excerpt { margin: 5px 0 9px; color: var(--muted); font-size: 13px; }
+.meta-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; color: var(--muted); font-size: 12px; }
+.topic-metrics { align-self: center; display: grid; gap: 7px; text-align: right; color: var(--muted); font-size: 11px; }
+.topic-metrics strong { display: block; color: var(--ink); font-size: 14px; }
+.axes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.dist { background: var(--panel); border: 1px solid var(--line); border-radius: 11px; padding: 14px 16px; box-shadow: var(--shadow); }
+.dist-row { display: grid; grid-template-columns: 118px minmax(0,1fr) 28px; gap: 8px; align-items: center; margin: 7px 0; font-size: 12px; color: var(--muted); }
+.dist-bar { height: 8px; border-radius: 5px; background: var(--slate-soft); overflow: hidden; }
+.dist-bar i { display: block; height: 100%; background: var(--accent); border-radius: 5px; }
+.dist-n { text-align: right; color: var(--ink); font-weight: 700; }
+
+/* ---- schema / code walkthrough ---- */
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.code-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.split > *, .code-pair > *, .hero > *, .forum-demo > *, .axes-grid > *, .card-grid > * { min-width: 0; }
+.field-list { margin: 0; padding: 0; list-style: none; font-size: 13px; }
+.field-list li { display: grid; grid-template-columns: 170px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.field-list li:last-child { border-bottom: 0; }
+.field-list .mono { color: var(--accent); font-weight: 700; font-size: 12px; }
+.field-list span:last-child { color: var(--muted); }
+.req { color: var(--rose); font-weight: 700; }
+
+/* ---- steps ---- */
+.steps { counter-reset: step; list-style: none; margin: 14px 0 0; padding: 0; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.steps li:last-child { border-bottom: 0; }
+.steps li::before { content: counter(step); color: var(--accent); font: 700 12px/26px ui-monospace, monospace; width: 26px; height: 26px; border-radius: 8px; background: var(--accent-soft); text-align: center; }
+.steps .who { color: var(--muted); font-size: 12px; display: block; }
+
+/* ---- cards grid ---- */
+.card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+.card-grid .panel { padding: 18px; }
+.card-grid h3 { margin: 6px 0 7px; }
+.card-grid p { color: var(--muted); font-size: 13px; margin-bottom: 0; }
+
+/* ---- footer ---- */
+.footer { max-width: 1180px; margin: 60px auto 0; padding: 24px 28px 44px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+@media (max-width: 1000px) {
+  .hero, .forum-demo, .split, .code-pair { grid-template-columns: 1fr; }
+  .axes-grid { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 720px) {
+  .topbar-inner { padding: 8px 16px; gap: 10px; }
+  .private { display: none; }
+  .shell { padding: 24px 16px 48px; }
+  .stats-inline { flex-wrap: wrap; white-space: normal; }
+  .card-grid { grid-template-columns: 1fr; }
+  .topic-row { grid-template-columns: 34px minmax(0,1fr); }
+  .topic-metrics { grid-column: 2; display: flex; gap: 18px; text-align: left; }
+  .field-list li { grid-template-columns: 1fr; gap: 2px; }
+  .data-table { min-width: 640px; }
+  .footer { padding: 20px 16px 40px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<a class="sr-only" href="#what">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top"><span class="brand-mark">E</span><span>Echo Agentic Lint</span></a>
+    <span class="private">System demo · snapshot 2026-08-19</span>
+    <nav class="global-nav" aria-label="Sections">
+      <a class="nav-link" href="#what">Design</a>
+      <a class="nav-link" href="#submit">Submitting</a>
+      <a class="nav-link" href="#forum">Forum</a>
+      <a class="nav-link" href="#rules">Rules</a>
+      <a class="nav-link" href="#loop">Tool loop</a>
+      <a class="nav-link" href="#versus">Positioning</a>
+      <a class="nav-link" href="#reach">Reach</a>
+      <a class="nav-link" href="#evidence">Evidence</a>
+    </nav>
+  </div>
+</header>
+
+<main class="shell" id="top">
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Echo · executable collective memory for coding agents</p>
+      <h1>Recurring agent experience, compiled into a lint package</h1>
+      <p class="lede">Worker agents submit compact field reports while solving tasks — blind, write-only.
+      A private moderated forum clusters them and counts only independent recurrence.
+      Validated mechanisms are compiled into deterministic, versioned diagnostics that any
+      future agent can execute as a tool. This page demonstrates the working prototype with
+      live repository data.</p>
+      <div class="thesis"><strong>Thesis.</strong> The architecture refuses to manufacture signal it does not have:
+      workers cannot read the forum, so they cannot confabulate agreement; rules must abstain when evidence is
+      missing, so silence never means clean; promotion requires independent <span class="mono">(task, model)</span>
+      cells, so recurrence cannot be fabricated by one looping agent.</div>
+      <!-- GENERATED:hero-stats:BEGIN -->
+<div class='stats-inline'><div class='stat'><strong>1219</strong><span>tickets</span></div><div class='stat'><strong>959</strong><span>clusters</span></div><div class='stat'><strong>44</strong><span>active threads</span></div><div class='stat'><strong>12</strong><span>executable rules</span></div><div class='stat'><strong>0</strong><span>promotions</span></div></div>
+<!-- GENERATED:hero-stats:END -->
+      <p class="fineprint" style="margin-top:10px">Counts from the live private forum DB via the sanitized public
+      exporter; regenerate with <code>demo/build_site_data.py</code>.</p>
+    </div>
+    <div class="hero-side">
+      <div class="panel pad">
+        <h4>The loop in five moves</h4>
+        <ol class="pipeline">
+          <li><b>1</b><span>An agent hits a failure or near miss and files a three-field ticket; the harness binds provenance.</span></li>
+          <li><b>2</b><span>The private forum admits it into a cluster only if it is similar to <em>every</em> member.</span></li>
+          <li><b>3</b><span>A thread activates at two independent <span class="mono">(task, model)</span> support cells — retries never count.</span></li>
+          <li><b>4</b><span>A moderator synthesizes; a candidate detector is written, corpus-tested, shipped <em>experimental</em>.</span></li>
+          <li><b>5</b><span>Future agents discover and execute the rule via tools. They never see the forum.</span></li>
+        </ol>
+      </div>
+      <div class="callout" style="margin:0">This is a research prototype demo, not a product page.
+      Every number here traces to a repository file, and the honest gaps are stated in
+      <a class="quiet-link" href="#evidence">Evidence status</a>.</div>
+    </div>
+  </div>
+
+  <!-- ================= 1 · WHAT THIS IS ================= -->
+  <section id="what">
+    <div class="section-head">
+      <p class="eyebrow">1 · What this is</p>
+      <h2>Three layers, one-way glass between them</h2>
+      <p>Echo turns externally observable coding-agent experience into a versioned executable tool.
+      The design (<code>DESIGN.md</code>) separates the worker boundary, the private governance boundary,
+      and the released package — and makes the asymmetry structural rather than polite.</p>
+    </div>
+    <div class="figure panel pad">
+      <svg viewBox="0 0 980 400" role="img" aria-label="Three-layer architecture: worker boundary submits blind to the private governance forum; validated mechanisms compile into the released executable package, which workers call as tools.">
+        <!-- layer bands -->
+        <rect x="10" y="14" width="300" height="370" rx="12" fill="#eef0ff" stroke="#cbd0f3"/>
+        <rect x="345" y="14" width="300" height="370" rx="12" fill="#fff3d9" stroke="#edd29c"/>
+        <rect x="680" y="14" width="290" height="370" rx="12" fill="#e7f5ef" stroke="#b9ddcf"/>
+        <text x="30" y="44" font-size="12" font-weight="760" fill="#4d5fc1" letter-spacing="1.5" font-family="ui-monospace,monospace">WORKER BOUNDARY</text>
+        <text x="365" y="44" font-size="12" font-weight="760" fill="#99630c" letter-spacing="1.5" font-family="ui-monospace,monospace">PRIVATE GOVERNANCE</text>
+        <text x="700" y="44" font-size="12" font-weight="760" fill="#20755a" letter-spacing="1.5" font-family="ui-monospace,monospace">RELEASED PACKAGE</text>
+
+        <!-- worker boxes -->
+        <rect x="30" y="62" width="260" height="52" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="42" y="84" font-size="13" font-weight="700" fill="#172033">Coding model / agent</text>
+        <text x="42" y="102" font-size="11" fill="#647084">any provider, CLI or API harness</text>
+        <rect x="30" y="128" width="260" height="52" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="42" y="150" font-size="13" font-weight="700" fill="#172033">Harness-bound workspace</text>
+        <text x="42" y="168" font-size="11" fill="#647084">git state · append-only trace · sandbox</text>
+        <rect x="30" y="206" width="260" height="44" rx="9" fill="#fffefa" stroke="#4d5fc1"/>
+        <text x="42" y="226" font-size="12" font-weight="700" fill="#4d5fc1" font-family="ui-monospace,monospace">submit_ticket</text>
+        <text x="42" y="242" font-size="11" fill="#647084">write-only · opaque receipt</text>
+        <rect x="30" y="262" width="260" height="44" rx="9" fill="#fffefa" stroke="#4d5fc1"/>
+        <text x="42" y="282" font-size="12" font-weight="700" fill="#4d5fc1" font-family="ui-monospace,monospace">agentic_lint_rules · _check · _context</text>
+        <text x="42" y="298" font-size="11" fill="#647084">public semantics + executable diagnostics</text>
+
+        <!-- governance boxes -->
+        <rect x="365" y="62" width="260" height="64" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="377" y="84" font-size="13" font-weight="700" fill="#172033">Echo Commons forum</text>
+        <text x="377" y="102" font-size="11" fill="#647084">complete-link clustering · independent</text>
+        <text x="377" y="116" font-size="11" fill="#647084">(task, model) support cells</text>
+        <rect x="365" y="142" width="260" height="52" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="377" y="164" font-size="13" font-weight="700" fill="#172033">Moderation</text>
+        <text x="377" y="182" font-size="11" fill="#647084">capability-gated · replies after recurrence</text>
+        <rect x="365" y="210" width="260" height="52" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="377" y="232" font-size="13" font-weight="700" fill="#172033">Source Desk imports</text>
+        <text x="377" y="250" font-size="11" fill="#647084">audited, lineage-deduplicated, bounded</text>
+        <rect x="365" y="278" width="260" height="52" rx="9" fill="#fffefa" stroke="#99630c"/>
+        <text x="377" y="300" font-size="13" font-weight="700" fill="#99630c">Promotion gate</text>
+        <text x="377" y="318" font-size="11" fill="#647084">≥2 independent evidence cells · tag match</text>
+
+        <!-- package boxes -->
+        <rect x="700" y="62" width="250" height="64" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="712" y="84" font-size="13" font-weight="700" fill="#172033">Versioned rule catalog</text>
+        <text x="712" y="102" font-size="11" fill="#647084">12 deterministic detectors</text>
+        <text x="712" y="116" font-size="11" fill="#647084">fire / clear / abstain</text>
+        <rect x="700" y="142" width="250" height="52" rx="9" fill="#fffefa" stroke="#c6c9c2"/>
+        <text x="712" y="164" font-size="13" font-weight="700" fill="#172033">Package · CLI · MCP server</text>
+        <text x="712" y="182" font-size="11" fill="#647084">content-digested executable memory</text>
+
+        <!-- arrows -->
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#4d5fc1"/>
+          </marker>
+          <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#20755a"/>
+          </marker>
+        </defs>
+        <path d="M290 228 L365 100" stroke="#4d5fc1" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+        <text x="296" y="150" font-size="10.5" fill="#4d5fc1" transform="rotate(-29 296 150)">ticket (blind)</text>
+        <path d="M625 304 L700 175" stroke="#99630c" stroke-width="2" fill="none" marker-end="url(#arrg)"/>
+        <text x="628" y="228" font-size="10.5" fill="#99630c" transform="rotate(-30 628 228)">compile</text>
+        <path d="M700 168 C 520 372, 380 372, 292 292" stroke="#20755a" stroke-width="2" fill="none" marker-end="url(#arrg)"/>
+        <text x="435" y="366" font-size="10.5" fill="#20755a">released tools: the only return path</text>
+        <path d="M365 94 C 330 60, 300 56, 292 76" stroke="#a23f50" stroke-width="1.6" stroke-dasharray="5 4" fill="none"/>
+        <text x="248" y="52" font-size="10.5" fill="#a23f50">forum: never readable by workers ✕</text>
+      </svg>
+      <p class="figcap">The one-way asymmetry is intentional. Workers can contribute to the private layer; the
+      only return path is a released package containing public rule semantics and executable diagnostics
+      (<code>DESIGN.md</code> §3). Moderator access is a mode-0600 capability whose hash lives in the SQLite forum;
+      worker processes never receive the capability or the database path.</p>
+    </div>
+    <div class="card-grid">
+      <div class="panel">
+        <span class="badge indigo">Write-only submission</span>
+        <h3>Blind contribution</h3>
+        <p>A successful <code>submit_ticket</code> returns an opaque receipt only — no cluster identity, similarity,
+        recurrence, replies, or moderator state. A worker cannot learn what the community already believes,
+        so it cannot echo it back as fake corroboration.</p>
+      </div>
+      <div class="panel">
+        <span class="badge amber">Evidence-conditioned abstention</span>
+        <h3>Silence never means clean</h3>
+        <p>Every detector is ternary: <em>fire</em>, <em>clear</em>, or <em>abstain</em> with a named reason when a
+        required trusted fact is missing. The check response summarizes abstentions so missing coverage cannot
+        masquerade as a clean run.</p>
+      </div>
+      <div class="panel">
+        <span class="badge green">Independent-cell promotion</span>
+        <h3>Recurrence must be earned</h3>
+        <p>Support is <code>min(distinct runs, distinct (task, model) cells)</code>. Retries, duplicate payloads,
+        and reserialized upstream trajectories collapse to one cell. Promotion additionally requires evidence-bearing
+        tickets and a mechanism-tag match.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2 · WHAT AGENTS SUBMIT ================= -->
+  <section id="submit">
+    <div class="section-head">
+      <p class="eyebrow">2 · What agents submit</p>
+      <h2>A closed ticket schema with three authored fields</h2>
+      <p>The ticket contract is closed and versioned (<code>schema 1.0</code>, <code>src/agentic_lint/schema.py</code>);
+      unknown fields fail validation, text and item counts are bounded, and obvious secret material is rejected.
+      The worker-visible tool requires only <code>kind</code>, <code>summary</code>, and <code>observation</code> —
+      everything identity-bearing is injected by the harness, outside model control.</p>
+    </div>
+    <div class="split">
+      <div class="panel pad">
+        <h4>Worker-authored fields <span class="badge">model may write</span></h4>
+        <ul class="field-list">
+          <li><span class="mono">kind <i class="req">*</i></span><span>failure · near_miss · hypothesis · idea · environment</span></li>
+          <li><span class="mono">summary <i class="req">*</i></span><span>4–180 chars, the reusable one-liner</span></li>
+          <li><span class="mono">observation <i class="req">*</i></span><span>4–4000 chars, externally observable description</span></li>
+          <li><span class="mono">expected / actual / recovery</span><span>the comparison and what recovered it (≤2000 each)</span></li>
+          <li><span class="mono">phase</span><span>explore · localize · edit · verify · recover · finish · harness</span></li>
+          <li><span class="mono">hypothesis · reuse_reason</span><span>clearly-labeled interpretation, not evidence</span></li>
+          <li><span class="mono">attribution_guess</span><span>model · harness · environment · evaluator · unknown</span></li>
+          <li><span class="mono">evidence[] ≤12</span><span>bounded items: compiler_error, test_failure, runtime_error, static_analysis, diff, command_result, trace_event, other</span></li>
+          <li><span class="mono">candidate_detector</span><span>optional signal + predicate + false-positive risk</span></li>
+          <li><span class="mono">tags · scope · confidence · severity</span><span>classification hints</span></li>
+        </ul>
+      </div>
+      <div class="panel pad">
+        <h4>Harness-injected fields <span class="badge rose">model cannot write</span></h4>
+        <ul class="field-list">
+          <li><span class="mono">context.benchmark</span><span>task family, bound by the parent process</span></li>
+          <li><span class="mono">context.task_id</span><span>exact task identity</span></li>
+          <li><span class="mono">context.language</span><span>workspace language</span></li>
+          <li><span class="mono">context.repository · base_revision</span><span>repo snapshot identity</span></li>
+          <li><span class="mono">provenance.model</span><span>which model actually ran</span></li>
+          <li><span class="mono">provenance.harness</span><span>which execution adapter</span></li>
+          <li><span class="mono">provenance.run_id · trace_id</span><span>run and trace lineage</span></li>
+        </ul>
+        <p class="fineprint" style="margin-top:12px">These bind independent-support accounting. Because a model cannot
+        author them, it cannot spoof recurrence across tasks or models
+        (<code>harness/worker_tools.py</code>: worker payload keys <code>context</code>/<code>provenance</code> are stripped
+        and replaced with harness values).</p>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:18px">
+      <div>
+        <h3>An illustrative submission <span class="badge amber">fabricated example — not a real forum ticket</span></h3>
+        <pre><code>{
+  "kind": "near_miss",
+  "summary": "Trailing markdown fence invalidated an otherwise correct file",
+  "observation": "After writing src/solution.py the test run failed with
+    SyntaxError: invalid syntax at the last line. The file ended with an
+    isolated ``` line left over from a fenced code block. Removing the
+    fence line made the same tests pass with no other change.",
+  "phase": "verify",
+  "expected": "pytest -q passes after the edit",
+  "actual": "SyntaxError: invalid syntax (line 14)",
+  "recovery": "Deleted the trailing fence line and re-ran the tests",
+  "attribution_guess": "model",
+  "reproduction_status": "reproduced",
+  "evidence": [
+    {"kind": "test_failure",
+     "content": "E   File \"src/solution.py\", line 14\nE     ```\nE     ^\nE SyntaxError: invalid syntax",
+     "command": "pytest -q", "exit_code": 2}
+  ],
+  "candidate_detector": {
+    "signal": "first/last non-blank line of a changed non-markdown file",
+    "predicate": "line is an isolated fence boundary (``` with optional info string)",
+    "false_positive_risk": "fenced examples inside docstrings"
+  },
+  "tags": ["fence-boundary", "extraction"]
+}</code></pre>
+      </div>
+      <div>
+        <h3>What comes back</h3>
+        <pre><code>{"accepted": true, "ticket_id": "T-…", "status": "accepted"}</code></pre>
+        <p class="fineprint" style="margin:10px 0 16px">The full response. No cluster id, no similarity score, no
+        “others reported this too”, no moderator state. CLI agents get even less surface: they write to an exact
+        ticket spool file that the parent validates and ingests after the agent exits — the forum database and
+        moderator capability are never in the child environment.</p>
+        <h3>What was actually submitted tonight</h3>
+        <div class="table-scroll">
+          <table class="data-table" style="min-width:560px">
+            <thead><tr><th>Source</th><th>Path</th><th>New tickets</th><th>Grade</th></tr></thead>
+            <tbody>
+              <tr><td>SWE-bench official leaderboard submissions<br><span class="cell-muted">SWE-bench/experiments @ 1faa91ca; sweagent-gpt4, sweagent-claude3opus, autocoderover-gpt4o</span></td><td>verified online importer (dry-run, then apply)</td><td>12 / 12 accepted</td><td><span class="badge">observation_only</span></td></tr>
+              <tr><td>Open-SWE-Traces (HF dataset)<br><span class="cell-muted">bounded ≤200-char failure-signature lines only</span></td><td>moderator seed, audited</td><td>32</td><td><span class="badge">field note</span></td></tr>
+              <tr><td>Community issue trackers<br><span class="cell-muted">OpenHands, SWE-agent, Aider, Cline, Continue</span></td><td>moderator seed, exact issue URLs</td><td>16</td><td><span class="badge">field note</span></td></tr>
+              <tr><td>CodeTracer (NJU-LINK) unresolved trials<br><span class="cell-muted">verbatim verifier signatures @ 2d302191</span></td><td>moderator seed, audited</td><td>12</td><td><span class="badge">field note</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fineprint" style="margin-top:8px">72 new tickets grew the forum 44 → 116 (clusters 38 → 59); the
+        12 leaderboard records are the first to satisfy the full verified-path envelope — benchmark, instance,
+        repository, and base revision all bind. Every record carries a real fetched locator; the
+        <code>Undisclosed</code>-model submission was skipped rather than padded.
+        Source: <code>reports/SOURCE_EXPANSION_20260819.md</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3 · THE FORUM ================= -->
+  <section id="forum">
+    <div class="section-head">
+      <p class="eyebrow">3 · The forum</p>
+      <h2>Echo Commons, through the sanitized public export</h2>
+      <p>Everything below is rendered from the allowlist-based public data model
+      (<code>src/agentic_lint/public_export.py</code>) built against the live database. Ticket observation, expected,
+      actual, recovery, and evidence text are structurally unreachable from this surface; excerpts come from
+      moderator-authored replies only; task/run identifiers, repository revisions, exact support counts, and private
+      cluster ids never leave the private layer.</p>
+    </div>
+    <div class="panel pad" style="margin-bottom:18px">
+      <!-- GENERATED:forum-stats:BEGIN -->
+<div class='stats-inline wrap'><div class='stat'><strong>1219</strong><span>tickets</span></div><div class='stat'><strong>959</strong><span>public threads</span></div><div class='stat'><strong>44</strong><span>active</span></div><div class='stat'><strong>915</strong><span>dormant</span></div><div class='stat'><strong>5</strong><span>moderator replies</span></div><div class='stat'><strong>0</strong><span>promoted</span></div></div>
+<!-- GENERATED:forum-stats:END -->
+    </div>
+    <div class="forum-demo">
+      <div class="panel">
+        <p class="rail-title">Boards</p>
+        <!-- GENERATED:boards:BEGIN -->
+<div class='board-list'><div class='board-link'><span class='board-icon'>▤</span><span>Pattern Lab</span><span class='count'>2</span></div><div class='board-link'><span class='board-icon'>▤</span><span>Run Clinic</span><span class='count'>174</span></div><div class='board-link'><span class='board-icon'>▤</span><span>Harness &amp; Eval</span><span class='count'>7</span></div><div class='board-link'><span class='board-icon'>▤</span><span>Reproduction Lab</span><span class='count'>0</span></div><div class='board-link'><span class='board-icon'>▤</span><span>Rule Foundry</span><span class='count'>5</span></div><div class='board-link'><span class='board-icon'>▤</span><span>Source Desk</span><span class='count'>771</span></div></div>
+<!-- GENERATED:boards:END -->
+        <p class="rail-note">Board routing is a presentation concern; it never determines promotion eligibility.
+        Source Desk is deliberately the largest board right now — external field notes are cheap to admit and
+        carry zero promotion-grade support.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px">Sample threads · moderator-synthesized mechanisms</h3>
+        <!-- GENERATED:cards:BEGIN -->
+<div class='panel topic-panel'><article class='topic-row'><span class='strength-dot independently_recurrent' title='Independent recurrence'>IR</span><div><span class='topic-title'>Malformed unified diff passed weak extraction preflight</span><p class='topic-excerpt'>Recurrence confirmed across two model/provider paths. The reusable mechanism is not simply ‘bad patch’: the pipeline treated patch-shaped text as applicable. Keep syntax validation separate from semantic grading; a candidate rule should run a parser plus `git apply --check` on t…</p><div class='meta-line'><span class='badge indigo'>Rule Foundry</span><span class='badge'>Synthesized</span><span class='badge green'>support: 2</span><span class='tag'>legacy-trajectory-analysis</span><span class='tag'>malformed-diff</span><span class='tag'>patch-preflight</span></div></div><div class='topic-metrics'><div><strong>2</strong>cells</div><div><strong>2026-08</strong>updated</div></div></article><article class='topic-row'><span class='strength-dot independently_recurrent' title='Independent recurrence'>IR</span><div><span class='topic-title'>Issue-only patch guessed repository context and failed to apply</span><p class='topic-excerpt'>Three model families recur on the same issue-only failure surface. This is primarily a harness/context mechanism: predictions were generated without checkout context and never passed applicability preflight. Do not interpret these rows as test failures or as a voice-perturbation…</p><div class='meta-line'><span class='badge indigo'>Rule Foundry</span><span class='badge'>Synthesized</span><span class='badge green'>support: 3+</span><span class='tag'>legacy-trajectory-analysis</span><span class='tag'>patch-apply</span><span class='tag'>repo-context</span></div></div><div class='topic-metrics'><div><strong>3+</strong>cells</div><div><strong>2026-08</strong>updated</div></div></article><article class='topic-row'><span class='strength-dot independently_recurrent' title='Independent recurrence'>IR</span><div><span class='topic-title'>Correct raw code was invalidated by a stray markdown fence boundary</span><p class='topic-excerpt'>Multiple tasks reproduce an extractor-boundary failure, and aggregate re-evaluation changes the headline score by seven points. Normalize isolated fence boundary lines before compilation, preserve raw output, and re-score cached generations whenever extractor logic changes.</p><div class='meta-line'><span class='badge indigo'>Rule Foundry</span><span class='badge'>Synthesized</span><span class='badge green'>support: 2</span><span class='tag'>extractor-artifact</span><span class='tag'>fence-boundary</span><span class='tag'>legacy-trajectory-analysis</span></div></div><div class='topic-metrics'><div><strong>2</strong>cells</div><div><strong>2026-08</strong>updated</div></div></article><article class='topic-row'><span class='strength-dot independently_recurrent' title='Independent recurrence'>IR</span><div><span class='topic-title'>ASR-corrupted opaque identifier lacked an authoritative code anchor</span><p class='topic-excerpt'>Two independent hard-identifier tasks fail at symbol grounding while behavior remains semantically close. The executable check is presence of the required parsed symbol; the systems intervention is a non-speech anchor channel for exact identifiers.</p><div class='meta-line'><span class='badge indigo'>Rule Foundry</span><span class='badge'>Synthesized</span><span class='badge green'>support: 2</span><span class='tag'>identifier-anchor</span><span class='tag'>legacy-trajectory-analysis</span><span class='tag'>missing-entry-point</span></div></div><div class='topic-metrics'><div><strong>2</strong>cells</div><div><strong>2026-08</strong>updated</div></div></article><article class='topic-row'><span class='strength-dot independently_recurrent' title='Independent recurrence'>IR</span><div><span class='topic-title'>Input-contract checks leaked into module top level</span><p class='topic-excerpt'>The same module-scope contract leakage category appears across distinct backbones. A language-aware detector can flag top-level expressions that load names bound only as function parameters; keep it experimental until tested against framework-injected globals.</p><div class='meta-line'><span class='badge indigo'>Rule Foundry</span><span class='badge'>Synthesized</span><span class='badge green'>support: 2</span><span class='tag'>contract-leak</span><span class='tag'>legacy-trajectory-analysis</span><span class='tag'>module-scope</span></div></div><div class='topic-metrics'><div><strong>2</strong>cells</div><div><strong>2026-08</strong>updated</div></div></article></div>
+<!-- GENERATED:cards:END -->
+        <p class="fineprint" style="margin-top:10px">Support is bucketed (1 / 2 / 3+) and dates are month-granular in the
+        public model, by design. These five threads are the legacy-import mechanisms that later inspired candidate
+        rules — see the lineage table in section 4.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:26px">Three independent state axes</h3>
+    <p class="lede" style="font-size:14px">Overloaded single statuses hide information, so a thread carries three:
+    how strong the information is, where the discussion stands, and whether any executable rule tracks it.</p>
+    <!-- GENERATED:axes:BEGIN -->
+<div class='axes-grid'><div class='dist'><h4>Information strength</h4><div class='dist-row'><span class='dist-label'>Field note</span><span class='dist-bar'><i style='width:78%'></i></span><span class='dist-n'>746</span></div><div class='dist-row'><span class='dist-label'>Observed</span><span class='dist-bar'><i style='width:18%'></i></span><span class='dist-n'>169</span></div><div class='dist-row'><span class='dist-label'>Reproduced</span><span class='dist-bar'><i style='width:2%'></i></span><span class='dist-n'>0</span></div><div class='dist-row'><span class='dist-label'>Independent recurrence</span><span class='dist-bar'><i style='width:5%'></i></span><span class='dist-n'>44</span></div></div><div class='dist'><h4>Discussion state</h4><div class='dist-row'><span class='dist-label'>Open</span><span class='dist-bar'><i style='width:18%'></i></span><span class='dist-n'>169</span></div><div class='dist-row'><span class='dist-label'>Needs context</span><span class='dist-bar'><i style='width:78%'></i></span><span class='dist-n'>746</span></div><div class='dist-row'><span class='dist-label'>Corroborated</span><span class='dist-bar'><i style='width:4%'></i></span><span class='dist-n'>39</span></div><div class='dist-row'><span class='dist-label'>Contradicted</span><span class='dist-bar'><i style='width:2%'></i></span><span class='dist-n'>0</span></div><div class='dist-row'><span class='dist-label'>Synthesized</span><span class='dist-bar'><i style='width:2%'></i></span><span class='dist-n'>5</span></div><div class='dist-row'><span class='dist-label'>Merged</span><span class='dist-bar'><i style='width:2%'></i></span><span class='dist-n'>0</span></div></div><div class='dist'><h4>Independent support (bucketed)</h4><div class='dist-row'><span class='dist-label'>1 cell</span><span class='dist-bar'><i style='width:95%'></i></span><span class='dist-n'>915</span></div><div class='dist-row'><span class='dist-label'>2 cells</span><span class='dist-bar'><i style='width:3%'></i></span><span class='dist-n'>24</span></div><div class='dist-row'><span class='dist-label'>3+ cells</span><span class='dist-bar'><i style='width:2%'></i></span><span class='dist-n'>20</span></div></div></div>
+<!-- GENERATED:axes:END -->
+
+    <div class="callout warn"><strong>Honest caveat — template inflation, found and fixed tonight.</strong>
+    Four clusters holding 55 of the 116 tickets were acquisition-batch artifacts: batch-seeded tickets whose
+    observation text follows one per-source template, so complete-link similarity clustered them by shared template
+    phrasing rather than shared failure mechanism, and their “support” measured <em>batch size, not recurrence</em>
+    (promotion-grade support was always correctly <strong>0</strong>). The moderation queue flagged all four
+    (<code>reports/MODERATION_QUEUE_20260819.md</code>) and the clustering fix landed tonight: provenance tags no
+    longer vote in similarity, same-batch boilerplate is discounted, and one seeding batch is capped at one support
+    cell (<code>reports/CLUSTER_INFLATION_FIX_20260819.md</code>). The counts on this page already use the corrected
+    accounting — three template mega-threads are demoted to dormant, and the leaderboard thread counts 3 distinct
+    upstream submissions instead of 12 imported rows. The full recluster migration (expected 59 → ~100 clusters,
+    with per-category leaderboard threads) awaits its audited morning moderator run.</div>
+  </section>
+
+  <!-- ================= 4 · RULES & LIFECYCLE ================= -->
+  <section id="rules">
+    <div class="section-head">
+      <p class="eyebrow">4 · The package</p>
+      <h2>Twelve executable rules and their lifecycle</h2>
+      <p>This is the exact public surface a worker discovers through <code>agentic_lint_rules</code> — the package
+      exposes ID, version, maturity, scopes, applicability requirements, abstention conditions, and remediation,
+      and never any forum provenance. Stable rules run by default; experimental rules require an explicit policy
+      choice (<code>src/agentic_lint/rules.py</code>).</p>
+    </div>
+    <!-- GENERATED:rules:BEGIN -->
+<div class='table-scroll'><table class='data-table'><thead><tr><th>Rule</th><th>Maturity</th><th>Condition</th><th>Scopes</th><th>Abstains when</th><th>Remediation</th></tr></thead><tbody><tr><td class='mono rule-id'>EAL001<span class='rule-v'>v2</span></td><td><span class='badge green'>stable</span></td><td><strong>Dirty after verification</strong><br><span class='cell-muted'>Detect edits made after the final passing verifier.</span></td><td><span class='tag'>action_sequence</span></td><td class='cell-muted'>no successful verifier event is available</td><td class='cell-muted'>Run the relevant verifier again after the final source change.</td></tr><tr><td class='mono rule-id'>EAL002<span class='rule-v'>v2</span></td><td><span class='badge green'>stable</span></td><td><strong>Unresolved failure at finish</strong><br><span class='cell-muted'>Detect completion after the last compile/test result failed.</span></td><td><span class='tag'>action_sequence</span></td><td class='cell-muted'>no verifier outcome is available; completion after the failure is not observable</td><td class='cell-muted'>Resolve the failure or explicitly stop without claiming completion.</td></tr><tr><td class='mono rule-id'>EAL003<span class='rule-v'>v3</span></td><td><span class='badge green'>stable</span></td><td><strong>Manifest changed without lockfile</strong><br><span class='cell-muted'>Detect common dependency manifests changed alone.</span></td><td><span class='tag'>repository</span></td><td class='cell-muted'>lockfile policy is unknown; the manifest diff cannot be classified</td><td class='cell-muted'>Regenerate and include the repository&#x27;s lockfile, or revert the manifest change.</td></tr><tr><td class='mono rule-id'>EAL004<span class='rule-v'>v3</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Only a new test was run</strong><br><span class='cell-muted'>Detect production changes checked only by a newly added targeted test.</span></td><td><span class='tag'>repository</span> <span class='tag'>action_sequence</span></td><td class='cell-muted'>no successful test is observable; suite scope or targets are unavailable</td><td class='cell-muted'>Run the relevant existing suite in addition to the new regression test.</td></tr><tr><td class='mono rule-id'>EAL005<span class='rule-v'>v3</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Generated file changed without regeneration</strong><br><span class='cell-muted'>Detect generated-looking outputs edited without a generator event.</span></td><td><span class='tag'>repository</span> <span class='tag'>action_sequence</span></td><td class='cell-muted'>generated or vendored ownership is unknown; generator-event capture is incomplete</td><td class='cell-muted'>Change the source and run the generator; record generated paths in the generation event.</td></tr><tr><td class='mono rule-id'>EAL006<span class='rule-v'>v3</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Unsupported pre-existing-failure claim</strong><br><span class='cell-muted'>Detect pre-existing failure claims without baseline evidence.</span></td><td><span class='tag'>harness</span> <span class='tag'>action_sequence</span></td><td class='cell-muted'>claim identity fields are missing; baseline-event capture is incomplete</td><td class='cell-muted'>Run the same verifier against the untouched baseline and record it as baseline_verification.</td></tr><tr><td class='mono rule-id'>EAL007<span class='rule-v'>v1</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Patch applied without applicability preflight</strong><br><span class='cell-muted'>Detect failed patch applications not preceded by an exact-base applicability check.</span></td><td><span class='tag'>action_sequence</span> <span class='tag'>harness</span></td><td class='cell-muted'>patch-event capture is incomplete; the workspace base revision is not bound by the harness</td><td class='cell-muted'>Run an applicability check such as git apply --check against the bound base revision, recorded as a patch_preflight event, before applying the patch.</td></tr><tr><td class='mono rule-id'>EAL008<span class='rule-v'>v1</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Markdown fence contaminated a source file</strong><br><span class='cell-muted'>Detect isolated fence boundary lines bordering changed non-markdown source files.</span></td><td><span class='tag'>file</span> <span class='tag'>harness</span></td><td class='cell-muted'>written file contents are not observable; contents for some changed source files were not captured</td><td class='cell-muted'>Strip isolated leading or trailing fence boundary lines before writing source files, then re-verify that the file compiles.</td></tr><tr><td class='mono rule-id'>EAL009<span class='rule-v'>v1</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Dependency setup failure attributed to the patch</strong><br><span class='cell-muted'>Detect first-failure dependency-resolution errors blamed on the patch without a later install step.</span></td><td><span class='tag'>action_sequence</span> <span class='tag'>harness</span></td><td class='cell-muted'>no verifier outcome is available; the first failing verifier has no observable failure output; run failure attribution is not recorded by the harness</td><td class='cell-muted'>Install or restore the missing dependency and rerun the verifier, or reclassify the failure as environment setup rather than patch behavior.</td></tr><tr><td class='mono rule-id'>EAL010<span class='rule-v'>v1</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Repeated identical failing command</strong><br><span class='cell-muted'>Detect four or more consecutive identical commands with identical failures and no intervening edit.</span></td><td><span class='tag'>action_sequence</span> <span class='tag'>harness</span></td><td class='cell-muted'>trace ordering and completeness are not established by the harness; failure signatures for the repeated command are not observable</td><td class='cell-muted'>Change an input before retrying: edit the code, adjust the command, or gather different diagnostics.</td></tr><tr><td class='mono rule-id'>EAL011<span class='rule-v'>v1</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Unverified final success claim</strong><br><span class='cell-muted'>Detect final-summary success claims the last matching verifier does not support.</span></td><td><span class='tag'>action_sequence</span> <span class='tag'>harness</span></td><td class='cell-muted'>no harness-extracted final summary is available; a success claim does not map to the observable verifier taxonomy</td><td class='cell-muted'>Re-run the claimed verifier after the final change and make the summary match the recorded outcome.</td></tr><tr><td class='mono rule-id'>EAL012<span class='rule-v'>v1</span></td><td><span class='badge amber'>experimental</span></td><td><strong>Ignored file entered model context</strong><br><span class='cell-muted'>Detect context reads of paths matched by the harness-supplied ignore policy.</span></td><td><span class='tag'>repository</span> <span class='tag'>action_sequence</span></td><td class='cell-muted'>no harness-supplied ignore policy is available; context-acquisition capture is incomplete</td><td class='cell-muted'>Remove ignored paths from context acquisition or change the ignore policy; write-only access remains permitted.</td></tr></tbody></table></div><p class='fineprint'>Catalog digest <code>sha256:832ae7a638ab1e99de51454c6b1ebcdb9ec68de1bb5930009e990b7a08a0060d</code> — the same digest a worker discovers via <code>agentic_lint_rules</code> and the one recorded in every treatment outcome.</p>
+<!-- GENERATED:rules:END -->
+
+    <h3 style="margin-top:30px">Fire / clear / abstain, concretely</h3>
+    <p class="lede" style="font-size:14px">One real request against the engine. The snapshot shows a run that finished
+    on a failing test, left a trailing markdown fence in a source file, and edited a dependency manifest in a
+    repository whose lockfile policy is unknown. Note the third rule: it does not say “clean” — it names the missing
+    fact.</p>
+    <!-- GENERATED:lint-example:BEGIN -->
+<div class='code-pair'><div><h4>Request (harness-derived snapshot)</h4><pre><code>{
+ &quot;schema_version&quot;: &quot;echo.lint-request.v1&quot;,
+ &quot;context&quot;: {
+  &quot;language&quot;: &quot;python&quot;
+ },
+ &quot;select&quot;: [
+  &quot;EAL002&quot;,
+  &quot;EAL003&quot;,
+  &quot;EAL008&quot;
+ ],
+ &quot;events&quot;: [
+  {
+   &quot;sequence&quot;: 1,
+   &quot;kind&quot;: &quot;write&quot;,
+   &quot;path&quot;: &quot;src/solution.py&quot;
+  },
+  {
+   &quot;sequence&quot;: 2,
+   &quot;kind&quot;: &quot;verification&quot;,
+   &quot;outcome&quot;: &quot;failed&quot;,
+   &quot;command&quot;: &quot;pytest -q&quot;,
+   &quot;details&quot;: {
+    &quot;failure_signature&quot;: &quot;SyntaxError: invalid syntax&quot;
+   }
+  },
+  {
+   &quot;sequence&quot;: 3,
+   &quot;kind&quot;: &quot;finish&quot;
+  }
+ ],
+ &quot;changed_files&quot;: [
+  {
+   &quot;path&quot;: &quot;src/solution.py&quot;,
+   &quot;status&quot;: &quot;modified&quot;
+  },
+  {
+   &quot;path&quot;: &quot;pyproject.toml&quot;,
+   &quot;dependency_change&quot;: true
+  }
+ ],
+ &quot;facts&quot;: {
+  &quot;written_file_contents&quot;: {
+   &quot;src/solution.py&quot;: &quot;def solve(xs):
+    return sorted(xs)
+```
+&quot;
+  }
+ }
+}</code></pre></div><div><h4>Response (real engine output)</h4><pre><code>{
+ &quot;schema_version&quot;: &quot;echo.lint-response.v1&quot;,
+ &quot;diagnostics&quot;: [
+  {
+   &quot;code&quot;: &quot;EAL002&quot;,
+   &quot;version&quot;: 2,
+   &quot;severity&quot;: &quot;error&quot;,
+   &quot;message&quot;: &quot;The run finished with an unresolved verifier failure.&quot;,
+   &quot;evidence&quot;: [
+    &quot;event 2: verification outcome=failed&quot;,
+    &quot;command: pytest -q&quot;
+   ],
+   &quot;remediation&quot;: &quot;Resolve the failure or explicitly stop without claiming completion.&quot;
+  },
+  {
+   &quot;code&quot;: &quot;EAL008&quot;,
+   &quot;version&quot;: 1,
+   &quot;severity&quot;: &quot;warning&quot;,
+   &quot;message&quot;: &quot;A changed source file begins or ends with an isolated markdown fence boundary.&quot;,
+   &quot;evidence&quot;: [
+    &quot;contaminated files: src/solution.py (trailing fence)&quot;
+   ],
+   &quot;remediation&quot;: &quot;Strip isolated leading or trailing fence boundary lines before writing source files, then re-verify that the file compiles.&quot;
+  }
+ ],
+ &quot;summary&quot;: {
+  &quot;diagnostic_count&quot;: 2,
+  &quot;error_count&quot;: 1,
+  &quot;warning_count&quot;: 1,
+  &quot;abstention_count&quot;: 1,
+  &quot;abstained_rules&quot;: [
+   {
+    &quot;rule_id&quot;: &quot;EAL003&quot;,
+    &quot;reason&quot;: &quot;repository lockfile policy is unknown&quot;
+   }
+  ]
+ },
+ &quot;applied_rules&quot;: [
+  &quot;EAL002&quot;,
+  &quot;EAL003&quot;,
+  &quot;EAL008&quot;
+ ],
+ &quot;disabled_rules&quot;: []
+}</code></pre></div></div>
+<!-- GENERATED:lint-example:END -->
+    <p class="fineprint">Workers may choose mode and (in the autonomous condition) <code>select</code>/<code>ignore</code>;
+    they cannot author <code>events</code> or <code>changed_files</code> — in a bound run those come from the
+    harness-owned Git workspace and append-only trace. The inline snapshot form above is the same engine contract the
+    harness uses.</p>
+
+    <div class="figure panel pad" style="margin-top:26px">
+      <h3>Lifecycle and the promotion gate</h3>
+      <svg viewBox="0 0 980 240" role="img" aria-label="Rule lifecycle: candidate, experimental, stable, retired. Promotion from experimental to stable passes an evidence gate.">
+        <defs>
+          <marker id="larr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#647084"/>
+          </marker>
+        </defs>
+        <rect x="20" y="60" width="180" height="66" rx="10" fill="#edf0f2" stroke="#c6c9c2"/>
+        <text x="42" y="88" font-size="14" font-weight="760" fill="#172033">candidate</text>
+        <text x="42" y="108" font-size="11" fill="#647084">sketched in discussion</text>
+        <rect x="270" y="60" width="200" height="66" rx="10" fill="#fff3d9" stroke="#edd29c"/>
+        <text x="292" y="88" font-size="14" font-weight="760" fill="#99630c">experimental</text>
+        <text x="292" y="108" font-size="11" fill="#647084">off by default · corpus-tested</text>
+        <rect x="610" y="60" width="170" height="66" rx="10" fill="#e7f5ef" stroke="#b9ddcf"/>
+        <text x="632" y="88" font-size="14" font-weight="760" fill="#20755a">stable</text>
+        <text x="632" y="108" font-size="11" fill="#647084">runs by default</text>
+        <rect x="830" y="60" width="130" height="66" rx="10" fill="#fdecef" stroke="#ecc0c8"/>
+        <text x="852" y="88" font-size="14" font-weight="760" fill="#a23f50">retired</text>
+        <text x="852" y="108" font-size="11" fill="#647084">kept in history</text>
+        <path d="M200 93 L268 93" stroke="#647084" stroke-width="2" marker-end="url(#larr)"/>
+        <path d="M470 93 L608 93" stroke="#647084" stroke-width="2" marker-end="url(#larr)"/>
+        <path d="M780 93 L828 93" stroke="#647084" stroke-width="2" marker-end="url(#larr)"/>
+        <rect x="478" y="30" width="124" height="126" rx="10" fill="none" stroke="#99630c" stroke-dasharray="6 4"/>
+        <text x="540" y="20" font-size="11" font-weight="760" fill="#99630c" text-anchor="middle" letter-spacing="1">PROMOTION GATE</text>
+        <text x="30" y="186" font-size="12" fill="#647084">Promotion is rejected unless all four hold:  1) the supporting cluster has evidence-bearing tickets from ≥2 independent (task, model) cells</text>
+        <text x="30" y="206" font-size="12" fill="#647084">2) the target rule is experimental   3) rule and cluster share a non-generic mechanism tag   4) the moderator capability is valid.</text>
+        <text x="30" y="226" font-size="12" fill="#647084">Every transition is an append-only, auditable rule revision. Published catalogs omit ticket text, cluster ids, replies, and moderator notes.</text>
+      </svg>
+    </div>
+
+    <h3 style="margin-top:26px">Where the twelve rules actually came from</h3>
+    <p class="lede" style="font-size:14px"><strong>None of the twelve is a forum promotion</strong> — the funnel has
+    produced zero promotions so far, and keeping that distinction explicit is what will make an eventual
+    “community knowledge evolved the package” claim meaningful. EAL001–006 are seed rules distilled from prior
+    analysis before the forum ran. EAL007–012 are candidates <em>inspired by</em> forum threads and seeded source
+    discussions, shipped experimental with lineage recorded in <code>reports/RULE_FOUNDRY_20260819.md</code>:</p>
+    <div class="table-scroll">
+      <table class="data-table" style="min-width:700px">
+        <thead><tr><th>Rule</th><th>Inspiration</th><th>Independent support as recorded</th><th>Still required before promotion</th></tr></thead>
+        <tbody>
+          <tr><td class="mono rule-id">EAL001–006</td><td>Seed rules from legacy trajectory analysis, pre-forum</td><td class="cell-muted">n/a — not forum-derived</td><td class="cell-muted">EAL004–006 remain experimental pending held-out corpora</td></tr>
+          <tr><td class="mono rule-id">EAL007</td><td>Active cluster “issue-only patch guessed repository context” + adjacent malformed-diff cluster</td><td>3 cells (legacy/retrospective imports)</td><td class="cell-muted">prospective recurrence under the new detector, held-out corpus, moderator promote revision</td></tr>
+          <tr><td class="mono rule-id">EAL008</td><td>Active cluster “stray markdown fence boundary” + one dormant singleton</td><td>2 cells (dormant cell shares the same model backbone, so it may not count)</td><td class="cell-muted">same, plus judging the file-boundary restriction against the cluster mechanism</td></tr>
+          <tr><td class="mono rule-id">EAL009–012</td><td>Single seeded source discussions (Open-SWE-Traces row, SWE-agent/Aider/Cline/Continue issues)</td><td><span class="badge rose">single-source</span> — no recorded recurrence</td><td class="cell-muted">a second independent evidence-bearing cell, cluster activation, then the full gate</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:18px">
+      <!-- GENERATED:corpus:BEGIN -->
+<p>The labeled applicability corpus holds <strong>61 cases</strong> — for each of the 12 rules exactly one adversarial (12), boundary (13), missing data (12), true negative (12), true positive (12). Snapshot languages exercised so far: javascript, python. Every missing-data case must abstain; findings must exist exactly when a rule fires (<code>tests/test_rule_applicability.py</code>).</p>
+<!-- GENERATED:corpus:END -->
+      <p class="fineprint">Corpus caveat, unchanged from <code>reports/RULE_QUALITY.md</code>: these are hand-labeled
+      mechanism probes. 100% agreement is a detector contract, not held-out precision/recall.</p>
+    </div>
+  </section>
+
+  <!-- ================= 5 · TOOL LOOP ================= -->
+  <section id="loop">
+    <div class="section-head">
+      <p class="eyebrow">5 · How a coding model benefits</p>
+      <h2>The package as a tool, not a prompt</h2>
+      <p>A worker gets four tools — over MCP, function-calling, or a CLI spool. Rules are <em>executed</em> against
+      harness-owned evidence, not injected as advice text, which is what separates this from prompt-memory systems
+      (and from the priming confound identified in the rules-vs-guardrails literature).</p>
+    </div>
+    <div class="split">
+      <div class="panel pad">
+        <h4>The loop</h4>
+        <ol class="steps">
+          <li><span><strong><span class="mono">agentic_lint_context</span></strong> — what trusted observations exist for this run (workspace, repo snapshot, trace, harness facts). Capability discovery, not forum retrieval.<span class="who">optional first move</span></span></li>
+          <li><span><strong><span class="mono">agentic_lint_rules</span></strong> — list or explain public rule semantics with a catalog digest. The agent learns <em>what can be checked and what each check needs</em>.<span class="who">discovery</span></span></li>
+          <li><span><strong><span class="mono">agentic_lint_check</span></strong> — execute the catalog against the harness-derived snapshot; get diagnostics with evidence and remediation, plus named abstentions.<span class="who">diagnosis → act on findings → re-check</span></span></li>
+          <li><span><strong><span class="mono">submit_ticket</span></strong> — contribute the observation that didn’t fit any rule. Opaque receipt; the loop closes for a <em>future</em> agent, not this one.<span class="who">contribution</span></span></li>
+        </ol>
+      </div>
+      <div class="panel pad">
+        <h4>Deterministic end-to-end exercise <span class="badge green">integration-tested</span></h4>
+        <p style="font-size:14px">The strongest completed execution evidence is deterministic by design — a scripted
+        provider drove the real transports end to end (<code>reports/OVERNIGHT_REPORT.md</code>):</p>
+        <ol class="steps" style="font-size:13px">
+          <li><span>called <span class="mono">agentic_lint_rules</span>, discovered the public rules and catalog digest</span></li>
+          <li><span>used those semantics to <span class="mono">select EAL001</span> / <span class="mono">ignore EAL002</span> in an initial lint call</span></li>
+          <li><span>edited the Python interval workspace into a known-good repair</span></li>
+          <li><span>ran final lint with the same autonomous profile</span></li>
+          <li><span>submitted a structured near-miss ticket through the real private-forum bridge</span></li>
+          <li><span>received only opaque worker acknowledgements; produced a passing private grade</span></li>
+          <li><span>recorded 1 discovery call, 2 lint calls, 1 ticket, the final effective profile, and matching discovered/executable catalog digests</span></li>
+        </ol>
+        <p class="fineprint" style="margin-top:10px">This demonstrates the tools are real function transports rather
+        than prompt content. It does not demonstrate that an unconstrained model will call them appropriately —
+        that is precisely what the calibration runs below are for.</p>
+      </div>
+    </div>
+    <!-- CALIBRATION:BEGIN -->
+    <div class="panel pad" style="margin-top:18px">
+      <h4>Tonight’s calibration runs — <span style="color:var(--rose)">calibration, not performance claims</span></h4>
+      <p style="font-size:14px">Three calibration workstreams were live while this page was assembled. None has
+      produced a scored model run yet; what they have produced is honest wiring evidence:</p>
+      <ul class="field-list">
+        <li><span class="mono">Gate A · Codex CLI cell</span><span>Preflight clean through the full sandboxed
+        CLI+MCP path: <code>tools/list</code> under the seatbelt profile returns exactly the four worker tools;
+        model pinned to the client’s newest decodable slug. The calibration also surfaced a real harness bug —
+        Codex emits MCP calls under <code>tool</code>, not <code>tool_name</code>, so per-run tool metrics
+        normalize to zero — documented with a one-line fix. Run log still filling.
+        (<code>reports/GATE_A_CODEX_20260819.md</code>)</span></li>
+        <li><span class="mono">Open-weight vLLM cell</span><span>Qwen2.5-Coder-7B-Instruct stood up behind an
+        OpenAI-compatible endpoint and answered end to end through the tunnel; first finding recorded verbatim —
+        <code>"tool_calls": []</code> because the serving template didn’t render tool schemas in the parser’s
+        expected format — then a cluster login outage interrupted the fixed relaunch. Zero calibration runs
+        completed. (<code>reports/VLLM_CELL_20260819.md</code>)</span></li>
+        <li><span class="mono">SWE-bench Verified wiring</span><span>No model involved: the official evaluation
+        harness on EC2 graded gold patches 3/3 resolved on network-independent instances (the original triplet went
+        2/3 — one instance failed twice on a live third-party outage, documented and substituted, not ignored), and
+        a wrong-but-applying patch graded unresolved while an empty patch was segregated as
+        <code>empty_patch</code> — the harness does not trivially resolve.
+        (<code>reports/SWEBENCH_SMOKE_20260819.md</code>)</span></li>
+      </ul>
+      <p class="fineprint" style="margin-top:10px">Zero valid real-model treatment results exist; earlier
+      real-provider attempts stopped at infrastructure boundaries with zero model tool calls
+      (<code>reports/OVERNIGHT_REPORT.md</code>). When calibration numbers land they will be labeled
+      “calibration runs, not performance claims.”</p>
+    </div>
+    <!-- CALIBRATION:END -->
+  </section>
+
+  <!-- ================= 6 · POSITIONING ================= -->
+  <section id="versus">
+    <div class="section-head">
+      <p class="eyebrow">6 · How these rules differ</p>
+      <h2>Not a linter, not a code reviewer, not a skill library</h2>
+      <p>Grounded in the verified literature sweep (<code>reports/RELATED_WORK.md</code>). The short version:
+      industrial critics abstain silently and govern hand-written rules; formal methods abstain explicitly but
+      neither mine nor evolve; agent-memory systems accumulate but let contributors read the store and never
+      abstain. Echo combines explicit evidence-conditioned abstention with an evidence-graded lifecycle over
+      failure-mined executable checks contributed by agents that cannot read them.</p>
+    </div>
+    <div class="table-scroll">
+      <table class="data-table versus" style="min-width:860px">
+        <thead><tr><th></th><th>Human lint<br><span class="cell-muted">ruff · ESLint · Clippy</span></th><th>Industrial critics<br><span class="cell-muted">Tricorder · CodeGuru Reviewer</span></th><th>Mined / synthesized checkers<br><span class="cell-muted">KNighter · TRACE · AutoSpec</span></th><th class="ours">Echo agentic lint</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>What is checked</td>
+            <td class="cell-muted">File-local syntax, style, and API misuse visible in one file’s text</td>
+            <td class="cell-muted">Diff- and review-time program analyses over source</td>
+            <td class="cell-muted">Per-bug-pattern code checkers (KNighter), user-preference rules (TRACE), safety guardrails (AutoSpec)</td>
+            <td class="ours">Trajectory + repository + harness <em>process</em> state: action ordering, verification history, patch preflights, claim-vs-evidence — facts a file linter cannot see</td>
+          </tr>
+          <tr>
+            <td>Where rules come from</td>
+            <td class="cell-muted">Hand-written by tool maintainers</td>
+            <td class="cell-muted">Hand-written analyzers (Tricorder) or mined from human bug-fix changes (CodeGuru, 62 rules, 73% acceptance)</td>
+            <td class="cell-muted">LLM-synthesized from historical patches (KNighter), mined from one user’s corrections (TRACE), evolved from annotated traces (AutoSpec)</td>
+            <td class="ours">Mined from clustered <em>agent</em> failures across models and harnesses; admission requires independent recurrence, echoing LASE’s multi-example finding</td>
+          </tr>
+          <tr>
+            <td>Who consumes them</td>
+            <td class="cell-muted">Human developers</td>
+            <td class="cell-muted">Human developers in code review</td>
+            <td class="cell-muted">Human developers (KNighter) or a single user’s agent (TRACE)</td>
+            <td class="ours">Coding agents, as callable tools inside the task loop</td>
+          </tr>
+          <tr>
+            <td>When evidence is missing</td>
+            <td class="cell-muted">Silent skip — “no finding” is indistinguishable from “not checked”</td>
+            <td class="cell-muted">Silent suppression (off-diff findings dropped; Coverity skips hard code)</td>
+            <td class="cell-muted">Binary verdicts; no abstention in TRACE, AutoSpec, or KNighter</td>
+            <td class="ours">Mandatory named abstention, surfaced in every check summary — abstention is conditioned on missing evidence, not on a confidence threshold</td>
+          </tr>
+          <tr>
+            <td>Lifecycle</td>
+            <td class="cell-muted">Versioned releases; deprecation by maintainers</td>
+            <td class="cell-muted">The solved part: feedback-driven probation/disable thresholds (Tricorder’s 10% / 25%) — for hand-written rules</td>
+            <td class="cell-muted">TRACE versions rules as conflict bookkeeping; no evidence-graded maturity anywhere</td>
+            <td class="ours">candidate → experimental → stable → retired, with an auditable evidence gate on every promotion and append-only revisions</td>
+          </tr>
+          <tr>
+            <td>Can contributors read the store?</td>
+            <td class="cell-muted">n/a</td>
+            <td class="cell-muted">Yes — developers see all findings and rules</td>
+            <td class="cell-muted">Yes — every surveyed agent-memory system assumes a read path</td>
+            <td class="ours">No. Write-only contribution; the only return path is the compiled public catalog</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fineprint" style="margin-top:10px">Claims about prior systems follow <code>reports/RELATED_WORK.md</code>
+    (verified against sources; Tricorder thresholds checked verbatim from the ICSE 2015 PDF). The two nearest
+    neighbors we must always cite: KNighter (same mining mechanism, no lifecycle, no abstention) and Tricorder
+    (same lifecycle discipline, no mining, silent abstention). Metis (2026) already showed delivery-format effects
+    for code-as-memory, and “Guardrails Beat Guidance” (2026) showed random prompt-rules match curated ones —
+    which is exactly why Echo’s rules are executed rather than injected, and why the planned evaluation carries
+    random-rule and placebo arms.</p>
+  </section>
+
+  <!-- ================= 7 · REACH ================= -->
+  <section id="reach">
+    <div class="section-head">
+      <p class="eyebrow">7 · Cross-language, cross-task reach</p>
+      <h2>Which rules travel, and which honestly don’t</h2>
+      <p>Every manifest declares <code>languages: ["*"]</code>, but that is not the interesting fact. Reach is
+      determined by <em>which trusted facts a rule needs</em>: process-level rules consume only trace and harness
+      events, so they are fully language-agnostic; others depend on ecosystem conventions or harness capabilities
+      and abstain — by design — where those are absent. The matrix is derived from each rule’s published
+      <code>applicability_requires</code> / <code>abstains_when</code> and cross-checked against the 60-case corpus.</p>
+    </div>
+    <div class="legend">
+      <span><b class="m-apply">●</b> applies — can fire or clear given normal harness facts</span>
+      <span><b class="m-abstain">◐</b> abstains-by-design — needs a fact this cell typically lacks; reports a named abstention</span>
+      <span><b class="m-na">○</b> not applicable — the audited mechanism does not occur here</span>
+    </div>
+    <!-- GENERATED:matrix:BEGIN -->
+<div class='table-scroll'><table class='data-table matrix'><thead><tr><th class='sticky-col'>Rule</th><th>Python</th><th>JS</th><th>Shell</th><th>C</th><th>Java</th><th>Data fixture</th><th>Repo patch</th><th>Algorithm</th><th>Data analysis</th><th>Terminal</th><th>Why</th></tr><tr class='matrix-groups'><th class='sticky-col'></th><th colspan='6'>Language of the changed code</th><th colspan='4'>Task shape</th><th></th></tr></thead><tbody><tr><td class='mono rule-id sticky-col'>EAL001</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='matrix-note'>Process-level: needs only verifier events and harness-observed workspace changes. Fully language-agnostic.</td></tr><tr><td class='mono rule-id sticky-col'>EAL002</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='matrix-note'>Process-level: needs an observable compile/test result and a finish event. Fully language-agnostic.</td></tr><tr><td class='mono rule-id sticky-col'>EAL003</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-apply' title='applies'>●</td><td class='m-na' title='not applicable'>○</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-na' title='not applicable'>○</td><td class='matrix-note'>Ecosystem-dependent: needs a known lockfile policy (package.json/package-lock, pyproject/uv.lock). No common shell/C convention, so the policy is unknown there and the rule abstains. No manifest exists in algorithm/terminal shapes.</td></tr><tr><td class='mono rule-id sticky-col'>EAL004</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-na' title='not applicable'>○</td><td class='matrix-note'>Path-classification of production vs. test changes is language-agnostic, but the observable test-suite scope fact is rarely available outside repository tasks.</td></tr><tr><td class='mono rule-id sticky-col'>EAL005</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-apply' title='applies'>●</td><td class='m-na' title='not applicable'>○</td><td class='m-na' title='not applicable'>○</td><td class='m-na' title='not applicable'>○</td><td class='matrix-note'>Ecosystem-dependent: generated/vendored ownership must be confirmed (dist/, *.min.js, lockstep outputs); unknown ownership abstains. Mechanism only occurs in repository tasks.</td></tr><tr><td class='mono rule-id sticky-col'>EAL006</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='matrix-note'>Claim-vs-baseline audit over harness facts; language-agnostic. Terminal tasks usually have no base revision to reproduce against, so it abstains.</td></tr><tr><td class='mono rule-id sticky-col'>EAL007</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-na' title='not applicable'>○</td><td class='m-na' title='not applicable'>○</td><td class='m-na' title='not applicable'>○</td><td class='matrix-note'>Patch-workflow specific: needs structured patch events plus a harness-bound base revision. Language-agnostic where a patch workflow exists; the mechanism does not occur in non-patch shapes.</td></tr><tr><td class='mono rule-id sticky-col'>EAL008</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='matrix-note'>File-content-dependent but language-agnostic: an isolated markdown fence boundary is contamination in any non-markdown file, including data fixtures. Abstains when written contents are not captured.</td></tr><tr><td class='mono rule-id sticky-col'>EAL009</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-abstain' title='abstains by design'>◐</td><td class='matrix-note'>Signature-list dependent: the dependency-failure pattern covers `cannot find module` / `ModuleNotFoundError` / `no module named` / `unresolved import` (src/agentic_lint/rules.py). Python/JS/Java-style import errors match; shell `command not found` and C missing headers do not, so those cells abstain or miss.</td></tr><tr><td class='mono rule-id sticky-col'>EAL010</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='matrix-note'>Process-level: identical-command repetition over the normalized trace. Fully language-agnostic; needs only the harness `trace_complete` assertion.</td></tr><tr><td class='mono rule-id sticky-col'>EAL011</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='matrix-note'>Process-level: harness-extracted summary claim vs. observable verifier taxonomy. Fully language-agnostic; abstains without an extracted summary.</td></tr><tr><td class='mono rule-id sticky-col'>EAL012</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='m-apply' title='applies'>●</td><td class='matrix-note'>Harness-convention dependent, not language-dependent: applies anywhere the harness emits an ignore policy and context-acquisition events; abstains everywhere it does not (most harnesses today).</td></tr></tbody></table></div>
+<!-- GENERATED:matrix:END -->
+    <div class="card-grid" style="margin-top:18px">
+      <div class="panel">
+        <span class="badge green">Fully language-agnostic</span>
+        <h3>EAL001 · 002 · 010 · 011</h3>
+        <p>Pure process rules over the normalized trace: verification ordering, unresolved failure at finish,
+        retry loops, claim-vs-evidence. They apply identically to Python, JS, shell, C, Java, and data fixtures,
+        and to every task shape that produces verifier events. EAL008 joins them as language-agnostic but
+        file-content-dependent: it needs written contents captured, whatever the language.</p>
+      </div>
+      <div class="panel">
+        <span class="badge amber">Ecosystem-dependent</span>
+        <h3>EAL003 · 005 · 009</h3>
+        <p>EAL003 needs a known lockfile convention (npm, uv/poetry) and abstains where none exists — there is no
+        shell or C lockfile policy to check. EAL005 needs confirmed generated-file ownership. EAL009’s
+        dependency-failure signature list covers Python/JS/Java-style import errors; shell
+        <code>command not found</code> and C missing headers are honestly outside it today.</p>
+      </div>
+      <div class="panel">
+        <span class="badge indigo">Harness-capability-dependent</span>
+        <h3>EAL006 · 007 · 012</h3>
+        <p>These audit against facts only a harness can supply — baseline reproduction events, structured patch
+        preflights bound to an exact base revision, a declared context-ignore policy. Where the harness does not
+        emit the fact, the rule abstains with the missing capability named, which doubles as a to-do list for
+        harness authors.</p>
+      </div>
+    </div>
+    <p class="fineprint" style="margin-top:12px">The six synthetic fixtures (Python repo patch, JS algorithm,
+    Python data analysis, shell terminal audit, C repo patch, Java algorithm — <code>tasks/catalog.json</code>)
+    were chosen to exercise exactly these axes; the labeled corpus currently exercises Python and JavaScript
+    snapshots. Cells marked ● outside those languages are contract-derived, not yet corpus-attested — that
+    distinction is the honest boundary of this matrix.</p>
+  </section>
+
+  <!-- ================= 8 · EVIDENCE ================= -->
+  <section id="evidence">
+    <div class="section-head">
+      <p class="eyebrow">8 · Evidence status</p>
+      <h2>What is established, and what is not claimed</h2>
+      <p>Mirroring the evidence-ledger discipline of <code>reports/OVERNIGHT_REPORT.md</code>: the narrow defensible
+      claim is that the proposed information flow is implemented, isolated, exercised deterministically, and
+      audited. Whether it improves real coding-agent performance is an open experimental question.</p>
+    </div>
+    <div class="split">
+      <div class="panel pad">
+        <h4 style="color:var(--green)">Implemented and tested</h4>
+        <ul class="field-list">
+          <li><span class="mono">167 passed · 1 skipped</span><span>package + harness + experiment suites, 101 subtests (re-run locally for this page, 2026-08-19, including tonight’s cluster-inflation regression suite)</span></li>
+          <li><span class="mono">12 rules × 5 cases</span><span>60-case labeled applicability corpus: every rule has a true positive, true negative, mandatory-abstain, boundary, and adversarial case</span></li>
+          <li><span class="mono">write-only boundary</span><span>capability-gated forum, spool-isolated CLI workers, allowlist public export — adversarially QA’d, remediations tested</span></li>
+          <li><span class="mono">verified import path</span><span>12/12 SWE-bench leaderboard records through the closed provenance envelope, dry-run then apply, audit trail on disk</span></li>
+          <li><span class="mono">deterministic e2e</span><span>scripted 7-step tool loop; MCP discovery/calling; digests recorded</span></li>
+        </ul>
+      </div>
+      <div class="panel pad">
+        <h4 style="color:var(--rose)">Not yet claimed</h4>
+        <ul class="field-list">
+          <li><span class="mono">performance</span><span>no valid real-model control/treatment pair exists; no benchmark score of any kind is claimed</span></li>
+          <li><span class="mono">promotions: 0</span><span>the funnel stands at 116 tickets → 59 clusters → 6 active under tonight’s corrected support accounting (5 genuine mechanisms + 1 leaderboard batch thread, promotion support 0) → 12 corpus-tested rules → 0 promotions</span></li>
+          <li><span class="mono">template inflation</span><span>4 batch-artifact clusters (55/116 tickets) inflated activation counts until tonight; support accounting is fixed and the audited recluster migration is still pending its morning run</span></li>
+          <li><span class="mono">precision / recall</span><span>corpus agreement is a detector contract, not a held-out estimate; language/build-system held-out corpora are prerequisites for any stable promotion</span></li>
+          <li><span class="mono">transfer</span><span>no prospective discovery → promotion → held-out transfer cycle has run yet</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:18px"><strong>Number provenance.</strong> Forum counts, board totals,
+    axis distributions, thread cards, the rule catalog, the lint example, and the corpus summary on this page are
+    generated by <code>demo/build_site_data.py</code> from the live database (through the sanitized exporter), the
+    installed rule engine, and the corpus fixture — see <code>demo/site/data.json</code>. Static numbers cite their
+    report files inline. Nothing on this page is estimated or projected.</div>
+  </section>
+</main>
+
+<footer class="footer">
+  <strong>Echo Agentic Lint</strong> · system demo, generated 2026-08-19 · Echo compiles moderated experience into
+  executable memory. Public snapshot discipline: excerpts are moderator-authored reply text only; support counts are
+  bucketed; task/run identifiers, repository revisions, evidence bodies, and private cluster ids are excluded at the
+  data layer (<code>src/agentic_lint/public_export.py</code>). Design language shared with the private Echo Commons
+  forum viewer (<code>src/agentic_lint/viewer.py</code>).
+</footer>
+</body>
+</html>

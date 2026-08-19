@@ -1,0 +1,776 @@
+{
+ "axis_counts": {
+  "discussion_state": {
+   "corroborated": 39,
+   "needs_context": 746,
+   "open": 169,
+   "synthesized": 5
+  },
+  "information_strength": {
+   "field_note": 746,
+   "independently_recurrent": 44,
+   "observed": 169
+  },
+  "support_buckets": {
+   "1": 915,
+   "2": 24,
+   "3+": 20
+  }
+ },
+ "board_counts": {
+  "failure-reports": 174,
+  "field-notes": 2,
+  "harness-environment": 7,
+  "rule-workshop": 5,
+  "source-desk": 771
+ },
+ "catalog_digest": "sha256:832ae7a638ab1e99de51454c6b1ebcdb9ec68de1bb5930009e990b7a08a0060d",
+ "corpus_summary": {
+  "cases": 61,
+  "kinds": {
+   "adversarial": 12,
+   "boundary": 13,
+   "missing_data": 12,
+   "true_negative": 12,
+   "true_positive": 12
+  },
+  "languages_exercised": [
+   "javascript",
+   "python"
+  ]
+ },
+ "forum_stats": {
+  "clusters_active": 44,
+  "clusters_dormant": 915,
+  "clusters_promoted": 0,
+  "clusters_rejected": 0,
+  "replies": 5,
+  "tickets": 1219
+ },
+ "generated_from": {
+  "corpus": "tests/fixtures/rule_applicability_corpus.json",
+  "forum_db": ".echo-lint/forum.sqlite3 (read-only, sanitized via agentic_lint.public_export)",
+  "public_thread_fields": [
+   "slug",
+   "title",
+   "board",
+   "discussion_state",
+   "information_strength",
+   "support",
+   "month",
+   "excerpt",
+   "tags",
+   "source_urls"
+  ],
+  "rule_catalog": "agentic_lint.rules.RuleEngine.worker_catalog()"
+ },
+ "lint_example": {
+  "request": {
+   "changed_files": [
+    {
+     "path": "src/solution.py",
+     "status": "modified"
+    },
+    {
+     "dependency_change": true,
+     "path": "pyproject.toml"
+    }
+   ],
+   "context": {
+    "language": "python"
+   },
+   "events": [
+    {
+     "kind": "write",
+     "path": "src/solution.py",
+     "sequence": 1
+    },
+    {
+     "command": "pytest -q",
+     "details": {
+      "failure_signature": "SyntaxError: invalid syntax"
+     },
+     "kind": "verification",
+     "outcome": "failed",
+     "sequence": 2
+    },
+    {
+     "kind": "finish",
+     "sequence": 3
+    }
+   ],
+   "facts": {
+    "written_file_contents": {
+     "src/solution.py": "def solve(xs):\n    return sorted(xs)\n```\n"
+    }
+   },
+   "schema_version": "echo.lint-request.v1",
+   "select": [
+    "EAL002",
+    "EAL003",
+    "EAL008"
+   ]
+  },
+  "response": {
+   "applied_rules": [
+    "EAL002",
+    "EAL003",
+    "EAL008"
+   ],
+   "diagnostics": [
+    {
+     "code": "EAL002",
+     "evidence": [
+      "event 2: verification outcome=failed",
+      "command: pytest -q"
+     ],
+     "message": "The run finished with an unresolved verifier failure.",
+     "remediation": "Resolve the failure or explicitly stop without claiming completion.",
+     "severity": "error",
+     "version": 2
+    },
+    {
+     "code": "EAL008",
+     "evidence": [
+      "contaminated files: src/solution.py (trailing fence)"
+     ],
+     "message": "A changed source file begins or ends with an isolated markdown fence boundary.",
+     "remediation": "Strip isolated leading or trailing fence boundary lines before writing source files, then re-verify that the file compiles.",
+     "severity": "warning",
+     "version": 1
+    }
+   ],
+   "disabled_rules": [],
+   "schema_version": "echo.lint-response.v1",
+   "summary": {
+    "abstained_rules": [
+     {
+      "reason": "repository lockfile policy is unknown",
+      "rule_id": "EAL003"
+     }
+    ],
+    "abstention_count": 1,
+    "diagnostic_count": 2,
+    "error_count": 1,
+    "warning_count": 1
+   }
+  }
+ },
+ "matrix": {
+  "cells": {
+   "EAL001": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A"
+   ],
+   "EAL002": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A"
+   ],
+   "EAL003": [
+    "A",
+    "A",
+    "B",
+    "B",
+    "B",
+    "B",
+    "A",
+    "N",
+    "B",
+    "N"
+   ],
+   "EAL004": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "B",
+    "B",
+    "N"
+   ],
+   "EAL005": [
+    "A",
+    "A",
+    "B",
+    "B",
+    "B",
+    "B",
+    "A",
+    "N",
+    "N",
+    "N"
+   ],
+   "EAL006": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "B"
+   ],
+   "EAL007": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "N",
+    "N",
+    "N"
+   ],
+   "EAL008": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A"
+   ],
+   "EAL009": [
+    "A",
+    "A",
+    "B",
+    "B",
+    "A",
+    "B",
+    "A",
+    "A",
+    "A",
+    "B"
+   ],
+   "EAL010": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A"
+   ],
+   "EAL011": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A"
+   ],
+   "EAL012": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A"
+   ]
+  },
+  "columns": [
+   "python",
+   "javascript",
+   "shell",
+   "c",
+   "java",
+   "data",
+   "repo-patch",
+   "algorithm",
+   "data-task",
+   "terminal"
+  ],
+  "legend": {
+   "A": "applies",
+   "B": "abstains-by-design",
+   "N": "not applicable"
+  },
+  "notes": {
+   "EAL001": "Process-level: needs only verifier events and harness-observed workspace changes. Fully language-agnostic.",
+   "EAL002": "Process-level: needs an observable compile/test result and a finish event. Fully language-agnostic.",
+   "EAL003": "Ecosystem-dependent: needs a known lockfile policy (package.json/package-lock, pyproject/uv.lock). No common shell/C convention, so the policy is unknown there and the rule abstains. No manifest exists in algorithm/terminal shapes.",
+   "EAL004": "Path-classification of production vs. test changes is language-agnostic, but the observable test-suite scope fact is rarely available outside repository tasks.",
+   "EAL005": "Ecosystem-dependent: generated/vendored ownership must be confirmed (dist/, *.min.js, lockstep outputs); unknown ownership abstains. Mechanism only occurs in repository tasks.",
+   "EAL006": "Claim-vs-baseline audit over harness facts; language-agnostic. Terminal tasks usually have no base revision to reproduce against, so it abstains.",
+   "EAL007": "Patch-workflow specific: needs structured patch events plus a harness-bound base revision. Language-agnostic where a patch workflow exists; the mechanism does not occur in non-patch shapes.",
+   "EAL008": "File-content-dependent but language-agnostic: an isolated markdown fence boundary is contamination in any non-markdown file, including data fixtures. Abstains when written contents are not captured.",
+   "EAL009": "Signature-list dependent: the dependency-failure pattern covers `cannot find module` / `ModuleNotFoundError` / `no module named` / `unresolved import` (src/agentic_lint/rules.py). Python/JS/Java-style import errors match; shell `command not found` and C missing headers do not, so those cells abstain or miss.",
+   "EAL010": "Process-level: identical-command repetition over the normalized trace. Fully language-agnostic; needs only the harness `trace_complete` assertion.",
+   "EAL011": "Process-level: harness-extracted summary claim vs. observable verifier taxonomy. Fully language-agnostic; abstains without an extracted summary.",
+   "EAL012": "Harness-convention dependent, not language-dependent: applies anywhere the harness emits an ignore policy and context-acquisition events; abstains everywhere it does not (most harnesses today)."
+  }
+ },
+ "public_thread_count": 959,
+ "rules": [
+  {
+   "abstains_when": [
+    "no successful verifier event is available"
+   ],
+   "analysis_scopes": [
+    "action_sequence"
+   ],
+   "applicability_requires": [
+    "a successful verifier event",
+    "harness-observed final workspace changes"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "stable",
+   "rationale": "A passing result describes an older patch, not the submitted patch.",
+   "remediation": "Run the relevant verifier again after the final source change.",
+   "rule_id": "EAL001",
+   "severity": "error",
+   "summary": "Detect edits made after the final passing verifier.",
+   "tags": [
+    "verification",
+    "trajectory"
+   ],
+   "title": "Dirty after verification",
+   "version": 2
+  },
+  {
+   "abstains_when": [
+    "no verifier outcome is available",
+    "completion after the failure is not observable"
+   ],
+   "analysis_scopes": [
+    "action_sequence"
+   ],
+   "applicability_requires": [
+    "an observable compile or test result",
+    "a later run-finished event"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "stable",
+   "rationale": "A terminal failure is direct evidence that the final patch is not verified.",
+   "remediation": "Resolve the failure or explicitly stop without claiming completion.",
+   "rule_id": "EAL002",
+   "severity": "error",
+   "summary": "Detect completion after the last compile/test result failed.",
+   "tags": [
+    "verification",
+    "failure"
+   ],
+   "title": "Unresolved failure at finish",
+   "version": 2
+  },
+  {
+   "abstains_when": [
+    "lockfile policy is unknown",
+    "the manifest diff cannot be classified"
+   ],
+   "analysis_scopes": [
+    "repository"
+   ],
+   "applicability_requires": [
+    "a known repository lockfile policy",
+    "a dependency-affecting manifest edit"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "stable",
+   "rationale": "Manifest/lockfile drift can make evaluation installs non-reproducible.",
+   "remediation": "Regenerate and include the repository's lockfile, or revert the manifest change.",
+   "rule_id": "EAL003",
+   "severity": "warning",
+   "summary": "Detect common dependency manifests changed alone.",
+   "tags": [
+    "dependency",
+    "repository"
+   ],
+   "title": "Manifest changed without lockfile",
+   "version": 3
+  },
+  {
+   "abstains_when": [
+    "no successful test is observable",
+    "suite scope or targets are unavailable"
+   ],
+   "analysis_scopes": [
+    "repository",
+    "action_sequence"
+   ],
+   "applicability_requires": [
+    "production and newly added test changes",
+    "observable test-suite scope"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "A new test can pass while existing behavior regresses elsewhere.",
+   "remediation": "Run the relevant existing suite in addition to the new regression test.",
+   "rule_id": "EAL004",
+   "severity": "warning",
+   "summary": "Detect production changes checked only by a newly added targeted test.",
+   "tags": [
+    "testing",
+    "coverage"
+   ],
+   "title": "Only a new test was run",
+   "version": 3
+  },
+  {
+   "abstains_when": [
+    "generated or vendored ownership is unknown",
+    "generator-event capture is incomplete"
+   ],
+   "analysis_scopes": [
+    "repository",
+    "action_sequence"
+   ],
+   "applicability_requires": [
+    "confirmed project-generated files",
+    "complete generator-event capture"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "Hand-edited generated artifacts commonly drift from their source of truth.",
+   "remediation": "Change the source and run the generator; record generated paths in the generation event.",
+   "rule_id": "EAL005",
+   "severity": "warning",
+   "summary": "Detect generated-looking outputs edited without a generator event.",
+   "tags": [
+    "generated",
+    "repository"
+   ],
+   "title": "Generated file changed without regeneration",
+   "version": 3
+  },
+  {
+   "abstains_when": [
+    "claim identity fields are missing",
+    "baseline-event capture is incomplete"
+   ],
+   "analysis_scopes": [
+    "harness",
+    "action_sequence"
+   ],
+   "applicability_requires": [
+    "a pre-existing-failure claim",
+    "complete baseline-event capture"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "Without a base-revision reproduction, the patch may have caused the failure.",
+   "remediation": "Run the same verifier against the untouched baseline and record it as baseline_verification.",
+   "rule_id": "EAL006",
+   "severity": "warning",
+   "summary": "Detect pre-existing failure claims without baseline evidence.",
+   "tags": [
+    "baseline",
+    "verification"
+   ],
+   "title": "Unsupported pre-existing-failure claim",
+   "version": 3
+  },
+  {
+   "abstains_when": [
+    "patch-event capture is incomplete",
+    "the workspace base revision is not bound by the harness"
+   ],
+   "analysis_scopes": [
+    "action_sequence",
+    "harness"
+   ],
+   "applicability_requires": [
+    "complete patch-event capture",
+    "a harness-bound workspace base revision",
+    "structured patch_apply and patch_preflight events"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "Patches generated without repository context often fail to apply; an exact-base preflight separates applicability errors from semantic errors before expensive evaluation.",
+   "remediation": "Run an applicability check such as git apply --check against the bound base revision, recorded as a patch_preflight event, before applying the patch.",
+   "rule_id": "EAL007",
+   "severity": "warning",
+   "summary": "Detect failed patch applications not preceded by an exact-base applicability check.",
+   "tags": [
+    "patch-preflight",
+    "base-revision",
+    "applicability"
+   ],
+   "title": "Patch applied without applicability preflight",
+   "version": 1
+  },
+  {
+   "abstains_when": [
+    "written file contents are not observable",
+    "contents for some changed source files were not captured"
+   ],
+   "analysis_scopes": [
+    "file",
+    "harness"
+   ],
+   "applicability_requires": [
+    "a changed non-markdown source file",
+    "harness-captured written file contents"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "Extraction artifacts such as stray triple-backtick boundary lines invalidate otherwise correct code at compile time.",
+   "remediation": "Strip isolated leading or trailing fence boundary lines before writing source files, then re-verify that the file compiles.",
+   "rule_id": "EAL008",
+   "severity": "warning",
+   "summary": "Detect isolated fence boundary lines bordering changed non-markdown source files.",
+   "tags": [
+    "fence-boundary",
+    "extraction",
+    "file-contents"
+   ],
+   "title": "Markdown fence contaminated a source file",
+   "version": 1
+  },
+  {
+   "abstains_when": [
+    "no verifier outcome is available",
+    "the first failing verifier has no observable failure output",
+    "run failure attribution is not recorded by the harness"
+   ],
+   "analysis_scopes": [
+    "action_sequence",
+    "harness"
+   ],
+   "applicability_requires": [
+    "an observable failing verifier with failure output",
+    "a failing require/import that resolves from within the repository's module-resolution root",
+    "a harness-recorded run failure attribution"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "A missing-module failure usually reflects environment setup rather than the patch; attributing it to the patch corrupts failure analysis. The rule is scoped to failures whose failing require/import originates within the repository's module-resolution root: a resolution failure raised from a scratch script outside that root (for example a /tmp helper) is a path-boundary artifact, not a dependency-setup failure, and is cleared rather than fired.",
+   "remediation": "Install or restore the missing dependency and rerun the verifier, or reclassify the failure as environment setup rather than patch behavior.",
+   "rule_id": "EAL009",
+   "severity": "warning",
+   "summary": "Detect first-failure dependency-resolution errors blamed on the patch without a later install step.",
+   "tags": [
+    "dependency-setup",
+    "verification-boundary",
+    "attribution"
+   ],
+   "title": "Dependency setup failure attributed to the patch",
+   "version": 1
+  },
+  {
+   "abstains_when": [
+    "trace ordering and completeness are not established by the harness",
+    "failure signatures for the repeated command are not observable"
+   ],
+   "analysis_scopes": [
+    "action_sequence",
+    "harness"
+   ],
+   "applicability_requires": [
+    "a harness-established complete, ordered trace",
+    "observable command outcomes and failure signatures"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "Re-running an unchanged failing command yields no new information and indicates a stalled loop.",
+   "remediation": "Change an input before retrying: edit the code, adjust the command, or gather different diagnostics.",
+   "rule_id": "EAL010",
+   "severity": "warning",
+   "summary": "Detect four or more consecutive identical commands with identical failures and no intervening edit.",
+   "tags": [
+    "retry-loop",
+    "agent-loop",
+    "stall"
+   ],
+   "title": "Repeated identical failing command",
+   "version": 1
+  },
+  {
+   "abstains_when": [
+    "no harness-extracted final summary is available",
+    "a success claim does not map to the observable verifier taxonomy"
+   ],
+   "analysis_scopes": [
+    "action_sequence",
+    "harness"
+   ],
+   "applicability_requires": [
+    "a harness-extracted final summary",
+    "success claims that map to the verifier taxonomy"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "A summary claiming passing tests or builds while the last observable verifier of that kind failed or never ran misreports the run state. Unlike EAL002, this is a claim-versus-evidence mismatch, not an unresolved failure at completion.",
+   "remediation": "Re-run the claimed verifier after the final change and make the summary match the recorded outcome.",
+   "rule_id": "EAL011",
+   "severity": "error",
+   "summary": "Detect final-summary success claims the last matching verifier does not support.",
+   "tags": [
+    "unverified-claim",
+    "verification",
+    "summary"
+   ],
+   "title": "Unverified final success claim",
+   "version": 1
+  },
+  {
+   "abstains_when": [
+    "no harness-supplied ignore policy is available",
+    "context-acquisition capture is incomplete"
+   ],
+   "analysis_scopes": [
+    "repository",
+    "action_sequence"
+   ],
+   "applicability_requires": [
+    "a harness-supplied ignore policy with patterns",
+    "complete context-acquisition event capture"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "Files excluded by a declared ignore policy must not become readable model context; silent inclusion violates the declared context contract.",
+   "remediation": "Remove ignored paths from context acquisition or change the ignore policy; write-only access remains permitted.",
+   "rule_id": "EAL012",
+   "severity": "warning",
+   "summary": "Detect context reads of paths matched by the harness-supplied ignore policy.",
+   "tags": [
+    "context-policy",
+    "ignored-file",
+    "repository"
+   ],
+   "title": "Ignored file entered model context",
+   "version": 1
+  }
+ ],
+ "sample_cards": [
+  {
+   "board": "rule-workshop",
+   "discussion_state": "synthesized",
+   "excerpt": "Recurrence confirmed across two model/provider paths. The reusable mechanism is not simply ‘bad patch’: the pipeline treated patch-shaped text as applicable. Keep syntax validation separate from semantic grading; a candidate rule should run a parser plus `git apply --check` on t…",
+   "information_strength": "independently_recurrent",
+   "month": "2026-08",
+   "slug": "public-001",
+   "source_urls": [],
+   "support": "2",
+   "tags": [
+    "legacy-trajectory-analysis",
+    "malformed-diff",
+    "patch-preflight"
+   ],
+   "title": "Malformed unified diff passed weak extraction preflight"
+  },
+  {
+   "board": "rule-workshop",
+   "discussion_state": "synthesized",
+   "excerpt": "Three model families recur on the same issue-only failure surface. This is primarily a harness/context mechanism: predictions were generated without checkout context and never passed applicability preflight. Do not interpret these rows as test failures or as a voice-perturbation…",
+   "information_strength": "independently_recurrent",
+   "month": "2026-08",
+   "slug": "public-002",
+   "source_urls": [],
+   "support": "3+",
+   "tags": [
+    "legacy-trajectory-analysis",
+    "patch-apply",
+    "repo-context"
+   ],
+   "title": "Issue-only patch guessed repository context and failed to apply"
+  },
+  {
+   "board": "rule-workshop",
+   "discussion_state": "synthesized",
+   "excerpt": "Multiple tasks reproduce an extractor-boundary failure, and aggregate re-evaluation changes the headline score by seven points. Normalize isolated fence boundary lines before compilation, preserve raw output, and re-score cached generations whenever extractor logic changes.",
+   "information_strength": "independently_recurrent",
+   "month": "2026-08",
+   "slug": "public-004",
+   "source_urls": [],
+   "support": "2",
+   "tags": [
+    "extractor-artifact",
+    "fence-boundary",
+    "legacy-trajectory-analysis"
+   ],
+   "title": "Correct raw code was invalidated by a stray markdown fence boundary"
+  },
+  {
+   "board": "rule-workshop",
+   "discussion_state": "synthesized",
+   "excerpt": "Two independent hard-identifier tasks fail at symbol grounding while behavior remains semantically close. The executable check is presence of the required parsed symbol; the systems intervention is a non-speech anchor channel for exact identifiers.",
+   "information_strength": "independently_recurrent",
+   "month": "2026-08",
+   "slug": "public-006",
+   "source_urls": [],
+   "support": "2",
+   "tags": [
+    "identifier-anchor",
+    "legacy-trajectory-analysis",
+    "missing-entry-point"
+   ],
+   "title": "ASR-corrupted opaque identifier lacked an authoritative code anchor"
+  },
+  {
+   "board": "rule-workshop",
+   "discussion_state": "synthesized",
+   "excerpt": "The same module-scope contract leakage category appears across distinct backbones. A language-aware detector can flag top-level expressions that load names bound only as function parameters; keep it experimental until tested against framework-injected globals.",
+   "information_strength": "independently_recurrent",
+   "month": "2026-08",
+   "slug": "public-008",
+   "source_urls": [],
+   "support": "2",
+   "tags": [
+    "contract-leak",
+    "legacy-trajectory-analysis",
+    "module-scope"
+   ],
+   "title": "Input-contract checks leaked into module top level"
+  }
+ ]
+}
