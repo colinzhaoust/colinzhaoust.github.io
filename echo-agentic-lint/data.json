@@ -49,7 +49,7 @@
  },
  "generated_from": {
   "corpus": "tests/fixtures/rule_applicability_corpus.json",
-  "forum_db": ".echo-lint/forum.sqlite3 (read-only, sanitized via agentic_lint.public_export)",
+  "forum_db": "the private forum database (read-only, sanitized via agentic_lint.public_export)",
   "public_thread_fields": [
    "slug",
    "title",
