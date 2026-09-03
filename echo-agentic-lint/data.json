@@ -1,38 +1,39 @@
 {
  "axis_counts": {
   "discussion_state": {
-   "corroborated": 39,
-   "needs_context": 746,
-   "open": 169,
+   "corroborated": 370,
+   "needs_context": 44,
+   "open": 581,
    "synthesized": 5
   },
   "information_strength": {
-   "field_note": 746,
-   "independently_recurrent": 44,
-   "observed": 169
+   "field_note": 44,
+   "independently_recurrent": 375,
+   "observed": 581
   },
   "support_buckets": {
-   "1": 915,
-   "2": 24,
-   "3+": 20
+   "1": 625,
+   "2": 276,
+   "3+": 99
   }
  },
  "board_counts": {
-  "failure-reports": 174,
-  "field-notes": 2,
-  "harness-environment": 7,
-  "rule-workshop": 5,
-  "source-desk": 771
+  "failure-reports": 443,
+  "field-notes": 19,
+  "harness-environment": 222,
+  "reproductions": 2,
+  "rule-workshop": 12,
+  "source-desk": 302
  },
- "catalog_digest": "sha256:832ae7a638ab1e99de51454c6b1ebcdb9ec68de1bb5930009e990b7a08a0060d",
+ "catalog_digest": "sha256:69dd0d14e5cb5a92b1a30d4b65b2e1dc55ae56fce279441cd6f9a196c454c997",
  "corpus_summary": {
-  "cases": 61,
+  "cases": 66,
   "kinds": {
-   "adversarial": 12,
-   "boundary": 13,
-   "missing_data": 12,
-   "true_negative": 12,
-   "true_positive": 12
+   "adversarial": 13,
+   "boundary": 14,
+   "missing_data": 13,
+   "true_negative": 13,
+   "true_positive": 13
   },
   "languages_exercised": [
    "javascript",
@@ -40,12 +41,14 @@
   ]
  },
  "forum_stats": {
-  "clusters_active": 44,
-  "clusters_dormant": 915,
-  "clusters_promoted": 0,
+  "clusters_active": 373,
+  "clusters_dormant": 6228,
+  "clusters_promotable_cross_model": 31,
+  "clusters_promoted": 2,
+  "clusters_promotion_blocked_single_model": 71,
   "clusters_rejected": 0,
-  "replies": 5,
-  "tickets": 1219
+  "replies": 6,
+  "tickets": 7573
  },
  "generated_from": {
   "corpus": "tests/fixtures/rule_applicability_corpus.json",
@@ -150,6 +153,9 @@
      }
     ],
     "abstention_count": 1,
+    "affirmative_clear_count": 0,
+    "clear_count": 0,
+    "default_clear_count": 0,
     "diagnostic_count": 2,
     "error_count": 1,
     "warning_count": 1
@@ -335,7 +341,7 @@
    "EAL012": "Harness-convention dependent, not language-dependent: applies anywhere the harness emits an ignore policy and context-acquisition events; abstains everywhere it does not (most harnesses today)."
   }
  },
- "public_thread_count": 959,
+ "public_thread_count": 1000,
  "rules": [
   {
    "abstains_when": [
@@ -354,6 +360,7 @@
    "maturity": "stable",
    "rationale": "A passing result describes an older patch, not the submitted patch.",
    "remediation": "Run the relevant verifier again after the final source change.",
+   "rule_class": "instruction",
    "rule_id": "EAL001",
    "severity": "error",
    "summary": "Detect edits made after the final passing verifier.",
@@ -382,6 +389,7 @@
    "maturity": "stable",
    "rationale": "A terminal failure is direct evidence that the final patch is not verified.",
    "remediation": "Resolve the failure or explicitly stop without claiming completion.",
+   "rule_class": "instruction",
    "rule_id": "EAL002",
    "severity": "error",
    "summary": "Detect completion after the last compile/test result failed.",
@@ -410,6 +418,7 @@
    "maturity": "stable",
    "rationale": "Manifest/lockfile drift can make evaluation installs non-reproducible.",
    "remediation": "Regenerate and include the repository's lockfile, or revert the manifest change.",
+   "rule_class": "code_check",
    "rule_id": "EAL003",
    "severity": "warning",
    "summary": "Detect common dependency manifests changed alone.",
@@ -439,6 +448,7 @@
    "maturity": "experimental",
    "rationale": "A new test can pass while existing behavior regresses elsewhere.",
    "remediation": "Run the relevant existing suite in addition to the new regression test.",
+   "rule_class": "instruction",
    "rule_id": "EAL004",
    "severity": "warning",
    "summary": "Detect production changes checked only by a newly added targeted test.",
@@ -468,6 +478,7 @@
    "maturity": "experimental",
    "rationale": "Hand-edited generated artifacts commonly drift from their source of truth.",
    "remediation": "Change the source and run the generator; record generated paths in the generation event.",
+   "rule_class": "hybrid",
    "rule_id": "EAL005",
    "severity": "warning",
    "summary": "Detect generated-looking outputs edited without a generator event.",
@@ -497,6 +508,7 @@
    "maturity": "experimental",
    "rationale": "Without a base-revision reproduction, the patch may have caused the failure.",
    "remediation": "Run the same verifier against the untouched baseline and record it as baseline_verification.",
+   "rule_class": "instruction",
    "rule_id": "EAL006",
    "severity": "warning",
    "summary": "Detect pre-existing failure claims without baseline evidence.",
@@ -527,6 +539,7 @@
    "maturity": "experimental",
    "rationale": "Patches generated without repository context often fail to apply; an exact-base preflight separates applicability errors from semantic errors before expensive evaluation.",
    "remediation": "Run an applicability check such as git apply --check against the bound base revision, recorded as a patch_preflight event, before applying the patch.",
+   "rule_class": "instruction",
    "rule_id": "EAL007",
    "severity": "warning",
    "summary": "Detect failed patch applications not preceded by an exact-base applicability check.",
@@ -557,6 +570,7 @@
    "maturity": "experimental",
    "rationale": "Extraction artifacts such as stray triple-backtick boundary lines invalidate otherwise correct code at compile time.",
    "remediation": "Strip isolated leading or trailing fence boundary lines before writing source files, then re-verify that the file compiles.",
+   "rule_class": "code_check",
    "rule_id": "EAL008",
    "severity": "warning",
    "summary": "Detect isolated fence boundary lines bordering changed non-markdown source files.",
@@ -589,6 +603,7 @@
    "maturity": "experimental",
    "rationale": "A missing-module failure usually reflects environment setup rather than the patch; attributing it to the patch corrupts failure analysis. The rule is scoped to failures whose failing require/import originates within the repository's module-resolution root: a resolution failure raised from a scratch script outside that root (for example a /tmp helper) is a path-boundary artifact, not a dependency-setup failure, and is cleared rather than fired.",
    "remediation": "Install or restore the missing dependency and rerun the verifier, or reclassify the failure as environment setup rather than patch behavior.",
+   "rule_class": "instruction",
    "rule_id": "EAL009",
    "severity": "warning",
    "summary": "Detect first-failure dependency-resolution errors blamed on the patch without a later install step.",
@@ -619,6 +634,7 @@
    "maturity": "experimental",
    "rationale": "Re-running an unchanged failing command yields no new information and indicates a stalled loop.",
    "remediation": "Change an input before retrying: edit the code, adjust the command, or gather different diagnostics.",
+   "rule_class": "instruction",
    "rule_id": "EAL010",
    "severity": "warning",
    "summary": "Detect four or more consecutive identical commands with identical failures and no intervening edit.",
@@ -649,6 +665,7 @@
    "maturity": "experimental",
    "rationale": "A summary claiming passing tests or builds while the last observable verifier of that kind failed or never ran misreports the run state. Unlike EAL002, this is a claim-versus-evidence mismatch, not an unresolved failure at completion.",
    "remediation": "Re-run the claimed verifier after the final change and make the summary match the recorded outcome.",
+   "rule_class": "instruction",
    "rule_id": "EAL011",
    "severity": "error",
    "summary": "Detect final-summary success claims the last matching verifier does not support.",
@@ -679,6 +696,7 @@
    "maturity": "experimental",
    "rationale": "Files excluded by a declared ignore policy must not become readable model context; silent inclusion violates the declared context contract.",
    "remediation": "Remove ignored paths from context acquisition or change the ignore policy; write-only access remains permitted.",
+   "rule_class": "code_check",
    "rule_id": "EAL012",
    "severity": "warning",
    "summary": "Detect context reads of paths matched by the harness-supplied ignore policy.",
@@ -689,6 +707,39 @@
    ],
    "title": "Ignored file entered model context",
    "version": 1
+  },
+  {
+   "abstains_when": [
+    "patch event completeness is not established by the harness",
+    "the submitted patch text is not observable"
+   ],
+   "analysis_scopes": [
+    "action_sequence",
+    "harness"
+   ],
+   "applicability_requires": [
+    "harness-established completeness of the patch events",
+    "a submitted patch recorded by the harness",
+    "the submitted diff text",
+    "the diff being a unified diff"
+   ],
+   "languages": [
+    "*"
+   ],
+   "maturity": "experimental",
+   "rationale": "A hunk header's two counts are derivable from the hunk body (old = context + removed, new = context + added). When they disagree the patch cannot apply, whatever the harness calls the rejection. Keying on the arithmetic instead of on the message makes the rule portable across harnesses and lets it fire before an apply is attempted.",
+   "remediation": "Recompute each hunk's line counts from its body before submitting, or regenerate the diff with a tool rather than editing hunk headers by hand.",
+   "rule_class": "code_check",
+   "rule_id": "EAL014",
+   "severity": "warning",
+   "summary": "Detect unified diffs whose hunk headers declare line counts their bodies do not have.",
+   "tags": [
+    "malformed-diff",
+    "patch-arithmetic",
+    "extraction"
+   ],
+   "title": "Submitted diff contradicts its own hunk headers",
+   "version": 2
   }
  ],
  "sample_cards": [
@@ -730,7 +781,7 @@
    "excerpt": "Multiple tasks reproduce an extractor-boundary failure, and aggregate re-evaluation changes the headline score by seven points. Normalize isolated fence boundary lines before compilation, preserve raw output, and re-score cached generations whenever extractor logic changes.",
    "information_strength": "independently_recurrent",
    "month": "2026-08",
-   "slug": "public-004",
+   "slug": "public-003",
    "source_urls": [],
    "support": "2",
    "tags": [
@@ -746,7 +797,7 @@
    "excerpt": "Two independent hard-identifier tasks fail at symbol grounding while behavior remains semantically close. The executable check is presence of the required parsed symbol; the systems intervention is a non-speech anchor channel for exact identifiers.",
    "information_strength": "independently_recurrent",
    "month": "2026-08",
-   "slug": "public-006",
+   "slug": "public-004",
    "source_urls": [],
    "support": "2",
    "tags": [
@@ -759,10 +810,10 @@
   {
    "board": "rule-workshop",
    "discussion_state": "synthesized",
-   "excerpt": "The same module-scope contract leakage category appears across distinct backbones. A language-aware detector can flag top-level expressions that load names bound only as function parameters; keep it experimental until tested against framework-injected globals.",
+   "excerpt": "VETOED by the user (2026-08-31): both supporting cells are Qwen3-coder variants. Governance ruling recorded: same-family model variants (including different sizes, e.g. Qwen2.5-32B vs 7B) do NOT count as distinct models for the cross-model promotion gate. Cluster remains active;…",
    "information_strength": "independently_recurrent",
    "month": "2026-08",
-   "slug": "public-008",
+   "slug": "public-005",
    "source_urls": [],
    "support": "2",
    "tags": [
