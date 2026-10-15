@@ -2,6 +2,7 @@
 """Build the two static research pages from research.json. No dependencies."""
 from pathlib import Path
 import html,json,hashlib,re
+from link_targets import normalize_links
 ROOT=Path(__file__).resolve().parents[1]
 papers=json.loads((ROOT/'research.json').read_text())
 css_version=hashlib.sha256((ROOT/'site.css').read_bytes()).hexdigest()[:12]
@@ -43,7 +44,7 @@ def group(category,title):
  entries=sorted((p for p in papers if p['category']==category),key=lambda p:p['year'],reverse=True)
  return f'<section id="{category}" class="paper-section"><h2>{title}</h2>'+''.join(entry(p, detailed=True, number=i) for i,p in enumerate(entries,1))+'</section>'
 def shell(title,body,active):
- return f'''<!doctype html>
+ return normalize_links(f'''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -70,7 +71,7 @@ def shell(title,body,active):
 <main id="main">{body}</main>
 <footer><span>Updated October 2026</span>
 <p>Layout inspired by <a href="https://jonbarron.info/">Jon Barron</a>.</p></footer>
-</body></html>\n'''
+</body></html>\n''')
 
 bio='''<section class="intro" aria-labelledby="name">
 <div class="intro-heading"><h1 id="name">Xinran Zhao</h1>
@@ -118,3 +119,6 @@ all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, sub
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
 (ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations(detailed=True)+events,'all'))
 print('Built index.html and all-research.html from',len(papers),'papers')
+
+legacy=ROOT/'legacy.html'
+legacy.write_text(normalize_links(legacy.read_text()))
