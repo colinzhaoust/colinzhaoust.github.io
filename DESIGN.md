@@ -32,7 +32,7 @@ Unpublished submissions without an arXiv release must not link to OpenReview. Ke
 
 ## Awards
 
-Selected Honors & Awards follows Academic Events on the homepage, with a direct Awards navigation link on both pages. Use a compact year-and-description list based on CV sections/honors.tex; preserve award amounts and distinctions without adding unverified details.
+Honors and Awards is an independent section between the research overview and Selected Research, following Shangbin Feng’s homepage reference (https://bunsenfeng.github.io/): a compact heading, fine divider below it, and a simple bulleted list with dates inline. Retain the Awards navigation link. Content is based on CV sections/honors.tex; preserve award amounts and distinctions without adding unverified details.
 
 ## Selected research and reference ordering
 

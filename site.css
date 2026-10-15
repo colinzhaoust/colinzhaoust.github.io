@@ -110,16 +110,11 @@ footer p { width: 100%; margin: 0; }
 .collaboration-fold summary:focus-visible { outline: 2px solid var(--link); outline-offset: 6px; }
 .collaboration-papers { padding-top: 24px; }
 
-.awards-list { margin: 0; }
-.award-year { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 16px; margin-bottom: 18px; }
-.award-year:last-child { margin-bottom: 0; }
-.award-year dt { color: var(--muted); font-size: .925rem; padding-top: 1px; font-variant-numeric: tabular-nums; }
-.award-year dd { margin: 0; min-width: 0; }
-.award-year p { margin: 0 0 8px; }
-.award-year p:last-child { margin-bottom: 0; }
-.award-detail { display: block; color: var(--muted); font-size: .925rem; }
-@media (max-width: 420px) {
-  .award-year { grid-template-columns: 62px minmax(0, 1fr); gap: 12px; }
-}
+.awards { border-top: 0; padding-top: 0; }
+.awards h2 { font-size: 1.25rem; border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 12px; }
+.awards-list { padding-left: 20px; margin: 0; }
+.awards-list li { margin-bottom: 6px; }
+.awards-list li:last-child { margin-bottom: 0; }
+.award-detail { color: var(--muted); font-size: .925rem; }
 
 .reference-venue { color: var(--muted); font-size: .875rem; }
