@@ -121,3 +121,5 @@ footer p { width: 100%; margin: 0; }
 @media (max-width: 420px) {
   .award-year { grid-template-columns: 62px minmax(0, 1fr); gap: 12px; }
 }
+
+.reference-venue { color: var(--muted); font-size: .875rem; }

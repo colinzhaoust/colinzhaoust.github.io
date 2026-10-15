@@ -10,7 +10,7 @@ Approximately 860px reading column. Compact navigation. Two-column bio on deskto
 
 ## Architecture
 
-Research: complete legacy biography with internship and mentor acknowledgments, job-market line, original high-level research questions, three research directions with links, all submissions, and selected published/workshop papers. All Research: complete publication list with Large-scale Collaborations immediately before Academic Events. CV and Legacy links in navigation. Large-scale Collaborations uses native details/summary and starts collapsed. Original projects and personal sections remain in Legacy.
+Research: complete legacy biography with internship and mentor acknowledgments, job-market line, original high-level research questions, three research directions with links, selected publications and user-chosen manuscripts. All Research: complete publication list with Large-scale Collaborations immediately before Academic Events. CV and Legacy links in navigation. Large-scale Collaborations uses native details/summary and starts collapsed. Original projects and personal sections remain in Legacy.
 
 ## States and interaction
 
@@ -26,10 +26,14 @@ Lead with Information Seeking & Human–AI Interaction, followed by Reasoning, P
 
 ## Content preservation
 
-Keep every internship and mentor acknowledgment from the legacy bio, and preserve the original high-level research interests. Submission venues and cycles must not be displayed; use “In submission.” The homepage includes all submissions independently of Selected Research. 3DCodeEdit is coding research and Xinran is an equal-contribution author.
+Keep every internship and mentor acknowledgment from the legacy bio, merging internship and education paragraphs where possible, and preserve the original high-level research interests. Submission venues and cycles must not be displayed; use “In submission.” The homepage combines selected publications and user-chosen submissions in Selected Research; the full submission list remains in All Research. 3DCodeEdit is coding research and Xinran is an equal-contribution author.
 
 Unpublished submissions without an arXiv release must not link to OpenReview. Keep their titles as plain text; thematic representative links may point to local All Research entries.
 
 ## Awards
 
 Selected Honors & Awards follows Academic Events on the homepage, with a direct Awards navigation link on both pages. Use a compact year-and-description list based on CV sections/honors.tex; preserve award amounts and distinctions without adding unverified details.
+
+## Selected research and reference ordering
+
+Order representative links and Selected Research newest year first, preserving editorial order for year ties. Show verified venue labels on thematic references, with unpublished work labeled only In submission and no OpenReview link. Include 3DCodeEdit, new debate, ReSHAPE search, Tea Leaves, Knowing When to Stop, Better Harnesses, and Ramon Llull alongside existing published/workshop selections. Pivot-ICL belongs to efficient reasoning in the overview and All Research, not Selected Research. Remove the casual invitation to discuss ideas from the current bio.
