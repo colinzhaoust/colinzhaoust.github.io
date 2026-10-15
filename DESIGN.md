@@ -59,3 +59,5 @@ Interactive Adaptation belongs to Information Seeking & Human–AI Interaction. 
 Number publications from 1 within each All Research section, matching Legacy’s section-local numbering. Keep title links and anchors; put supplementary links inline after the venue as [Code], [Project], etc., allowing natural wrapping on mobile. Home lists remain unnumbered. SPHERE belongs in the Information Seeking & Human–AI Interaction overview.
 
 The homepage uses Selected Honors and Awards, omitting Continuous Undergraduate Scholarship and First Class Honors / Dean’s List. Keep their complete records in the CV.
+
+Academic Events uses an unnumbered list with literal whitespace between date and body spans, so copied text and simplified views remain readable without CSS.
