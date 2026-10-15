@@ -68,8 +68,13 @@ main { padding-top: 32px; }
 .authors strong { color: var(--ink); font-weight: 700; }
 .publication .venue { font-size: .875rem; color: var(--ink); }
 .publication .paper-links { font-size: .875rem; margin-top: 4px; }
-.events ul { padding-left: 20px; margin: 0; }
-.events li { margin-bottom: 10px; font-size: .925rem; }
+.events-scroll { max-height: 22rem; overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; scrollbar-width: thin; }
+.events-scroll:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+.events-list { list-style: none; padding: 0; margin: 0; }
+.events-list li { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 16px; margin: 0 0 18px; font-size: .925rem; line-height: 1.55; }
+.events-list li:last-child { margin-bottom: 0; }
+.event-date { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .8rem; line-height: 1.8; font-variant-numeric: tabular-nums; }
+.event-date span { display: block; }
 .page-heading h1 { margin-bottom: 12px; }
 .section-nav { display: flex; gap: 0 20px; flex-wrap: wrap; font-size: .925rem; margin-top: 16px; }
 .section-nav a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -90,11 +95,15 @@ footer p { width: 100%; margin: 0; }
   .wordmark { width: 100%; }
   .intro { column-gap: 16px; }
   .job-market { padding: 12px; }
+  .events-scroll { padding: 14px 12px; }
+  .events-list li { grid-template-columns: 4.5rem minmax(0, 1fr); gap: 10px; }
 }
 @media print {
   .site-header, .skip-link, .section-nav { display: none; }
   main, footer { width: 100%; padding: 0; }
   .publication { break-inside: avoid; }
+  .events-scroll { max-height: none; overflow: visible; border: 0; padding: 0; }
+  .events-list li { break-inside: avoid; }
   .job-market { background: none; padding: 0; }
   a { color: inherit; }
   body { background: none; }

@@ -41,3 +41,7 @@ Order representative links and Selected Research newest year first, preserving e
 ReSHAPE search-space and planning-specification titles refer to versions of one work. Keep a single current-title record and retain BiAlign NeurIPS 2026 Oral in the venue label without the words earlier version; preserve the old page anchor as an alias.
 
 Pivot-ICL is listed under 2025 with In submission, per the author. CV author-order convention puts Xinran first only when he shares first authorship, retaining contribution stars; the website retains its existing publication author ordering.
+
+## Academic events
+
+Follow the date-and-text layout of Rulin Shao’s News section: a compact, lightly bordered scroll region with muted monospaced dates in a narrow left column. Keep Academic Events as the section title and retain the existing position. Use known seasons rather than inventing months, list dated events newest first, and retain ongoing service below them. The region is keyboard focusable; print expands the complete list. Use shorter invitation wording without changing whether an event was invited or completed.
