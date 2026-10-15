@@ -106,13 +106,14 @@ themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
 selected=['3DCodeEdit:','Planning while Listening','How Should Planning','Reading the Tea','Knowing When to Stop:','Better Harnesses,','Improving Attributed','Strategic Planning',"The Ramon Llull's",'MoR:','cAST:','Improving Large Language','Beyond Relevance:','Fact-and-Reflection','Thrust:']
 selected=sorted(selected,key=lambda title:paper(title)['year'],reverse=True)
 selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Selected publications and ongoing work. * Equal contribution.</p>'+''.join(entry(paper(t),number=i,compact_links=True) for i,t in enumerate(selected,1))+'</section>'
+miscellaneous='<section id="miscellaneous" class="miscellaneous"><h2>Miscellaneous</h2>'+(ROOT/'scripts/miscellaneous.html').read_text()+'</section>'
 events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(ROOT/'scripts/events.html').read_text()+'</section>'
 def collaborations(detailed=False):
  entries=[p for p in papers if p['category']=='collaborations']
  return '<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p,detailed=detailed,number=i if detailed else None) for i,p in enumerate(entries,1))+'</div></details></section>'
 awards='<section id="awards" class="awards"><h2>Selected Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
-(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events,'home'))
+(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events+miscellaneous,'home'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
 (ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations(detailed=True)+events,'all'))
