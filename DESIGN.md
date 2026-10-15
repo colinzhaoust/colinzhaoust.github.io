@@ -48,7 +48,7 @@ Follow the date-and-text layout of Rulin Shao’s News section: a compact, light
 
 ## Copy and venue labels
 
-Use compact conference years such as EMNLP'25 and BiAlign@NeurIPS'26 throughout publication labels. Omit Findings in the Home research overview and selected list, while retaining it in All Research and CV. Keep canonical publication metadata intact; apply short labels only at rendering. Preserve readable sentence gaps at linked text boundaries and keep Dr./Prof. with the following name.
+Use compact conference years such as EMNLP'25 and BiAlign@NeurIPS'26 throughout publication labels. Omit Findings in the Home research overview and selected list, while retaining it in All Research and CV. Keep canonical publication metadata intact; apply short labels only at rendering. Preserve readable sentence gaps at linked text boundaries. Omit Dr. and Prof. in the homepage biography while retaining every mentor name and link.
 
 ## Research classification corrections
 
