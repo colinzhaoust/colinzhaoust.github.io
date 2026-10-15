@@ -49,3 +49,7 @@ Follow the date-and-text layout of Rulin Shao’s News section: a compact, light
 ## Copy and venue labels
 
 Use compact conference years such as EMNLP'25 and BiAlign@NeurIPS'26 throughout publication labels. Omit Findings in the Home research overview and selected list, while retaining it in All Research and CV. Keep canonical publication metadata intact; apply short labels only at rendering. Preserve readable sentence gaps at linked text boundaries and keep Dr./Prof. with the following name.
+
+## Research classification corrections
+
+Interactive Adaptation belongs to Information Seeking & Human–AI Interaction. FaR belongs to Persuasion & Human–AI Alignment. Thrust appears under information seeking as “Thrust: When to Retrieve.” Both FaR and Thrust are explicitly selected works and must remain in Selected Research, ordered by year with the other entries.
