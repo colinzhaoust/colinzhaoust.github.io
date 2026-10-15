@@ -53,3 +53,7 @@ Use compact conference years such as EMNLP'25 and BiAlign@NeurIPS'26 throughout 
 ## Research classification corrections
 
 Interactive Adaptation belongs to Information Seeking & Human–AI Interaction. FaR belongs to Persuasion & Human–AI Alignment. Thrust appears under information seeking as “Thrust: When to Retrieve.” Both FaR and Thrust are explicitly selected works and must remain in Selected Research, ordered by year with the other entries.
+
+## All Research numbering and links
+
+Number publications from 1 within each All Research section, matching Legacy’s section-local numbering. Keep title links and anchors; put supplementary links inline after the venue as [Code], [Project], etc., allowing natural wrapping on mobile. Home lists remain unnumbered. SPHERE belongs in the Information Seeking & Human–AI Interaction overview.

@@ -127,3 +127,8 @@ footer p { width: 100%; margin: 0; }
 .award-detail { color: var(--muted); font-size: .925rem; }
 
 .reference-venue { color: var(--muted); font-size: .875rem; }
+
+.publication-number { color: var(--muted); font-variant-numeric: tabular-nums; }
+.inline-paper-links { margin-left: .4em; }
+.inline-paper-links a { display: inline-block; white-space: nowrap; margin-right: .35em; }
+.inline-paper-links a:last-child { margin-right: 0; }

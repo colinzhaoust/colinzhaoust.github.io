@@ -23,20 +23,22 @@ def ref(prefix,label):
 def refs(items):
  return ' · '.join(ref(prefix,label) for prefix,label in sorted(items,key=lambda item:paper(item[0])['year'],reverse=True))
 def authors(text):return esc(text).replace('Xinran Zhao','<strong>Xinran Zhao</strong>')
-def entry(p, detailed=False):
+def entry(p, detailed=False, number=None):
  aliases=''.join(f'<span id="{esc(alias,quote=True)}"></span>' for alias in p.get('aliases',[]))
  title=esc(p['title'])
  if p['url']:title=f'<a href="{esc(p["url"],quote=True)}">{title}</a>'
+ number_html=f'<span class="publication-number">{number}.</span> ' if number is not None else ''
  links=' &nbsp;·&nbsp; '.join(f'<a href="{esc(x["url"],quote=True)}">{esc(x["label"])}</a>' for x in p['links'])
+ inline_links=' '.join(f'<a href="{esc(x["url"],quote=True)}">[{esc(x["label"])}]</a>' for x in p['links']) if detailed else ''
  return f'''<article class="publication" id="{p['id']}">
-{aliases}<h3>{title}</h3>
+{aliases}<h3>{number_html}{title}</h3>
 <p class="authors">{authors(p['authors'])}</p>
-<p class="venue">{esc(venue(p, detailed=detailed))}</p>
-{f'<p class="paper-links">{links}</p>' if links else ''}
+<p class="venue">{esc(venue(p, detailed=detailed))}{f' <span class="inline-paper-links">{inline_links}</span>' if inline_links else ''}</p>
+{f'<p class="paper-links">{links}</p>' if links and not detailed else ''}
 </article>'''
 def group(category,title):
  entries=sorted((p for p in papers if p['category']==category),key=lambda p:p['year'],reverse=True)
- return f'<section id="{category}" class="paper-section"><h2>{title}</h2>'+''.join(entry(p, detailed=True) for p in entries)+'</section>'
+ return f'<section id="{category}" class="paper-section"><h2>{title}</h2>'+''.join(entry(p, detailed=True, number=i) for i,p in enumerate(entries,1))+'</section>'
 def shell(title,body,active):
  return f'''<!doctype html>
 <html lang="en">
@@ -90,7 +92,7 @@ themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
 <li>How can agents proactively help humans seek information, learn, and stay educated amid massive artificial artifacts?</li>
 </ol></div>
 <div class="direction"><h3>Information Seeking &amp; Human–AI Interaction</h3>
-<p class="representatives">{refs([('Knowing When','Escalation'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Efficient Test-Time','Interactive Adaptation'),('MoR:','Mixture of Retrievers'),('Thrust:','Thrust: When to Retrieve')])}</p></div>
+<p class="representatives">{refs([('Knowing When','Escalation'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Efficient Test-Time','Interactive Adaptation'),('MoR:','Mixture of Retrievers'),('SPHERE:','SPHERE'),('Thrust:','Thrust: When to Retrieve')])}</p></div>
 <div class="direction"><h3>Reasoning, Planning &amp; Coding Agents</h3>
 <p class="representatives">{refs([('3DCodeEdit:','3D Code Editing'),('Reading the Tea','Tea Leaves'),('How Should Planning','ReSHAPE'),('Better Harnesses','Harness Adaptation'),('Pivot-ICL:','Pivot-ICL'),("The Ramon Llull's",'Ramon Llull'),('cAST:','cAST'),('Improving Large Language','Action Sequence Similarity')])}</p></div>
 <div class="direction"><h3>Persuasion &amp; Human–AI Alignment</h3>
@@ -102,11 +104,13 @@ selected=['3DCodeEdit:','Planning while Listening','How Should Planning','Readin
 selected=sorted(selected,key=lambda title:paper(title)['year'],reverse=True)
 selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Selected publications and ongoing work. * Equal contribution.</p>'+''.join(entry(paper(t)) for t in selected)+'</section>'
 events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(ROOT/'scripts/events.html').read_text()+'</section>'
-collaborations='<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p) for p in papers if p['category']=='collaborations')+'</div></details></section>'
+def collaborations(detailed=False):
+ entries=[p for p in papers if p['category']=='collaborations']
+ return '<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p,detailed=detailed,number=i if detailed else None) for i,p in enumerate(entries,1))+'</div></details></section>'
 awards='<section id="awards" class="awards"><h2>Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
-(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations+events,'home'))
+(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events,'home'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
-(ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations+events,'all'))
+(ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations(detailed=True)+events,'all'))
 print('Built index.html and all-research.html from',len(papers),'papers')
