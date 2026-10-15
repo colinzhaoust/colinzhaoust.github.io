@@ -95,11 +95,11 @@ themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
 <li>How can agents proactively help humans seek information, learn, and stay educated amid massive artificial artifacts?</li>
 </ol></div>
 <div class="direction"><h3>Information Seeking &amp; Human–AI Interaction</h3>
-<p class="representatives">{refs([('Knowing When','Escalation'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Revela:','Revela'),('Efficient Test-Time','Interactive Adaptation'),('MoR:','Mixture of Retrievers'),('SPHERE:','SPHERE'),('Beyond Relevance:','PIR'),('Dense X Retrieval:','Dense X'),('MixGR:','MixGR'),('Thrust:','Thrust','when to retrieve')])}</p></div>
+<p class="representatives">{refs([('Knowing When','Escalation'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Revela:','Revela'),('MoR:','Mixture of Retrievers'),('Beyond Relevance:','PIR'),('Dense X Retrieval:','Dense X'),('MixGR:','MixGR'),('Thrust:','Thrust','when to retrieve')])}</p></div>
 <div class="direction"><h3>Reasoning, Planning &amp; Coding Agents</h3>
 <p class="representatives">{refs([('3DCodeEdit:','3D Code Editing'),('Reading the Tea','Tea Leaves'),('How Should Planning','ReSHAPE'),('Better Harnesses','Harness Adaptation'),('Pivot-ICL:','Pivot-ICL'),("The Ramon Llull's",'Ramon Llull'),('cAST:','cAST'),('Improving Large Language','Action Sequence Similarity')])}</p></div>
 <div class="direction"><h3>Persuasion &amp; Human–AI Alignment</h3>
-<p class="representatives">{refs([('Planning while Listening','Real-Time Debate'),('Strategic Planning','Strategic Debate'),('Fact-and-Reflection','FaR','LLM honesty'),('Leveraging Topic','Argument Persuasion'),('Probing Toxic','Probing Toxic Content')])}</p></div>
+<p class="representatives">{refs([('Planning while Listening','Real-Time Debate'),('Strategic Planning','Strategic Debate'),('SPHERE:','SPHERE'),('Fact-and-Reflection','FaR','LLM honesty'),('Leveraging Topic','Argument Persuasion'),('Probing Toxic','Probing Toxic Content')])}</p></div>
 </section>'''
 # Include the user's selected manuscripts alongside published representative work.
 # Sort by year; within a year, retain the explicit editorial order below.
