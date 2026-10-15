@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Build the two static research pages from research.json. No dependencies."""
 from pathlib import Path
-import html,json
+import html,json,hashlib
 ROOT=Path(__file__).resolve().parents[1]
 papers=json.loads((ROOT/'research.json').read_text())
+css_version=hashlib.sha256((ROOT/'site.css').read_bytes()).hexdigest()[:12]
 esc=html.escape
 
 def paper(prefix):return next(p for p in papers if p['title'].startswith(prefix))
@@ -41,7 +42,7 @@ def shell(title,body,active):
 <title>{esc(title)}</title>
 <link rel="icon" type="image/png" href="images/lti.png">
 <link rel="stylesheet" href="fonts.css">
-<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="site.css?v={css_version}">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
