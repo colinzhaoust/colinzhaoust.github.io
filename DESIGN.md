@@ -61,3 +61,5 @@ Number publications from 1 within each All Research section, matching Legacy’s
 The homepage uses Selected Honors and Awards, omitting Continuous Undergraduate Scholarship and First Class Honors / Dean’s List. Keep their complete records in the CV.
 
 Academic Events uses an unnumbered list with literal whitespace between date and body spans, so copied text and simplified views remain readable without CSS.
+
+Event dates use a single unbroken line, e.g. “Fall, 2026” or “Summer, 2025”, on desktop and mobile.
