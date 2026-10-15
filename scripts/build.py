@@ -22,6 +22,8 @@ def ref(prefix,label,topic=None):
  url=p['url'] or f'all-research.html#{p["id"]}'
  # Overview labels keep the primary venue; distinctions remain in full entries.
  conference=venue(p).split(' · ')[0]
+ if topic and conference == 'In submission':
+  conference='in submission'
  annotation=f'{topic}, {conference}' if topic else conference
  return f'<span class="research-reference"><a href="{esc(url,quote=True)}">{esc(label)}</a> <span class="reference-venue">({esc(annotation)})</span></span>'
 def refs(items):
@@ -82,7 +84,7 @@ bio='''<section class="intro" aria-labelledby="name">
 <p>At Google DeepMind (2024, 2026), I worked as a student researcher on LLM planning, long-horizon code generation, and continual learning with <a href="https://sites.google.com/view/azadenova">Azade Nova</a> and <a href="https://haniesedghi.com/">Hanie Sedghi</a>.&ensp;At Ai2 (2025), I worked on deep research agents with <a href="https://www.cs.cornell.edu/~varshakishore/">Varsha</a>, <a href="https://www.cs.cmu.edu/~anaik/">Aakanksha</a>, <a href="https://scholar.google.com/citations?user=MY2W9d4AAAAJ&hl=en">Joseph</a>, <a href="https://scholar.google.com/citations?user=f8aP6RMAAAAJ&hl=en">Jay</a>, and <a href="https://jenahwang.github.io/">Jena</a>.</p>
 <p>I received my MSCS from Stanford, where I worked with <a href="https://nlp.stanford.edu/~manning/">Christopher Manning</a>, and my bachelor's degree from <a href="http://www.ust.hk/">HKUST</a>. At HKUST and during my exchange at Cornell, I was fortunate to work with <a href="https://www.cse.ust.hk/~yqsong/">Yangqiu Song</a>, <a href="https://scholar.google.com/citations?user=nEsOOx8AAAAJ&hl=en">Dit-Yan Yeung</a>, and <a href="https://www.cs.cornell.edu/home/cardie/">Claire Cardie</a>.</p>
 <p>I always feel lucky to meet great mentors along my journey, including but not limited to, <a href="https://www.shikharmurty.com/">Shikhar Murty</a>, <a href="https://panda0881.github.io/Hongming_Homepage/">Hongming Zhang</a>, and <a href="https://esdurmus.github.io/">Esin Durmus</a>.</p>
-<p class="social"><a href="mailto:xinranz3@andrew.cmu.edu">Email</a><span> / </span><a href="data/CV.pdf">CV</a><span> / </span><a href="https://scholar.google.com/citations?user=iX71amEAAAAJ&amp;hl=en">Google Scholar</a><span> / </span><a href="https://www.semanticscholar.org/author/Xinran-Zhao/1500662261">Semantic Scholar</a><span> / </span><a href="https://github.com/colinzhaoust">GitHub</a><span> / </span><a href="https://www.linkedin.com/in/xinran-zhao-51b061180">LinkedIn</a></p>
+<p class="social"><a href="mailto:xinranz3@andrew.cmu.edu">Email</a><span> / </span><a href="data/CV.pdf">CV</a><span> / </span><a href="https://scholar.google.com/citations?user=iX71amEAAAAJ&amp;hl=en">Google Scholar</a><span> / </span><a href="https://github.com/colinzhaoust">GitHub</a><span> / </span><a href="https://www.linkedin.com/in/xinran-zhao-51b061180">LinkedIn</a></p>
 </div>
 </section>
 <p class="job-market"><strong><span aria-hidden="true">👨‍💻</span> I am currently on the industry job market!</strong></p>'''
@@ -95,12 +97,12 @@ themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
 <li>How can models stay aligned with human motives, goals, and intents, especially under high automation? This includes studying multi-turn behaviors and how multimodal inputs shape model representation spaces.</li>
 <li>How can agents proactively help humans seek information, learn, and stay educated amid massive artificial artifacts?</li>
 </ol></div>
-<div class="direction"><h3>Information Seeking &amp; Human–AI Interaction</h3>
-<p class="representatives">{refs([('Knowing When','Escalation'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Revela:','Revela'),('MoR:','Mixture of Retrievers'),('Beyond Relevance:','PIR'),('Dense X Retrieval:','Dense X'),('MixGR:','MixGR'),('Thrust:','Thrust','when to retrieve')])}</p></div>
+<div class="direction"><h3>Information Seeking &amp; Delivery</h3>
+<p class="representatives">{refs([('Knowing When','Escalation','proactive delivery'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Revela:','Revela'),('MoR:','Mixture of Retrievers'),('Beyond Relevance:','PIR'),('Dense X Retrieval:','Dense X'),('MixGR:','MixGR'),('Thrust:','Thrust','when to retrieve')])}</p></div>
 <div class="direction"><h3>Reasoning, Planning, Forecasting &amp; Coding Agents</h3>
 <p class="representatives">{refs([('3DCodeEdit:','3D Code Editing'),('Reading the Tea','Tea Leaves'),('How Should Planning','ReSHAPE'),('Better Harnesses','Harness Adaptation'),('Pivot-ICL:','Pivot-ICL'),("The Ramon Llull's",'Ramon Llull'),('cAST:','cAST'),('Improving Large Language','Action Sequence Similarity')])}</p></div>
 <div class="direction"><h3>Persuasion &amp; Human–AI Alignment</h3>
-<p class="representatives">{refs([('Planning while Listening','Real-Time Debate'),('Strategic Planning','Strategic Debate'),('SPHERE:','SPHERE'),('Fact-and-Reflection','FaR','confidence calibration'),('Leveraging Topic','Argument Persuasion'),('Probing Toxic','Probing Toxic Content')])}</p></div>
+<p class="representatives">{refs([('Planning while Listening','Real-Time Debate'),('Strategic Planning','Strategic Debate'),('SPHERE:','SPHERE'),('Fact-and-Reflection','FaR','LLM honesty'),('Leveraging Topic','Argument Persuasion'),('Probing Toxic','Probing Toxic Content')])}</p></div>
 </section>'''
 # Include the user's selected manuscripts alongside published representative work.
 # Sort by year; within a year, retain the explicit editorial order below.
