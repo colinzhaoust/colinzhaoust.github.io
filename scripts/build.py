@@ -107,7 +107,7 @@ events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(
 def collaborations(detailed=False):
  entries=[p for p in papers if p['category']=='collaborations']
  return '<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p,detailed=detailed,number=i if detailed else None) for i,p in enumerate(entries,1))+'</div></details></section>'
-awards='<section id="awards" class="awards"><h2>Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
+awards='<section id="awards" class="awards"><h2>Selected Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
 (ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events,'home'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
