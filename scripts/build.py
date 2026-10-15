@@ -49,7 +49,7 @@ def shell(title,body,active):
 <header class="site-header"><nav class="nav" aria-label="Main navigation">
 <a class="wordmark" href="index.html">Xinran Zhao</a>
 <div class="nav-links">
-<a href="index.html#research" {'aria-current="page"' if active=='research' else ''}>Research</a>
+<a href="index.html" {'aria-current="page"' if active=='home' else ''}>Home</a>
 <a href="all-research.html" {'aria-current="page"' if active=='all' else ''}>All Research</a>
 <a href="index.html#awards">Awards</a>
 <a href="data/CV.pdf">CV</a>
@@ -94,7 +94,7 @@ events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(
 collaborations='<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p) for p in papers if p['category']=='collaborations')+'</div></details></section>'
 awards='<section id="awards" class="awards"><h2>Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
-(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations+events,'research'))
+(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations+events,'home'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
 (ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations+events,'all'))
