@@ -55,8 +55,8 @@ def shell(title,body,active):
 <a href="legacy.html">Legacy</a>
 </div></nav></header>
 <main id="main">{body}</main>
-<footer><a href="mailto:xinranz3@andrew.cmu.edu">xinranz3@andrew.cmu.edu</a><span>Updated October 2026</span>
-<p>Layout inspired by <a href="https://rulinshao.github.io/">Rulin Shao</a>; <a href="legacy.html">original homepage</a> based on <a href="https://jonbarron.info/">Jon Barron</a>.</p></footer>
+<footer><span>Updated October 2026</span>
+<p>Layout inspired by <a href="https://jonbarron.info/">Jon Barron</a>.</p></footer>
 </body></html>\n'''
 
 bio='''<section class="intro" aria-labelledby="name">
