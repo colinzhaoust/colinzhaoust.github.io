@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
 """Build the two static research pages from research.json. No dependencies."""
 from pathlib import Path
-import html,json,hashlib
+import html,json,hashlib,re
 ROOT=Path(__file__).resolve().parents[1]
 papers=json.loads((ROOT/'research.json').read_text())
 css_version=hashlib.sha256((ROOT/'site.css').read_bytes()).hexdigest()[:12]
 esc=html.escape
 
 def paper(prefix):return next(p for p in papers if p['title'].startswith(prefix))
+def venue(p, detailed=False):
+ text=p['venue']
+ if not detailed:
+  text=text.removeprefix('Findings of ')
+ # Abbreviate conference years only, leaving biography and event dates intact.
+ return re.sub(r"\b(ACL|NAACL|EACL|EMNLP|ICLR|ICML|NeurIPS|COLM|CVPR|ICCV|AAAI|LREC|TMLR) (?:20)?(\d{2})\b", r"\1'\2", text)
+
 def ref(prefix,label):
  p=paper(prefix)
  # A public paper should be one click away. Unreleased work keeps a local entry.
  url=p['url'] or f'all-research.html#{p["id"]}'
- return f'<span class="research-reference"><a href="{esc(url,quote=True)}">{esc(label)}</a> <span class="reference-venue">({esc(p["venue"])})</span></span>'
+ return f'<span class="research-reference"><a href="{esc(url,quote=True)}">{esc(label)}</a> <span class="reference-venue">({esc(venue(p))})</span></span>'
 def refs(items):
  return ' · '.join(ref(prefix,label) for prefix,label in sorted(items,key=lambda item:paper(item[0])['year'],reverse=True))
 def authors(text):return esc(text).replace('Xinran Zhao','<strong>Xinran Zhao</strong>')
-def entry(p):
+def entry(p, detailed=False):
  aliases=''.join(f'<span id="{esc(alias,quote=True)}"></span>' for alias in p.get('aliases',[]))
  title=esc(p['title'])
  if p['url']:title=f'<a href="{esc(p["url"],quote=True)}">{title}</a>'
@@ -24,12 +31,12 @@ def entry(p):
  return f'''<article class="publication" id="{p['id']}">
 {aliases}<h3>{title}</h3>
 <p class="authors">{authors(p['authors'])}</p>
-<p class="venue">{esc(p['venue'])}</p>
+<p class="venue">{esc(venue(p, detailed=detailed))}</p>
 {f'<p class="paper-links">{links}</p>' if links else ''}
 </article>'''
 def group(category,title):
  entries=sorted((p for p in papers if p['category']==category),key=lambda p:p['year'],reverse=True)
- return f'<section id="{category}" class="paper-section"><h2>{title}</h2>'+''.join(entry(p) for p in entries)+'</section>'
+ return f'<section id="{category}" class="paper-section"><h2>{title}</h2>'+''.join(entry(p, detailed=True) for p in entries)+'</section>'
 def shell(title,body,active):
  return f'''<!doctype html>
 <html lang="en">
@@ -65,7 +72,11 @@ bio='''<section class="intro" aria-labelledby="name">
 <p class="affiliation">PhD Candidate · Carnegie Mellon University</p></div>
 <img class="portrait" src="images/xinran_circle.PNG" width="587" height="572" alt="Xinran Zhao">
 <div class="intro-copy">
-<p> I am a fourth-year PhD candidate at CMU LTI, advised by <a href="https://www.cs.cmu.edu/~sherryw/">Prof. Sherry Wu</a>. My PhD is supported by the <a href="https://www.amazon.science/news/amazon-launches-68-million-ai-phd-fellowship-program">Amazon AI PhD Fellowship</a>. </p> <p>At Google DeepMind (2024, 2026), I worked as a student researcher on LLM planning, long-horizon code generation, and continual learning with <a href="https://sites.google.com/view/azadenova">Dr. Azade Nova</a> and <a href="https://haniesedghi.com/">Dr. Hanie Sedghi</a>. At Ai2 (2025), I worked on deep research agents with <a href="https://www.cs.cornell.edu/~varshakishore/">Varsha</a>, <a href="https://www.cs.cmu.edu/~anaik/">Aakanksha</a>, <a href="https://scholar.google.com/citations?user=MY2W9d4AAAAJ&hl=en">Joseph</a>, <a href="https://scholar.google.com/citations?user=f8aP6RMAAAAJ&hl=en">Jay</a>, and <a href="https://jenahwang.github.io/">Jena</a>. </p> <p>I received my MSCS from Stanford, where I worked with <a href="https://nlp.stanford.edu/~manning/">Prof. Christopher Manning</a>, and my bachelor's degree from <a href="http://www.ust.hk/">HKUST</a>. At HKUST and during my exchange at Cornell, I was fortunate to work with <a href="https://www.cse.ust.hk/~yqsong/">Prof. Yangqiu Song</a>, <a href="https://scholar.google.com/citations?user=nEsOOx8AAAAJ&hl=en">Prof. Dit-Yan Yeung</a>, and <a href="https://www.cs.cornell.edu/home/cardie/">Prof. Claire Cardie</a>.</p> <p> I always feel lucky to meet great mentors along my journey, including but not limited to, <a href="https://www.shikharmurty.com/">Dr. Shikhar Murty</a>, <a href="https://panda0881.github.io/Hongming_Homepage/">Dr. Hongming Zhang</a>, and <a href="https://esdurmus.github.io/">Dr. Esin Durmus</a>.</p> <p class="social"><a href="mailto:xinranz3@andrew.cmu.edu">Email</a><span>/</span><a href="data/CV.pdf">CV</a><span>/</span><a href="https://scholar.google.com/citations?user=iX71amEAAAAJ&amp;hl=en">Google Scholar</a><span>/</span><a href="https://github.com/colinzhaoust">GitHub</a><span>/</span><a href="https://www.linkedin.com/in/xinran-zhao-51b061180">LinkedIn</a></p>
+<p>I am a fourth-year PhD candidate at CMU LTI, advised by <a href="https://www.cs.cmu.edu/~sherryw/">Prof.&nbsp;Sherry Wu</a>. My PhD is supported by the <a href="https://www.amazon.science/news/amazon-launches-68-million-ai-phd-fellowship-program">Amazon AI PhD Fellowship</a>.</p>
+<p>At Google DeepMind (2024, 2026), I worked as a student researcher on LLM planning, long-horizon code generation, and continual learning with <a href="https://sites.google.com/view/azadenova">Dr.&nbsp;Azade Nova</a> and <a href="https://haniesedghi.com/">Dr.&nbsp;Hanie Sedghi</a>.&ensp;At Ai2 (2025), I worked on deep research agents with <a href="https://www.cs.cornell.edu/~varshakishore/">Varsha</a>, <a href="https://www.cs.cmu.edu/~anaik/">Aakanksha</a>, <a href="https://scholar.google.com/citations?user=MY2W9d4AAAAJ&hl=en">Joseph</a>, <a href="https://scholar.google.com/citations?user=f8aP6RMAAAAJ&hl=en">Jay</a>, and <a href="https://jenahwang.github.io/">Jena</a>.</p>
+<p>I received my MSCS from Stanford, where I worked with <a href="https://nlp.stanford.edu/~manning/">Prof.&nbsp;Christopher Manning</a>, and my bachelor's degree from <a href="http://www.ust.hk/">HKUST</a>. At HKUST and during my exchange at Cornell, I was fortunate to work with <a href="https://www.cse.ust.hk/~yqsong/">Prof.&nbsp;Yangqiu Song</a>, <a href="https://scholar.google.com/citations?user=nEsOOx8AAAAJ&hl=en">Prof.&nbsp;Dit-Yan Yeung</a>, and <a href="https://www.cs.cornell.edu/home/cardie/">Prof.&nbsp;Claire Cardie</a>.</p>
+<p>I always feel lucky to meet great mentors along my journey, including but not limited to, <a href="https://www.shikharmurty.com/">Dr.&nbsp;Shikhar Murty</a>, <a href="https://panda0881.github.io/Hongming_Homepage/">Dr.&nbsp;Hongming Zhang</a>, and <a href="https://esdurmus.github.io/">Dr.&nbsp;Esin Durmus</a>.</p>
+<p class="social"><a href="mailto:xinranz3@andrew.cmu.edu">Email</a><span> / </span><a href="data/CV.pdf">CV</a><span> / </span><a href="https://scholar.google.com/citations?user=iX71amEAAAAJ&amp;hl=en">Google Scholar</a><span> / </span><a href="https://github.com/colinzhaoust">GitHub</a><span> / </span><a href="https://www.linkedin.com/in/xinran-zhao-51b061180">LinkedIn</a></p>
 </div>
 </section>
 <p class="job-market"><strong>I am currently on the industry job market.</strong></p>'''

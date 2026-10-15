@@ -45,3 +45,7 @@ Pivot-ICL is listed under 2025 with In submission, per the author. CV author-ord
 ## Academic events
 
 Follow the date-and-text layout of Rulin Shao’s News section: a compact, lightly bordered scroll region with muted monospaced dates in a narrow left column. Keep Academic Events as the section title and retain the existing position. Use known seasons rather than inventing months, list dated events newest first, and retain ongoing service below them. The region is keyboard focusable; print expands the complete list. Use shorter invitation wording without changing whether an event was invited or completed.
+
+## Copy and venue labels
+
+Use compact conference years such as EMNLP'25 and BiAlign@NeurIPS'26 throughout publication labels. Omit Findings in the Home research overview and selected list, while retaining it in All Research and CV. Keep canonical publication metadata intact; apply short labels only at rendering. Preserve readable sentence gaps at linked text boundaries and keep Dr./Prof. with the following name.
