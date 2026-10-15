@@ -1,0 +1,102 @@
+:root {
+  --canvas: oklch(99.5% .005 255);
+  --ink: oklch(25% .009 255);
+  --muted: oklch(45% .009 255);
+  --link: oklch(46% .15 254);
+  --line: oklch(89% .008 255);
+  --highlight: oklch(96% .014 255);
+  --column: 860px;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 24px; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: Lato, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+a { color: var(--link); text-decoration: none; text-underline-offset: 3px; }
+a:hover, a:focus { color: var(--link); text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; border-radius: 1px; }
+.intro-copy > p:not(.social) a, .direction p a, .job-market a, .events a, .page-heading p a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in oklch, var(--link) 45%, transparent);
+}
+a:hover { text-decoration-color: currentColor; }
+h1, h2, h3 { line-height: 1.25; margin: 0; color: var(--ink); }
+h1 { font-size: 2rem; font-weight: 700; letter-spacing: -.025em; }
+h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 24px; }
+h3 { font-size: 1.125rem; font-weight: 700; }
+p { margin: 0 0 16px; }
+.site-header { border-bottom: 1px solid var(--line); }
+.nav, main, footer { width: min(var(--column), calc(100% - 40px)); margin-inline: auto; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 4px 24px; flex-wrap: wrap; padding: 8px 0; }
+.wordmark { font-weight: 700; color: var(--ink); }
+.nav-links { display: flex; gap: 4px 24px; flex-wrap: wrap; }
+.nav-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); font-size: .925rem; }
+.nav-links a[aria-current] { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 7px; }
+main { padding-top: 32px; }
+/* One mobile order at every narrow width: identity, biography, job-market line. */
+.intro { display: grid; grid-template-columns: minmax(0, 1fr) 88px; grid-template-areas: 'heading portrait' 'bio bio'; gap: 20px; }
+.intro-heading { grid-area: heading; align-self: center; }
+.intro-copy { grid-area: bio; min-width: 0; }
+.affiliation { color: var(--muted); margin: 8px 0 0; font-size: .925rem; }
+.portrait { grid-area: portrait; width: 88px; height: auto; max-width: 100%; align-self: center; }
+.social { display: flex; flex-wrap: wrap; gap: 0 10px; margin: 12px 0 0; font-size: .925rem; align-items: center; }
+.social span { color: var(--muted); }
+.social a { display: inline-flex; align-items: center; min-height: 44px; }
+.job-market { background: var(--highlight); padding: 12px 16px; margin: 24px 0 0; font-size: 1rem; }
+.research-overview, .paper-section, .events { border-top: 1px solid var(--line); margin-top: 36px; padding-top: 28px; }
+.research-lead { max-width: 72ch; margin-bottom: 24px; }
+.direction { margin-bottom: 22px; }
+.direction:last-child { margin-bottom: 0; }
+.direction h3 { margin-bottom: 8px; }
+.direction p { max-width: 74ch; margin-bottom: 6px; }
+.representatives { font-size: .925rem; line-height: 1.9; }
+.section-heading { display: flex; align-items: baseline; gap: 8px 16px; justify-content: space-between; flex-wrap: wrap; }
+.section-heading h2 { margin-bottom: 12px; }
+.section-heading > a { font-size: .925rem; }
+.section-note { font-size: .875rem; color: var(--muted); margin-bottom: 24px; }
+.publication { margin-bottom: 24px; scroll-margin-top: 24px; }
+.publication:last-child { margin-bottom: 0; }
+.publication h3 { font-size: 1rem; line-height: 1.45; margin-bottom: 5px; }
+.publication p { font-size: .925rem; line-height: 1.55; margin: 0 0 3px; }
+.authors { color: var(--muted); }
+.authors strong { color: var(--ink); font-weight: 700; }
+.publication .venue { font-size: .875rem; color: var(--ink); }
+.publication .paper-links { font-size: .875rem; margin-top: 4px; }
+.events ul { padding-left: 20px; margin: 0; }
+.events li { margin-bottom: 10px; font-size: .925rem; }
+.page-heading h1 { margin-bottom: 12px; }
+.section-nav { display: flex; gap: 0 20px; flex-wrap: wrap; font-size: .925rem; margin-top: 16px; }
+.section-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+footer { border-top: 1px solid var(--line); margin-top: 48px; padding: 24px 0 32px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--muted); font-size: .875rem; }
+footer p { width: 100%; margin: 0; }
+.skip-link { position: absolute; left: 20px; top: -80px; background: var(--canvas); padding: 12px; z-index: 10; }
+.skip-link:focus { top: 8px; }
+@media (min-width: 640px) {
+  .intro { grid-template-columns: minmax(0, 1fr) 192px; grid-template-areas: 'heading portrait' 'bio portrait'; column-gap: 36px; row-gap: 24px; }
+  .portrait { width: 192px; align-self: start; margin-top: 32px; }
+  .intro-copy p { max-width: 65ch; }
+  h1 { font-size: 2.25rem; }
+  main { padding-top: 40px; }
+}
+@media (max-width: 420px) {
+  .nav, main, footer { width: calc(100% - 32px); }
+  .nav-links { gap: 4px 20px; }
+  .wordmark { width: 100%; }
+  .intro { column-gap: 16px; }
+  .job-market { padding: 12px; }
+}
+@media print {
+  .site-header, .skip-link, .section-nav { display: none; }
+  main, footer { width: 100%; padding: 0; }
+  .publication { break-inside: avoid; }
+  .job-market { background: none; padding: 0; }
+  a { color: inherit; }
+  body { background: none; }
+  footer { font-size: .875rem; }
+}
