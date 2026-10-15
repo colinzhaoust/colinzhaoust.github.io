@@ -38,4 +38,6 @@ Honors and Awards is an independent section between the research overview and Se
 
 Order representative links and Selected Research newest year first, preserving editorial order for year ties. Show verified venue labels on thematic references, with unpublished work labeled only In submission and no OpenReview link. Include 3DCodeEdit, new debate, ReSHAPE search, Tea Leaves, Knowing When to Stop, Better Harnesses, and Ramon Llull alongside existing published/workshop selections. Pivot-ICL belongs to efficient reasoning in the overview and All Research, not Selected Research. Remove the casual invitation to discuss ideas from the current bio.
 
-ReSHAPE search-space and planning-specification titles refer to versions of one work. Keep a single current-title record and acknowledge the earlier BiAlign NeurIPS 2026 Oral version; preserve the old page anchor as an alias.
+ReSHAPE search-space and planning-specification titles refer to versions of one work. Keep a single current-title record and retain BiAlign NeurIPS 2026 Oral in the venue label without the words earlier version; preserve the old page anchor as an alias.
+
+Pivot-ICL is listed under 2025 with In submission, per the author. CV author-order convention puts Xinran first only when he shares first authorship, retaining contribution stars; the website retains its existing publication author ordering.
