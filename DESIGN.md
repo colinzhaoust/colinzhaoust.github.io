@@ -10,7 +10,7 @@ Approximately 860px reading column. Compact navigation. Two-column bio on deskto
 
 ## Architecture
 
-Research: short biography, job-market line, three research directions with links, selected papers. All Research: complete publication list with Large-scale Collaborations immediately before Academic Events. CV and Legacy links in navigation. Original projects and personal sections remain in Legacy.
+Research: complete legacy biography with internship and mentor acknowledgments, job-market line, original high-level research questions, three research directions with links, all submissions, and selected published/workshop papers. All Research: complete publication list with Large-scale Collaborations immediately before Academic Events. CV and Legacy links in navigation. Large-scale Collaborations uses native details/summary and starts collapsed. Original projects and personal sections remain in Legacy.
 
 ## States and interaction
 
@@ -23,3 +23,7 @@ Generated probes and mockups skipped: the user explicitly selected an existing l
 ## Editorial order
 
 Lead with Information Seeking & Human–AI Interaction, followed by Reasoning, Planning & Coding Agents, then Persuasion & Human–AI Alignment. Representative links open public papers directly; work without a public destination points to its local All Research entry.
+
+## Content preservation
+
+Keep every internship and mentor acknowledgment from the legacy bio, and preserve the original high-level research interests. Submission venues and cycles must not be displayed; use “In submission.” The homepage includes all submissions independently of Selected Research. 3DCodeEdit is coding research and Xinran is an equal-contribution author.
