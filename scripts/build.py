@@ -47,6 +47,7 @@ def shell(title,body,active):
 <div class="nav-links">
 <a href="index.html#research" {'aria-current="page"' if active=='research' else ''}>Research</a>
 <a href="all-research.html" {'aria-current="page"' if active=='all' else ''}>All Research</a>
+<a href="index.html#awards">Awards</a>
 <a href="data/CV.pdf">CV</a>
 <a href="legacy.html">Legacy</a>
 </div></nav></header>
@@ -88,8 +89,9 @@ selected=['Improving Attributed','MoR:','Improving Large Language','Strategic Pl
 selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Representative published and workshop papers across the research directions above. * Equal contribution.</p>'+''.join(entry(paper(t)) for t in selected)+'</section>'
 events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(ROOT/'scripts/events.html').read_text()+'</section>'
 collaborations='<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p) for p in papers if p['category']=='collaborations')+'</div></details></section>'
+awards='<section id="awards" class="awards"><h2>Selected Honors &amp; Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
-(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+submissions+selected_html+collaborations+events,'research'))
+(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+submissions+selected_html+collaborations+events+awards,'research'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
 (ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations+events,'all'))
