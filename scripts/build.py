@@ -26,18 +26,18 @@ def ref(prefix,label,topic=None):
 def refs(items):
  return ' · '.join(ref(*item) for item in sorted(items,key=lambda item:paper(item[0])['year'],reverse=True))
 def authors(text):return esc(text).replace('Xinran Zhao','<strong>Xinran Zhao</strong>')
-def entry(p, detailed=False, number=None):
+def entry(p, detailed=False, number=None, compact_links=False):
  aliases=''.join(f'<span id="{esc(alias,quote=True)}"></span>' for alias in p.get('aliases',[]))
  title=esc(p['title'])
  if p['url']:title=f'<a href="{esc(p["url"],quote=True)}">{title}</a>'
  number_html=f'<span class="publication-number">{number}.</span> ' if number is not None else ''
  links=' &nbsp;·&nbsp; '.join(f'<a href="{esc(x["url"],quote=True)}">{esc(x["label"])}</a>' for x in p['links'])
- inline_links=' '.join(f'<a href="{esc(x["url"],quote=True)}">[{esc(x["label"])}]</a>' for x in p['links']) if detailed else ''
+ inline_links=' '.join(f'<a href="{esc(x["url"],quote=True)}">[{esc(x["label"])}]</a>' for x in p['links']) if detailed or compact_links else ''
  return f'''<article class="publication" id="{p['id']}">
 {aliases}<h3>{number_html}{title}</h3>
 <p class="authors">{authors(p['authors'])}</p>
 <p class="venue">{esc(venue(p, detailed=detailed))}{f' <span class="inline-paper-links">{inline_links}</span>' if inline_links else ''}</p>
-{f'<p class="paper-links">{links}</p>' if links and not detailed else ''}
+{f'<p class="paper-links">{links}</p>' if links and not (detailed or compact_links) else ''}
 </article>'''
 def group(category,title):
  entries=sorted((p for p in papers if p['category']==category),key=lambda p:p['year'],reverse=True)
@@ -105,7 +105,7 @@ themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
 # Sort by year; within a year, retain the explicit editorial order below.
 selected=['3DCodeEdit:','Planning while Listening','How Should Planning','Reading the Tea','Knowing When to Stop:','Better Harnesses,','Improving Attributed','Strategic Planning',"The Ramon Llull's",'MoR:','cAST:','Improving Large Language','Beyond Relevance:','Fact-and-Reflection','Thrust:']
 selected=sorted(selected,key=lambda title:paper(title)['year'],reverse=True)
-selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Selected publications and ongoing work. * Equal contribution.</p>'+''.join(entry(paper(t)) for t in selected)+'</section>'
+selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Selected publications and ongoing work. * Equal contribution.</p>'+''.join(entry(paper(t),number=i,compact_links=True) for i,t in enumerate(selected,1))+'</section>'
 events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(ROOT/'scripts/events.html').read_text()+'</section>'
 def collaborations(detailed=False):
  entries=[p for p in papers if p['category']=='collaborations']
