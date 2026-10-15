@@ -23,7 +23,7 @@
     "id": "reshape-search",
     "title": "How Should Planning Agents ReSHAPE Their Search Space?",
     "authors": "Yilin Zhang, Xinran Zhao, Tong Chen, Ziming Yuan, and Tongshuang Wu",
-    "url": "https://openreview.net/forum?id=VAoXkslmgy",
+    "url": "",
     "category": "manuscripts",
     "venue": "In submission",
     "links": [],
@@ -77,7 +77,7 @@
   {
     "id": "paper-5",
     "title": "Reading the Tea Leaves, Again: Can Large Language Models Predict Language Model Training Runs?",
-    "url": "https://openreview.net/forum?id=BYmY4hH3Xa",
+    "url": "",
     "authors": "Xinran Zhao, Xiang Li, Tong Chen, Jinchuan Tian, Zichun Yu, and Tongshuang Wu",
     "venue": "In submission",
     "links": [],
@@ -87,7 +87,7 @@
   {
     "id": "paper-6",
     "title": "Knowing When to Stop: The Evidence–Action Gap in Coding Agents",
-    "url": "https://openreview.net/forum?id=M8J1WmXMo5",
+    "url": "",
     "authors": "Tianyu Chen*, Xinran Zhao*, Vijay Viswanathan, Shoubin Yu, Mingyuan Zhou, and Tongshuang Wu",
     "venue": "In submission",
     "links": [],
@@ -97,7 +97,7 @@
   {
     "id": "paper-7",
     "title": "Pivot-ICL: Adaptive Exemplar Selection for In-Context Learning",
-    "url": "https://openreview.net/forum?id=kKl9NduRbS",
+    "url": "",
     "authors": "Xinran Zhao, Hanie Sedghi, Azade Nova, and Tongshuang Wu",
     "venue": "In submission",
     "links": [],
@@ -137,7 +137,7 @@
   {
     "id": "paper-11",
     "title": "Adaptive-GEPA: Make Your Harness Fit Heterogeneous Requests",
-    "url": "https://openreview.net/forum?id=S5zuWHaImI",
+    "url": "",
     "authors": "Tianyu Chen, Yasi Zhang, Ruiyi Wang, Xinran Zhao, Taoran Li, and Mingyuan Zhou",
     "venue": "In submission",
     "links": [],

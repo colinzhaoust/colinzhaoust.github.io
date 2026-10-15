@@ -27,3 +27,5 @@ Lead with Information Seeking & Human–AI Interaction, followed by Reasoning, P
 ## Content preservation
 
 Keep every internship and mentor acknowledgment from the legacy bio, and preserve the original high-level research interests. Submission venues and cycles must not be displayed; use “In submission.” The homepage includes all submissions independently of Selected Research. 3DCodeEdit is coding research and Xinran is an equal-contribution author.
+
+Unpublished submissions without an arXiv release must not link to OpenReview. Keep their titles as plain text; thematic representative links may point to local All Research entries.
