@@ -25,9 +25,12 @@
     "authors": "Yilin Zhang, Xinran Zhao, Tong Chen, Ziming Yuan, and Tongshuang Wu",
     "url": "",
     "category": "manuscripts",
-    "venue": "In submission",
+    "venue": "In submission · Earlier version: NeurIPS 2026 · BiAlign Workshop · Oral",
     "links": [],
-    "year": 2026
+    "year": 2026,
+    "aliases": [
+      "paper-10"
+    ]
   },
   {
     "id": "paper-1",
@@ -122,16 +125,6 @@
     "venue": "In submission",
     "links": [],
     "category": "manuscripts",
-    "year": 2026
-  },
-  {
-    "id": "paper-10",
-    "title": "ReSHAPE: User-Guided Revision of Planning Specifications",
-    "url": "",
-    "authors": "Yilin Zhang, Xinran Zhao, and Tongshuang Wu",
-    "venue": "NeurIPS 2026 · BiAlign Workshop · Oral",
-    "links": [],
-    "category": "workshops",
     "year": 2026
   },
   {

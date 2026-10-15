@@ -37,3 +37,5 @@ Selected Honors & Awards follows Academic Events on the homepage, with a direct 
 ## Selected research and reference ordering
 
 Order representative links and Selected Research newest year first, preserving editorial order for year ties. Show verified venue labels on thematic references, with unpublished work labeled only In submission and no OpenReview link. Include 3DCodeEdit, new debate, ReSHAPE search, Tea Leaves, Knowing When to Stop, Better Harnesses, and Ramon Llull alongside existing published/workshop selections. Pivot-ICL belongs to efficient reasoning in the overview and All Research, not Selected Research. Remove the casual invitation to discuss ideas from the current bio.
+
+ReSHAPE search-space and planning-specification titles refer to versions of one work. Keep a single current-title record and acknowledge the earlier BiAlign NeurIPS 2026 Oral version; preserve the old page anchor as an alias.
