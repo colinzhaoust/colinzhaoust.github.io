@@ -66,7 +66,7 @@ Event dates use a single unbroken line, e.g. “Fall, 2026” or “Summer, 2025
 
 ## October 2026 updates
 
-The three high-level research questions live inside their matching direction blocks (as a `direction-question` line under each heading) instead of a separate list: information seeking ↔ proactive help with information and learning; planning and coding agents ↔ agents that learn, keep memory, and evolve; persuasion and alignment ↔ staying aligned with human goals under high automation. The bio names the two Google DeepMind stints separately (2024 with Azade Nova and Hanie Sedghi; 2026 with Azade Nova). The job-market line says 2026–27 industry job market with a flexible graduation date. Academic Events lists the FrontierIR @ AAAI 2027 general-chair role and marks ML-conference reviewing as ongoing.
+The three high-level research questions live inside their matching direction blocks (as a `direction-question` line under each heading) instead of a separate list: information seeking ↔ proactive help with information and learning; planning and coding agents ↔ agents that learn, keep memory, and evolve; persuasion and alignment ↔ staying aligned with human goals under high automation. The bio keeps the two Google DeepMind stints in one sentence; the CV lists them separately. The job-market line says 2026–27 industry job market with a flexible graduation date. Academic Events lists the FrontierIR @ AAAI 2027 general-chair role and marks ML-conference reviewing as ongoing.
 
 Service (workshop chairing, area chairing, reviewing) is its own short bulleted section after Academic Events on both pages, so Academic Events holds only dated items.
 
