@@ -110,10 +110,7 @@ footer p { width: 100%; margin: 0; }
   footer { font-size: .875rem; }
 }
 
-.high-level-interests { margin-bottom: 28px; max-width: 74ch; }
-.high-level-interests p { margin-bottom: 8px; }
-.high-level-interests ol { padding-left: 24px; margin: 0; }
-.high-level-interests li { margin-bottom: 10px; }
+.direction-question { margin-bottom: 8px; }
 .collaboration-fold summary { cursor: pointer; color: var(--ink); }
 .collaboration-fold summary h2 { display: inline; margin: 0; }
 .collaboration-fold summary:focus-visible { outline: 2px solid var(--link); outline-offset: 6px; }

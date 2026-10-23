@@ -63,3 +63,7 @@ The homepage uses Selected Honors and Awards, omitting Continuous Undergraduate 
 Academic Events uses an unnumbered list with literal whitespace between date and body spans, so copied text and simplified views remain readable without CSS.
 
 Event dates use a single unbroken line, e.g. “Fall, 2026” or “Summer, 2025”, on desktop and mobile.
+
+## October 2026 updates
+
+The three high-level research questions live inside their matching direction blocks (as a `direction-question` line under each heading) instead of a separate list: information seeking ↔ proactive help with information and learning; planning and coding agents ↔ agents that learn, keep memory, and evolve; persuasion and alignment ↔ staying aligned with human goals under high automation. The bio names the two Google DeepMind stints separately (2024 with Azade Nova and Hanie Sedghi; 2026 with Azade Nova). The job-market line says 2026–27 industry job market with a flexible graduation date. Academic Events lists the FrontierIR @ AAAI 2027 general-chair role and marks ML-conference reviewing as ongoing.
