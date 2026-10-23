@@ -83,7 +83,7 @@ bio='''<section class="intro" aria-labelledby="name">
 <p>I am a fourth-year PhD candidate at CMU LTI, advised by <a href="https://www.cs.cmu.edu/~sherryw/">Sherry Wu</a>. My PhD is supported by the <a href="https://www.amazon.science/news/amazon-launches-68-million-ai-phd-fellowship-program">Amazon AI PhD Fellowship</a>.</p>
 <p>At Google DeepMind, I worked as a student researcher on LLM planning with <a href="https://sites.google.com/view/azadenova">Azade Nova</a> and <a href="https://haniesedghi.com/">Hanie Sedghi</a> (2024), and on long-horizon code generation and continual learning with Azade (2026).&ensp;At Ai2 (2025), I worked on deep research agents with <a href="https://www.cs.cornell.edu/~varshakishore/">Varsha</a>, <a href="https://www.cs.cmu.edu/~anaik/">Aakanksha</a>, <a href="https://scholar.google.com/citations?user=MY2W9d4AAAAJ&hl=en">Joseph</a>, <a href="https://scholar.google.com/citations?user=f8aP6RMAAAAJ&hl=en">Jay</a>, and <a href="https://jenahwang.github.io/">Jena</a>.</p>
 <p>I received my MSCS from Stanford, where I worked with <a href="https://nlp.stanford.edu/~manning/">Christopher Manning</a>, and my bachelor's degree from <a href="http://www.ust.hk/">HKUST</a>. At HKUST and during my exchange at Cornell, I was fortunate to work with <a href="https://www.cse.ust.hk/~yqsong/">Yangqiu Song</a>, <a href="https://scholar.google.com/citations?user=nEsOOx8AAAAJ&hl=en">Dit-Yan Yeung</a>, and <a href="https://www.cs.cornell.edu/home/cardie/">Claire Cardie</a>.</p>
-<p>I always feel lucky to meet great mentors along my journey, including but not limited to, <a href="https://www.shikharmurty.com/">Shikhar Murty</a>, <a href="https://panda0881.github.io/Hongming_Homepage/">Hongming Zhang</a>, and <a href="https://esdurmus.github.io/">Esin Durmus</a>.</p>
+<p>I always feel lucky to meet great mentors along my journey, including but not limited to, <a href="https://www.shikharmurty.com/">Shikhar Murty</a>, <a href="https://panda0881.github.io/Hongming_Homepage/">Hongming Zhang</a>, and <a href="https://esdurmus.github.io/">Esin Durmus</a>. I serve as a general chair of <a href="https://frontier-ir-workshop.github.io/">FrontierIR @ AAAI 2027</a> and as an area chair for ACL, EMNLP, and NAACL.</p>
 <p class="social"><a href="mailto:xinranz3@andrew.cmu.edu">Email</a><span> / </span><a href="data/CV.pdf">CV</a><span> / </span><a href="https://scholar.google.com/citations?user=iX71amEAAAAJ&amp;hl=en">Google Scholar</a><span> / </span><a href="https://www.semanticscholar.org/author/Xinran-Zhao/1500662261">Semantic Scholar</a><span> / </span><a href="https://github.com/colinzhaoust">GitHub</a><span> / </span><a href="https://www.linkedin.com/in/xinran-zhao-51b061180">LinkedIn</a></p>
 </div>
 </section>
@@ -108,15 +108,16 @@ selected=sorted(selected,key=lambda title:paper(title)['year'],reverse=True)
 selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Selected publications and ongoing work. * Equal contribution.</p>'+''.join(entry(paper(t),number=i,compact_links=True) for i,t in enumerate(selected,1))+'</section>'
 miscellaneous='<section id="miscellaneous" class="miscellaneous"><h2>Miscellaneous</h2>'+(ROOT/'scripts/miscellaneous.html').read_text()+'</section>'
 events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(ROOT/'scripts/events.html').read_text()+'</section>'
+service='<section id="service" class="service"><h2>Service</h2>'+(ROOT/'scripts/service.html').read_text()+'</section>'
 def collaborations(detailed=False):
  entries=[p for p in papers if p['category']=='collaborations']
  return '<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p,detailed=detailed,number=i if detailed else None) for i,p in enumerate(entries,1))+'</div></details></section>'
 awards='<section id="awards" class="awards"><h2>Selected Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
-(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events+miscellaneous,'home'))
+(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events+service+miscellaneous,'home'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
-(ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations(detailed=True)+events,'all'))
+(ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations(detailed=True)+events+service,'all'))
 print('Built index.html and all-research.html from',len(papers),'papers')
 
 legacy=ROOT/'legacy.html'
