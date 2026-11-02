@@ -3,7 +3,7 @@
     "id": "3dcodeedit",
     "title": "3DCodeEdit: Benchmarking Instruction-Guided 3D Program Editing",
     "authors": "Binjie Wang*, Xinran Zhao*, Shoubin Yu, Xiang Li, Silong Yong, Chenyang Yang, Tianyu Chen, Ruofei Du, He He, Chen Zhao, and Tongshuang Wu",
-    "url": "",
+    "url": "https://arxiv.org/abs/2610.38231",
     "category": "manuscripts",
     "venue": "In submission",
     "links": [],
@@ -90,7 +90,7 @@
   {
     "id": "paper-6",
     "title": "Knowing When to Stop: The Evidence–Action Gap in Coding Agents",
-    "url": "",
+    "url": "https://arxiv.org/abs/2610.31895",
     "authors": "Tianyu Chen*, Xinran Zhao*, Vijay Viswanathan, Shoubin Yu, Mingyuan Zhou, and Tongshuang Wu",
     "venue": "In submission",
     "links": [],
