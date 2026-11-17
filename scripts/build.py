@@ -71,7 +71,7 @@ def shell(title,body,active):
 <a href="legacy.html">Legacy</a>
 </div></nav></header>
 <main id="main">{body}</main>
-<footer><span>Updated October 2026</span>
+<footer><span>Updated November 2026</span>
 <p>Layout inspired by <a href="https://jonbarron.info/">Jon Barron</a>.</p></footer>
 </body></html>\n''')
 

@@ -23,7 +23,7 @@
     "id": "reshape-search",
     "title": "How Should Planning Agents ReSHAPE Their Search Space?",
     "authors": "Yilin Zhang, Xinran Zhao, Tong Chen, Ziming Yuan, and Tongshuang Wu",
-    "url": "",
+    "url": "https://arxiv.org/abs/2611.16466",
     "category": "manuscripts",
     "venue": "BiAlign@NeurIPS 26",
     "links": [],
@@ -130,7 +130,7 @@
   {
     "id": "paper-11",
     "title": "Adaptive-GEPA: Make Your Harness Fit Heterogeneous Requests",
-    "url": "",
+    "url": "https://arxiv.org/abs/2609.38762",
     "authors": "Tianyu Chen, Yasi Zhang, Ruiyi Wang, Xinran Zhao, Taoran Li, and Mingyuan Zhou",
     "venue": "In submission",
     "links": [],
