@@ -75,3 +75,7 @@ Selected Research omits the real-time debate and ReSHAPE search-space manuscript
 ## November 2026 updates
 
 The research lead reuses the CV Research Focus wording, so the two stay in sync; edit both together. The footer date comes from the build date. ReSHAPE shows its BiAlign oral in All Research. The test-time adaptation paper uses its current arXiv title (Human-Agent Interaction). The European Journal of Marketing article is dated 2022 (vol. 56, no. 12) and links its DOI. Legacy keeps its layout but carries current titles, authors, and arXiv links for in-submission work; it still has no OpenReview links for unpublished submissions.
+
+### Home research block (supersedes the earlier overview and Selected Research notes)
+
+The home page no longer has a separate research overview, Selected Research list, or collaborations fold. One Research section carries a thesis line from the CV Research Focus, then three directions titled "Building agents that …", each with three or four named works and a one-line description (the format of Weiwei Sun's homepage, https://sunnweiwei.github.io/). The works and wording were approved by the author; descriptions and numbers come from the public abstracts. Tea Leaves and Real-Time Debate have no public paper, so their lines say only what the titles say and link to their All Research entries, never OpenReview. The full record, including collaborations, lives in All Research, linked from the section heading.

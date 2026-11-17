@@ -18,31 +18,19 @@ def venue(p, detailed=False):
  # Abbreviate conference years only, leaving biography and event dates intact.
  return re.sub(r"\b(ACL|NAACL|EACL|EMNLP|ICLR|ICML|NeurIPS|COLM|CVPR|ICCV|AAAI|LREC|TMLR) (?:20)?(\d{2})\b", r"\1'\2", text)
 
-def ref(prefix,label,topic=None):
- p=paper(prefix)
- # A public paper should be one click away. Unreleased work keeps a local entry.
- url=p['url'] or f'all-research.html#{p["id"]}'
- # Overview labels keep the primary venue; distinctions remain in full entries.
- conference=venue(p).split(' · ')[0]
- if topic and conference == 'In submission':
-  conference='in submission'
- annotation=f'{topic}, {conference}' if topic else conference
- return f'<span class="research-reference"><a href="{esc(url,quote=True)}">{esc(label)}</a> <span class="reference-venue">({esc(annotation)})</span></span>'
-def refs(items):
- return ' · '.join(ref(*item) for item in sorted(items,key=lambda item:paper(item[0])['year'],reverse=True))
 def authors(text):return esc(text).replace('Xinran Zhao','<strong>Xinran Zhao</strong>')
-def entry(p, detailed=False, number=None, compact_links=False):
+def entry(p, detailed=False, number=None):
  aliases=''.join(f'<span id="{esc(alias,quote=True)}"></span>' for alias in p.get('aliases',[]))
  title=esc(p['title'])
  if p['url']:title=f'<a href="{esc(p["url"],quote=True)}">{title}</a>'
  number_html=f'<span class="publication-number">{number}.</span> ' if number is not None else ''
  links=' &nbsp;·&nbsp; '.join(f'<a href="{esc(x["url"],quote=True)}">{esc(x["label"])}</a>' for x in p['links'])
- inline_links=' '.join(f'<a href="{esc(x["url"],quote=True)}">[{esc(x["label"])}]</a>' for x in p['links']) if detailed or compact_links else ''
+ inline_links=' '.join(f'<a href="{esc(x["url"],quote=True)}">[{esc(x["label"])}]</a>' for x in p['links']) if detailed else ''
  return f'''<article class="publication" id="{p['id']}">
 {aliases}<h3>{number_html}{title}</h3>
 <p class="authors">{authors(p['authors'])}</p>
 <p class="venue">{esc(venue(p, detailed=detailed))}{f' <span class="inline-paper-links">{inline_links}</span>' if inline_links else ''}</p>
-{f'<p class="paper-links">{links}</p>' if links and not (detailed or compact_links) else ''}
+{f'<p class="paper-links">{links}</p>' if links and not detailed else ''}
 </article>'''
 def group(category,title):
  entries=sorted((p for p in papers if p['category']==category),key=lambda p:p['year'],reverse=True)
@@ -101,24 +89,31 @@ bio='''<section class="intro" aria-labelledby="name">
 </section>
 <p class="job-market"><strong><span aria-hidden="true">👨‍💻</span> I am on the 2026&ndash;27 industry job market, with a flexible graduation date!</strong></p>'''
 
-themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
-<p class="research-lead">I build highly autonomous language model agents that seek information, learn from experience, plan, and collaborate with people. My current focus is on how agents forecast their outcomes, proactively deliver necessary information, elicit intents, and adapt to users' goals in long-horizon settings. My work is organized around three questions:</p>
-<div class="direction"><h3>Information Seeking &amp; Delivery</h3>
-<p class="direction-question">How can agents proactively help humans seek information, learn, and stay educated amid massive artificial artifacts?</p>
-<p class="representatives">{refs([('Knowing When','Escalation','proactive delivery'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Revela:','Revela'),('MoR:','Mixture of Retrievers'),('Beyond Relevance:','PIR'),('Dense X Retrieval:','Dense X'),('MixGR:','MixGR'),('Thrust:','Thrust','when to retrieve')])}</p></div>
-<div class="direction"><h3>Reasoning, Planning, Forecasting &amp; Coding Agents</h3>
-<p class="direction-question">How can agents learn, maintain memory, and evolve over complex long-horizon tasks?</p>
-<p class="representatives">{refs([('3DCodeEdit:','3D Code Editing'),('Reading the Tea','Tea Leaves'),('How Should Planning','ReSHAPE'),('Better Harnesses','Harness Adaptation'),('Pivot-ICL:','Pivot-ICL'),("The Ramon Llull's",'Ramon Llull'),('cAST:','cAST'),('Improving Large Language','Action Sequence Similarity')])}</p></div>
-<div class="direction"><h3>Persuasion &amp; Human–AI Alignment</h3>
-<p class="direction-question">How can models stay aligned with human motives, goals, and intents under high automation, including through multi-turn behaviors and how multimodal inputs shape model representations?</p>
-<p class="representatives">{refs([('Planning while Listening','Real-Time Debate'),('Strategic Planning','Strategic Debate'),('SPHERE:','SPHERE'),('Fact-and-Reflection','FaR','confidence calibration'),('Leveraging Topic','Argument Persuasion'),('Probing Toxic','Probing Toxic Content')])}</p></div>
-</section>'''
-# Include the user's selected manuscripts alongside published representative work.
-# Sort by year; within a year, retain the explicit editorial order below.
-# Accepted 2026 papers lead; the user removed the real-time debate and ReSHAPE entries.
-selected=['Improving Attributed','Strategic Planning','3DCodeEdit:','Reading the Tea','Knowing When to Stop:','Better Harnesses,',"The Ramon Llull's",'MoR:','cAST:','Improving Large Language','Beyond Relevance:','Fact-and-Reflection','Thrust:']
-selected=sorted(selected,key=lambda title:paper(title)['year'],reverse=True)
-selected_html='<section id="selected" class="paper-section"><div class="section-heading"><h2>Selected Research</h2><a href="all-research.html">All research →</a></div><p class="section-note">Selected publications and ongoing work. * Equal contribution.</p>'+''.join(entry(paper(t),number=i,compact_links=True) for i,t in enumerate(selected,1))+'</section>'
+# Home research block: one thesis line, then a few named works per direction with one line each.
+# Each item is (title prefix in research.json, short name, venue label or '', one-line description).
+directions=[
+ ('Building agents that seek information and deliver it proactively.',[
+  ('Knowing When','Knowing When to Stop','','coding agents collect enough evidence that they are blocked, yet a third still exhaust their budget. An escalation tool cuts that from 34.0% to 6.7%.'),
+  ('Improving Attributed','Intent-aware Deep Research',"ICLR'26",'deep research reports improve when the model makes explicit the implicit intents behind what to write and what to cite, by 12.3 points for small models.'),
+  ('MoR:','MoR',"EMNLP'25",'a zero-shot mixture of sparse, dense, and human retrievers, weighted per query.'),
+  ('Revela:','Revela',"ICLR'26 Oral",'trains dense retrievers through language modeling, without annotated query–document pairs.')]),
+ ('Building agents that plan, code, and forecast their own outcomes.',[
+  ('Improving Large Language','Action Sequence Similarity',"ICLR'25",'exemplars chosen by problem similarity can carry very different plans. Choosing by plan similarity instead improves planning accuracy by 11–40 points with 27% fewer exemplars.'),
+  ('3DCodeEdit:','3DCodeEdit','','2,592 instruction-guided edits over 108 Blender programs. The strongest models complete fewer than 60% of structural and style edits.'),
+  ('Reading the Tea','Tea Leaves','','can LLMs read the start of a training run and predict how it ends?'),
+  ('How Should Planning','ReSHAPE',"BiAlign@NeurIPS'26 Oral","users' requests rule out plans they would accept. Showing concrete plans recovers them better than asking about preferences.")]),
+ ('Building agents that debate, persuade, and stay honest about what they know.',[
+  ('Strategic Planning','TreeDebater',"ICLR'26",'plans a competitive debate on two trees, one rehearsing attacks and defenses, one tracking the live flow to spend limited time on the points that matter. Human judges rate it 15.6% more persuasive than the prior best system.'),
+  ('Planning while Listening','Real-Time Debate','','takes debating to live speech, where the agent must plan while it listens and speaks.'),
+  ('Fact-and-Reflection','FaR',"ACL'24",'eliciting known facts first, then reflecting on them, lowers calibration error by 23.5% and lets the model voice concern when it is unsure.')]),
+]
+def work(prefix,name,label,text):
+ p=paper(prefix)
+ # A public paper is one click away; unreleased work points to its All Research entry, never OpenReview.
+ url=p['url'] or f'all-research.html#{p["id"]}'
+ note=f' <span class="reference-venue">({esc(label)})</span>' if label else ''
+ return f'<li><a class="work-name" href="{esc(url,quote=True)}">{esc(name)}</a>{note}: {esc(text)}</li>'
+themes='<section id="research" class="research-overview"><div class="section-heading"><h2>Research</h2><a href="all-research.html">All research →</a></div>\n<p class="research-lead">I build highly autonomous language model agents that seek information, learn from experience, plan, and collaborate with people. Specifically, I work on:</p>\n'+'\n'.join(f'<div class="direction"><h3>{esc(title)}</h3>\n<ul class="work-list">\n'+'\n'.join(work(*w) for w in works)+'\n</ul></div>' for title,works in directions)+'\n</section>'
 miscellaneous='<section id="miscellaneous" class="miscellaneous"><h2>Miscellaneous</h2>'+(ROOT/'scripts/miscellaneous.html').read_text()+'</section>'
 events='<section id="academic-events" class="events"><h2>Academic Events</h2>'+(ROOT/'scripts/events.html').read_text()+'</section>'
 service='<section id="service" class="service"><h2>Service</h2>'+(ROOT/'scripts/service.html').read_text()+'</section>'
@@ -127,7 +122,7 @@ def collaborations(detailed=False):
  return '<section id="collaborations" class="paper-section"><details class="collaboration-fold"><summary><h2>Large-scale Collaborations</h2></summary><div class="collaboration-papers">'+''.join(entry(p,detailed=detailed,number=i if detailed else None) for i,p in enumerate(entries,1))+'</div></details></section>'
 awards='<section id="awards" class="awards"><h2>Selected Honors and Awards</h2>'+(ROOT/'scripts/awards.html').read_text()+'</section>'
 submissions=group('manuscripts','In Submission')
-(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+selected_html+collaborations()+events+service+miscellaneous,'home'))
+(ROOT/'index.html').write_text(shell('Xinran Zhao',bio+themes+awards+events+service+miscellaneous,'home'))
 all_intro='''<div class="page-heading"><h1>All Research</h1><p>Publications, submissions, and collaborations. <a href="index.html#research">Explore by research direction</a>.</p><p class="section-note">* Equal contribution.</p></div>
 <nav class="section-nav" aria-label="Publication sections"><a href="#manuscripts">In Submission</a><a href="#peer-reviewed">Peer-reviewed</a><a href="#workshops">Workshops</a><a href="#collaborations">Collaborations</a><a href="#academic-events">Academic Events</a></nav>'''
 (ROOT/'all-research.html').write_text(shell('All Research · Xinran Zhao',all_intro+submissions+group('peer-reviewed','Peer-reviewed Publications')+group('workshops','Workshop Papers')+collaborations(detailed=True)+events+service,'all'))
