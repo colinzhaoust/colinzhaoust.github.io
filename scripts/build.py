@@ -93,19 +93,19 @@ bio='''<section class="intro" aria-labelledby="name">
 # Each item is (title prefix in research.json, short name, venue label or '', one-line description).
 directions=[
  ('Building agents that seek information and deliver it proactively.',[
-  ('Knowing When','Knowing When to Stop','','coding agents collect enough evidence that they are blocked, yet a third still exhaust their budget. An escalation tool cuts that from 34.0% to 6.7%.'),
-  ('Improving Attributed','Intent-aware Deep Research',"ICLR'26",'deep research reports improve when the model makes explicit the implicit intents behind what to write and what to cite, by 12.3 points for small models.'),
+  ('Knowing When','Knowing When to Stop','','when a coding agent is blocked, proactively telling the user cuts wasted effort and unsafe actions.'),
+  ('Improving Attributed','Intent-aware Deep Research',"ICLR'26",'making the intents behind what to write and cite explicit improves deep research reports.'),
   ('MoR:','MoR',"EMNLP'25",'a zero-shot mixture of sparse, dense, and human retrievers, weighted per query.'),
   ('Revela:','Revela',"ICLR'26 Oral",'trains dense retrievers through language modeling, without annotated query–document pairs.')]),
  ('Building agents that plan, code, and forecast their own outcomes.',[
-  ('Improving Large Language','Action Sequence Similarity',"ICLR'25",'exemplars chosen by problem similarity can carry very different plans. Choosing by plan similarity instead improves planning accuracy by 11–40 points with 27% fewer exemplars.'),
-  ('3DCodeEdit:','3DCodeEdit','','2,592 instruction-guided edits over 108 Blender programs. The strongest models complete fewer than 60% of structural and style edits.'),
+  ('Improving Large Language','Action Sequence Similarity',"ICLR'25",'choosing in-context exemplars by plan similarity, not problem similarity, improves LLM planning.'),
+  ('3DCodeEdit:','3DCodeEdit','','a benchmark of instruction-guided 3D program editing, where models succeed on only 37% of tasks on average.'),
   ('Reading the Tea','Tea Leaves','','can LLMs read the start of a training run and predict how it ends?'),
-  ('How Should Planning','ReSHAPE',"BiAlign@NeurIPS'26 Oral","users' requests rule out plans they would accept. Showing concrete plans recovers them better than asking about preferences.")]),
+  ('How Should Planning','ReSHAPE',"BiAlign@NeurIPS'26 Oral",'agents recover plans users would accept by showing concrete options instead of asking about preferences.')]),
  ('Building agents that debate, persuade, and stay honest about what they know.',[
-  ('Strategic Planning','TreeDebater',"ICLR'26",'plans a competitive debate on two trees, one rehearsing attacks and defenses, one tracking the live flow to spend limited time on the points that matter. Human judges rate it 15.6% more persuasive than the prior best system.'),
-  ('Planning while Listening','Real-Time Debate','','takes debating to live speech, where the agent must plan while it listens and speaks.'),
-  ('Fact-and-Reflection','FaR',"ACL'24",'eliciting known facts first, then reflecting on them, lowers calibration error by 23.5% and lets the model voice concern when it is unsure.')]),
+  ('Strategic Planning','TreeDebater',"ICLR'26",'tree-structured planning that rehearses attacks and tracks the debate flow, making LLM debaters more persuasive to human judges.'),
+  ('Planning while Listening','Real-Time Debate','','debating in live speech, where the agent plans while it listens and speaks.'),
+  ('Fact-and-Reflection','FaR',"ACL'24",'eliciting known facts and then reflecting on them improves confidence calibration.')]),
 ]
 def work(prefix,name,label,text):
  p=paper(prefix)
