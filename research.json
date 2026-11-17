@@ -25,7 +25,7 @@
     "authors": "Yilin Zhang, Xinran Zhao, Tong Chen, Ziming Yuan, and Tongshuang Wu",
     "url": "https://arxiv.org/abs/2611.16466",
     "category": "manuscripts",
-    "venue": "BiAlign@NeurIPS 26",
+    "venue": "BiAlign@NeurIPS 26 · Oral",
     "links": [],
     "year": 2026,
     "aliases": [
@@ -149,7 +149,7 @@
   },
   {
     "id": "paper-13",
-    "title": "Efficient Test-Time Adaptation through Human-AI Interaction",
+    "title": "Efficient Test-Time Adaptation through Human-Agent Interaction",
     "url": "https://arxiv.org/abs/2609.04141",
     "authors": "Zora Zhiruo Wang, Apurva Gandhi, Rulin Shao, Aspen Chen, Jonas Mueller, Zhiqi Liang, Jett Chen, Michael Ryan, Qianou Ma, Luxi He, Zhoujun Cheng, Andre He, Seungone Kim, Jiayi Geng, Mingqian Zheng, Weiwei Sun, Zheyuan Zhang, Xinran Zhao, Yike Wang, Abe Hou, Liwei Jiang, Pang Wei Koh, Diyi Yang, Graham Neubig, and Daniel Fried",
     "venue": "TTCL@NeurIPS 26",
@@ -470,11 +470,11 @@
   {
     "id": "paper-37",
     "title": "The Effects of Fear of Missing Out on Social Media Posting Preferences",
-    "url": "",
+    "url": "https://doi.org/10.1108/EJM-10-2021-0814",
     "authors": "Yue Xi, Jiale Huo, Xinran Zhao, Yushi Jiang, and Qiang Yang",
-    "venue": "European Journal of Marketing, 2021",
+    "venue": "European Journal of Marketing, 2022",
     "links": [],
     "category": "peer-reviewed",
-    "year": 2021
+    "year": 2022
   }
 ]

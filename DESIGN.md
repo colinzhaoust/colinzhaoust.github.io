@@ -71,3 +71,7 @@ The three high-level research questions live inside their matching direction blo
 Service (workshop chairing, area chairing, reviewing) is its own short bulleted section after Academic Events on both pages, so Academic Events holds only dated items.
 
 Selected Research omits the real-time debate and ReSHAPE search-space manuscripts; within 2026, accepted papers (Intent-aware QA, Strategic Debate) lead before manuscripts.
+
+## November 2026 updates
+
+The research lead reuses the CV Research Focus wording, so the two stay in sync; edit both together. The footer date comes from the build date. ReSHAPE shows its BiAlign oral in All Research. The test-time adaptation paper uses its current arXiv title (Human-Agent Interaction). The European Journal of Marketing article is dated 2022 (vol. 56, no. 12) and links its DOI. Legacy keeps its layout but carries current titles, authors, and arXiv links for in-submission work; it still has no OpenReview links for unpublished submissions.

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Build the two static research pages from research.json. No dependencies."""
 from pathlib import Path
-import html,json,hashlib,re
+import html,json,hashlib,re,datetime
 from link_targets import normalize_links
 ROOT=Path(__file__).resolve().parents[1]
 papers=json.loads((ROOT/'research.json').read_text())
 css_version=hashlib.sha256((ROOT/'site.css').read_bytes()).hexdigest()[:12]
 esc=html.escape
+SITE='https://colinzhaoust.github.io/'
+DESCRIPTION='Xinran Zhao, PhD candidate at Carnegie Mellon University. Research on language model agents, information seeking, reasoning, planning, and human–AI interaction.'
 
 def paper(prefix):return next(p for p in papers if p['title'].startswith(prefix))
 def venue(p, detailed=False):
@@ -46,13 +48,23 @@ def group(category,title):
  entries=sorted((p for p in papers if p['category']==category),key=lambda p:p['year'],reverse=True)
  return f'<section id="{category}" class="paper-section"><h2>{title}</h2>'+''.join(entry(p, detailed=True, number=i) for i,p in enumerate(entries,1))+'</section>'
 def shell(title,body,active):
+ # The footer date follows the build, so it cannot go stale.
+ updated=datetime.date.today().strftime('%B %Y')
+ url=SITE+('' if active=='home' else 'all-research.html')
  return normalize_links(f'''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="author" content="Xinran Zhao">
-<meta name="description" content="Xinran Zhao, PhD candidate at Carnegie Mellon University. Research on language model agents, information seeking, reasoning, planning, and human–AI interaction.">
+<meta name="description" content="{DESCRIPTION}">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{DESCRIPTION}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{SITE}images/xinran_circle.PNG">
+<meta name="twitter:card" content="summary">
 <meta name="google-site-verification" content="LwD5w9ZnQlSTsmKcIz8OKY0fQtgaaxa_QGAhDlwJ6eI">
 <title>{esc(title)}</title>
 <link rel="icon" type="image/png" href="images/lti.png">
@@ -71,7 +83,7 @@ def shell(title,body,active):
 <a href="legacy.html">Legacy</a>
 </div></nav></header>
 <main id="main">{body}</main>
-<footer><span>Updated November 2026</span>
+<footer><span>Updated {updated}</span>
 <p>Layout inspired by <a href="https://jonbarron.info/">Jon Barron</a>.</p></footer>
 </body></html>\n''')
 
@@ -90,7 +102,7 @@ bio='''<section class="intro" aria-labelledby="name">
 <p class="job-market"><strong><span aria-hidden="true">👨‍💻</span> I am on the 2026&ndash;27 industry job market, with a flexible graduation date!</strong></p>'''
 
 themes=f'''<section id="research" class="research-overview"><h2>Research</h2>
-<p class="research-lead">I am interested in meaningful research on natural language processing (NLP) and language model agents. My goal is to build efficient, effective, and faithful systems that work with people on complex real-world tasks. Recently, I focus on information seeking and planning in long-horizon scenarios, organized around three questions:</p>
+<p class="research-lead">I build highly autonomous language model agents that seek information, learn from experience, plan, and collaborate with people. My current focus is on how agents forecast their outcomes, proactively deliver necessary information, elicit intents, and adapt to users' goals in long-horizon settings. My work is organized around three questions:</p>
 <div class="direction"><h3>Information Seeking &amp; Delivery</h3>
 <p class="direction-question">How can agents proactively help humans seek information, learn, and stay educated amid massive artificial artifacts?</p>
 <p class="representatives">{refs([('Knowing When','Escalation','proactive delivery'),('DR Tulu:','DR Tulu'),('Improving Attributed','Intent-aware QA'),('Revela:','Revela'),('MoR:','Mixture of Retrievers'),('Beyond Relevance:','PIR'),('Dense X Retrieval:','Dense X'),('MixGR:','MixGR'),('Thrust:','Thrust','when to retrieve')])}</p></div>
