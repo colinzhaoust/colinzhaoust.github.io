@@ -94,7 +94,7 @@ bio='''<section class="intro" aria-labelledby="name">
 directions=[
  ('Building agents that seek information and deliver it proactively.',[
   ('Knowing When','Knowing When to Stop','','when a coding agent is blocked, proactively telling the user cuts wasted effort and unsafe actions.'),
-  ('Improving Attributed','Intent-aware Deep Research',"ICLR'26",'making the intents behind what to write and cite explicit improves deep research reports.'),
+  ('Improving Attributed','Intent-aware Deep Research',"ICLR'26",'making the intents behind what to write and cite explicit improves both the performance and readability of deep research reports.'),
   ('MoR:','MoR',"EMNLP'25",'a zero-shot mixture of sparse, dense, and human retrievers, weighted per query.'),
   ('Revela:','Revela',"ICLR'26 Oral",'trains dense retrievers through language modeling, without annotated query–document pairs.')]),
  ('Building agents that plan, code, and forecast their own outcomes.',[
