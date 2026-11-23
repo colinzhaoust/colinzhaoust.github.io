@@ -80,10 +80,19 @@
   {
     "id": "paper-5",
     "title": "Reading the Tea Leaves, Again: Can Large Language Models Predict Language Model Training Runs?",
-    "url": "",
+    "url": "https://github.com/colinzhaoust/read-tea-leaves/blob/main/paper/tea-leaves.pdf",
     "authors": "Xinran Zhao, Xiang Li, Tong Chen, Jinchuan Tian, Zichun Yu, and Tongshuang Wu",
     "venue": "In submission",
-    "links": [],
+    "links": [
+      {
+        "label": "Code",
+        "url": "https://github.com/colinzhaoust/read-tea-leaves"
+      },
+      {
+        "label": "Data",
+        "url": "https://huggingface.co/datasets/xinranz3/read-tea-leaves"
+      }
+    ],
     "category": "manuscripts",
     "year": 2026
   },
